@@ -1,0 +1,175 @@
+* {
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+}
+camera-body {
+  -webkit-touch-callout: none;
+  -webkit-text-size-adjust: none;
+  -webkit-user-select: none;       
+  user-select: none;
+  height:100%;
+  margin:0px;
+  padding:0px;
+  width:100%;
+}
+/* Canvas */
+canvas.raster {
+  top: 15%;
+  left: 0;
+  position: absolute;
+  z-index: 120;
+}
+video.raster{
+  top: 0%;
+  left: 0;
+  position: absolute;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+}
+.portPhoto{
+  width: 100%;
+  position: absolute;
+  left: 0;
+  top: 0%;
+}
+.landPhoto{
+  width: 100%;
+  position: absolute;
+  left: 0;
+  top: 37%;
+}
+/* Fondo negro */
+div.top {
+  top: 0;
+  left: 0;
+  z-index: -999;
+  height: 100%;
+  width: 100%;
+  background-color: black;
+  position: absolute;
+}
+div .rotate-left{
+  width: 48px;
+  height: 48px;
+  background-color: #c2c2c242;
+  border-radius: 100%;
+  position: absolute;
+  top: 9px;
+  right: 71px;
+  line-height: 87px;
+}
+div .rotate-right{
+  width: 48px;
+  height: 48px;
+  background-color: #c2c2c242;
+  border-radius: 100%;
+  position: absolute;
+  top: 9px;
+  right: 13px;
+  line-height: 87px;
+}
+/* Actions */
+div.torch {
+  width: 48px;
+  height: 48px;
+  background-color: #c2c2c242;
+  border-radius: 100%;
+  position: absolute;
+  top: 9px;
+  right: 13px;
+  line-height: 87px;
+}
+#flash{
+  position: absolute;
+  top: 9px;
+  right: 9px;
+}
+/* Take action */
+div.take {
+  left: 0;
+  float: right;
+  border-radius: 100%;
+  width: 100px;
+  height: 100px;
+  background-color: #c2c2c242;
+  position: relative;
+}
+/* Bolita Camara */
+.bubble-take{
+  background-color: white;
+  width: 80%;
+  height: 80%;
+  margin-left: 10%;
+  border-radius: 100%;
+  margin-top: 10%;
+}
+/* Seleccionar */
+div.select {
+  left: 43%;
+  float: right;
+  border-radius: 100%;
+  background-color: #c2c2c242;
+  position: relative;
+  width: 58px !important;
+  height: 58px !important;
+  margin-top: 23px !important;
+  z-index: 9999;
+}
+#img-select{
+  width: 30px;
+  margin-left: 14px;
+  margin-top: 25%;
+}
+/*  */
+.camera{
+  position: absolute;
+  bottom: 0;
+  width: 61%;
+  height: 18%;
+  align-content: center;
+}
+.left-action{
+  position: absolute;
+  bottom: 0;
+  width: 30%;
+  height: 15%;
+  align-content: center;
+}
+.right-action{
+  position: absolute;
+  bottom: 0;
+  width: 30%;
+  height: 15%;
+  right: 7%;
+  align-content: center;
+}
+div.switch{
+  position: relative;
+  left: 43px;
+  background-color: #c2c2c242;
+  width: 58px;
+  height: 58px;
+  border-radius: 100%;
+}
+.image-switch{
+  margin-top: 14%;
+  margin-left: 10px;
+  width: 39px;
+}
+/* Cancelar */
+div.cancel{
+  position: absolute;
+  left: 46px;
+  background-color: #c2c2c242;
+  width: 58px;
+  height: 58px;
+  border-radius: 100%;
+}
+#cancelCamera{
+  z-index: 99;
+}
+.image-cancel{
+  width: 23px;
+  margin-left: 17px;
+  margin-top: 29%;
+}

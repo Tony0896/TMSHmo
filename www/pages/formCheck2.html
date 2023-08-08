@@ -1,0 +1,160 @@
+<template>
+    <div class="page">
+        <!-- Navsbars -->
+        <nav class="left top-left" style="justify-content: space-between;">
+            <a href="javascript:location.reload()" style="margin-left: 10px; display: inline-flex;align-items: center;">
+                <i class="icon material-icons md-only" style="font-weight: 900;font-size: 30px;">arrow_back</i>
+            </a>
+            <div class="title">Revisión de Imagen</div>
+            <a style="margin-right: 10px;">
+                <i class="icon material-icons md-only" style="color: #005D99; font-weight: 900;">arrow_back</i>
+            </a>
+        </nav>
+        <div class="toolbar tabbar toolbar-bottom" >
+            <div class="toolbar-inner" style="background-color: #005D99;" id="toolbar_down">
+            </div>
+        </div>
+        <!-- Contenido Page -->
+        <div class="page-content" style="height: 98%;">
+            <div style="text-align: center; justify-content:center; margin-right:auto; margin-left:auto; width: 99%;margin-top: 30px;">
+                <h2 class="FWN-titulo-2" style="margin-bottom: 0px;color: #707070;" id="titulo"></h2>
+                <h2 class="FWN-titulo-2" style="margin-bottom: 0px;margin-top: 10px;" id="fase_titulo"></h2>
+                <div style="text-align: left;">
+                    <div class="list FWM-fixing-form" id="datos_form" style="margin-top: 5px;"> 
+                    
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+<script>
+return {
+    on: {      
+        pageInit: function () {
+            app.preloader.show('red');
+            localStorage.setItem("page", 2);
+            var fase = parseInt(localStorage.getItem("fase"));
+            var id_cedula = localStorage.getItem("IdCedula");
+            databaseHandler.db.transaction(
+                function(tx){
+                    tx.executeSql(
+                        "Select MAX(id_fase) as max_fase from checklist where id_cedula= ?",
+                        [id_cedula],
+                        function(tx, results){
+                            var item2 = results.rows.item(0);
+                            var max_fase = item2.max_fase;
+                            if (fase){
+                                if(fase == max_fase){
+                                var Anterior = fase-1;
+                                $("#toolbar_down").append(`<a href="#" onclick="moveChecklist(`+Anterior+`);" style="margin: auto;color: #fff;font-weight: bold;font-size: 18px;width: 100%;text-align: center;">Anterior</a>
+                                <a href="#" onclick="TerminarCheckList();" style="margin: auto;color: #fff;font-weight: bold;font-size: 18px;width: 100%;text-align: center;">Terminar <i class="icon material-icons md-only" style="display: inline-block;">check</i></a>`);
+                                $("#toolbar_down").css("background-color","#239B56")
+                                }else{
+                                var Anterior = fase-1;
+                                $("#toolbar_down").css("background-color","#005D99");
+                                var Siguiente = fase+1;
+                                $("#toolbar_down").append(`<a href="#" onclick="moveChecklist(`+Anterior+`);" style="margin: auto;color: #fff;font-weight: bold;font-size: 18px;width: 100%;text-align: center;">Anterior</a>
+                                <a href="#" onclick="moveChecklist(`+Siguiente+`);" style="margin: auto;color: #fff;font-weight: bold;font-size: 18px;width: 100%;text-align: center;">Siguiente</a>`);
+                                }
+                            }else{
+                                $("#toolbar_down").append(`<a href="#" onclick="moveChecklist(1);" style="margin: auto;color: #fff;font-weight: bold;font-size: 18px;width: 100%;text-align: center;">Siguiente</a>`);
+                            }
+                        }
+                    );
+                },
+                function(error){},
+                function(){}
+            );
+
+            databaseHandler.db.transaction(
+                function(tx){
+                    tx.executeSql(
+                        "Select * from checklist where id_cedula= ? AND id_fase = ?",
+                        [id_cedula,fase],
+                        function(tx, results){
+                            var length = results.rows.length;
+                            var comentarios = '';
+                            for(var i = 0; i< length; i++){
+                                var item = results.rows.item(i);
+                                //console.log(item)
+                                if(item.respuesta == 1){
+                                    var check1 = 'checked';
+                                    var check2 = '';
+                                    var check3 = '';
+                                }else if(item.respuesta == 2){
+                                    var check1 = '';
+                                    var check2 = 'checked';
+                                    var check3 = '';
+                                }else if(item.respuesta == 3){
+                                    var check3 = 'checked';
+                                    var check2 = '';
+                                    var check1 = '';
+                                }
+                                comentarios = '';
+                                if(item.comentarios){
+                                    comentarios = item.comentarios;
+                                }
+                                //$("#datos_form").append(`<div style="display: flex;margin-top: 5px;"><span class="span-pregunta span FWM-span-form">`+item.id_fase+`.`+item.no_pregunta+`</span>&emsp; <span class="span-pregunta span FWM-span-form">`+item.revision+`</span> </div> <div style="display: flex;justify-content: space-around;margin-bottom: 10px;margin-top: 5px;"> <label id="label`+item.id_pregunta+`-1" class="radios `+check1+`"><input type="radio" id="radio`+item.id_pregunta+`-1" onclick="validaradios(this.id,3);" `+check1+`> Bueno </label>  <label id="label`+item.id_pregunta+`-2" class="radios `+check2+`"><input type="radio" id="radio`+item.id_pregunta+`-2" onclick="validaradios(this.id,3);" `+check2+`> Malo </label> <label id="label`+item.id_pregunta+`-3" class="radios `+check3+`"><input type="radio" id="radio`+item.id_pregunta+`-3" onclick="validaradios(this.id,3);" `+check3+`> N/A </label><button class="col button button-outline button-round button-raised" style="width: auto;border: 2px solid #cf0000;margin-top: auto;margin-bottom: auto;" onclick="agregaComentarios(`+item.id_pregunta+`)";><i class="material-icons md-light panel-cerrar" style="color: #cf0000;margin: auto;text-align: center;align-items: center;display: flex;">chat</i></button></div><div style="margin-bottom: 10px;"><span style="color: #ff0000;font-style: italic;" id="span-`+item.id_pregunta+`">`+comentarios+`</span></div><hr>`);
+                                //$("#datos_form").append(`<div style="display: flex;margin-top: 5px;"><span class="span-pregunta span FWM-span-form">`+item.id_fase+`.`+item.no_pregunta+`</span>&emsp; <span class="span-pregunta span FWM-span-form">`+item.revision+`</span> </div> <div style="display: flex;justify-content: space-around;margin-bottom: 10px;margin-top: 5px;"> <label id="label`+item.id_pregunta+`-1" class="radios `+check1+`"><input type="radio" id="radio`+item.id_pregunta+`-1" onclick="validaradios(this.id,3);" `+check1+`> Bueno </label>  <label id="label`+item.id_pregunta+`-2" class="radios `+check2+`"><input type="radio" id="radio`+item.id_pregunta+`-2" onclick="validaradios(this.id,3);" `+check2+`> Malo </label></div><div style="margin-bottom: 10px;"><span style="color: #ff0000;font-style: italic;" id="span-`+item.id_pregunta+`">`+comentarios+`</span></div><hr>`);
+                                $("#datos_form").append(`<div style="display: flex;margin-top: 5px;"><span class="span-pregunta span FWM-span-form">`+item.id_fase+`.`+item.no_pregunta+`</span>&emsp; <span class="span-pregunta span FWM-span-form">`+item.revision+`</span> </div> <div style="display: flex;justify-content: space-around;margin-bottom: 10px;margin-top: 5px;"> <label id="label`+item.id_pregunta+`-1" class="radios `+check1+`"><input type="radio" id="radio`+item.id_pregunta+`-1" onclick="validaradios(this.id,3);" `+check1+`> Bueno </label>  <label id="label`+item.id_pregunta+`-2" class="radios `+check2+`"><input type="radio" id="radio`+item.id_pregunta+`-2" onclick="validaradios(this.id,3);" `+check2+`> Malo </label></div><div style="margin-bottom: 10px;"><span style="color: #ff0000;font-style: italic;" id="span-`+item.id_pregunta+`">`+comentarios+`</span></div><hr>`);
+                            }
+                            $("#datos_form").append(`<div class="block grid-resizable-demo" style="top: 25px;margin-bottom: 80px;"></div>`);
+                            if(fase){
+                                $("#fase_titulo").html(item.nombre_fase);
+                                $("#titulo").html(item.int_ext);
+                            }else{
+                                databaseHandler.db.transaction(
+                                    function(tx){
+                                        tx.executeSql(
+                                            "Select * from datos_generales_checklist where id_cedula= ?",
+                                            [id_cedula],
+                                            function(tx, results){
+                                                var item3 = results.rows.item(0);
+                                                $("#fase_titulo").html("Datos de la unidad");
+                                                $("#datos_form").append(`<table id="table-general" cellpadding="10" style="width: 100%;margin: 0;padding: 0;">
+                                                    <tbody id="table-general-conten">
+                                                        <tr>
+                                                            <th class="FWM-span-form" style="color:#000000">Unidad:</th>
+                                                            <td><span style="color: #5d5d5d;font-size: 14px;font-family: 'ITC Avant Garde Gothic', sans-serif;">`+item3.Unidad+`</span></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th class="FWM-span-form" style="color:#000000">Chasis:</th>
+                                                            <td><span style="color: #5d5d5d;font-size: 14px;font-family: 'ITC Avant Garde Gothic', sans-serif;">`+item3.Chasis+`</span></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th class="FWM-span-form" style="color:#000000">Familia:</th>
+                                                            <td><span style="color: #5d5d5d;font-size: 14px;font-family: 'ITC Avant Garde Gothic', sans-serif;">`+item3.Familia+`</span></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th class="FWM-span-form" style="color:#000000">Marca:</th>
+                                                            <td><span style="color: #5d5d5d;font-size: 14px;font-family: 'ITC Avant Garde Gothic', sans-serif;">`+item3.marca+`</span></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th class="FWM-span-form" style="color:#000000">Empresa:</th>
+                                                            <td><span style="color: #5d5d5d;font-size: 14px;font-family: 'ITC Avant Garde Gothic', sans-serif;">`+item3.Empresa+`</span></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th class="FWM-span-form" style="color:#000000">Fecha revisión:</th>
+                                                            <td><span style="color: #5d5d5d;font-size: 14px;font-family: 'ITC Avant Garde Gothic', sans-serif;">`+item3.fecha_revision+`</span></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>`);
+                                            }
+                                        );
+                                    },
+                                    function(error){},
+                                    function(){}
+                                );
+                            }
+                            app.preloader.hide();
+                        }
+                    );
+                },
+                function(error){},
+                function(){}
+            );
+        }
+    }
+}
+</script>

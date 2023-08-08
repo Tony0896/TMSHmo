@@ -1,0 +1,147 @@
+<!--suppress JSAnnotator -->
+<template>
+    <div class="page">
+        <nav class="left top-left" style="justify-content: space-between;">
+            <a href="javascript:location.reload()" style="margin-left: 10px; display: inline-flex;align-items: center;">
+                <i class="icon material-icons md-only" style="font-weight: 900;font-size: 30px;">arrow_back</i>
+            </a>
+            <div class="title">Revisión de Imagen</div>
+            <a style="margin-right: 10px;">
+                <i class="icon material-icons md-only" style="color: #005D99; font-weight: 900;">arrow_back</i>
+            </a>
+        </nav>
+        <div class="toolbar tabbar toolbar-bottom">
+            <div class="toolbar-inner" style="background-color: #005D99;">
+                <a href="#" onclick="IniciaCheckList();" style="margin: auto;color: #fff;font-weight: bold;font-size: 18px;">Iniciar <i class="icon material-icons md-only" style="display: inline-block;">chevron_right</i></a>
+            </div>
+        </div>
+        <div class="page-content">
+            <div style="text-align: center; justify-content:center; margin-right:auto; margin-left:auto; width: 99%;margin-top: 50px;">
+                <div class="list" id="demo-form">
+                    <div class="list no-hairlines-md">
+                        <div class="list FWM-fixing-form">
+                            <span class="span FWM-span-form" name="">Unidad</span>
+                                <input type="text" placeholder="Escribe el No. de la unidad"id="autocomplete-dropdown-ajax" class="FWM-input autocomplete-dropdown item-title" >
+                            <span class="span FWM-span-form" name="">Chasis</span>
+                                <input class="FWM-input" type="text" id="Chasis" readonly/>
+                            <span class="span FWM-span-form" name="">Familia</span>
+                                <input class="FWM-input" type="text" id="Familia" readonly/>
+                            <span class="span FWM-span-form" name="">Marca</span>
+                                <input class="FWM-input" type="text" id="marca" readonly/>
+                            <span class="span FWM-span-form" name="">Empresa</span>
+                                <input class="FWM-input" type="text" id="Empresa" readonly/>
+                            <span class="span FWM-span-form" name="">Fecha de revisión</span>
+                                <input class="FWM-input" type="date" id="fecha_revision" readonly/>
+
+                            <input type="hidden" id="FK_unidad">
+                            <input type="hidden" id="id_unidad">
+                            <input type="hidden" id="FK_unidad_danos_empresa">
+                            <input type="hidden" id="modelo_check">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+<script>
+    return {
+        on: {      
+            pageInit: function () {
+                var empresa = localStorage.getItem("empresa");;
+                var self = this;
+                var app = self.$app; 
+                var OPCV = localStorage.getItem("Opcion");       
+                var Division = localStorage.getItem("Division");
+                var NomJson = 'Unidades_empresa'+empresa;
+                var NomDescCli = "Unidades_desc_empresa"+empresa;
+
+                var fecha = new Date();
+                var mes = fecha.getMonth()+1;
+                var day = fecha.getDate();;
+
+                if(mes<10 && mes>=0){
+                    mes = '0'+mes;
+                }
+                if(day<10 && day>=0){
+                    day = '0'+day;
+                }
+
+                var fecha_revision = fecha.getFullYear()+"-"+mes+"-"+day;
+
+                $("#fecha_revision").val(fecha_revision);
+
+                self.autocompleteDropdownAjax = app.autocomplete.create({
+                    inputEl: '#autocomplete-dropdown-ajax',
+                    openIn: 'dropdown',
+                    preloader: true, //enable preloader
+                    valueProperty: 'id_unidad', //object's "value" property name
+                    textProperty:  'buscador', //object's "text" property name
+                    limit: 10, //limit to [number] results
+                    dropdownPlaceholderText: 'Selecciona una Unidad...',
+                    source: function (query, render) {
+                        var autocomplete = this;
+                        var results = [];
+                        if (query.length === 0) {
+                            render(results);
+                            return;
+                        }
+                        autocomplete.preloaderShow();
+                        app.request({
+                            url: cordova.file.dataDirectory + "jsons/"+NomJson+".json", 
+                            method: 'GET',
+                            dataType: 'json',
+                            data: {
+                                query: query,
+                            },success: function (data) {
+                                for (var i = 0; i < data.length; i++) {
+                                    if (data[i].buscador.toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(data[i]);
+                                }
+                                autocomplete.preloaderHide();
+                                render(results); 
+                            }
+                        }); 
+                    }
+                });
+
+                $('#autocomplete-dropdown-ajax').change(function () {
+                    var unidad = $("#autocomplete-dropdown-ajax").val();
+                    var encontro = false;
+                    app.request.get(cordova.file.dataDirectory + "jsons/"+NomDescCli+".json", function (data) {
+                        var content2 = JSON.parse(data);
+                        for(var x = 0; x < content2.length; x++) {
+                            if(content2[x].id_unidad == unidad){
+                                $("#autocomplete-dropdown-ajax").val(content2[x].Unidad);
+                                $("#Chasis").val(content2[x].Chasis);
+                                $("#Empresa").val(content2[x].Empresa);
+                                $("#Familia").val(content2[x].Familia);
+                                $("#marca").val(content2[x].marca);
+
+                                $("#FK_unidad").val(content2[x].FK_unidad);
+                                $("#id_unidad").val(content2[x].id_unidad);
+                                $("#FK_unidad_danos_empresa").val(content2[x].FK_unidad_danos_empresa);
+                                $("#modelo_check").val(content2[x].modelo_check);
+                                encontro = true;
+                            }         
+                        }
+                        if(encontro){
+                            $("#btn_cheklist").css("display","block")
+                        }else{
+                            $("#btn_cheklist").css("display","none")
+                            $("#autocomplete-dropdown-ajax").val("");
+                            $("#Chasis").val("");
+                            $("#Empresa").val("");
+                            $("#Familia").val("");
+                            $("#marca").val("");
+
+                            $("#FK_unidad").val("");
+                            $("#id_unidad").val("");
+                            $("#FK_unidad_danos_empresa").val("");
+                            $("#modelo_check").val("");
+                        }
+                    });
+                });  
+            }
+        }
+    }
+</script>

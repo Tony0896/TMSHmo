@@ -1,0 +1,208 @@
+<style>
+    input[type="radio"] {
+        transform: scale(1.3);
+    }
+</style>
+<template>
+    <div class="page">
+        <div class="navbar" style="background-color: #005D99;height: 5px;">
+            <div class="left top-left" style="justify-content: space-between;">
+                <a href="javascript:location.reload()"
+                    style="margin-left: 10px; display: inline-flex;align-items: center;">
+                    <i class="icon material-icons md-only" style="font-weight: 900;font-size: 30px;">arrow_back</i>
+                </a>
+                <div class="title" style="font-size: 18px;">Cursos</div>
+                <a style="margin-right: 10px;">
+                    <i class="icon material-icons md-only" style="color: #005D99; font-weight: 900;">arrow_back</i>
+                </a>
+            </div>
+        </div>
+
+        <div class="toolbar tabbar toolbar-bottom">
+            <div class="toolbar-inner" style="background-color: #005D99;" id="toolbar_down">
+                <a href="#" onclick="guardarCursoMultiple();"
+                    style="margin: auto;color: #fff;font-weight: bold;font-size: 18px;">Guardar <i
+                        class="icon material-icons md-only" style="display: inline-block;">chevron_right</i></a>
+            </div>
+        </div>
+
+        <div class="page-content" style="height: 98%;border-radius: 0px !important">
+            <div
+                style="text-align: center; justify-content:center; margin-right:auto; margin-left:auto; width: 99%;margin-top: 30px;">
+                <div style="text-align: left;">
+                    <div class="list FWM-fixing-form" id="datos_form" style="width: 97%;margin-left: 10px;margin-right: 10px;">
+                        <h2 style="text-align: center;" id="title_asis">Propedéutico</h2>
+                        <input type="hidden" id="PuntosCurso" value="0">
+
+                        <div class="container-check">
+                            <span class="span FWM-span-form">Fecha</span>
+                            <span class="span FWM-span-form span-dato" id="fecha" name="Fecha"></span>
+                        </div>
+
+                        <div class="container-check">
+                            <span class="span FWM-span-form" style="margin-top: 0 !important;">Nombre Instructor</span>
+                            <span class="span FWM-span-form span-dato" id="nombreInstructor" name="Nombre Instructor" style="margin-top: 0 !important;"></span>
+                        </div>
+
+                        <div class="container-check">
+                            <span class="span FWM-span-form" style="margin-top: 0 !important;">Nombre Candidato</span>
+                            <span class="span FWM-span-form span-dato" id="nombreCandidato" name="Nombre Candidato" style="margin-top: 0 !important;"></span>
+                        </div>
+
+                        <hr>
+                        <h2 style="text-align: center;">Evaluación</h2>
+
+                        <div id="evaluacion_div" style="padding-left: 10px;padding-right: 10px;">
+                            
+                        </div>
+
+                        <div style="padding-left: 10px;padding-right: 10px;">
+
+                            <div class="container_options">
+                                <span class="span FWM-span-form">Observaciones:</span>
+                                <textarea class="FWM-input" style="font-family: 'ITC Avant Garde Gothic', sans-serif;" id="observaciones" cols="30" rows="10" onchange=""></textarea>
+                            </div>
+
+                            <div class="container_options">
+                                <span class="span FWM-span-form">El candidato es Apto?:</span>
+                                <input class="tgl tgl-skewed" id="cb3" type="checkbox"></input>
+                                <label class="tgl-btn" data-tg-off="NO" data-tg-on="SI" for="cb3" style="font-size: 20px;border-radius: 5px;"></label>
+                            </div>
+                            
+                            <div class="container_options">
+                                <span class="span FWM-span-form">Firma Instructor:</span>
+                                <input type="hidden" name="signate" id="signate" placeholder="sfirmc">
+                                <input type="hidden" id="whitfirma">
+                                <center>
+                                    <img id="ImagenFirmaView" src="" width="70%"><br>
+                                    <span id="VolverFirmar" style="display: none;"></span>
+                                    <input type="button" style="position:absolute;display:none;margin:0 !important;color:white;background-color: #019cdc;top:40px;margin-left:160px !important" value="Volver a Firmar">
+                                </center>
+                                <div class="row align-items-stretch" style="text-align: center;">
+                                    <div class="col-100 medium-50" style="min-width: 50px; border-style: none;">
+                                        <span class="resize-handler"></span>
+                                        <a href="#" onclick="createFirma()" data-popup=".popup-services" style="background-color: #005D99;" class="link popup-open boton-equipo" id="VolverAFirmar">Agregar Firma <i class="icon material-icons md-only" style="display: inline-block;margin-left: 12px;">border_color</i></a>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="popup popup-services" style="background-color: #f0f8ff;">
+                            <br>
+                            <div class="popup-container" style="height: 300px;">
+                                 <div class="headerPopupPhoto" style="width: 90%;display: flex;justify-content: space-between;padding-left: 20px;margin-bottom: 30px;">
+                                    <a class="link popup-close" onclick="gfirma(1)" href="#">Guardar Firma</a>
+                                    <a class="link" onclick="cleanFirma()" href="#">Limpiar</a>
+                                    <a class="link popup-close" onclick="gClose()" href="#">Cerrar</a>
+                                </div>
+                                
+                                <div style="display: flex;flex-direction: column;justify-content: center;align-content: center;align-items: center;">
+                                    <canvas id="signature-pad" class="signature-pad" width="600" height="250" style="background-color: #fff; touch-action: none; border: 2px solid #005D99; border-radius: 15px;"></canvas>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div style="margin-bottom: 100px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+    return {
+        on: {
+            pageInit: function () {
+                var id_cedula = localStorage.getItem("IdCedula");
+                
+                var IDCurso = localStorage.getItem("IDCurso");
+                var FK_Becario = localStorage.getItem("FK_Becario");
+                var empresa = localStorage.getItem("empresa");
+                var NomJson = 'DatosEvaluacionD_'+empresa;
+                var html = '';        
+        
+                databaseHandler.db.transaction(
+                    function(tx){
+                        tx.executeSql(
+                            "Select * from datosGeneralesCurso where id_cedula= ?",
+                            [id_cedula],
+                            function(tx, results){
+                                var item2 = results.rows.item(0);
+                                $("#title_asis").html(item2.name_course+" "+item2.fecha);
+                                $("#nombreCandidato").html(item2.nombreCandidato);
+                                $("#fecha").html(item2.fecha);
+                                $("#nombreInstructor").html(item2.nombreInstructor);
+                                $("#nombreCandidato").html(item2.nombreCandidato);
+                            }
+                        );
+                    },
+                    function(error){},
+                    function(){}
+                );
+                // String.fromCharCode(65) //A
+                // String.fromCharCode(66) //B
+                // String.fromCharCode(67) //c
+                // String.fromCharCode(68) //D
+                // String.fromCharCode(69) //E
+                
+                var count = 0
+                var html='';
+                var id_cedula = localStorage.getItem("IdCedula");
+                databaseHandler.db.transaction(
+                    function(tx){
+                        tx.executeSql(
+                            "Select * from CAP_RespuestasMultiple where id_cedula= ?",
+                            [id_cedula],
+                            function(tx, results){
+                                var length = results.rows.length;
+                                var PuntosCurso = 0;
+                                for(var i = 0; i< length; i++){
+                                    count++
+                                    // console.log(String.fromCharCode(letter))
+                                    var item2 = results.rows.item(i);
+                                    html +=`<div class="container-answer-valor"><span class="span FWM-span-form span_options">${count}. ${item2.Pregunta}</span> </div>
+                                    <div class="container-check container_options_multiple" id="container_opts_${item2.FK_IDPregunta}"></div>`;
+                                    getOpcionesMultiples(item2.FK_IDPregunta, item2.Respuesta);
+                                }
+                                $("#evaluacion_div").html(html);
+                            }
+                        );
+                    },
+                    function(error){},
+                    function(){}
+                );
+
+                function getOpcionesMultiples(FK_IDPregunta, Respuesta){
+                    var id_cedula = localStorage.getItem("IdCedula");
+                    databaseHandler.db.transaction(
+                        function(tx){
+                            tx.executeSql(
+                                "Select * from CAP_OPMultipleOpts where id_cedula= ? AND FK_IDPregunta = ?",
+                                [id_cedula, FK_IDPregunta],
+                                function(tx, results){
+                                    var length = results.rows.length;
+                                    var letter = 64
+                                    for(var i = 0; i< length; i++){
+                                        letter++
+                                        var item3 = results.rows.item(i);
+                                        var checked = '';
+                                        Respuesta == letter ? checked = 'checked' : checked = '';
+                                        $("#container_opts_"+FK_IDPregunta).append(`<label for="op${item3.id_Opts}-${letter}" id="label-op${item3.id_Opts}-${letter}" class="radios radio_multiple rad_${FK_IDPregunta}" style="width: fit-content;${item3.Image ? 'margin-bottom: 0;': ''}">
+                                            <input class="in_${FK_IDPregunta}" type="radio" id="op${item3.id_Opts}-${letter}" style="margin-right: 15px;" onchange="validarRadioCapaMultiple(this.id,1,${FK_IDPregunta})" ${checked}>
+                                                ${String.fromCharCode(letter)}. ${item3.Opcion}
+                                            </label>
+                                            ${item3.Image ? `<img src="${item3.Image}" style="max-width: 25%;margin-bottom: 15px; margin-top: 15px;">` : ``} `)
+                                    }
+                                }
+                            );
+                        },
+                        function(error){},
+                        function(){}
+                    );
+                }
+            }
+        }
+    }
+</script>

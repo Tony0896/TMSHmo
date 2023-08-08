@@ -1,0 +1,140 @@
+<style>
+    input[type="radio"] {
+        transform: scale(1.3);
+    }
+</style>
+<template>
+    <div class="page">
+        <div class="navbar" style="background-color: #005D99;height: 5px;">
+            <div class="left top-left" style="justify-content: space-between;">
+                <a href="javascript:location.reload()"
+                    style="margin-left: 10px; display: inline-flex;align-items: center;">
+                    <i class="icon material-icons md-only" style="font-weight: 900;font-size: 30px;">arrow_back</i>
+                </a>
+                <div class="title" style="font-size: 18px;">Lista de Asistencia</div>
+                <a style="margin-right: 10px;">
+                    <i class="icon material-icons md-only" style="color: #005D99; font-weight: 900;">arrow_back</i>
+                </a>
+            </div>
+        </div>
+
+        <div class="toolbar tabbar toolbar-bottom">
+            <div class="toolbar-inner" style="background-color: #005D99;" id="toolbar_down">
+                <a href="#" onclick="guardarAsistencia();"
+                    style="margin: auto;color: #fff;font-weight: bold;font-size: 18px;">Guardar <i
+                        class="icon material-icons md-only" style="display: inline-block;">chevron_right</i></a>
+            </div>
+        </div>
+
+        <div class="page-content" style="height: 98%;border-radius: 0px !important">
+            <div
+                style="text-align: center; justify-content:center; margin-right:auto; margin-left:auto; width: 99%;margin-top: 30px;">
+                <div style="text-align: left;">
+                    <div class="list FWM-fixing-form" id="datos_form" style="width: 97%;margin-left: 10px;margin-right: 10px;">
+                        <h2 style="text-align: center;" id="title_asis">Asistencia becarios del día 01/07/2023</h2>
+
+                        <div id="content-page1"
+                            style="text-align: center; justify-content:center; margin-right:auto; margin-left:auto; width: 99%;">
+                            <div class='sentencia1 preloader color-blue infinite-scroll-preloader'></div>
+                            <div
+                                style="text-align: left; justify-content:left; margin-right:auto; margin-left:auto; width: 99%;">
+                                <div class="infinite-scroll-content">
+                                    <div id="historyContainer"></div>
+                                </div>
+                                <br>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div style="margin-bottom: 100px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+<script>
+    return {
+        on: {
+            pageInit: function () {
+                app.preloader.show('red');
+                $('.sentencia1').remove();
+                app.preloader.hide();
+
+                var id_cedula = localStorage.getItem("IdCedula");
+                databaseHandler.db.transaction(
+                    function(tx){
+                        tx.executeSql(
+                            "Select fecha from asistenciaHeader where id_cedula= ?",
+                            [id_cedula],
+                            function(tx, results){
+                                var item2 = results.rows.item(0);
+                                var fecha = item2.fecha;
+                                $("#title_asis").html("Asistencia becarios del día "+fecha)
+                                databaseHandler.db.transaction(
+                                    function(tx){
+                                        tx.executeSql(
+                                            "Select id_asistenciaD, id_becario, claveBecario, nameBecario, asiste from asistenciaDetails where id_cedula= ?",
+                                            [id_cedula],
+                                            function(tx, results){
+                                                var length = results.rows.length;
+                                                let html = `<table style="width: 100%;">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th style="color:#FFF;background-color: #005D99;width: 10%;font-size: 20px !important;padding: 10px;">#</th>
+                                                                        <th style="color:#FFF;background-color: #005D99;font-size: 20px !important;padding: 10px;">Nombre</th>
+                                                                        <th style="color:#FFF;background-color: #005D99;width: 35%;font-size: 20px !important;padding: 10px;">Asistencia</th>
+                                                                    </tr>
+                                                                </thead>
+                                                            <tbody class="tbody_asistencia">`;
+                                                if(length == 0){
+                                                }else{
+                                                    for(var i = 0; i< length; i++){
+                                                        var item = results.rows.item(i);
+                                                        html += `
+                                                            <tr>
+                                                                <td style="padding: 10px;"><span>${item.claveBecario}</span></td>
+                                                                <td style="padding: 10px;"><span>${item.nameBecario}</span></td>
+                                                                <td style="padding: 10px;">
+                                                                    <div>
+                                                                        <div class="div_IMTES_asis">
+                                                                            <div id="div_evento_${item.id_becario}"></div>
+                                                                        </div>
+                                                                        <div style="margin-bottom: 10px;">
+                                                                            <input class="tgl tgl-skewed" id="cb3-${item.id_asistenciaD}" type="checkbox" onchange="actualizaLista(this.id)"></input>
+                                                                            <label id="toogle_${item.id_becario}" class="tgl-btn" data-tg-off="Falta" data-tg-on="Asistencia" for="cb3-${item.id_asistenciaD}" style="border-radius: 5px;margin: auto;"></label>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>`
+                                                    }
+                                                }
+                                                html += `</tbody> </table>`;
+                                                $('#historyContainer').html(html);
+                                                validaEventos(fecha)
+                                            }
+                                        );
+                                    },
+                                    function(error){},
+                                    function(){}
+                                );
+                            }
+                        );
+                    },
+                    function(error){},
+                    function(){}
+                );
+
+
+                // app.request({
+                //     url: cordova.file.dataDirectory + carpeta + "/"+NomJson+".json", 
+                //     method: 'GET',
+                //     dataType: 'json',
+                //     success: function (data) {
+                //         
+                //     }
+                // }); 
+
+            }
+        }
+    }
+</script>

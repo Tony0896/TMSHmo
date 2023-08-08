@@ -1,0 +1,127 @@
+<template>
+    <div class="page">
+        <!-- Navsbars -->
+        <nav class="left top-left" style="justify-content: space-between;">
+            <a href="javascript:location.reload()" style="margin-left: 10px; display: inline-flex;align-items: center;">
+                <i class="icon material-icons md-only" style="font-weight: 900;font-size: 30px;">arrow_back</i>
+            </a>
+            <div class="title">Revisión de Imagen</div>
+            <a style="margin-right: 10px;">
+                <i class="icon material-icons md-only" style="color: #005D99; font-weight: 900;">arrow_back</i>
+            </a>
+        </nav>
+        <div class="toolbar tabbar toolbar-bottom" >
+            <div class="toolbar-inner" style="background-color: #005D99;" id="toolbar_down">
+            </div>
+        </div>
+        <!-- Contenido Page -->
+        <div class="page-content" style="height: 98%;">
+            <div style="text-align: center; justify-content:center; margin-right:auto; margin-left:auto; width: 99%;margin-top: 30px;">
+                <h2 class="FWN-titulo-2" style="margin-bottom: 0px;color: #707070;" id="titulo"></h2>
+                <h2 class="FWN-titulo-2" style="margin-bottom: 25px;margin-top: 10px;" id="fase_titulo"></h2>
+                <div style="text-align: left;">
+                    <div class="list FWM-fixing-form" id="datos_form" style="margin-top: 5px;"> 
+                    </div>
+
+                    <div class="list FWM-fixing-form" style="margin-top: 5px;"> 
+                        <span class="span FWM-span-form">Observaciones adicionales:</span>
+                            <textarea class="FWM-input" style="font-family: 'ITC Avant Garde Gothic', sans-serif;" id="comentarios_generales" cols="30" rows="10" onchange="guardaComentarios_generales(this.value)"></textarea>
+                        <div class="block grid-resizable-demo" style="top: 25px;margin-bottom: 80px;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+<script>
+return {
+    on: {      
+        pageInit: function () {
+            app.preloader.show('red');
+            var fase = parseInt(localStorage.getItem("fase"));
+            var id_cedula = localStorage.getItem("IdCedula");
+            databaseHandler.db.transaction(
+                function(tx){
+                    tx.executeSql(
+                        "Select MAX(id_fase) as max_fase from checklist where id_cedula= ?",
+                        [id_cedula],
+                        function(tx, results){
+                            var item2 = results.rows.item(0);
+                            var max_fase = parseInt(item2.max_fase);
+                            $("#toolbar_down").append(`<a href="#" onclick="moveChecklist(`+max_fase+`);" style="margin: auto;color: #fff;font-weight: bold;font-size: 18px;width: 100%;text-align: center;">Anterior</a>
+                            <a href="#" onclick="EnviarCheckList();" style="margin: auto;color: #fff;font-weight: bold;font-size: 18px;width: 100%;text-align: center;">Enviar <i class="icon material-icons md-only" style="display: inline-block;">check</i></a>`);
+                            $("#toolbar_down").css("background-color","#239B56")
+                        }
+                    );
+                },
+                function(error){},
+                function(){}
+            );
+            
+            databaseHandler.db.transaction(
+                function(tx){
+                    tx.executeSql(
+                        "Select * from checklist where id_cedula= ? AND respuesta = 2",
+                        [id_cedula],
+                        function(tx, results){
+                            var length = results.rows.length;
+                            if(length == 0){
+                                $("#fase_titulo").html("Sin puntos en mal estado");
+                            }else{
+                                $("#fase_titulo").html("Revisión de puntos en mal estado");
+                                var comentarios;
+                                for(var i = 0; i< length; i++){
+                                    var item = results.rows.item(i);
+                                    comentarios = '';
+                                    if (item.comentarios){
+                                        comentarios = item.comentarios;
+                                    }else{
+                                        comentarios = "Sin comentarios";
+                                    }
+                                    $("#datos_form").append(`
+                                    <div class='card demo-facebook-card' style='padding-bottom: 5px;'>
+                                        <div class='card-header'>
+                                            <div class='demo-facebook-name' id='demo' style='margin-left:0px;display: flex;'>
+                                                <span class="span-pregunta span FWM-span-form">`+item.id_fase+`.`+item.no_pregunta+`</span>&emsp; 
+                                                <span class="span-pregunta span FWM-span-form">`+item.revision+`</span>
+                                            </div>
+                                        </div>
+                                        <div class='card demo-facebook-card'>
+                                                <div class='demo-facebook-date'></div> 
+                                                <div class='card-footer'><a href='#' >`+item.int_ext+`</a></div> 
+                                                <div class='card-footer'><a href='#'>`+item.nombre_fase+`</a></div> 
+                                                <div class='card-footer'><a href='#' >`+comentarios+`</a></div>
+                                        </div>
+                                    </div> <br>`);
+                                }
+                            }
+                            app.preloader.hide();
+                        }
+                    );
+                },
+                function(error){},
+                function(){}
+            );
+            
+            databaseHandler.db.transaction(
+                function(tx){
+                    tx.executeSql(
+                        "Select comentarios_generales from datos_generales_checklist where id_cedula = ?",
+                        [id_cedula],
+                        function(tx, results){
+                            var length = results.rows.length;
+                            if(length == 0){
+                            }else{
+                                var item2 = results.rows.item(0);
+                                $("#comentarios_generales").val(item2.comentarios_generales);
+                            }
+                        }
+                    );
+                },
+                function(error){},
+                function(){}
+            );
+        }
+    }
+}
+</script>

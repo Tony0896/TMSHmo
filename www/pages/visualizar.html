@@ -1,0 +1,190 @@
+<template>
+    <div class="page">
+        <nav class="left top-left" style="justify-content: space-between;">
+            <a class="link back" style="margin-left: 10px; display: inline-flex;align-items: center;">
+                <i class="icon material-icons md-only" style="font-weight: 900;font-size: 30px;">arrow_back</i>
+            </a>
+            <div class="title">Historial</div>
+            <a style="margin-right: 10px;">
+                <i class="icon material-icons md-only" style="color: #005D99; font-weight: 900;">arrow_back</i>
+            </a>
+        </nav>
+
+        <div class="page-content" style="border-radius: 0;">
+            <div id="nointernet-page1"
+                style="display:none;text-align: center; justify-content:center; margin-right:auto; margin-left:auto; width: 99%;">
+                <img src="" width="60%" style="margin-top: 140px;">
+                <div style="text-align: left;">
+                    <h2 style="margin: 50px 0 0 15px;text-align: left;"><b>¡VAYA!</b></h2>
+                    <h2 style="margin: 0 0 0 15px;text-align: left;"><b>No tienes internet.</b></h2>
+                    <h4 style="margin: 0 0 0 15px;text-align: left;">Para realizar esta consulta es necesario tener una
+                        conexion.</h>
+                </div>
+            </div>
+
+            <div id="content-page1"
+                style="text-align: center; justify-content:center; margin-right:auto; margin-left:auto; width: 99%;">
+                <center>
+                    <h2 style="color: #FF0037;" id="titulo_reporte"></h2>
+                </center>
+                <div class='sentencia1 preloader color-blue infinite-scroll-preloader'></div>
+                <div style="text-align: left; justify-content:left; margin-right:auto; margin-left:auto; width: 99%;">
+                    <div class="infinite-scroll-content">
+                        <div id="historyContainer"></div>
+                    </div>
+                    <br>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</template>
+<script>
+    return {
+        on: {
+            pageInit: function (e, page) {
+                var id_empresa = localStorage.getItem("empresa");
+                var cedula = localStorage.getItem("IdCed");
+                var TipoCed = localStorage.getItem("TipoC");
+                app.preloader.show('red');
+
+                var url = localStorage.getItem("url");
+
+                app.request.get(url + '/datageneral.php', { Id: cedula, TipoCed: TipoCed }, function (data) {
+                    $('.sentencia1').remove();
+                    if (data) {
+                        var content = JSON.parse(data);
+                        if (TipoCed == 'checklist') {
+                            $("#titulo_reporte").css("display", "none");
+                            var datosGenerales = new Array;
+                            datosGenerales = content[0];
+                            var Checklist = new Array;
+                            Checklist = content[1];
+                            if (datosGenerales == null) {
+                                $("#message-despues").css("display", "block");
+                                app.preloader.hide();
+                            } else {
+                                $('#historyContainer').append(`<table id = "imyal" cellpadding="10" >
+                      <tbody id="imya">
+                        <tr>
+                          <th colspan="2" style="background-color:#FFF"><h2 class="titulo" style="margin-top: 15px;">Check-list de Imagen</h2></th>
+                        </tr>
+                        <tr>
+                          <th colspan="2" style="background-color:#FFF"><h2 class="subtitulo">Dirección Corporativa de Mantenimiento</h2></th>
+                        </tr>
+                        <tr>
+                          <th>Empresa:</th>
+                          <td><span>${datosGenerales[0].empresa}</span></td>
+                        </tr>
+                        <tr>
+                          <th>Unidad:</th>
+                          <td><span>${datosGenerales[0].Unidad}</span></td>
+                        </tr>
+                        <tr>
+                          <th>Fecha:</th>
+                          <td><span>${datosGenerales[0].fecha_revision}</span></td>
+                        </tr>
+                        <tr>
+                          <th>Formato:</th>
+                          <td><span>${datosGenerales[0].nombre}</span></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <div>  
+                      <div class="card data-table"> 
+                        <div class="infinite-scroll-content">
+                          <table style='text-align:center;'>
+                            <tbody id="tb_check">
+                              <tr>
+                                <th>Item</th>
+                                <th>Revisión</th>
+                                <th>Estado</th>
+                                <th>Comentarios</th>
+                              </tr>
+                            </tbody>
+                          </table>
+                          <div id="message-despues" style="width: 100%;text-align: center;font-family: 'ITC Avant Garde Gothic', sans-serif;font-size: 16px;" style="display: none;">
+                            <p>Sin registros</p>
+                          </div>
+                          <br><br>
+                          <table id = "imya2" cellpadding="10" >
+                            <tbody id="imya2">
+                              <tr>
+                                <th>Observaciones Adicionales:</th>
+                              </tr>
+                              <tr>
+                                <td><span>${datosGenerales[0].comentarios_generales}</span></td>
+                              </tr>
+                            </tbody>
+                          </table>
+                          
+                          <div class='sentencia2 preloader color-blue infinite-scroll-preloader'></div>
+                        </div>
+                      </div>
+                    </div>
+                    <br><br>
+                  </div>
+                  <br>
+                `);
+                            }
+
+                            if (Checklist.length === 0) {
+                                $("#message-despues").css("display", "block");
+                                app.preloader.hide();
+                            } else {
+                                var seccion = '';
+                                var parte = '';
+                                var html = '';
+                                for (let i = 0; i < Checklist.length; i++) {
+                                    if (!seccion) {//titulo de exterior o interior
+                                        seccion = Checklist[i].int_ext;
+                                        $("#tb_check").append(`<tr><td colspan='4' class='titulo_ext_int'>${Checklist[i].int_ext}</td></tr>`);
+                                    } else {
+                                        if (seccion != Checklist[i].int_ext) {
+                                            $("#tb_check").append(`<tr><td colspan='4' class='titulo_ext_int'>${Checklist[i].int_ext}</td></tr>`);
+                                        }
+                                        seccion = Checklist[i].int_ext;
+                                    }
+
+                                    if (!parte) {//nombres de las partes
+                                        parte = Checklist[i].nombre_fase;
+                                        $("#tb_check").append(`<tr><td class='titulo_fases'>${Checklist[i].id_fase}</td><td class='titulo_fases'>${Checklist[i].nombre_fase}</td><td colspan='2' class='espacio_gris'>&nbsp;</td></tr>`);
+                                    } else {
+                                        if (parte != Checklist[i].nombre_fase) {
+                                            $("#tb_check").append(`<tr><td class='titulo_fases'>${Checklist[i].id_fase}</td><td class='titulo_fases'>${Checklist[i].nombre_fase}</td><td colspan='2' class='espacio_gris'>&nbsp;</td></tr>`);
+                                        }
+                                        parte = Checklist[i].nombre_fase;
+                                    }
+                                    $("#tb_check").append(`<tr>`);
+                                    $("#tb_check").append(`<td style='min-width: 50px;'>${Checklist[i].id_fase}.${Checklist[i].no_pregunta}</td>`);
+                                    $("#tb_check").append(`<td>${Checklist[i].revision}</td>`);
+                                    if (Checklist[i].respuesta == 2) {
+                                        $("#tb_check").append(`<td class='respuesta_mala'>Malo</td>`);
+                                    } else {
+                                        $("#tb_check").append(`<td class='respuesta_buena'>Bueno</td>`);
+                                    }
+                                    $("#tb_check").append(`<td>${Checklist[i].comentarios}</td>`);
+                                    $("#tb_check").append(`</tr>`);
+                                }
+                                $("#message-despues").css("display", "none");
+                                app.preloader.hide();
+                            }
+                        } else {
+                            app.preloader.hide();
+                            swal("", "Información no dsiponible.", "warning");
+                        }
+                    } else {
+                        app.preloader.hide();
+                        swal("", "Información no dsiponible.", "warning");
+                    }
+                }, function (xhr) {
+                    app.preloader.hide();
+                    $('.sentencia1').remove();
+                    $("#content-page1").css('display', 'none');
+                    $("#nointernet-page1").css('display', 'block');
+                });
+            }
+        }
+    }
+</script>
