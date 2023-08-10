@@ -5,7 +5,7 @@
 </style>
 <template>
     <div class="page">
-        <div class="navbar" style="background-color: #005D99;height: 5px;">
+        <div class="navbar" style="background-color: #2B5875;height: 5px;">
             <div class="left top-left" style="justify-content: space-between;">
                 <a href="javascript:location.reload()"
                     style="margin-left: 10px; display: inline-flex;align-items: center;">
@@ -13,13 +13,13 @@
                 </a>
                 <div class="title" style="font-size: 18px;">Lista de Asistencia</div>
                 <a style="margin-right: 10px;">
-                    <i class="icon material-icons md-only" style="color: #005D99; font-weight: 900;">arrow_back</i>
+                    <i class="icon material-icons md-only" style="color: #2B5875; font-weight: 900;">arrow_back</i>
                 </a>
             </div>
         </div>
 
         <div class="toolbar tabbar toolbar-bottom">
-            <div class="toolbar-inner" style="background-color: #005D99;" id="toolbar_down">
+            <div class="toolbar-inner" style="background-color: #2B5875;" id="toolbar_down">
                 <a href="#" onclick="guardarAsistencia();"
                     style="margin: auto;color: #fff;font-weight: bold;font-size: 18px;">Guardar <i
                         class="icon material-icons md-only" style="display: inline-block;">chevron_right</i></a>
@@ -57,8 +57,7 @@
         on: {
             pageInit: function () {
                 app.preloader.show('red');
-                $('.sentencia1').remove();
-                app.preloader.hide();
+                $('.sentencia1').remove();                
 
                 var id_cedula = localStorage.getItem("IdCedula");
                 databaseHandler.db.transaction(
@@ -111,10 +110,11 @@
                                                 html += `</tbody> </table>`;
                                                 $('#historyContainer').html(html);
                                                 validaEventos(fecha)
+                                                app.preloader.hide();
                                             }
                                         );
                                     },
-                                    function(error){},
+                                    function(error){app.preloader.hide();},
                                     function(){}
                                 );
                             }

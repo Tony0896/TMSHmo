@@ -5,7 +5,7 @@
 </style>
 <template>
     <div class="page">
-        <div class="navbar" style="background-color: #005D99;height: 5px;">
+        <div class="navbar" style="background-color: #2B5875;height: 5px;">
             <div class="left top-left" style="justify-content: space-between;">
                 <a href="javascript:location.reload()"
                     style="margin-left: 10px; display: inline-flex;align-items: center;">
@@ -13,13 +13,13 @@
                 </a>
                 <div class="title" style="font-size: 18px;">Cursos</div>
                 <a style="margin-right: 10px;">
-                    <i class="icon material-icons md-only" style="color: #005D99; font-weight: 900;">arrow_back</i>
+                    <i class="icon material-icons md-only" style="color: #2B5875; font-weight: 900;">arrow_back</i>
                 </a>
             </div>
         </div>
 
         <div class="toolbar tabbar toolbar-bottom">
-            <div class="toolbar-inner" style="background-color: #005D99;" id="toolbar_down">
+            <div class="toolbar-inner" style="background-color: #2B5875;" id="toolbar_down">
                 <a href="#" onclick="guardarCursoEvidencias();"
                     style="margin: auto;color: #fff;font-weight: bold;font-size: 18px;">Guardar <i
                         class="icon material-icons md-only" style="display: inline-block;">chevron_right</i></a>
@@ -47,6 +47,35 @@
                             <span class="span FWM-span-form" style="margin-top: 0 !important;">Nombre Candidato</span>
                             <span class="span FWM-span-form span-dato" id="nombreCandidato" name="Nombre Candidato" style="margin-top: 0 !important;"></span>
                         </div>
+
+                        <div class="list list-strong list-outline-ios list-dividers-ios inset-md accordion-list" id="div_calificaciones" style="display: none;">
+                            <ul>
+                                <li class="accordion-item">
+                                    <a class="item-link item-content">
+                                    <div class="item-inner">
+                                        <div class="item-title">Ver historia de calificaciones</div>
+                                    </div>
+                                    </a>
+                                    <div class="accordion-item-content">
+                                        <div class="block">
+                                            <div class="card data-table">
+                                                <div class="infinite-scroll-content">
+                                                    <div class="hitii">
+                                                        <div class="timeline timeline-horizontal timeline-cols-3 medium-timeline-cols-6">
+                                                            <div class="timeline-year" style="padding: 0;">
+                                                                <div class="timeline-month" style="padding: 0;">
+                                                                    
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div> 
 
                         <hr>
                         
@@ -148,6 +177,7 @@
     return {
         on: {
             pageInit: function () {
+                app.preloader.show('red');
                 var id_cedula = localStorage.getItem("IdCedula");
                 
                 var IDCurso = localStorage.getItem("IDCurso");
@@ -168,6 +198,45 @@
                                 $("#fecha").html(item2.fecha);
                                 $("#nombreInstructor").html(item2.nombreInstructor);
                                 $("#nombreCandidato").html(item2.nombreCandidato);
+                                if (item2.OpDiario == 1) {
+                                    console.log("si diario")
+                                    var IDCurso = localStorage.getItem("IDCurso");
+                                    var FK_Becario = localStorage.getItem("FK_Becario");
+                                    var empresa = localStorage.getItem("empresa");
+                                    var NomJson = 'DatosEvaluacionD_'+empresa;
+                                    var html = '';        
+                                    app.request({
+                                        url: cordova.file.dataDirectory + "jsons_capacitacion/"+NomJson+".json",
+                                        method: 'GET',
+                                        dataType: 'json',
+                                        success: function (data) {
+                                            var length = data.length;
+                                            if(length == 0){
+                                            } else {
+                                                for (var j = 0; j < data.length; j++) {
+                                                    if(data[j].FK_IDCurso == IDCurso && data[j].FK_Becario == FK_Becario){
+                                                        var check = ''
+                                                        data[j].apto == 1 ? check = 'checked': check = '';
+                                                        html += `<div class="timeline-item">
+                                                            <div class="timeline-item-date">${data[j].fecha}</div>
+                                                            <div class="timeline-item-content">
+                                                                <div class="timeline-item-time">Puntos Obtenidos</div>
+                                                                <div class="timeline-item-text">${data[j].Valores}</div>
+                                                                <div class="timeline-item-time">Calificación</div>
+                                                                <div class="timeline-item-text">${data[j].califf}</div>
+                                                                <div class="timeline-item-time">Observaciones</div>
+                                                                <div class="timeline-item-text">${data[j].observaciones}</div>
+                                                            </div>
+                                                        </div>`;
+                                                    }
+                                                }
+                                            }
+                                            app.preloader.hide();
+                                            $(".timeline-month").html(html);
+                                        }
+                                    });
+                                    $("#div_calificaciones").css("display", "block")
+                                }
                             }
                         );
                     },
@@ -181,6 +250,7 @@
                             "Select * from CAP_Evidencias where id_cedula= ?",
                             [id_cedula],
                             function(tx, results){
+                                app.preloader.show('red');
                                 $('.sentencia').remove();
                                 var length = results.rows.length;
                                 for(var i = 0; i< length; i++){
@@ -188,6 +258,7 @@
                                     $("#facturas").append("<tr id='fila"+ item2.id_evidencia +"'><td style='text-align: center;'><img src='"+item2.evidencia+"' width='60px' style='margin-top: 4px;'/></td><td style='text-align: center;'><a href='#' onclick='eliminarFilaFoto("+item2.id_evidencia +",1);' style='border: none; outline:none;'><i class='icon material-icons md-only' style='display: inline-block;margin-left: 12px;color:#FF0037; font-size: 40px;'>delete_forever</i></a></td></tr>");
                                     $("#message-nr").css("display", "none");
                                 }
+                                app.preloader.hide();
                             }
                         );
                     },

@@ -5,20 +5,20 @@
 </style>
 <template>
     <div class="page">
-        <div class="navbar" style="background-color: #005D99;height: 5px;">
+        <div class="navbar" style="background-color: #2B5875;height: 5px;">
             <div class="left top-left" style="justify-content: space-between;">
                 <a href="javascript:location.reload()" style="margin-left: 10px; display: inline-flex;align-items: center;">
                     <i class="icon material-icons md-only" style="font-weight: 900;font-size: 30px;">arrow_back</i>
                 </a>
                 <div class="title" style="font-size: 18px;">PRUEBA DE MANEJO</div>
                 <a style="margin-right: 10px;">
-                    <i class="icon material-icons md-only" style="color: #005D99; font-weight: 900;">arrow_back</i>
+                    <i class="icon material-icons md-only" style="color: #2B5875; font-weight: 900;">arrow_back</i>
                 </a>
             </div>
         </div>
 
         <div class="toolbar tabbar toolbar-bottom" >
-            <div class="toolbar-inner" style="background-color: #005D99;" id="toolbar_down">
+            <div class="toolbar-inner" style="background-color: #2B5875;" id="toolbar_down">
                 <a href="#" onclick="guardarCursoCiertoFalso();" style="margin: auto;color: #fff;font-weight: bold;font-size: 18px;">Guardar <i class="icon material-icons md-only" style="display: inline-block;">chevron_right</i></a>
             </div>
         </div>
@@ -57,6 +57,35 @@
                             <span class="span FWM-span-form" style="margin-top: 0 !important;">Antecedentes de Manejo</span>
                             <span class="span FWM-span-form span-dato" id="antecedentesManejo" name="Antecedentes de Manejo" style="margin-top: 0 !important;"></span>
                         </div>
+
+                        <div class="list list-strong list-outline-ios list-dividers-ios inset-md accordion-list" id="div_calificaciones" style="display: none;">
+                            <ul>
+                                <li class="accordion-item">
+                                    <a class="item-link item-content">
+                                    <div class="item-inner">
+                                        <div class="item-title">Ver historia de calificaciones</div>
+                                    </div>
+                                    </a>
+                                    <div class="accordion-item-content">
+                                        <div class="block">
+                                            <div class="card data-table">
+                                                <div class="infinite-scroll-content">
+                                                    <div class="hitii">
+                                                        <div class="timeline timeline-horizontal timeline-cols-3 medium-timeline-cols-6">
+                                                            <div class="timeline-year" style="padding: 0;">
+                                                                <div class="timeline-month" style="padding: 0;">
+                                                                    
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div> 
 
                         <hr>
                         <h2 style="text-align: center;">Evaluación</h2>
@@ -121,6 +150,7 @@
 return {
     on: {      
         pageInit: function () {
+            app.preloader.show('red');
             var id_cedula = localStorage.getItem("IdCedula");
         
             databaseHandler.db.transaction(
@@ -141,13 +171,51 @@ return {
                             } else {
                                 $(".div_manejo").css("display", "none");
                             }
+                            if (item2.OpDiario == 1) {
+                                var IDCurso = localStorage.getItem("IDCurso");
+                                var FK_Becario = localStorage.getItem("FK_Becario");
+                                var empresa = localStorage.getItem("empresa");
+                                var NomJson = 'DatosEvaluacionD_'+empresa;
+                                var html = '';        
+                                app.request({
+                                    url: cordova.file.dataDirectory + "jsons_capacitacion/"+NomJson+".json",
+                                    method: 'GET',
+                                    dataType: 'json',
+                                    success: function (data) {
+                                        var length = data.length;
+                                        if(length == 0){
+                                        } else {
+                                            for (var j = 0; j < data.length; j++) {
+                                                if(data[j].FK_IDCurso == IDCurso && data[j].FK_Becario == FK_Becario){
+                                                    var check = ''
+                                                    data[j].apto == 1 ? check = 'checked': check = '';
+                                                    html += `<div class="timeline-item">
+                                                        <div class="timeline-item-date">${data[j].fecha}</div>
+                                                        <div class="timeline-item-content">
+                                                            <div class="timeline-item-time">Puntos Obtenidos</div>
+                                                            <div class="timeline-item-text">${data[j].Valores}</div>
+                                                            <div class="timeline-item-time">Calificación</div>
+                                                            <div class="timeline-item-text">${data[j].califf}</div>
+                                                            <div class="timeline-item-time">Observaciones</div>
+                                                            <div class="timeline-item-text">${data[j].observaciones}</div>
+                                                        </div>
+                                                    </div>`;
+                                                }
+                                            }
+                                        }
+                                        $(".timeline-month").html(html);
+                                    }
+                                });
+                                $("#div_calificaciones").css("display", "block")
+                            }
+                            app.preloader.hide();
                         }
                     );
                 },
-                function(error){},
+                function(error){app.preloader.hide();},
                 function(){}
             );
-
+            
             form = '';
             databaseHandler.db.transaction(
                 function(tx){
@@ -155,6 +223,7 @@ return {
                         "Select * from cursoCiertoFalso where id_cedula= ?",
                         [id_cedula],
                         function(tx, results){
+                            app.preloader.show('red');
                             var length = results.rows.length;
                             var j = 0;
                             var respuestas = 0;
@@ -174,10 +243,11 @@ return {
                                 `;
                             }
                             $("#evaluacion_div").html(form);
+                            app.preloader.hide();
                         }
                     );
                 },
-                function(error){},
+                function(error){app.preloader.hide();},
                 function(){}
             );
         }

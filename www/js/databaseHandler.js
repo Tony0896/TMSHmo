@@ -24,7 +24,7 @@ var databaseHandler = {
                     }
                 );
                 tx.executeSql(
-                    "create table if not exists datosGeneralesCurso(id_dato integer primary key, id_cedula integer, fecha text, nombreInstructor text, id_instructor integer, id_candidato integer, nombreCandidato text, edad float, telCelular int, antecedentesManejo text, name_course text, fecha_captura text, id_course integer, apto integer, observaciones text, firmaInstructor blob, promedio float, costo float, ID_AT int, Prueba int)",
+                    "create table if not exists datosGeneralesCurso(id_dato integer primary key, id_cedula integer, fecha text, nombreInstructor text, id_instructor integer, id_candidato integer, nombreCandidato text, edad float, telCelular int, antecedentesManejo text, name_course text, fecha_captura text, id_course integer, apto integer, observaciones text, firmaInstructor blob, promedio float, costo float, ID_AT int, Prueba int, OpDiario int)",
                     [],
                     function(tx, results){
                         // console.log("Se creo Servicio tecnico DIPREC correctamente!");
@@ -74,7 +74,7 @@ var databaseHandler = {
                     }
                 );
                 tx.executeSql(
-                    "create table if not exists CAP_RespuestasMultiple(id_curso integer primary key, id_cedula integer, FK_IDPregunta integer, Pregunta text, FK_IDCurso integer, Respuesta integer, fecha text)",
+                    "create table if not exists CAP_RespuestasMultiple(id_curso integer primary key, id_cedula integer, FK_IDPregunta integer, Pregunta text, FK_IDCurso integer, Respuesta integer, fecha text, Justifica int, Justificacion text)",
                     [],
                     function(tx, results){
                         // console.log("Se creo Servicio tecnico DIPREC correctamente!");

@@ -33,7 +33,7 @@
                     <div class="title">Bienvenido</div>
                 </nav>
                 <div class="toolbar tabbar tabbar-labels toolbar-bottom">
-                    <div class="toolbar-inner" style="background-color: #005D99;">
+                    <div class="toolbar-inner" style="background-color: #2B5875;">
                         <a href="#tab-1" class="tab-link tab-link-active">
                             <i class="icon material-icons md-only">account_circle</i>
                             <span class="tabbar-label">Usuario</span>
@@ -198,7 +198,7 @@
                                             style="background-color:white;margin-top: 0;margin-bottom: 0;">
                                             <p style="margin-bottom: 15px;font-size: 1.2em;">
                                                 <label
-                                                    style="color:#005D99;font-family: 'ITC Avant Garde Gothic', sans-serif;font-weight: 600;">Sin
+                                                    style="color:#2B5875;font-family: 'ITC Avant Garde Gothic', sans-serif;font-weight: 600;">Sin
                                                     Terminar</label>
                                             </p>
                                             <ul id="pendientes" style="background-color: white;">
@@ -206,7 +206,7 @@
                                             <hr>
                                             <p style="margin-bottom: 15px;font-size: 1.2em;">
                                                 <label
-                                                    style="color:#005D99;font-family: 'ITC Avant Garde Gothic', sans-serif;font-weight: 600;">Por
+                                                    style="color:#2B5875;font-family: 'ITC Avant Garde Gothic', sans-serif;font-weight: 600;">Por
                                                     enviar</label>
                                             </p>
                                             <ul id="bandeja" style="background-color: white;">
@@ -335,7 +335,7 @@
             alert("Failed because: "+message);
         }
         function updateData() {
-            var urlBase2 = "http://192.168.100.6/Desarrollo/CISAApp/HMOFiles/JSONS";
+            var urlBase2 = "http://192.168.100.3/Desarrollo/CISAApp/HMOFiles/JSONS";
             // var urlBase2 = "http://192.168.1.71/Desarrollo/CISAApp/HMOFiles/JSONS";
             // var urlBase2 = "http://mantto.ci-sa.com.mx/www.CISAAPP.com";
             if (localStorage.getItem("Modulos")) {
@@ -492,7 +492,7 @@
         }
         // Evento de inicio de base de datos y consuLtas
         document.addEventListener("deviceready", function () {
-            StatusBar.backgroundColorByHexString("#005D99");
+            StatusBar.backgroundColorByHexString("#2B5875");
             StatusBar.styleLightContent();
             //cambio de picture()
             var empresa = localStorage.getItem("empresa");

@@ -13,8 +13,8 @@ body{
             justify-content: center;
     -webkit-box-align: center;
             align-items: center;
-    background: #124f90;
-    /* background-image: url("./../img/screen/screen.png") */
+    background: #355274;
+    background-image: url("./../img/screen/screen.png")
   }
   
   .dank-ass-loader {
@@ -38,7 +38,7 @@ body{
     text-shadow: 2px 2px 2px rgb(255, 255, 255);
   }
   .loader-image{
-    width: 80vw;
+    width: 40vw;
     margin-bottom: 30vw;
   }
   #contenedor {

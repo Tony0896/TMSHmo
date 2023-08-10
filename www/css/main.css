@@ -154,7 +154,7 @@ iframe {
   justify-content: center;
   align-items: center;
   padding: 15px;
-  background: #124F90;
+  background-image: url("./../img/screen/screen.png")
 }
 
 
@@ -206,7 +206,7 @@ iframe {
   height: 100%;
   top: 0;
   left: 0;
-  background-color: #005D99;
+  background-color: #2B5875;
 }
 
 
@@ -390,7 +390,7 @@ input.input100 {
   bottom: 0px;
   display: flex;
   height: 27px;
-  background-color: #005D99;
+  background-color: #2B5875;
   align-items: center;
   justify-content: center;
 }

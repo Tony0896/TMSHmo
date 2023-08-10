@@ -510,7 +510,7 @@ function llevarTodo(id_cedula,tipo_cedula){
                                                     var fechag = item2.fecha;
                                                     item2.OpCorrecta == item2.Respuesta ? correctas = correctas + 1: null;
                                                     fechag = fechag.replace(" ", "T");
-                                                    cursoCiertoFalso[i] = {'Valor':i, 'FK_IDCurso': item2.FK_IDCurso, 'FK_IDPregunta': item2.FK_IDPregunta, 'Pregunta': item2.Pregunta, 'Respuesta': item2.Respuesta, 'fecha': fechag};
+                                                    cursoCiertoFalso[i] = {'Valor':i, 'FK_IDCurso': item2.FK_IDCurso, 'FK_IDPregunta': item2.FK_IDPregunta, 'Pregunta': item2.Pregunta, 'Respuesta': item2.Respuesta,'Justificacion': item2.Justificacion, 'fecha': fechag};
                                                 }
                                                 
                                                 databaseHandler.db.transaction(

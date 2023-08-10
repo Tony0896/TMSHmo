@@ -426,12 +426,12 @@ var productHandler={
           function () {}
         );
   },
-  addDatosPrueba1: function (id_cedula, fecha, nombreInstructor, id_instructor, id_candidato, nombreCandidato, edad, telCelular, antecedentesManejo, name_course, fecha_captura, id_course, IDTipoCurso, ID_AT, costo, Prueba){
+  addDatosPrueba1: function (id_cedula, fecha, nombreInstructor, id_instructor, id_candidato, nombreCandidato, edad, telCelular, antecedentesManejo, name_course, fecha_captura, id_course, IDTipoCurso, ID_AT, costo, Prueba, OpDiario){
     databaseHandler.db.transaction(
         function (tx) {
           tx.executeSql(
-            "insert into datosGeneralesCurso(id_cedula, fecha, nombreInstructor, id_instructor, id_candidato, nombreCandidato, edad, telCelular, antecedentesManejo, name_course, fecha_captura, id_course, ID_AT, costo, Prueba) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-            [id_cedula, fecha, nombreInstructor, id_instructor, id_candidato, nombreCandidato, edad, telCelular, antecedentesManejo, name_course, fecha_captura, id_course, ID_AT, costo, Prueba],
+            "insert into datosGeneralesCurso(id_cedula, fecha, nombreInstructor, id_instructor, id_candidato, nombreCandidato, edad, telCelular, antecedentesManejo, name_course, fecha_captura, id_course, ID_AT, costo, Prueba, OpDiario) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            [id_cedula, fecha, nombreInstructor, id_instructor, id_candidato, nombreCandidato, edad, telCelular, antecedentesManejo, name_course, fecha_captura, id_course, ID_AT, costo, Prueba, OpDiario],
             function (tx, results) {
               if(IDTipoCurso == 5){
                 app.dialog.close();
@@ -532,12 +532,12 @@ var productHandler={
           function () {}
         );
   },
-  insertPreguntasMultiple: function (id_cedula,IDPregunta,Pregunta,id_curso,aux,aux2){
+  insertPreguntasMultiple: function (id_cedula,IDPregunta,Pregunta,Justifica,id_curso,aux,aux2){
     databaseHandler.db.transaction(
         function (tx) {
           tx.executeSql(
-            "insert into CAP_RespuestasMultiple(id_cedula, FK_IDPregunta, Pregunta , FK_IDCurso, Respuesta, fecha) values(?, ?, ? , ?, ?, ?)",
-            [id_cedula,IDPregunta,Pregunta,id_curso,0,getDateWhitZeros()],
+            "insert into CAP_RespuestasMultiple(id_cedula, FK_IDPregunta, Pregunta, Justifica, FK_IDCurso, Respuesta, fecha) values(?, ?, ?, ? , ?, ?, ?)",
+            [id_cedula, IDPregunta, Pregunta, Justifica, id_curso, 0, getDateWhitZeros()],
             function (tx, results) {
               if(aux == aux2){
                 app.dialog.close();

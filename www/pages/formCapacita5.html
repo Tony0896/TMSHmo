@@ -5,7 +5,7 @@
 </style>
 <template>
     <div class="page">
-        <div class="navbar" style="background-color: #005D99;height: 5px;">
+        <div class="navbar" style="background-color: #2B5875;height: 5px;">
             <div class="left top-left" style="justify-content: space-between;">
                 <a href="javascript:location.reload()"
                     style="margin-left: 10px; display: inline-flex;align-items: center;">
@@ -13,13 +13,13 @@
                 </a>
                 <div class="title" style="font-size: 18px;">Cursos</div>
                 <a style="margin-right: 10px;">
-                    <i class="icon material-icons md-only" style="color: #005D99; font-weight: 900;">arrow_back</i>
+                    <i class="icon material-icons md-only" style="color: #2B5875; font-weight: 900;">arrow_back</i>
                 </a>
             </div>
         </div>
 
         <div class="toolbar tabbar toolbar-bottom">
-            <div class="toolbar-inner" style="background-color: #005D99;" id="toolbar_down">
+            <div class="toolbar-inner" style="background-color: #2B5875;" id="toolbar_down">
                 <a href="#" onclick="guardarCursoCiertoFalso();"
                     style="margin: auto;color: #fff;font-weight: bold;font-size: 18px;">Guardar <i
                         class="icon material-icons md-only" style="display: inline-block;">chevron_right</i></a>
@@ -48,7 +48,7 @@
                             <span class="span FWM-span-form span-dato" id="nombreCandidato" name="Nombre Candidato" style="margin-top: 0 !important;"></span>
                         </div>
 
-                        <div class="list list-strong list-outline-ios list-dividers-ios inset-md accordion-list">
+                        <div class="list list-strong list-outline-ios list-dividers-ios inset-md accordion-list" id="div_calificaciones" style="display: none;">
                             <ul>
                                 <li class="accordion-item">
                                     <a class="item-link item-content">
@@ -147,43 +147,8 @@
     return {
         on: {
             pageInit: function () {
+                app.preloader.show('red');
                 var id_cedula = localStorage.getItem("IdCedula");
-                
-                var IDCurso = localStorage.getItem("IDCurso");
-                var FK_Becario = localStorage.getItem("FK_Becario");
-                var empresa = localStorage.getItem("empresa");
-                var NomJson = 'DatosEvaluacionD_'+empresa;
-                var html = '';        
-                app.request({
-                    url: cordova.file.dataDirectory + "jsons_capacitacion/"+NomJson+".json",
-                    method: 'GET',
-                    dataType: 'json',
-                    success: function (data) {
-                        var length = data.length;
-                        if(length == 0){
-                        } else {
-                            for (var j = 0; j < data.length; j++) {
-                                if(data[j].FK_IDCurso == IDCurso && data[j].FK_Becario == FK_Becario){
-                                    var check = ''
-                                    data[j].apto == 1 ? check = 'checked': check = '';
-                                    html += `<div class="timeline-item">
-                                        <div class="timeline-item-date">${data[j].fecha}</div>
-                                        <div class="timeline-item-content">
-                                            <div class="timeline-item-time">Puntos Obtenidos</div>
-                                            <div class="timeline-item-text">${data[j].Valores}</div>
-                                            <div class="timeline-item-time">Calificación</div>
-                                            <div class="timeline-item-text">${data[j].califf}</div>
-                                            <div class="timeline-item-time">Observaciones</div>
-                                            <div class="timeline-item-text">${data[j].observaciones}</div>
-                                        </div>
-                                    </div>`;
-                                }
-                            }
-                        }
-                        $(".timeline-month").html(html);
-                    }
-                });
-
                 databaseHandler.db.transaction(
                     function(tx){
                         tx.executeSql(
@@ -196,10 +161,51 @@
                                 $("#fecha").html(item2.fecha);
                                 $("#nombreInstructor").html(item2.nombreInstructor);
                                 $("#nombreCandidato").html(item2.nombreCandidato);
+                                if (item2.OpDiario == 1) {
+                                    console.log("si diario")
+                                    var IDCurso = localStorage.getItem("IDCurso");
+                                    var FK_Becario = localStorage.getItem("FK_Becario");
+                                    var empresa = localStorage.getItem("empresa");
+                                    var NomJson = 'DatosEvaluacionD_'+empresa;
+                                    var html = '';        
+                                    app.request({
+                                        url: cordova.file.dataDirectory + "jsons_capacitacion/"+NomJson+".json",
+                                        method: 'GET',
+                                        dataType: 'json',
+                                        success: function (data) {
+                                            var length = data.length;
+                                            if(length == 0){
+                                            } else {
+                                                for (var j = 0; j < data.length; j++) {
+                                                    if(data[j].FK_IDCurso == IDCurso && data[j].FK_Becario == FK_Becario){
+                                                        var check = ''
+                                                        data[j].apto == 1 ? check = 'checked': check = '';
+                                                        html += `<div class="timeline-item">
+                                                            <div class="timeline-item-date">${data[j].fecha}</div>
+                                                            <div class="timeline-item-content">
+                                                                <div class="timeline-item-time">Puntos Obtenidos</div>
+                                                                <div class="timeline-item-text">${data[j].Valores}</div>
+                                                                <div class="timeline-item-time">Calificación</div>
+                                                                <div class="timeline-item-text">${data[j].califf}</div>
+                                                                <div class="timeline-item-time">Observaciones</div>
+                                                                <div class="timeline-item-text">${data[j].observaciones}</div>
+                                                            </div>
+                                                        </div>`;
+                                                    }
+                                                }
+                                            }
+                                            $(".timeline-month").html(html);
+                                            app.preloader.hide();
+                                        }
+                                    });
+                                    $("#div_calificaciones").css("display", "block")
+                                } else {
+                                    app.preloader.hide();
+                                }
                             }
                         );
                     },
-                    function(error){},
+                    function(error){app.preloader.hide();},
                     function(){}
                 );
 
@@ -215,6 +221,7 @@
                                 var PuntosCurso = 0;
                                 let OpCorrecta = 0
                                 for(var i = 0; i< length; i++){
+                                    app.preloader.show('red');
                                     j++;
                                     var checked1 = '';
                                     var checked2 = '';
@@ -238,10 +245,11 @@
                                 var califf = 0;
                                 getCalificacionCursoValor(PuntosCurso)
                                 $("#calificacion_number").val(PuntosCurso);
+                                app.preloader.hide();
                             }
                         );
                     },
-                    function(error){},
+                    function(error){app.preloader.hide();},
                     function(){}
                 );
             }
