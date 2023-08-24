@@ -16,6 +16,12 @@ function logaout() {
     );
 }
 
+function cambiaCamara(){
+    let camara = $("#camara_activa").val()
+    localStorage.setItem("camera",camara)
+    swal("", "Se cambio la configuracion de la camara.", "success");
+}
+
 function deleteForm() {
     document.getElementById("demo-form").reset();
 }
@@ -98,35 +104,39 @@ function changeCamera(check) {
     }
 }
 function capturePhoto() {
-    var camera = 1;
+    var camera = localStorage.getItem("camera");
     if (camera == 0) {
         var camera = app.popup.create({
             content: `
-                <div class="popup" id="camera">
+                <div class="popup" id="camera" style="display: block;width: 100%;height: 100%;margin-top: 0px;margin-left: 0px;top: 0;left: 0;">
                     <div class="app">
                     <div id="deviceready camera-Field-frame">
                         <div class="top"></div>
                         <canvas id="camera-frame" style="display: none;"></canvas>
                         <video id="camera-view" autoplay playsinline class="raster" style="display: none;"></video>
                         <img src="" id="phototaked">
-                        <div class="camera">
-                            <div class="take" id="take" onclick="onTake()">
-                                <div class="bubble-take"></div>
+                        <div>
+                            <div class="left-action">
+                                <div class="cancel popup-close" id="cancelCamera" onClick="onCancelCamera()"><img class="image-cancel" src="img/cerrar_camera.svg"></div>
+                                <div class="cancel " id="cancelPicure" onClick="onCancelPicture()"><img class="image-cancel" src="img/cerrar_camera.svg"></div>
                             </div>
-                            <div class="select" id="select" style="display: none;" onClick="onDone()"><img id="img-select" src="img/validar_camera.svg"></div>
+                            <div class="camera">
+                                <div class="take" id="take" onclick="onTake()">
+                                    <div class="bubble-take"></div>
+                                </div>
+                                <div class="select" id="select" style="display: none;" onClick="onDone()"><img id="img-select" src="img/validar_camera.svg"></div>
+                            </div>
+                            <div class="right-action">
+                                <div class="switch" id="switch" onClick="onSwitch()"><img class="image-switch" src="img/flip.svg"></div>
+                            </div>
                         </div>
-                        <div class="left-action">
-                            <div class="cancel popup-close" id="cancelCamera" onClick="onCancelCamera()"><img class="image-cancel" src="img/cerrar_camera.svg"></div>
-                            <div class="cancel " id="cancelPicure" onClick="onCancelPicture()"><img class="image-cancel" src="img/cerrar_camera.svg"></div>
-                        </div>
+                        
                         <div class="actions">
-                            <div class="action torch" id="torch" onClick="onTorch()"><img id="flash" src="img/flash_off.svg" width="30px"></div>
+                            <div class="action torch" id="torch" onClick="onTorch()"><img id="flash" src="img/flash_off.svg" width="30px" style="display:none;"></div>
                             <div class="action rotate-right" id="rotateRight" onClick="onRotateRight()" style="display:none"><img id="flash" src="img/rotate-right.svg" width="30px"></div>
                             <div class="action rotate-left" id="rotateLeft" onClick="onRotateLeft()" style="display:none"><img id="flash" src="img/rotate-left.svg" width="30px"></div>
                         </div>
-                        <div class="right-action">
-                            <div class="switch" id="switch" onClick="onSwitch()"><img class="image-switch" src="img/flip.svg"></div>
-                        </div>
+                        
                         <audio id="audio" controls style="display: none;">
                             <source type="audio/mp3" src="img/camera.mp3">
                         </audio>
@@ -240,6 +250,9 @@ function moveMenu(val) {
             iniciarDesincorporaciones();
         } else if (Modulos == "Recaudo") {
             preingresoRecaudo();
+        } else if(Modulos == "tecnologiasHmo"){
+            preInicioTech()
+            // app.views.main.router.navigate({ name: 'yallegueTecnologiasHMO'});
         }
     }
 }
@@ -621,6 +634,8 @@ function recargacedulas() {
         var tipo = "checklist";
     } else if (localStorage.getItem("Modulos") == 'Limpieza') {
         var tipo = "Limpieza";
+    } else {
+        var tipo = localStorage.getItem("Modulos")
     }
 
     var estatus = 0;
@@ -637,10 +652,14 @@ function recargacedulas() {
                             $("#pendientes").append("<li id='conc" + item2.id_cedula + "'><div class='item-content'><div class='item-media'><i class='icon'><img src='img/circuloNaranja.png' width='20px' height='20px' /></i></div><div class='item-inner'><div class='item-title'> <div> " + item2.nombre_cliente + "| " + fechas[0] + "</div> <div style='color: #afafaf;font-size: 12px;margin-left: 10px;margin-top: 8px;font-weight: bold;'>Rev. Imagen</div> </div><div class='item-after'><a href='#' onclick='continuarCed(`" + item2.id_cedula + "`,1);' style='border: none; outline:none;'><i class='material-icons md-light' style='font-size:35px;color:#00A7B5'>play_circle_outline</i></a>&nbsp;&nbsp;&nbsp;<a href='#' onclick='EliminarReg(" + item2.id_cedula + ",`" + item2.tipo_cedula + "`)' style='border: none; outline:none;'><i class='material-icons md-light' style='font-size:35px;color:red'>delete_forever</i></a></div></div></div></li>");
                         } else if (item2.tipo_cedula == 'Limpieza') {
                             $("#pendientes").append("<li id='conc" + item2.id_cedula + "'><div class='item-content'><div class='item-media'><i class='icon'><img src='img/circuloNaranja.png' width='20px' height='20px' /></i></div><div class='item-inner'><div class='item-title'> <div> " + item2.nombre_cliente + "| " + fechas[0] + "</div> <div style='color: #afafaf;font-size: 12px;margin-left: 10px;margin-top: 8px;font-weight: bold;'>Rev. Limpieza</div> </div><div class='item-after'><a href='#' onclick='continuarCed(`" + item2.id_cedula + "`,2);' style='border: none; outline:none;'><i class='material-icons md-light' style='font-size:35px;color:#00A7B5'>play_circle_outline</i></a>&nbsp;&nbsp;&nbsp;<a href='#' onclick='EliminarReg(" + item2.id_cedula + ",`" + item2.tipo_cedula + "`)' style='border: none; outline:none;'><i class='material-icons md-light' style='font-size:35px;color:red'>delete_forever</i></a></div></div></div></li>");
-                        } else if (item2.tipo_cedula == 'Desincorporaciones') {
-                            $("#pendientes").append("<li id='conc" + item2.id_cedula + "'><div class='item-content'><div class='item-media'><i class='icon'><img src='img/circuloNaranja.png' width='20px' height='20px' /></i></div><div class='item-inner'><div class='item-title'> <div> " + item2.nombre_cliente + "| " + fechas[0] + "</div> </div><div class='item-after'><a href='#' onclick='continuarCed(`" + item2.id_cedula + "`,3);' style='border: none; outline:none;'><i class='material-icons md-light' style='font-size:35px;color:#00A7B5'>play_circle_outline</i></a>&nbsp;&nbsp;&nbsp;</div></div></div></li>");
-                        } else if (item2.tipo_cedula == 'Recaudo') {
-                            $("#pendientes").append("<li id='conc" + item2.id_cedula + "'><div class='item-content'><div class='item-media'><i class='icon'><img src='img/circuloNaranja.png' width='20px' height='20px' /></i></div><div class='item-inner'><div class='item-title'> <div> " + item2.nombre_cliente + "| " + fechas[0] + "</div> <div style='color: #afafaf;font-size: 12px;margin-left: 10px;margin-top: 8px;font-weight: bold;'>Recaudo</div> </div><div class='item-after'><a href='#' onclick='continuarCed(`" + item2.id_cedula + "`,4);' style='border: none; outline:none;'><i class='material-icons md-light' style='font-size:35px;color:#00A7B5'>play_circle_outline</i></a>&nbsp;&nbsp;&nbsp;<a href='#' onclick='EliminarReg(" + item2.id_cedula + ",`" + item2.tipo_cedula + "`)' style='border: none; outline:none;'><i class='material-icons md-light' style='font-size:35px;color:red'>delete_forever</i></a></div></div></div></li>");
+                        } else if (item2.tipo_cedula == 'Capacitación') {
+                            if(item2.nombre_evalua == 'Prueba Manejo'){
+                                $("#pendientes").append("<li id='conc" + item2.id_cedula + "'><div class='item-content'><div class='item-media'><i class='icon'><img src='img/circuloNaranja.png' width='20px' height='20px' /></i></div><div class='item-inner'><div class='item-title'> <div> " + item2.nombre_cliente + "| " + fechas[0] + "</div> <div style='color: #afafaf;font-size: 12px;margin-left: 10px;margin-top: 8px;font-weight: bold;'>Prueba Manejo</div> </div><div class='item-after'><a href='#' onclick='continuarCed(`" + item2.id_cedula + "`,5);' style='border: none; outline:none;'><i class='material-icons md-light' style='font-size:35px;color:#00A7B5'>play_circle_outline</i></a>&nbsp;&nbsp;&nbsp;<a href='#' onclick='EliminarReg(" + item2.id_cedula + ",`" + item2.tipo_cedula + "`)' style='border: none; outline:none;'><i class='material-icons md-light' style='font-size:35px;color:red'>delete_forever</i></a></div></div></div></li>");
+                            } else {
+                                $("#pendientes").append("<li id='conc" + item2.id_cedula + "'><div class='item-content'><div class='item-media'><i class='icon'><img src='img/circuloNaranja.png' width='20px' height='20px' /></i></div><div class='item-inner'><div class='item-title'> <div> " + item2.nombre_cliente + "| " + fechas[0] + "</div> <div style='color: #afafaf;font-size: 12px;margin-left: 10px;margin-top: 8px;font-weight: bold;'>"+item2.nombre_evalua+"</div> </div><div class='item-after'><a href='#' onclick='continuarCedCap(`" + item2.id_cedula + "`,`" +item2.geolocalizacion_salida+ "`);' style='border: none; outline:none;'><i class='material-icons md-light' style='font-size:35px;color:#00A7B5'>play_circle_outline</i></a>&nbsp;&nbsp;&nbsp;<a href='#' onclick='EliminarReg(" + item2.id_cedula + ",`" + item2.tipo_cedula + "`)' style='border: none; outline:none;'><i class='material-icons md-light' style='font-size:35px;color:red'>delete_forever</i></a></div></div></div></li>");
+                            }
+                        } else {
+                            $("#pendientes").append("<li id='conc" + item2.id_cedula + "'><div class='item-content'><div class='item-media'><i class='icon'><img src='img/circuloNaranja.png' width='20px' height='20px' /></i></div><div class='item-inner'><div class='item-title'> <div> " + item2.nombre_cliente + "| " + fechas[0] + "</div> <div style='color: #afafaf;font-size: 12px;margin-left: 10px;margin-top: 8px;font-weight: bold;'>"+item2.nombre_evalua+"</div> </div><div class='item-after'><a href='#' onclick='continuarCedCap(`" + item2.id_cedula + "`,`" +item2.geolocalizacion_salida+ "`);' style='border: none; outline:none;'><i class='material-icons md-light' style='font-size:35px;color:#00A7B5'>play_circle_outline</i></a>&nbsp;&nbsp;&nbsp;<a href='#' onclick='EliminarReg(" + item2.id_cedula + ",`" + item2.tipo_cedula + "`)' style='border: none; outline:none;'><i class='material-icons md-light' style='font-size:35px;color:red'>delete_forever</i></a></div></div></div></li>");
                         }
                     }
                 },
@@ -787,7 +806,7 @@ function IniciaCheckList() {
     }
 }
 
-function validaradios(id, numero) {
+function validaradios(id, numero, pregunta, multiple, FK_equipo) {
     if (numero == 3) {
         var ids = id.split("-");
         var check = ids[1];
@@ -815,6 +834,33 @@ function validaradios(id, numero) {
             }
         }
         actualizacheck(id);
+    } else if(numero == 4){
+        var ids = id.split("-");
+        var check = ids[1];
+        if(check.includes('1')){
+            var valCheck = document.getElementById(ids[0]+"-"+ids[1]).checked;
+            if(valCheck ==true){
+                var otherCheck = ids[0] + "-2";
+                document.getElementById(otherCheck).checked = false;
+                var labels1 = ids[0].replace('radio','label') +"-1";
+                var labels2 = ids[0].replace('radio','label') +"-2";
+                $("#"+labels1).addClass("checked");
+                $("#"+labels2).removeClass("checked");
+            }
+        }else if(check.includes('2')){
+            var valCheck = document.getElementById(ids[0]+"-"+ids[1]).checked;
+            if(valCheck ==true){
+                var otherCheck = ids[0] + "-1";
+                document.getElementById(otherCheck).checked = false;
+                var labels1 = ids[0].replace('radio','label') +"-1";
+                var labels2 = ids[0].replace('radio','label') +"-2";
+                $("#"+labels2).addClass("checked");
+                $("#"+labels1).removeClass("checked");
+                var id_pregunta = ids[0].replace('radio','');
+                SeleccionarDanosControlTec(id_pregunta, pregunta, multiple, FK_equipo);
+            }
+        }
+        actualizacheckControlTec(id);
     }
 }
 
@@ -2251,7 +2297,7 @@ function edit_apoyo(val, estatus) {
 }
 function sincronizaDatos() {
     var EmpresaID = localStorage.getItem("empresa");
-    // var urlBase2 = "http://192.168.100.3/Desarrollo/CISAApp";
+    // var urlBase2 = "http://192.168.100.4/Desarrollo/CISAApp";
     var urlBase2 = "http://mantto.ci-sa.com.mx/www.CISAAPP.com";
     var url = urlBase2 + "/Exec/datos_desin.php?empresa=" + EmpresaID;
     var url2 = urlBase2 + "/Exec/datos_desin_H.php?empresa=" + EmpresaID;
@@ -2502,7 +2548,7 @@ function generaEvaluacion(val) {
                                         for (var j = 0; j < data.length; j++) {
                                             if (data[j].IDNombreCurso == id_course) {
                                                 aux2++;
-                                                productHandler.insertPreguntasCiertoFalso(id_cedula, data[j].IDPregunta, data[j].Pregunta, data[j].texto1, data[j].texto2, id_course, aux, aux2);
+                                                productHandler.insertPreguntasCiertoFalso(id_cedula, data[j].IDPregunta, data[j].Pregunta, data[j].texto1, data[j].texto2, data[j].OpCorrecta, id_course, aux, aux2);
                                             }
                                         }
                                     }
@@ -2636,10 +2682,7 @@ function generaEvaluacion(val) {
     }
 }
 
-function guardarCursoCiertoFalso() {
-    // if($("#observaciones").val() && $("#signate").val()){
-    //     console.log("true")
-    // } 
+function guardarCursoCiertoFalsoPuntuacion(){
     var id_cedula = localStorage.getItem("IdCedula");
     var observaciones = $("#observaciones").val();
     var firmaInstructor = $("#signate").val();
@@ -2647,45 +2690,131 @@ function guardarCursoCiertoFalso() {
     $("#cb3").prop("checked") == true ? apto = 1 : apto = 0;
 
     databaseHandler.db.transaction(
-        function (tx) {
-            tx.executeSql("UPDATE datosGeneralesCurso SET apto = ?, observaciones = ?, firmaInstructor = ? WHERE id_cedula = ?",
-                [apto, observaciones, firmaInstructor, id_cedula],
-                function (tx, results) {
-                    swal({
-                        title: "Aviso",
-                        text: "¿Estas seguro de querer finalizar la prueba?",
-                        icon: "warning",
-                        buttons: true,
-                        dangerMode: true,
-                    }).then((RESP) => {
-                        if (RESP == true) {
-                            var fecha_salida = getDateWhitZeros();
-                            var estatus = 1;
-                            databaseHandler.db.transaction(
-                                function (tx) {
-                                    tx.executeSql("UPDATE cedulas_general SET fecha_salida  = ?,estatus = ? WHERE id_cedula = ?",
-                                        [fecha_salida, estatus, id_cedula],
-                                        function (tx, results) {
-                                            window.location.href = "./menu.html";
-                                        },
-                                        function (tx, error) {
-                                            swal("Error al guardar", error.message, "error");
-                                        }
-                                    );
-                                },
-                                function (error) { },
-                                function () { }
-                            );
-                        }
-                    });
-                },
-                function (tx, error) {
-                    console.error("Error al guardar cierre: " + error.message);
+        function(tx){
+            tx.executeSql(
+                "Select COUNT(id_cedula) as cuenta from CAP_RespuestasSiNoPuntuacion where id_cedula= ? AND Respuesta is null",
+                [id_cedula],
+                function(tx, results){
+                    var item3 = results.rows.item(0);
+                    if(item3.cuenta > 0){
+                        swal("", "Aún faltan preguntas por contestar", "warning");
+                        return false
+                    } else {
+                        databaseHandler.db.transaction(
+                            function (tx) {
+                                tx.executeSql("UPDATE datosGeneralesCurso SET apto = ?, observaciones = ?, firmaInstructor = ? WHERE id_cedula = ?",
+                                    [apto, observaciones, firmaInstructor, id_cedula],
+                                    function (tx, results) {
+                                        swal({
+                                            title: "Aviso",
+                                            text: "¿Estas seguro de querer finalizar la prueba?",
+                                            icon: "warning",
+                                            buttons: true,
+                                            dangerMode: true,
+                                        }).then((RESP) => {
+                                            if (RESP == true) {
+                                                var fecha_salida = getDateWhitZeros();
+                                                var estatus = 1;
+                                                databaseHandler.db.transaction(
+                                                    function (tx) {
+                                                        tx.executeSql("UPDATE cedulas_general SET fecha_salida  = ?,estatus = ? WHERE id_cedula = ?",
+                                                            [fecha_salida, estatus, id_cedula],
+                                                            function (tx, results) {
+                                                                window.location.href = "./menu.html";
+                                                            },
+                                                            function (tx, error) {
+                                                                swal("Error al guardar", error.message, "error");
+                                                            }
+                                                        );
+                                                    },
+                                                    function (error) { },
+                                                    function () { }
+                                                );
+                                            }
+                                        });
+                                    },
+                                    function (tx, error) {
+                                        console.error("Error al guardar cierre: " + error.message);
+                                    }
+                                );
+                            },
+                            function (error) { },
+                            function () { }
+                        );
+                    }
                 }
             );
         },
-        function (error) { },
-        function () { }
+        function(error){},
+        function(){}
+    );
+}
+
+function guardarCursoCiertoFalso() {
+    var id_cedula = localStorage.getItem("IdCedula");
+    var observaciones = $("#observaciones").val();
+    var firmaInstructor = $("#signate").val();
+    var apto = 0;
+    $("#cb3").prop("checked") == true ? apto = 1 : apto = 0;
+
+    databaseHandler.db.transaction(
+        function(tx){
+            tx.executeSql(
+                "Select COUNT(id_cedula) as cuenta from cursoCiertoFalso where id_cedula= ? AND Respuesta is null",
+                [id_cedula],
+                function(tx, results){
+                    var item3 = results.rows.item(0);
+                    if(item3.cuenta > 0){
+                        swal("", "Aún faltan preguntas por contestar", "warning");
+                        return false
+                    } else {
+                        databaseHandler.db.transaction(
+                            function (tx) {
+                                tx.executeSql("UPDATE datosGeneralesCurso SET apto = ?, observaciones = ?, firmaInstructor = ? WHERE id_cedula = ?",
+                                    [apto, observaciones, firmaInstructor, id_cedula],
+                                    function (tx, results) {
+                                        swal({
+                                            title: "Aviso",
+                                            text: "¿Estas seguro de querer finalizar la prueba?",
+                                            icon: "warning",
+                                            buttons: true,
+                                            dangerMode: true,
+                                        }).then((RESP) => {
+                                            if (RESP == true) {
+                                                var fecha_salida = getDateWhitZeros();
+                                                var estatus = 1;
+                                                databaseHandler.db.transaction(
+                                                    function (tx) {
+                                                        tx.executeSql("UPDATE cedulas_general SET fecha_salida  = ?,estatus = ? WHERE id_cedula = ?",
+                                                            [fecha_salida, estatus, id_cedula],
+                                                            function (tx, results) {
+                                                                window.location.href = "./menu.html";
+                                                            },
+                                                            function (tx, error) {
+                                                                swal("Error al guardar", error.message, "error");
+                                                            }
+                                                        );
+                                                    },
+                                                    function (error) { },
+                                                    function () { }
+                                                );
+                                            }
+                                        });
+                                    },
+                                    function (tx, error) {
+                                        console.error("Error al guardar cierre: " + error.message);
+                                    }
+                                );
+                            },
+                            function (error) { },
+                            function () { }
+                        );
+                    }
+                }
+            );
+        },
+        function(error){},
+        function(){}
     );
 }
 
@@ -3166,8 +3295,8 @@ function actualizaRespuestaSiNoPuntuacion(id, valor, OpCorrecta) {
 function sincronizaDatosCapacitacion() {
     let EmpresaID = 1
     let paso = 1;
-    let urlBase2 = "http://192.168.100.3/Desarrollo/CISAApp/HMOFiles/Exec";
-    // var urlBase2 = "http://192.168.1.71/Desarrollo/CISAApp/HMOFiles/Exec";
+    let urlBase2 = "http://192.168.100.4/Desarrollo/CISAApp/HMOFiles/Exec";
+    // var urlBase2 = "http://192.168.137.205/Desarrollo/CISAApp/HMOFiles/Exec";
     // var urlBase2 = "http://mantto.ci-sa.com.mx/www.CISAAPP.com";
     let url = urlBase2 + "/capacitacion/datos.php?empresa=" + EmpresaID + "&paso=" + paso;
 
@@ -3185,68 +3314,86 @@ function guardarCursoMultiple() {
     var apto = 0;
     $("#cb3").prop("checked") == true ? apto = 1 : apto = 0;
 
-    $("#PuntosCurso").val(0)
     databaseHandler.db.transaction(
-        function (tx) {
+        function(tx){
             tx.executeSql(
-                "Select FK_IDPregunta, Respuesta from CAP_RespuestasMultiple where id_cedula= ?",
+                "Select COUNT(id_cedula) as cuenta from CAP_RespuestasMultiple where id_cedula= ? AND Respuesta is null",
                 [id_cedula],
-                function (tx, results) {
-                    var length = results.rows.length;
-                    var FK_IDPregunta = ''
-                    var Respuesta = ''
-                    for (var i = 0; i < length; i++) {
-                        var item2 = results.rows.item(i);
-                        FK_IDPregunta = item2.FK_IDPregunta
-                        Respuesta = item2.Respuesta
-                        getOpcionesMultiples(FK_IDPregunta, Respuesta, length)
-                    }
-                    databaseHandler.db.transaction(
-                        function (tx) {
-                            tx.executeSql("UPDATE datosGeneralesCurso SET apto = ?, observaciones = ?, firmaInstructor = ? WHERE id_cedula = ?",
-                                [apto, observaciones, firmaInstructor, id_cedula],
-                                function (tx, results) {
-                                    swal({
-                                        title: "Aviso",
-                                        text: "¿Estas seguro de querer finalizar la prueba?",
-                                        icon: "warning",
-                                        buttons: true,
-                                        dangerMode: true,
-                                    }).then((RESP) => {
-                                        if (RESP == true) {
-                                            var fecha_salida = getDateWhitZeros();
-                                            var estatus = 1;
-                                            databaseHandler.db.transaction(
-                                                function (tx) {
-                                                    tx.executeSql("UPDATE cedulas_general SET fecha_salida  = ?,estatus = ? WHERE id_cedula = ?",
-                                                        [fecha_salida, estatus, id_cedula],
-                                                        function (tx, results) {
-                                                            window.location.href = "./menu.html";
-                                                        },
-                                                        function (tx, error) {
-                                                            swal("Error al guardar", error.message, "error");
-                                                        }
-                                                    );
-                                                },
-                                                function (error) { },
-                                                function () { }
-                                            );
+                function(tx, results){
+                    var item3 = results.rows.item(0);
+                    if(item3.cuenta > 0){
+                        swal("", "Aún faltan preguntas por contestar", "warning");
+                        return false
+                    } else {
+                        $("#PuntosCurso").val(0)
+                        databaseHandler.db.transaction(
+                            function (tx) {
+                                tx.executeSql(
+                                    "Select FK_IDPregunta, Respuesta from CAP_RespuestasMultiple where id_cedula= ?",
+                                    [id_cedula],
+                                    function (tx, results) {
+                                        var length = results.rows.length;
+                                        var FK_IDPregunta = ''
+                                        var Respuesta = ''
+                                        for (var i = 0; i < length; i++) {
+                                            var item2 = results.rows.item(i);
+                                            FK_IDPregunta = item2.FK_IDPregunta
+                                            Respuesta = item2.Respuesta
+                                            getOpcionesMultiples(FK_IDPregunta, Respuesta, length)
                                         }
-                                    });
-                                },
-                                function (tx, error) {
-                                    console.error("Error al guardar cierre: " + error.message);
-                                }
-                            );
-                        },
-                        function (error) { },
-                        function () { }
-                    );
+                                        databaseHandler.db.transaction(
+                                            function (tx) {
+                                                tx.executeSql("UPDATE datosGeneralesCurso SET apto = ?, observaciones = ?, firmaInstructor = ? WHERE id_cedula = ?",
+                                                    [apto, observaciones, firmaInstructor, id_cedula],
+                                                    function (tx, results) {
+                                                        swal({
+                                                            title: "Aviso",
+                                                            text: "¿Estas seguro de querer finalizar la prueba?",
+                                                            icon: "warning",
+                                                            buttons: true,
+                                                            dangerMode: true,
+                                                        }).then((RESP) => {
+                                                            if (RESP == true) {
+                                                                var fecha_salida = getDateWhitZeros();
+                                                                var estatus = 1;
+                                                                databaseHandler.db.transaction(
+                                                                    function (tx) {
+                                                                        tx.executeSql("UPDATE cedulas_general SET fecha_salida  = ?,estatus = ? WHERE id_cedula = ?",
+                                                                            [fecha_salida, estatus, id_cedula],
+                                                                            function (tx, results) {
+                                                                                window.location.href = "./menu.html";
+                                                                            },
+                                                                            function (tx, error) {
+                                                                                swal("Error al guardar", error.message, "error");
+                                                                            }
+                                                                        );
+                                                                    },
+                                                                    function (error) { },
+                                                                    function () { }
+                                                                );
+                                                            }
+                                                        });
+                                                    },
+                                                    function (tx, error) {
+                                                        console.error("Error al guardar cierre: " + error.message);
+                                                    }
+                                                );
+                                            },
+                                            function (error) { },
+                                            function () { }
+                                        );
+                                    }
+                                );
+                            },
+                            function (error) { },
+                            function () { }
+                        );
+                    }
                 }
             );
         },
-        function (error) { },
-        function () { }
+        function(error){},
+        function(){}
     );
 }
 function getOpcionesMultiples(FK_IDPregunta, Respuesta, length2) {
@@ -3475,45 +3622,63 @@ function guardarCursoEvidencias() {
     $("#cb3").prop("checked") == true ? apto = 1 : apto = 0;
 
     databaseHandler.db.transaction(
-        function (tx) {
-            tx.executeSql("UPDATE datosGeneralesCurso SET apto = ?, observaciones = ?, firmaInstructor = ? WHERE id_cedula = ?",
-                [apto, observaciones, firmaInstructor, id_cedula],
-                function (tx, results) {
-                    swal({
-                        title: "Aviso",
-                        text: "¿Estas seguro de querer finalizar la prueba?",
-                        icon: "warning",
-                        buttons: true,
-                        dangerMode: true,
-                    }).then((RESP) => {
-                        if (RESP == true) {
-                            var fecha_salida = getDateWhitZeros();
-                            var estatus = 1;
-                            databaseHandler.db.transaction(
-                                function (tx) {
-                                    tx.executeSql("UPDATE cedulas_general SET fecha_salida  = ?,estatus = ? WHERE id_cedula = ?",
-                                        [fecha_salida, estatus, id_cedula],
-                                        function (tx, results) {
-                                            window.location.href = "./menu.html";
-                                        },
-                                        function (tx, error) {
-                                            swal("Error al guardar", error.message, "error");
-                                        }
-                                    );
-                                },
-                                function (error) { },
-                                function () { }
-                            );
-                        }
-                    });
-                },
-                function (tx, error) {
-                    console.error("Error al guardar cierre: " + error.message);
+        function(tx){
+            tx.executeSql(
+                "Select COUNT(id_cedula) as cuenta from CAP_Evidencias where id_cedula= ?",
+                [id_cedula],
+                function(tx, results){
+                    var item3 = results.rows.item(0);
+                    if(item3.cuenta < 0){
+                        swal("", "Aún no haz agregado evidencias", "warning");
+                        return false
+                    } else {
+                        databaseHandler.db.transaction(
+                            function (tx) {
+                                tx.executeSql("UPDATE datosGeneralesCurso SET apto = ?, observaciones = ?, firmaInstructor = ? WHERE id_cedula = ?",
+                                    [apto, observaciones, firmaInstructor, id_cedula],
+                                    function (tx, results) {
+                                        swal({
+                                            title: "Aviso",
+                                            text: "¿Estas seguro de querer finalizar la prueba?",
+                                            icon: "warning",
+                                            buttons: true,
+                                            dangerMode: true,
+                                        }).then((RESP) => {
+                                            if (RESP == true) {
+                                                var fecha_salida = getDateWhitZeros();
+                                                var estatus = 1;
+                                                databaseHandler.db.transaction(
+                                                    function (tx) {
+                                                        tx.executeSql("UPDATE cedulas_general SET fecha_salida  = ?,estatus = ? WHERE id_cedula = ?",
+                                                            [fecha_salida, estatus, id_cedula],
+                                                            function (tx, results) {
+                                                                window.location.href = "./menu.html";
+                                                            },
+                                                            function (tx, error) {
+                                                                swal("Error al guardar", error.message, "error");
+                                                            }
+                                                        );
+                                                    },
+                                                    function (error) { },
+                                                    function () { }
+                                                );
+                                            }
+                                        });
+                                    },
+                                    function (tx, error) {
+                                        console.error("Error al guardar cierre: " + error.message);
+                                    }
+                                );
+                            },
+                            function (error) { },
+                            function () { }
+                        );
+                    }
                 }
             );
         },
-        function (error) { },
-        function () { }
+        function(error){},
+        function(){}
     );
 }
 
@@ -3586,7 +3751,7 @@ function generarCursoManejo() {
                                         for (var j = 0; j < data.length; j++) {
                                             if (data[j].IDNombreCurso == id_course) {
                                                 aux2++;
-                                                productHandler.insertPreguntasCiertoFalso(id_cedula, data[j].IDPregunta, data[j].Pregunta, data[j].texto1, data[j].texto2, id_course, aux, aux2);
+                                                productHandler.insertPreguntasCiertoFalso(id_cedula, data[j].IDPregunta, data[j].Pregunta, data[j].texto1, data[j].texto2, data[j].OpCorrecta, id_course, aux, aux2);
                                             }
                                         }
                                     }
@@ -3852,4 +4017,521 @@ function guardaJustificacion(id){
 }
 
 //fin Capacitacion
+
+//Inicio tecnologiasHmo
+
+function continuarCed2(id_cedula, tipo) {
+    localStorage.setItem("IdCedula", id_cedula);
+
+    if (tipo == 'tecnologiasHmo') {
+        app.views.main.router.back('/yallegueTecnologiasHMO/', { force: true, ignoreCache: true, reload: true });
+    }
+}
+
+function preInicioTech(){
+    swal({
+        title: "Aviso",
+        text: "¿Estas seguro de querer abrir un nuevo registro?",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+    }).then((RESP) => {
+        if (RESP == true) {
+            iniciartecnologiasHmo();
+        }
+    });
+}
+
+function iniciartecnologiasHmo(){
+    var id_usuario = localStorage.getItem("id_usuario");
+    var nombre_usuario = localStorage.getItem("Usuario");
+    var fecha_llegada =  getDateWhitZeros();
+    var horario_programado = fecha_llegada;
+    var nombre_cliente = "Inspección tecnologías";
+    var estatus = 0;
+    var geolocation = '';
+    var id_cliente = localStorage.getItem("empresa");
+    var tipo_cedula = 'tecnologiasHmo';
+    productHandler.addCedulayb(id_usuario,nombre_usuario,fecha_llegada,geolocation,id_cliente,nombre_cliente,horario_programado,estatus,tipo_cedula);
+    databaseHandler.db.transaction(
+        function (tx) {
+            tx.executeSql(
+            "Select MAX(id_cedula) as Id from cedulas_general",
+            [],
+            function (tx, results) {
+                var item = results.rows.item(0);
+                localStorage.setItem("IdCedula", item.Id);
+                app.views.main.router.navigate({ name: 'yallegueTecnologiasHMO'});
+            },
+            function (tx, error) {
+                console.log("Error al guardar cedula: " + error.message);
+            }
+            );
+        },
+        function (error) {},
+        function () {}
+    );
+}
+
+function editarInspeccion(IdHeader){
+    localStorage.setItem("IdHeader", IdHeader);
+    app.views.main.router.navigate({ name: 'formtecnologiasHmo1' });
+}
+
+function inspeccionarUnidad(){
+    if($("#id_unidad").val()){
+        let unidad = $("#autocomplete-dropdown-ajax").val()
+        let id_unidad = $("#id_unidad").val()
+        let id_operador = $("#id_operador").val()
+        let operador = $("#operador").val()
+        let credencial = $("#credencial").val()
+        let fecha_inicio = getDateWhitZeros();
+        let progress = 0;
+        let dialog = app.dialog.progress('Trabajando... ', progress, 'red');
+        let id_empresa = localStorage.getItem("empresa");
+        let id_cedula = localStorage.getItem("IdCedula")
+        let NomJson = 'datos_check'+id_empresa;
+
+        productHandler.addDesTechHmoHeader(id_cedula, unidad, id_unidad, id_operador, operador, credencial, fecha_inicio);
+        databaseHandler.db.transaction(
+            function (tx) {
+                tx.executeSql(
+                "Select MAX(IdHeader) as IdHeader from DesTechHeader",
+                [],
+                function (tx, results) {
+                    var item = results.rows.item(0);
+                    localStorage.setItem("IdHeader", item.IdHeader);
+                    app.request({
+                        url: cordova.file.dataDirectory + "jsons_tecnologiasHmo/"+NomJson+".json",
+                        method: 'GET',
+                        dataType: 'json',
+                        success: function (data) {
+                            var aux = data.length;
+                            var aux2=0;
+                            if(aux == 0){
+                                app.dialog.close();
+                                swal("","Algo salió mal.","warning");
+                            }else{
+                                dialog.setText('1 de ' + aux);
+                                for (var j = 0; j < data.length; j++) {
+                                    aux2++;
+                                    productHandler.addDesTechHmoDetails(id_cedula,item.IdHeader, data[j].ID, data[j].Pregunta, data[j].Multiple, data[j].FK_formato, data[j].FK_equipo, aux, aux2);
+                                }
+                            }
+                        }
+                    });
+                },
+                function (tx, error) {
+                    console.log("Error al guardar cedula: " + error.message);
+                }
+                );
+            },
+            function (error) {},
+            function () {}
+        );
+    }else{
+        swal("","Selecciona una unidad para poder continuar.","warning");
+    }
+}
+
+function TerminarCheckListHMO(){
+    let id_cedula = localStorage.getItem("IdCedula");
+    let IdHeader = localStorage.getItem("IdHeader")
+    if($("#ID_personal").val()){
+        databaseHandler.db.transaction(
+            function(tx5){
+                tx5.executeSql("SELECT id_cedula FROM DesTechDetails WHERE id_cedula = ? AND respuesta is null",
+                    [id_cedula],
+                    function(tx5, results){
+                        let length = results.rows.length;
+                        if(length == 0){
+                            let firma = $("#signate").val()
+                            let observaciones = $("#observaciones").val()
+                            if(firma){
+                                databaseHandler.db.transaction(
+                                    function(tx){ tx.executeSql("UPDATE DesTecFirmas SET firma = ?, fecha = ? WHERE id_cedula = ? AND IdHeader = ?;", 
+                                    [firma,getDateWhitZeros(), id_cedula, IdHeader],
+                                    function(tx, results){ 
+                                        databaseHandler.db.transaction(
+                                            function(tx){ tx.executeSql("UPDATE DesTechHeader SET fecha_fin = ?, observaciones= ? WHERE id_cedula = ? AND IdHeader = ?;", 
+                                            [getDateWhitZeros(), observaciones, id_cedula, IdHeader],
+                                            function(tx, results){ regresaTechHmo() },
+                                            function(tx, error){ swal("Error al guardar",error.message,"error"); } ); }, function(error){}, function(){}
+                                        );
+                                 },
+                                    function(tx, error){ swal("Error al guardar",error.message,"error"); } ); }, function(error){}, function(){}
+                                );
+                            } else {
+                                databaseHandler.db.transaction(
+                                    function(tx){ tx.executeSql("UPDATE DesTechHeader SET fecha_fin = ?, observaciones= ? WHERE id_cedula = ? AND IdHeader = ?;", 
+                                    [getDateWhitZeros(), observaciones, id_cedula, IdHeader],
+                                    function(tx, results){ regresaTechHmo() },
+                                    function(tx, error){ swal("Error al guardar",error.message,"error"); } ); }, function(error){}, function(){}
+                                );
+                            }
+                        } else {
+                            swal("", "Debes responder a todos los conceptos para poder continuar", "warning");
+                        }
+                    },
+                    function(tx5, error){
+                        console.error("Error al consultar bandeja de salida: " + error.message);
+                    }
+                );  
+            },
+            function(error){},
+            function(){}
+        );
+    } else {
+        swal({
+            title: "Aviso",
+            text: "Aún no haz elegido un conductor ¿Estas seguro de querer regresar?",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        }).then((RESP) => {
+            if (RESP == true) {
+                regresaTechHmo()
+            }
+        });
+    }
+}
+
+function SeleccionarDanosControlTec(id, pregunta, multiple, FK_equipo){
+    if(multiple == 1){
+        var text = pregunta;
+        let result = text.includes("(");
+        if(result){
+            var resultados = text.split("(");
+            var titulo_modal = resultados[0].trim();
+            var divididos = resultados[1].split(",");
+            var opciones = '<select class="FWM-input" id="opts_modal" multiple>';
+            var quitapar = '';
+            for(i=0; i<divididos.length; i++){
+                quitapar = divididos[i].replace("(","");
+                quitapar = quitapar.replace(")","");
+                quitapar = capitalizarPrimeraLetra(quitapar);
+                opciones = opciones +`<option value=`+quitapar.trim()+`>`+quitapar.trim()+`</option>`;
+            }
+            opciones = opciones+'</select>';
+            CreaModalOptionCtlTec(id,opciones,1,titulo_modal, FK_equipo);
+        }else{
+            var titulo_modal = "";
+            var divididos = text.split(",");
+            var opciones = '<select class="FWM-input" id="opts_modal" multiple>';
+            var quitapar = '';
+            for(i=0; i<divididos.length; i++){
+                quitapar = divididos[i].replace("(","");
+                quitapar = quitapar.replace(")","");
+                quitapar = capitalizarPrimeraLetra(quitapar);
+                opciones = opciones +`<option value=`+quitapar.trim()+`>`+quitapar.trim()+`</option>`;
+            }
+            opciones = opciones+'</select>';
+            var titulo_modal = "";    
+            CreaModalOptionCtlTec(id,opciones,2,titulo_modal, FK_equipo);
+        }
+        
+    }else{
+        var opciones = false;
+        var titulo_modal = "";
+        CreaModalOptionCtlTec(id,opciones,3,titulo_modal, FK_equipo);
+    }
+}
+
+function actualizacheckControlTec(id){
+    var id_cedula = localStorage.getItem("IdCedula");
+    var IdHeader = localStorage.getItem("IdHeader");
+    var ids = id.split("-");
+    var check = ids[1];
+    if(check.includes('1')){
+        var respuesta = 1;
+        var comentarios = '';
+        var id_pregunta = ids[0].replace('radio','');
+        $("#span-"+id_pregunta).html(comentarios);
+        $("#spanComentarios-"+id_pregunta).html(comentarios);
+        databaseHandler.db.transaction(
+            function(tx){
+                tx.executeSql("UPDATE DesTechDetails SET respuesta = ?,comentarios = ?, falla = ? WHERE id_cedula = ? AND Fk_pregunta = ? AND IdHeader = ?",
+                    [respuesta,comentarios,comentarios,id_cedula,id_pregunta,IdHeader],
+                    function(tx, results){
+                    },
+                    function(tx, error){
+                        console.error("Error al guardar cierre: " + error.message);
+                    }
+                );
+            },
+            function(error){},
+            function(){}
+        );
+    } else if(check.includes('2')){
+        var respuesta = 2;
+        var id_pregunta = ids[0].replace('radio','');
+        databaseHandler.db.transaction(
+            function(tx){
+                tx.executeSql("UPDATE DesTechDetails SET respuesta = ? WHERE id_cedula = ? AND Fk_pregunta = ? AND IdHeader = ?",
+                    [respuesta,id_cedula,id_pregunta,IdHeader],
+                    function(tx, results){
+                    },
+                    function(tx, error){
+                        console.error("Error al guardar cierre: " + error.message);
+                    }
+                );
+            },
+            function(error){},
+            function(){}
+        );
+    }
+}
+
+function agregaComentariosCtlTec(id_pregunta,mul){
+    if(mul == 1 || mul == 2){
+        var seleccionados = $("#opts_modal").val();
+        if(seleccionados.length == 0){
+            swal("","Selecciona al menos una opción del desplegable.","warning");
+            return false;
+        }else{
+            var opts = '';
+            $("#opts_modal option").each(function(){
+                if(this.selected){
+                    opts = opts +", "+ capitalizarPrimeraLetra($(this).text());
+                }
+            });
+            opts = opts.slice(1);
+            opts = opts+":";
+        }
+    }else{
+        var opts = '';
+    }
+    var campos;
+    var comentarios = '';
+    var FKs = ''
+    
+    campos = document.querySelectorAll('#div_cboxs .obligatorio');
+    var valido = false;
+
+    [].slice.call(campos).forEach(function(campo) {
+        if (campo.checked == true) {
+            valido = true;
+            comentarios = comentarios+", "+campo.value;
+            FKs = FKs+","+campo.id.replace("cbox", "");
+        }
+    });
+
+    if (valido) {
+        var str = comentarios;
+        var name = str.slice(1);
+        var name2 = FKs.slice(1)
+        name = opts+""+name;
+        name = name.trim();
+        name = capitalizarPrimeraLetra(name);
+        var id_cedula = localStorage.getItem("IdCedula");
+        var IdHeader = localStorage.getItem("IdHeader");
+        var obs_generales = $("#obs_generales").val();
+
+        databaseHandler.db.transaction(
+            function(tx){
+                tx.executeSql("UPDATE DesTechDetails SET falla = ?, comentarios = ?, FKsFallas = ? WHERE id_cedula = ? AND Fk_pregunta = ? AND IdHeader = ?",
+                    [name,obs_generales,name2,id_cedula,id_pregunta, IdHeader],
+                    function(tx, results){
+                        $("#span-"+id_pregunta).html(name);
+                        $("#spanComentarios-"+id_pregunta).html(obs_generales ? `Comentarios:  ${obs_generales}` : ``);
+                        app.sheet.close('#sheet-modal');
+                        swal("","Comentario guardado correctamente","success");
+                    },
+                    function(tx, error){
+                        console.error("Error al guardar cierre: " + error.message);
+                    }
+                );
+            },
+            function(error){},
+            function(){}
+        );
+
+    } else {
+        swal("","Selecciona almenos un daño para poder guardar","warning");
+    }
+}
+
+function CreaModalOptionCtlTec(id, opciones, mul, titulo_modal, FK_equipo){
+    if(mul==3){
+        var display = "none";//div_opt
+        var display1 = "none";//titulo_modal
+    }else if(mul == 2){
+        var display = "block";//div_opt
+        var display1 = "none";//titulo_modal
+    }else if(mul == 1){
+        var display = "block";//div_opt
+        var display1 = "block";//titulo_modal
+    }
+
+    var NomDescCli = "fallos";
+    var html = '';
+
+    app.request.get(cordova.file.dataDirectory + "jsons_tecnologiasHmo/"+NomDescCli+".json", function (data) {
+        var content2 = JSON.parse(data);
+        for(var x = 0; x < content2.length; x++) {
+            if(FK_equipo == content2[x].id_tipo_equipo_recaudo){
+                html = html + `<label class="label_modal"><input class="cbox_modal obligatorio" type="checkbox" id="cbox${content2[x].id_tipo_falla}" value="${content2[x].nombre_tipo_falla}">${content2[x].nombre_tipo_falla}</label><br>`;
+            }
+        }
+        var popEvidencia = app.popup.create({
+            content: `
+            <div class="sheet-modal my-sheet" id="sheet-modal" name="sheet">
+            <div class="toolbar">
+                <div class="toolbar-inner">
+                    <div class="left"></div>
+                    <div class="right"><a class="link" id="close_sheet" href="#">Cerrar</a></div>
+                </div>
+            </div>
+            <div class="sheet-modal-inner" style="overflow-y: scroll;">
+                <div class="block">
+                    <h3 class="FWN-titulo-2">¿Que tipo de daño es?</h3><hr>
+                    <span id="titulo_modal" style="display:${display1};color: #FF0037;" class="span FWM-span-form">${titulo_modal}</span>
+                    <div id="div_opt" style="display:${display}; padding-top: 10px;margin-bottom: 20px;">
+                    ${opciones}
+                    </div>
+                    <div class="list FWM-fixing-form" id="div_cboxs" style="margin-top: 25px;"> 
+                        <input type="hidden" id="inputEvidencia" value=${id}>
+                        <input type="hidden" id="pasa" value="0">
+                            ${html}
+                        <div>
+                            <span style="color: #005D99;" class="span FWM-span-form">Comentarios adicionales</span>
+                            <textarea class="FWM-input" style="font-family: 'ITC Avant Garde Gothic', sans-serif;" id="obs_generales" cols="30" rows="10" maxlength="255"></textarea>
+                        </div>
+                        <div class="block grid-resizable-demo" style="margin-bottom: 70px;padding-top: 35px;">
+                            <div class="row align-items-stretch" style="text-align: center;">
+                                <div class="col-100 medium-50" style="min-width: 50px; border-style: none;">
+                                    <span class="resize-handler"></span>
+                                    <a href="#" onclick="agregaComentariosCtlTec(${id},${mul});" style="background-color: #FF0037;padding-left: 50px;padding-right: 50px;" class="boton-equipo">Guardar</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>`,
+        swipeToClose:false,
+        closeByOutsideClick:false,
+        closeByBackdropClick:false,
+        closeOnEscape:false,
+                on: {
+                    open: function (popup) {
+    
+                        $('#close_sheet').click(function () {
+                            if($('#pasa').val()!=0){
+                                app.sheet.close('#sheet-modal');
+                            }else{
+                                swal({
+                                    title: "Aviso",
+                                    text: "Aún no seleccionas o guardas una opción, ¿Estas seguro que deseas regresar?",
+                                    icon: "warning",
+                                    buttons: true,
+                                    dangerMode: false,
+                                }).then((willGoBack) => {
+                                    if (willGoBack){
+                                        var otherCheck = "radio"+ id + "-2";
+                                        document.getElementById(otherCheck).checked = false;
+                                        var Check = "radio"+ id + "-1";
+                                        document.getElementById(Check).checked = true;
+                                        var labels1 = Check.replace('radio','label');
+                                        var labels2 = otherCheck.replace('radio','label');
+                                        $("#"+labels1).addClass("checked");
+                                        $("#"+labels2).removeClass("checked");
+                                        actualizacheckControlTec(Check);
+                                        app.sheet.close('#sheet-modal');
+                                    } 
+                                });
+                            }
+                        });
+                    },
+                }
+        });
+        popEvidencia.open();
+    });
+}
+
+function regresaTechHmo(){
+    window.localStorage.removeItem("IdHeader")
+    app.views.main.router.back('/yallegueTecnologiasHMO/', { force: true, ignoreCache: true, reload: true })
+}
+
+function actualizaOperadorTech(){
+    let id_cedula = localStorage.getItem("IdCedula")
+    let IdHeader = localStorage.getItem("IdHeader")
+    let ID_personal = $("#ID_personal").val()
+    let clave = $("#clave").val()
+    let fullName = $("#fullName").val()
+
+    databaseHandler.db.transaction(
+        function(tx){ tx.executeSql("UPDATE DesTechHeader SET id_operador = ?, operador = ?, credencial = ? WHERE id_cedula = ? AND IdHeader = ?", 
+        [ID_personal,fullName,clave, id_cedula, IdHeader],
+        function(tx, results){  },
+        function(tx, error){ swal("Error al guardar",error.message,"error"); } ); }, function(error){}, function(){}
+    );
+}
+
+function FinalizarInspecciones(){
+    let id_cedula = localStorage.getItem("IdCedula");
+    databaseHandler.db.transaction(
+        function (tx) { tx.executeSql( "Select COUNT(id_cedula) as cuenta from DesTechHeader WHERE id_cedula = ? AND (id_operador IS NULL OR id_operador = '')", [id_cedula],
+        function (tx, results) { 
+            var item = results.rows.item(0);
+            if(item.cuenta > 0){
+                swal("", "Tienes unidades sin operador, para poder continuar debes completar el registro", "warning")
+            } else {
+                swal({
+                    title: "Aviso",
+                    text: "¿Estas seguro de querer finalizar la revisión?",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                }).then((RESP) => {
+                    if (RESP == true) {
+                        var fecha_salida = getDateWhitZeros();
+                        var id_cedula = localStorage.getItem("IdCedula");
+                        var estatus = 1;
+                        databaseHandler.db.transaction(
+                            function(tx){
+                                tx.executeSql("UPDATE cedulas_general SET fecha_salida  = ?,estatus = ? WHERE id_cedula = ?",
+                                    [fecha_salida,estatus,id_cedula],
+                                    function(tx, results){
+                                        window.location.href = "./menu.html";
+                                    },
+                                    function(tx, error){
+                                        swal("Error al guardar",error.message,"error");
+                                    }
+                                );
+                            },
+                            function(error){},
+                            function(){}
+                        );        
+                    }
+                });
+            }
+        },
+        function (tx, error) { console.log("Error al guardar cedula: " + error.message); } ); }, function (error) {}, function () {}
+    );
+}
+
+function eliminarInspeccion(IdHeader){
+    let id_cedula = localStorage.getItem("IdCedula");
+    swal({
+        title: "Aviso",
+        text: "¿Estas seguro de querer eliminar el registro?",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+    }).then((RESP) => {
+        if (RESP == true) {
+            databaseHandler.db.transaction( function(tx){ tx.executeSql("DELETE FROM DesTechDetails WHERE id_cedula = ?", [id_cedula], function(tx, results){
+                databaseHandler.db.transaction( function(tx){ tx.executeSql("DELETE FROM DesTechHeader WHERE id_cedula = ? AND IdHeader = ?", [id_cedula, IdHeader], function(tx, results){
+                    databaseHandler.db.transaction( function(tx){ tx.executeSql("DELETE FROM DesTecFirmas WHERE id_cedula = ? AND IdHeader = ?", [id_cedula, IdHeader], function(tx, results){
+                        $("#renglon_"+IdHeader).remove()
+                        swal("", "Eliminado correctamente", "success")
+                    }, function(tx, error){ } ); }, function(error){}, function(){} );
+                }, function(tx, error){ } ); }, function(error){}, function(){} );
+            }, function(tx, error){ } ); }, function(error){}, function(){} );
+        }
+    });
+}
+//Fin tecnologiasHmo
 //fin HMO

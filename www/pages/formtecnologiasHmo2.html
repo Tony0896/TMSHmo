@@ -1,0 +1,171 @@
+<template>
+    <div class="page">
+        <!-- Navsbars -->
+        <nav class="left top-left" style="justify-content: space-between;">
+            <a href="javascript:location.reload()" style="margin-left: 10px; display: inline-flex;align-items: center;">
+                <i class="icon material-icons md-only" style="font-weight: 900;font-size: 30px;">arrow_back</i>
+            </a>
+            <div class="title">Control de Tecnología</div>
+            <a style="margin-right: 10px;">
+                <i class="icon material-icons md-only" style="color: #005D99; font-weight: 900;">arrow_back</i>
+            </a>
+        </nav>
+        <div class="toolbar tabbar toolbar-bottom" >
+            <div class="toolbar-inner" style="background-color: #239B56;" id="toolbar_down">
+                <a href="#" onclick="moveControlTec();" style="margin: auto;color: #fff;font-weight: bold;font-size: 18px;width: 100%;text-align: center;">Anterior</a>
+                <a href="#" onclick="FinalizarCheckListHMO();" style="margin: auto;color: #fff;font-weight: bold;font-size: 18px;width: 100%;text-align: center;">Finalizar <i class="icon material-icons md-only" style="display: inline-block;">check</i></a>
+            </div>
+        </div>
+        <!-- Contenido Page -->
+        <div class="page-content" style="height: 98%;">
+            <div style="text-align: center; justify-content:center; margin-right:auto; margin-left:auto; width: 99%;margin-top: 30px;">
+                
+                <h2 class="FWN-titulo-2" style="margin-bottom: 0px;margin-top: 10px;" id="fase_titulo"></h2>
+                <h2 class="FWN-titulo-2" style="margin-bottom: 0px;color: #707070;" id="titulo"></h2>
+
+                <hr style="width: 90%;margin-bottom: 25px;">
+                <div style="text-align: left;">
+                    <div class="list FWM-fixing-form" id="datos_form" style="margin-top: 5px;">
+
+                    </div>
+                    <div class="list FWM-fixing-form" style="margin-top: 5px;"> 
+                        <span class="span FWM-span-form">Observaciones adicionales:</span>
+                            <textarea class="FWM-input" style="font-family: 'ITC Avant Garde Gothic', sans-serif;" id="comentarios_generales" cols="30" rows="10" maxlength="255"></textarea>
+                        <span class="span FWM-span-form">Nombre de colaborador:</span>
+                            <span class="span FWM-span-form" style="font-family: 'ITC Avant Garde Gothic', sans-serif;color: #005D99;" id="nombre_colaborador"></span>
+                        <span class="span FWM-span-form">Firma:</span>
+                        <input type="hidden" name="signate" id="signate" placeholder="sfirmc">
+                        <center>
+                            <img id="ImagenFirmaView" src="" width="70%"><br>
+                            <span id="VolverFirmar" style="display: none;"></span>
+                            <input type="button" style="position:absolute;display:none;margin:0 !important;color:white;background-color: #019cdc;top:40px;margin-left:160px !important" value="Volver a Firmar">
+                        </center>
+                        <div class="row align-items-stretch" style="text-align: center;">
+                            <div class="col-100 medium-50" style="min-width: 50px; border-style: none;">
+                                <span class="resize-handler"></span>
+                                <a href="#" onclick="createFirma()" data-popup=".popup-services" style="background-color: #005D99;" class="link popup-open boton-equipo" id="VolverAFirmar">Agregar Firma <i class="icon material-icons md-only" style="display: inline-block;margin-left: 12px;">border_color</i></a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="popup popup-services" style="background-color: #f0f8ff;">
+                        <br>
+                        <div class="popup-container" style="height: 300px;">
+                             <div class="headerPopupPhoto" style="width: 90%;display: flex;justify-content: space-between;padding-left: 20px;margin-bottom: 30px;">
+                                <a class="link popup-close" onclick="gfirma(1)" href="#">Guardar Firma</a>
+                                <a class="link" onclick="cleanFirma()" href="#">Limpiar</a>
+                                <a class="link popup-close" onclick="gClose()" href="#">Cerrar</a>
+                            </div>
+                            
+                            <div style="display: flex;flex-direction: column;justify-content: center;align-content: center;align-items: center;">
+                                <canvas id="signature-pad" class="signature-pad" width="600" height="250" style="background-color: #fff; touch-action: none; border: 2px solid #005D99; border-radius: 15px;"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="block grid-resizable-demo" style="top: 25px;margin-bottom: 80px;"></div>
+
+                    <input type="hidden" id="puntos_malos">
+                    <input type="hidden" id="total_puntos">
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+<script>
+return {
+    on: {      
+        pageInit: function () {
+            app.preloader.show('red');
+
+            var id_cedula = localStorage.getItem("IdCedula");
+            databaseHandler.db.transaction(
+                function(tx5){
+                    tx5.executeSql("SELECT unidad,obs_generales,usuario_operador FROM DesTechHeader WHERE id_cedula = ?",
+                        [id_cedula],
+                        function(tx5, results){
+                            var length = results.rows.length;
+                            var item2 = results.rows.item(0);
+                            $("#titulo").html("Unidad "+item2.unidad);
+                            $("#comentarios_generales").val(item2.obs_generales);
+                            $("#nombre_colaborador").text(item2.usuario_operador);
+                        },
+                        function(tx5, error){
+                            console.error("Error al consultar bandeja de salida: " + error.message);
+                        }
+                    );  
+                },
+                function(error){},
+                function(){}
+            );
+            
+            databaseHandler.db.transaction(
+                function(tx){
+                    tx.executeSql(
+                        "Select * from DesTechDetails where id_cedula= ? AND respuesta = 2",
+                        [id_cedula],
+                        function(tx, results){
+                            var length = results.rows.length;
+                            $("#puntos_malos").val(length);
+
+                            if(length == 0){
+                                $("#fase_titulo").html("Sin puntos en mal estado");
+                            }else{
+                                $("#fase_titulo").html("Revisión de puntos en mal estado");
+                                var comentarios, falla;
+                                for(var i = 0; i< length; i++){
+                                    var item = results.rows.item(i);
+                                    comentarios = '';
+                                    falla = ''
+                                    if (item.comentarios){
+                                        comentarios = item.comentarios;
+                                    } else {
+                                        comentarios = "Sin comentarios";
+                                    }
+                                    
+                                    $("#datos_form").append(`
+                                    <div class='card demo-facebook-card' style='padding-bottom: 5px;'>
+                                        <div class='card-header'>
+                                            <div class='demo-facebook-name' id='demo' style='margin-left:0px;display: flex;'>
+                                                <span class="span-pregunta span FWM-span-form">${item.no_pregunta}.</span>&emsp; 
+                                                <span class="span-pregunta span FWM-span-form">${item.pregunta}</span>
+                                            </div>
+                                        </div>
+                                        <div class='card demo-facebook-card'>
+                                                <div class='demo-facebook-date'></div> 
+                                                <div class='card-footer'><a href='#' >${item.falla}</a></div> 
+                                                <div class='card-footer'><a href='#' >${comentarios}</a></div>
+                                        </div>
+                                    </div> <br>`);
+                                }
+                            }
+                            app.preloader.hide();
+
+                            databaseHandler.db.transaction(
+                                function(tx5){
+                                    tx5.executeSql("SELECT COUNT(id_cedula) as total_puntos FROM DesTechDetails WHERE id_cedula = ?",
+                                        [id_cedula],
+                                        function(tx5, results){
+                                            var item2 = results.rows.item(0);
+                                            $("#total_puntos").val(item2.total_puntos);
+                                        },
+                                        function(tx5, error){
+                                            console.error("Error al consultar bandeja de salida: " + error.message);
+                                        }
+                                    );  
+                                },
+                                function(error){},
+                                function(){}
+                            );
+                        }
+                    );
+                },
+                function(error){
+                    app.preloader.hide();
+                },
+                function(){}
+            );
+        }
+    }
+}
+</script>

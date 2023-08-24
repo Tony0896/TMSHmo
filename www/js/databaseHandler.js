@@ -103,6 +103,36 @@ var databaseHandler = {
                         console.error("Error al crear la tabla de detalle_recaudo: " + error.message);
                     }
                 );
+                tx.executeSql(
+                    "create table if not exists DesTechDetails(id_detalle integer primary key, id_cedula integer, IdHeader integer, Fk_pregunta integer, respuesta integer, falla text, comentarios text, pregunta text, multiple bit, id_formato int, FK_equipo int, FKsFallas text)",
+                    [],
+                    function(tx, results){
+                        // console.log("Se creo Servicio tecnico DIPREC correctamente!");
+                    },
+                    function(tx, error){
+                        console.error("Error al crear la tabla de detalle_recaudo: " + error.message);
+                    }
+                );
+                tx.executeSql(
+                    "create table if not exists DesTechHeader(IdHeader integer primary key, id_cedula integer, fecha_inicio text, fecha_fin text, observaciones text, unidad text, id_unidad int, id_operador int, operador text, credencial text)",
+                    [],
+                    function(tx, results){
+                        // console.log("Se creo Servicio tecnico DIPREC correctamente!");
+                    },
+                    function(tx, error){
+                        console.error("Error al crear la tabla de detalle_recaudo: " + error.message);
+                    }
+                );
+                tx.executeSql(
+                    "create table if not exists DesTecFirmas(id_firma integer primary key, id_cedula integer, IdHeader integer, firma text, fecha text)",
+                    [],
+                    function(tx, results){
+                        // console.log("Se creo Servicio tecnico DIPREC correctamente!");
+                    },
+                    function(tx, error){
+                        console.error("Error al crear la tabla de detalle_recaudo: " + error.message);
+                    }
+                );
             },
             function(error){
                 console.error("Error al crear la base de datos: " + error.message);
