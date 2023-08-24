@@ -80,62 +80,8 @@ var routes = [
     componentUrl: './pages/formCheck3.html',
   },
   //fin de checklist 
-  //Inicio Desincorporacion
-  {
-    name: 'formDesin1',
-    path: '/formDesin1/',
-    componentUrl: './pages/formDesin1.html',
-  },
-  {
-    name: 'formDesin2',
-    path: '/formDesin2/',
-    componentUrl: './pages/formDesin2.html',
-  },
-  {
-    name: 'formDesin3',
-    path: '/formDesin3/',
-    componentUrl: './pages/formDesin3.html',
-  },
-  {
-    name: 'formDesin4',
-    path: '/formDesin4/',
-    componentUrl: './pages/formDesin4.html',
-  },
-  {
-    name: 'formDesin5',
-    path: '/formDesin5/',
-    componentUrl: './pages/formDesin5.html',
-  },
-  {
-    name: 'yallegue_desin',
-    path: '/yallegue_desin/',
-    componentUrl: './pages/yallegue_desin.html',
-  },
-  //Fin Desincorporacion
-  //inicio Recaudo
-  {
-    name: 'yallegueRecaudo',
-    path: '/yallegueRecaudo/',
-    componentUrl: './pages/yallegueRecaudo.html',
-  },
-  {
-    name: 'formRecaudo1',
-    path: '/formRecaudo1/',
-    componentUrl: './pages/formRecaudo1.html',
-  },
-  {
-    name: 'formRecaudo2',
-    path: '/formRecaudo2/',
-    componentUrl: './pages/formRecaudo2.html',
-  },
-  {
-    name: 'formRecaudo3',
-    path: '/formRecaudo3/',
-    componentUrl: './pages/formRecaudo3.html',
-  },
-  //fin Recaudo
-  //Inicio HMO
-  //Inicio Capacitacion 
+  //************************************** Inicio HMO **************************************
+  //?Inicio Capacitacion 
   {
     name: 'formCapacita1',
     path: '/formCapacita1/',
@@ -171,8 +117,24 @@ var routes = [
     path: '/formCapacita7/',
     componentUrl: './pages/formCapacita7.html',
   },
-  //fin Capacitacion 
-  //fin HMO
+  //?fin Capacitacion 
+  //?Inicio tecnologiasHmo
+   {
+    name: 'yallegueTecnologiasHMO',
+    path: '/yallegueTecnologiasHMO/',
+    componentUrl: './pages/yallegueTecnologiasHMO.html',
+  },
+  {
+    name: 'formtecnologiasHmo1',
+    path: '/formtecnologiasHmo1/',
+    componentUrl: './pages/formtecnologiasHmo1.html',
+  },{
+    name: 'formtecnologiasHmo2',
+    path: '/formtecnologiasHmo2/',
+    componentUrl: './pages/formtecnologiasHmo2.html',
+  },
+  //?Fin tecnologiasHmo
+  //************************************** fin HMO **************************************
   {
     name: 'visualizar',
     path: '/visualizar/',

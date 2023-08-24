@@ -96,6 +96,21 @@
                                                         </div>
                                                     </li>
 
+                                                    <li class="container_info" style="display: block;">
+                                                        <div class="item-content">
+                                                            <i class="material-icons md-light panel-cerrar"
+                                                                style="color: #005D99;">photo_camera</i>
+                                                            <div class="item-title" style="width: 100%;">
+                                                                <select name="camara_activa" id="camara_activa"
+                                                                    onchange="cambiaCamara();"
+                                                                    style="border-bottom: 0px;margin: auto;">
+                                                                    <option value="1">Cámara Principal</option>
+                                                                    <option value="0">Cámara Secundaria</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+
                                                     <li class="container_info">
                                                         <div class="item-content">
                                                             <i class="material-icons md-light panel-cerrar"
@@ -184,6 +199,13 @@
                                                     </a>
                                                 </td>
                                             </tr>
+                                            <tr class="menu_tecnologiasHmo menus" style="display: none;">
+                                                <td>
+                                                    <div>
+                                                        <a class="item-content item-link entrar principalButton" href="#" onclick="moveMenu();"><img src="img/iconsMenu/bus_tech.svg" height="60px"><p style="color: #000000;font-size: 19px;">Nueva Revisión</p><i class="material-icons md-light" style="color: #ff0000;margin-right: 10px;">chevron_right</i></a>
+                                                    </div>
+                                                </td>
+                                            </tr>
                                         </table>
                                     </div>
                                 </div>
@@ -267,11 +289,16 @@
         window.localStorage.removeItem("OpDiario");
         window.localStorage.removeItem("NombreCurso");
         window.localStorage.removeItem("nameBecario");
+        window.localStorage.removeItem("Costo")
+        window.localStorage.removeItem("cameraField")
+        window.localStorage.removeItem("IdHeader")
 
         var modulos = localStorage.getItem("Modulo").split(",");
         for (i = 0; i < modulos.length; i++) {
             if (modulos[i] == "Imagen") {
                 $("#menu_activo").append(`<option value="Imagen">Revisión Imagen</option>`);
+            } else if (modulos[i] == "tecnologiasHmo") {
+                $("#menu_activo").append(`<option value="tecnologiasHmo">Inspección Tecnologías</option>`);
             } else {
                 $("#menu_activo").append(`<option value="${modulos[i]}">${modulos[i]}</option>`);
             }
@@ -296,6 +323,8 @@
             $(".menu_imagen").css("display", "grid");
         } else if (localStorage.getItem("Modulos") == 'Capacitacion') {
             $(".menu_capacita").css("display", "grid");
+        } else {
+            $(".menu_"+localStorage.getItem("Modulos")).css("display", "grid");
         }
 
         $("#menu_activo").val(localStorage.getItem("Modulos"));
@@ -306,7 +335,7 @@
 
          // Called when a photo is successfully retrieved
         function onPhotoDataSuccess(imageData) {
-            var camera = 1;
+            var camera = localStorage.getItem("camera");
             if(camera == 0){
                 var smallImage = document.getElementById('smallImage');
                 smallImage.style.display = 'flex';
@@ -335,8 +364,8 @@
             alert("Failed because: "+message);
         }
         function updateData() {
-            var urlBase2 = "http://192.168.100.3/Desarrollo/CISAApp/HMOFiles/JSONS";
-            // var urlBase2 = "http://192.168.1.71/Desarrollo/CISAApp/HMOFiles/JSONS";
+            var urlBase2 = "http://192.168.100.4/Desarrollo/CISAApp/HMOFiles/JSONS";
+            // var urlBase2 = "http://192.168.137.205/Desarrollo/CISAApp/HMOFiles/JSONS";
             // var urlBase2 = "http://mantto.ci-sa.com.mx/www.CISAAPP.com";
             if (localStorage.getItem("Modulos")) {
                 if (localStorage.getItem("Modulos") == 'Limpieza') {
@@ -345,6 +374,9 @@
                 } else if (localStorage.getItem("Modulos") == 'Capacitacion') {
                     var RutaJSONS = urlBase2 + "/capacitacion/";
                     var carpeta = "jsons_capacitacion";
+                } else {
+                    var RutaJSONS = urlBase2 + "/"+localStorage.getItem("Modulos")+"/";
+                    var carpeta = "jsons_"+localStorage.getItem("Modulos");
                 }
 
                 $("#processclick").show();
@@ -445,15 +477,7 @@
                                                                     tx5.executeSql(
                                                                         "SELECT * FROM Actualizaciones ORDER BY idActualizacion DESC LIMIT 1",
                                                                         [],
-                                                                        function (tx5, results) {
-                                                                            var length = results.rows.length;
-                                                                            var item1 = results.rows.item(0);
-                                                                            if (localStorage.getItem("Modulos") == 'Desincorporaciones') {
-                                                                                RevisaHeaders();
-                                                                            } else if (localStorage.getItem("Modulos") == 'Recaudo') {
-                                                                                RevisaHeaders_recaudo();
-                                                                            }
-                                                                        }
+                                                                        function (tx5, results) { }
                                                                     );
                                                                 },
                                                                 function (error) { },
@@ -485,6 +509,8 @@
                 $(".menu_imagen").css("display", "grid");
             } else if (localStorage.getItem("Modulos") == 'Capacitacion') {
                 $(".menu_capacita").css("display", "grid");
+            } else {
+                $(".menu_"+localStorage.getItem("Modulos")).css("display", "grid");
             }
             updateData();
             recargacedulas();
@@ -515,7 +541,11 @@
                 var tipo = "checklist";
             } else if (localStorage.getItem("Modulos") == 'Capacitacion') {
                 var tipo = "Capacitación";
+            } else {
+                var tipo = localStorage.getItem("Modulos");
             }
+
+            localStorage.getItem("camera") ? $("#camara_activa").val(localStorage.getItem("camera")) : (localStorage.setItem("camera",1), $("#camara_activa").val(1))
 
             var estatus = 0;
             databaseHandler.db.transaction(
@@ -535,6 +565,8 @@
                                     } else {
                                         $("#pendientes").append("<li id='conc" + item2.id_cedula + "'><div class='item-content'><div class='item-media'><i class='icon'><img src='img/circuloNaranja.png' width='20px' height='20px' /></i></div><div class='item-inner'><div class='item-title'> <div> " + item2.nombre_cliente + "| " + fechas[0] + "</div> <div style='color: #afafaf;font-size: 12px;margin-left: 10px;margin-top: 8px;font-weight: bold;'>"+item2.nombre_evalua+"</div> </div><div class='item-after'><a href='#' onclick='continuarCedCap(`" + item2.id_cedula + "`,`" +item2.geolocalizacion_salida+ "`);' style='border: none; outline:none;'><i class='material-icons md-light' style='font-size:35px;color:#00A7B5'>play_circle_outline</i></a>&nbsp;&nbsp;&nbsp;<a href='#' onclick='EliminarReg(" + item2.id_cedula + ",`" + item2.tipo_cedula + "`)' style='border: none; outline:none;'><i class='material-icons md-light' style='font-size:35px;color:red'>delete_forever</i></a></div></div></div></li>");
                                     }
+                                } else {
+                                    $("#pendientes").append(`<li id='conc${item2.id_cedula}'><div class='item-content'><div class='item-media'> <i class='icon'><img src='img/circuloNaranja.png' width='20px' height='20px' /></i> </div><div class='item-inner'><div class='item-title'> <div>${item2.nombre_cliente} | ${fechas[0]}</div>  <div style='color: #afafaf;font-size: 12px;margin-left: 10px;margin-top: 8px;font-weight: bold;'>${item2.nombre_cliente}</div>  </div><div class='item-after'> <a href='#' onclick="continuarCed2(${item2.id_cedula},'${item2.tipo_cedula}');" style='border: none; outline:none;'> <i class='material-icons md-light' style='font-size:35px;color:#00A7B5'>play_circle_outline</i></a>&nbsp;&nbsp;&nbsp; <a href='#' onclick="EliminarReg(${item2.id_cedula},'${item2.tipo_cedula}')" style='border: none; outline:none;'><i class='material-icons md-light' style='font-size:35px;color:red'>delete_forever</i></a></div></div></div></li>`);
                                 }
                             }
                         },

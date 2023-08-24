@@ -124,7 +124,7 @@ div.select {
 .camera{
   position: absolute;
   bottom: 0;
-  width: 61%;
+  width: 56%;
   height: 18%;
   align-content: center;
 }
@@ -140,7 +140,7 @@ div.select {
   bottom: 0;
   width: 30%;
   height: 15%;
-  right: 7%;
+  right: -9%;
   align-content: center;
 }
 div.switch{
@@ -159,7 +159,7 @@ div.switch{
 /* Cancelar */
 div.cancel{
   position: absolute;
-  left: 46px;
+  left: 156px;
   background-color: #c2c2c242;
   width: 58px;
   height: 58px;

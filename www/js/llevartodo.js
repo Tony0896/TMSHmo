@@ -672,6 +672,111 @@ function llevarTodo(id_cedula,tipo_cedula){
                                 );
                             }
                         }
+                    } else if (tipo = "tecnologiasHmo"){
+                        var DesTechHeader = new Array();
+                        var DesTechDetails = new Array();
+                        var DesTecFirmas = new Array();
+                        databaseHandler.db.transaction(
+                            function(tx){
+                                tx.executeSql("SELECT IdHeader, credencial, REPLACE(fecha_fin, ' ', 'T') as fecha_fin, REPLACE(fecha_inicio, ' ', 'T') as fecha_inicio, id_cedula, id_operador, id_unidad, observaciones, operador, unidad FROM DesTechHeader WHERE id_cedula = ?",
+                                    [id_cedula],
+                                    function(tx, results){
+                                        var length = results.rows.length;
+                                        for(var i = 0; i< length; i++){
+                                            var item3 = results.rows.item(i);
+                                            DesTechHeader[i] = item3;
+                                        }
+                                        databaseHandler.db.transaction(
+                                            function(tx){
+                                                tx.executeSql("SELECT * FROM DesTechDetails WHERE id_cedula = ?",
+                                                    [id_cedula],
+                                                    function(tx, results){
+                                                        var length = results.rows.length;
+                                                        for(var i = 0; i< length; i++){
+                                                            var item2 = results.rows.item(i);
+                                                            DesTechDetails[i] = item2;
+                                                        }
+                                                        databaseHandler.db.transaction(
+                                                            function(tx){
+                                                                tx.executeSql("SELECT IdHeader, REPLACE(fecha, ' ', 'T') as fecha, firma, id_cedula, id_firma FROM DesTecFirmas WHERE id_cedula = ?",
+                                                                    [id_cedula],
+                                                                    function(tx, results){
+                                                                        var length = results.rows.length;
+                                                                        for(var i = 0; i< length; i++){
+                                                                            var item1 = results.rows.item(i);
+                                                                            DesTecFirmas[i] = item1;
+                                                                        }
+                                                                        console.log(datosCedulaGeneral)
+                                                                        console.log(DesTechHeader)
+                                                                        console.log(DesTechDetails)
+                                                                        console.log(DesTecFirmas)
+                                                                        $.ajax({
+                                                                            type: "POST",
+                                                                            async : true,
+                                                                            url: url+"/tecnologiasHmo/guardarTecHmo.php",
+                                                                            dataType: 'html',
+                                                                            data: {'datosCedulaGeneral': JSON.stringify(datosCedulaGeneral),
+                                                                            'DesTechHeader': JSON.stringify(DesTechHeader),
+                                                                            'DesTechDetails': JSON.stringify(DesTechDetails),
+                                                                            'DesTecFirmas': JSON.stringify(DesTecFirmas)},
+                                                                            success: function(respuesta){
+                                                                                var respu1 = respuesta.split("._.");
+                                                                                var dat1 = respu1[0];
+                                                                                var dat2 = respu1[1];
+                                                                                if(dat1 == "CEDULA"){
+                                                                                    if(dat2 > 0){
+                                                                                        databaseHandler.db.transaction(
+                                                                                            function(tx7){
+                                                                                                tx7.executeSql(
+                                                                                                    "UPDATE cedulas_general SET estatus = 3 WHERE id_cedula = ?",
+                                                                                                    [id_cedula],
+                                                                                                    function(tx7, results){
+                                                                                                        $(".send-ced").css("pointer-events", "all");
+                                                                                                        localStorage.setItem("sendFlag", 0);
+                                                                                                        $("#li-"+item.id_cedula).remove();
+                                                                                                        swal("Enviado!", "", "success");
+                                                                                                    }
+                                                                                                );
+                                                                                            }
+                                                                                        );
+                                                                                    }
+                                                                                } else {
+                                                                                    AlmacenarError(respuesta);
+                                                                                }
+                                                                            },
+                                                                            error: function(){
+                                                                                console.log("Error en la comunicacion");
+                                                                                swal("Fallo el envío, por conexión!", "", "error");
+                                                                                $(".send-ced").css("pointer-events", "all")
+                                                                            }
+                                                                        });
+                                                                    },
+                                                                    function(tx, error){
+                                                                        console.log("Error al consultar: " + error.message);
+                                                                    }
+                                                                );
+                                                            },
+                                                            function(error){},
+                                                            function(){}
+                                                        );
+                                                    },
+                                                    function(tx, error){
+                                                        console.log("Error al consultar: " + error.message);
+                                                    }
+                                                );
+                                            },
+                                            function(error){},
+                                            function(){}
+                                        );
+                                    },
+                                    function(tx, error){
+                                        console.log("Error al consultar: " + error.message);
+                                    }
+                                );
+                            },
+                            function(error){},
+                            function(){}
+                        );
                     }
                 },
                 function(tx, error){

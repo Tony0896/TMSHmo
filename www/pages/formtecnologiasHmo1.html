@@ -1,0 +1,259 @@
+<template>
+    <div class="page">
+        <!-- Navsbars -->
+        <nav class="left top-left" style="justify-content: space-between;">
+            <a onclick="TerminarCheckListHMO()" style="margin-left: 10px; display: inline-flex;align-items: center;">
+                <i class="icon material-icons md-only" style="font-weight: 900;font-size: 30px;">arrow_back</i>
+            </a>
+            <div class="title">Control de Tecnología</div>
+            <a style="margin-right: 10px;">
+                <i class="icon material-icons md-only" style="color: #005D99; font-weight: 900;">arrow_back</i>
+            </a>
+        </nav>
+        <div class="toolbar tabbar toolbar-bottom" >
+            <div class="toolbar-inner" style="background-color: #005D99;" id="toolbar_down">
+                <a href="#" onclick="TerminarCheckListHMO();" style="margin: auto;color: #fff;font-weight: bold;font-size: 18px;width: 100%;text-align: center;">Guardar <i class="icon material-icons md-only" style="display: inline-block;">check</i></a>
+            </div>
+        </div>
+        <!-- Contenido Page -->
+        <div class="page-content" style="height: 98%;">
+            <div style="text-align: center; justify-content:center; margin-right:auto; margin-left:auto; width: 98%;margin-top: 30px;">
+                <h2 class="FWN-titulo-2" style="margin-bottom: 0px;margin-top: 10px;" id="fase_titulo"></h2>
+
+                <div style="text-align: left;">
+                    <span class="span FWM-span-form" style="margin-left: 10px !important;">Operador</span>
+                    <input class="FWM-input obligatorio" type="text" id="operador_text" name="Nombre" style="padding: 10px !important; width: 95%; margin-left: 10px !important;"/>
+
+                    <input type="hidden" id="ID_personal">
+                    <input type="hidden" id="clave">
+                    <input type="hidden" id="fullName">
+
+                    <div class="list FWM-fixing-form" id="datos_form" style="margin-top: 5px;">
+
+                    </div>
+                </div>
+
+                <div class="container_options" style="margin-inline: 10px;">
+                    <div class="container_options">
+                        <span class="span FWM-span-form">Observaciones Generales:</span>
+                        <textarea class="FWM-input" style="font-family: 'ITC Avant Garde Gothic', sans-serif; width: 100%;padding-top: 10px;" id="observaciones" cols="30" rows="10" onchange=""></textarea>
+                    </div>
+                    
+                    <div class="container_options">
+                        <span class="span FWM-span-form" id="operador_firma"></span>
+                        <input type="hidden" name="signate" id="signate" placeholder="sfirmc">
+                        <input type="hidden" id="whitfirma">
+                        <center>
+                            <img id="ImagenFirmaView" src="" width="70%"><br>
+                            <span id="VolverFirmar" style="display: none;"></span>
+                            <input type="button" style="position:absolute;display:none;margin:0 !important;color:white;background-color: #019cdc;top:40px;margin-left:160px !important" value="Volver a Firmar">
+                        </center>
+                        <div class="row align-items-stretch" style="text-align: center;">
+                            <div class="col-100 medium-50" style="min-width: 50px; border-style: none;">
+                                <span class="resize-handler"></span>
+                                <a href="#" onclick="createFirma()" data-popup=".popup-services" style="background-color: #005D99;" class="link popup-open boton-equipo" id="VolverAFirmar">Agregar Firma <i class="icon material-icons md-only" style="display: inline-block;margin-left: 12px;">border_color</i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="popup popup-services" style="background-color: #f0f8ff;">
+                    <br>
+                    <div class="popup-container" style="height: 300px;">
+                         <div class="headerPopupPhoto" style="width: 90%;display: flex;justify-content: space-between;padding-left: 20px;margin-bottom: 30px;">
+                            <a class="link popup-close" onclick="gfirma(1)" href="#">Guardar Firma</a>
+                            <a class="link" onclick="cleanFirma()" href="#">Limpiar</a>
+                            <a class="link popup-close" onclick="gClose()" href="#">Cerrar</a>
+                        </div>
+                        
+                        <div style="display: flex;flex-direction: column;justify-content: center;align-content: center;align-items: center;">
+                            <canvas id="signature-pad" class="signature-pad" width="600" height="250" style="background-color: #fff; touch-action: none; border: 2px solid #005D99; border-radius: 15px;"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="block grid-resizable-demo" style="top: 25px;margin-bottom: 80px;"></div>
+
+            </div>
+        </div>
+    </div>
+</template>
+<script>
+return {
+    on: {      
+        pageInit: function () {
+            app.preloader.show('red');
+            
+            var id_cedula = localStorage.getItem("IdCedula");
+            databaseHandler.db.transaction(
+                function(tx5){
+                    tx5.executeSql("SELECT * FROM DesTechDetails WHERE id_cedula = ? AND IdHeader = ?",
+                        [id_cedula, localStorage.getItem("IdHeader")],
+                        function(tx5, results){
+                            let length = results.rows.length;
+                            let comentarios = '', falla = '';
+                            let count = 0
+                            for(var i = 0; i< length; i++){
+                                count++
+                                let item = results.rows.item(i);
+                                if(item.respuesta == 1){
+                                    var check1 = 'checked';
+                                    var check2 = '';
+                                }else if(item.respuesta == 2){
+                                    var check1 = '';
+                                    var check2 = 'checked';
+                                } else {
+                                    var check1 = '';
+                                    var check2 = '';
+                                }
+                                comentarios = '';
+                                falla = '';
+                                if(item.comentarios){
+                                    comentarios = item.comentarios;
+                                }
+                                if(item.falla){
+                                    falla = item.falla;
+                                }
+
+                                $("#datos_form").append(`<div style="display: flex;margin-top: 5px;">
+                                    <span class="span-pregunta span FWM-span-form">${count}.</span>&emsp;<span class="span-pregunta span FWM-span-form">${item.pregunta}</span> 
+                                </div> 
+                                <div style="display: flex;justify-content: space-around;margin-bottom: 10px;margin-top: 5px;"> 
+                                    <label id="label${item.Fk_pregunta}-1" class="radios ${check1}"><input type="radio" id="radio${item.Fk_pregunta}-1" onclick="validaradios(this.id, 4, '${item.pregunta}', ${item.multiple}, ${item.FK_equipo});" ${check1}> SI </label>  
+                                    <label id="label${item.Fk_pregunta}-2" class="radios ${check2}"><input type="radio" id="radio${item.Fk_pregunta}-2" onclick="validaradios(this.id, 4, '${item.pregunta}', ${item.multiple}, ${item.FK_equipo});" ${check2}> No </label>
+                                </div>
+                                <div style="margin-bottom: 10px;display:flex;flex-direction: column;">
+                                    <span style="color: #ff0000;font-style: italic;" id="span-${item.Fk_pregunta}">${falla}</span>
+                                    <span style="color: #ff0000;font-style: italic;" id="spanComentarios-${item.Fk_pregunta}">${comentarios}</span>
+                                </div> <hr>`);
+
+                            }
+                            // $("#datos_form").append(`<div class="block grid-resizable-demo" style="top: 25px;margin-bottom: 80px;"></div>`);
+                            app.preloader.hide();
+                        },
+                        function(tx5, error){
+                            console.error("Error al consultar bandeja de salida: " + error.message);
+                            app.preloader.hide();
+                        }
+                    );  
+                },
+                function(error){},
+                function(){}
+            );
+            
+            databaseHandler.db.transaction(
+                function(tx5){
+                    tx5.executeSql("SELECT * FROM DesTechHeader WHERE id_cedula = ? AND IdHeader = ?",
+                        [id_cedula, localStorage.getItem("IdHeader")],
+                        function(tx5, results){
+                            let length = results.rows.length;
+                            let item2 = results.rows.item(0);
+                            $("#fase_titulo").html("Revisión Unidad "+item2.unidad);
+                            item2.operador ? ($("#operador_text").val(item2.credencial+" - "+item2.operador),$("#operador_firma").html("Firma de "+item2.operador),$("#ID_personal").val(item2.id_operador)) : $("#operador_text").val('')
+                            $("#observaciones").val(item2.observaciones)
+                        },
+                        function(tx5, error){
+                            console.error("Error al consultar bandeja de salida: " + error.message);
+                        }
+                    );  
+                },
+                function(error){},
+                function(){}
+            );
+
+            databaseHandler.db.transaction(
+                function(tx5){
+                    tx5.executeSql("SELECT * FROM DesTecFirmas WHERE id_cedula = ? AND IdHeader = ?",
+                        [id_cedula, localStorage.getItem("IdHeader")],
+                        function(tx5, results){
+                            let val = 1
+                            let length = results.rows.length;
+                            let item2 = results.rows.item(0);
+                            let data = item2.firma
+                            $("#signate").val(data);
+                            $('#ImagenFirmaView').attr('src', data);
+                            $('#VolverFirmar').html("Evidencia");
+                            $("#VolverAFirmar").html("Volver a Firmar <i class='icon material-icons md-only' style='display: inline-block;margin-left: 12px;'>border_color</i>");
+                            
+                            if (val) {
+                                var element = document.querySelector(".page-content");
+                                element.scrollTop = element.scrollHeight;
+                            }
+                        },
+                        function(tx5, error){
+                            console.error("Error al consultar bandeja de salida: " + error.message);
+                        }
+                    );  
+                },
+                function(error){},
+                function(){}
+            );
+
+            var empresa = localStorage.getItem("empresa");
+
+            let NomJson2 = 'personal_'+empresa;
+
+            self.autocompleteDropdownAjax = app.autocomplete.create({
+                inputEl: '#operador_text',
+                openIn: 'dropdown',
+                preloader: true, //enable preloader
+                valueProperty: 'ID', //object's "value" property name
+                textProperty:  'buscador', //object's "text" property name
+                limit: 10, //limit to [number] results
+                dropdownPlaceholderText: 'Selecciona una Unidad...',
+                source: function (query, render) {
+                    var autocomplete = this;
+                    var results = [];
+                    if (query.length === 0) {
+                        render(results);
+                        return;
+                    }
+                    autocomplete.preloaderShow();
+                    app.request({
+                        url: cordova.file.dataDirectory + "jsons_tecnologiasHmo/"+NomJson2+".json", 
+                        method: 'GET',
+                        dataType: 'json',
+                        data: {
+                            query: query,
+                        },success: function (data) {
+                            for (var i = 0; i < data.length; i++) {
+                                if (data[i].buscador.toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(data[i]);
+                            }
+                            autocomplete.preloaderHide();
+                            render(results); 
+                        }
+                    }); 
+                }
+            });
+
+            $('#operador_text').change(function () {
+                let ID = $("#operador_text").val();
+                let encontro = false;
+                
+                app.request.get(cordova.file.dataDirectory + "jsons_tecnologiasHmo/"+NomJson2+".json", function (data) {
+                    var content2 = JSON.parse(data);
+                    for(var x = 0; x < content2.length; x++) {
+                        if(content2[x].ID == ID){
+                            $("#operador_text").val(content2[x].buscador)
+                            $("#ID_personal").val(content2[x].ID)
+                            $("#clave").val(content2[x].clave)
+                            $("#fullName").val(content2[x].fullName)
+                            $("#operador_firma").html("Firma de "+content2[x].fullName)
+                            encontro = true;
+                        }         
+                    }
+                    
+                    if(!encontro){
+                        $("#operador_text").val("")
+                        $("#ID_personal").val("")
+                        $("#clave").val("")
+                        $("#fullName").val("")
+                    } else {
+                        actualizaOperadorTech()
+                    }
+                });
+            });
+        }
+    }
+}
+</script>
