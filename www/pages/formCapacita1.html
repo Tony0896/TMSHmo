@@ -48,7 +48,7 @@
                         <input class="FWM-input obligatorio" type="text" id="antecedentesManejo" name="Antecedentes de Manejo" maxlength="255"/>
 
                         <span class="span FWM-span-form">Cursos Disponibles</span>
-                        <select id="CursosTecnicos" class="FWM-input obligatorio">
+                        <select id="CursosTecnicos" name="Cursos Disponibles" class="FWM-input obligatorio">
                                 
                         </select>
 
@@ -72,15 +72,32 @@ return {
             var fecha = getDateWhitZeros().split(" ");
             $("#fecha").val(fecha[0]);
 
+            var self = this;
+            var app = self.$app; 
+
             if (localStorage.getItem("SaltoCurso")){
                 $("#id_candidato").val(localStorage.getItem("FK_Becario"));
                 $("#nombreCandidato").val( localStorage.getItem("nameBecario"));
                 $("#nombreCandidato").prop('disabled', true)
                 localStorage.removeItem("SaltoCurso")
+                app.request({
+                    url: cordova.file.dataDirectory + "jsons_capacitacion/Cursos_1.json", 
+                    method: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        let html = '<option value="" name="">Selecciona un curso</option>'
+                        for (var i = 0; i < data.length; i++) {
+                            if(data[i].IDNombreCurso == localStorage.getItem("IDCurso")){
+                                html += `
+                                    <option value="${data[i].IDNombreCurso}" name="${data[i].IDTipoCurso}" selected>${data[i].NombreCurso}</option>
+                                `;
+                            }
+                        }
+                        $("#CursosTecnicos").html(html)
+                    }
+                }); 
             } else {
                 var empresa = localStorage.getItem("empresa");
-                var self = this;
-                var app = self.$app; 
                 var NomJson = 'Prospectos_'+empresa;
                 var NomDescCli = "Prospectos_"+empresa;
 

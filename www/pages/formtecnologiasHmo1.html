@@ -170,10 +170,12 @@ return {
                             let length = results.rows.length;
                             let item2 = results.rows.item(0);
                             let data = item2.firma
-                            $("#signate").val(data);
-                            $('#ImagenFirmaView').attr('src', data);
-                            $('#VolverFirmar').html("Evidencia");
-                            $("#VolverAFirmar").html("Volver a Firmar <i class='icon material-icons md-only' style='display: inline-block;margin-left: 12px;'>border_color</i>");
+                            if(data){
+                                $("#signate").val(data);
+                                $('#ImagenFirmaView').attr('src', data);
+                                $('#VolverFirmar').html("Evidencia");
+                                $("#VolverAFirmar").html("Volver a Firmar <i class='icon material-icons md-only' style='display: inline-block;margin-left: 12px;'>border_color</i>");
+                            }
                             
                             if (val) {
                                 var element = document.querySelector(".page-content");

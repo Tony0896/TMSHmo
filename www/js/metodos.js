@@ -253,7 +253,9 @@ function moveMenu(val) {
         } else if(Modulos == "tecnologiasHmo"){
             preInicioTech()
             // app.views.main.router.navigate({ name: 'yallegueTecnologiasHMO'});
-        }
+        } else if(Modulos == "Relevos"){
+            app.views.main.router.navigate({ name: 'formRelevos1'});
+        } 
     }
 }
 function EliminarActualizacionesAntiguas() {
@@ -650,8 +652,6 @@ function recargacedulas() {
                         var fechas = item2.fecha_entrada.split(" ");
                         if (item2.tipo_cedula == 'checklist') {
                             $("#pendientes").append("<li id='conc" + item2.id_cedula + "'><div class='item-content'><div class='item-media'><i class='icon'><img src='img/circuloNaranja.png' width='20px' height='20px' /></i></div><div class='item-inner'><div class='item-title'> <div> " + item2.nombre_cliente + "| " + fechas[0] + "</div> <div style='color: #afafaf;font-size: 12px;margin-left: 10px;margin-top: 8px;font-weight: bold;'>Rev. Imagen</div> </div><div class='item-after'><a href='#' onclick='continuarCed(`" + item2.id_cedula + "`,1);' style='border: none; outline:none;'><i class='material-icons md-light' style='font-size:35px;color:#00A7B5'>play_circle_outline</i></a>&nbsp;&nbsp;&nbsp;<a href='#' onclick='EliminarReg(" + item2.id_cedula + ",`" + item2.tipo_cedula + "`)' style='border: none; outline:none;'><i class='material-icons md-light' style='font-size:35px;color:red'>delete_forever</i></a></div></div></div></li>");
-                        } else if (item2.tipo_cedula == 'Limpieza') {
-                            $("#pendientes").append("<li id='conc" + item2.id_cedula + "'><div class='item-content'><div class='item-media'><i class='icon'><img src='img/circuloNaranja.png' width='20px' height='20px' /></i></div><div class='item-inner'><div class='item-title'> <div> " + item2.nombre_cliente + "| " + fechas[0] + "</div> <div style='color: #afafaf;font-size: 12px;margin-left: 10px;margin-top: 8px;font-weight: bold;'>Rev. Limpieza</div> </div><div class='item-after'><a href='#' onclick='continuarCed(`" + item2.id_cedula + "`,2);' style='border: none; outline:none;'><i class='material-icons md-light' style='font-size:35px;color:#00A7B5'>play_circle_outline</i></a>&nbsp;&nbsp;&nbsp;<a href='#' onclick='EliminarReg(" + item2.id_cedula + ",`" + item2.tipo_cedula + "`)' style='border: none; outline:none;'><i class='material-icons md-light' style='font-size:35px;color:red'>delete_forever</i></a></div></div></div></li>");
                         } else if (item2.tipo_cedula == 'Capacitación') {
                             if(item2.nombre_evalua == 'Prueba Manejo'){
                                 $("#pendientes").append("<li id='conc" + item2.id_cedula + "'><div class='item-content'><div class='item-media'><i class='icon'><img src='img/circuloNaranja.png' width='20px' height='20px' /></i></div><div class='item-inner'><div class='item-title'> <div> " + item2.nombre_cliente + "| " + fechas[0] + "</div> <div style='color: #afafaf;font-size: 12px;margin-left: 10px;margin-top: 8px;font-weight: bold;'>Prueba Manejo</div> </div><div class='item-after'><a href='#' onclick='continuarCed(`" + item2.id_cedula + "`,5);' style='border: none; outline:none;'><i class='material-icons md-light' style='font-size:35px;color:#00A7B5'>play_circle_outline</i></a>&nbsp;&nbsp;&nbsp;<a href='#' onclick='EliminarReg(" + item2.id_cedula + ",`" + item2.tipo_cedula + "`)' style='border: none; outline:none;'><i class='material-icons md-light' style='font-size:35px;color:red'>delete_forever</i></a></div></div></div></li>");
@@ -659,7 +659,7 @@ function recargacedulas() {
                                 $("#pendientes").append("<li id='conc" + item2.id_cedula + "'><div class='item-content'><div class='item-media'><i class='icon'><img src='img/circuloNaranja.png' width='20px' height='20px' /></i></div><div class='item-inner'><div class='item-title'> <div> " + item2.nombre_cliente + "| " + fechas[0] + "</div> <div style='color: #afafaf;font-size: 12px;margin-left: 10px;margin-top: 8px;font-weight: bold;'>"+item2.nombre_evalua+"</div> </div><div class='item-after'><a href='#' onclick='continuarCedCap(`" + item2.id_cedula + "`,`" +item2.geolocalizacion_salida+ "`);' style='border: none; outline:none;'><i class='material-icons md-light' style='font-size:35px;color:#00A7B5'>play_circle_outline</i></a>&nbsp;&nbsp;&nbsp;<a href='#' onclick='EliminarReg(" + item2.id_cedula + ",`" + item2.tipo_cedula + "`)' style='border: none; outline:none;'><i class='material-icons md-light' style='font-size:35px;color:red'>delete_forever</i></a></div></div></div></li>");
                             }
                         } else {
-                            $("#pendientes").append("<li id='conc" + item2.id_cedula + "'><div class='item-content'><div class='item-media'><i class='icon'><img src='img/circuloNaranja.png' width='20px' height='20px' /></i></div><div class='item-inner'><div class='item-title'> <div> " + item2.nombre_cliente + "| " + fechas[0] + "</div> <div style='color: #afafaf;font-size: 12px;margin-left: 10px;margin-top: 8px;font-weight: bold;'>"+item2.nombre_evalua+"</div> </div><div class='item-after'><a href='#' onclick='continuarCedCap(`" + item2.id_cedula + "`,`" +item2.geolocalizacion_salida+ "`);' style='border: none; outline:none;'><i class='material-icons md-light' style='font-size:35px;color:#00A7B5'>play_circle_outline</i></a>&nbsp;&nbsp;&nbsp;<a href='#' onclick='EliminarReg(" + item2.id_cedula + ",`" + item2.tipo_cedula + "`)' style='border: none; outline:none;'><i class='material-icons md-light' style='font-size:35px;color:red'>delete_forever</i></a></div></div></div></li>");
+                            $("#pendientes").append(`<li id='conc${item2.id_cedula}'><div class='item-content'><div class='item-media'> <i class='icon'><img src='img/circuloNaranja.png' width='20px' height='20px' /></i> </div><div class='item-inner'><div class='item-title'> <div>${item2.nombre_cliente} | ${fechas[0]}</div>  <div style='color: #afafaf;font-size: 12px;margin-left: 10px;margin-top: 8px;font-weight: bold;'>${item2.nombre_cliente}</div>  </div><div class='item-after'> <a href='#' onclick="continuarCed2(${item2.id_cedula},'${item2.tipo_cedula}');" style='border: none; outline:none;'> <i class='material-icons md-light' style='font-size:35px;color:#00A7B5'>play_circle_outline</i></a>&nbsp;&nbsp;&nbsp; <a href='#' onclick="EliminarReg(${item2.id_cedula},'${item2.tipo_cedula}')" style='border: none; outline:none;'><i class='material-icons md-light' style='font-size:35px;color:red'>delete_forever</i></a></div></div></div></li>`);
                         }
                     }
                 },
@@ -3168,6 +3168,7 @@ function GenerarCurso(IDMov, FK_Becario, IDCurso, IDTipoCurso, OpDiario, NombreC
                 <div class="card" style="text-align: center;padding-left: 15px;padding-right: 15px;border: 1px solid #005D99;border-radius: 10px;">
                     <span class="span FWM-span-form">Evaluacion no disponible</span>
                 </div></div>`;
+            let encontro = false
             app.request({
                 url: cordova.file.dataDirectory + "jsons_capacitacion/" + NomJson + ".json",
                 method: 'GET',
@@ -3175,9 +3176,11 @@ function GenerarCurso(IDMov, FK_Becario, IDCurso, IDTipoCurso, OpDiario, NombreC
                 success: function (data) {
                     var length = data.length;
                     if (length == 0) {
+                        segundaBusqueda22(IDCurso, FK_Becario)
                     } else {
                         for (var j = 0; j < data.length; j++) {
                             if (data[j].FK_IDCurso == IDCurso && data[j].FK_Becario == FK_Becario) {
+                                encontro = true
                                 var check = ''
                                 data[j].apto == 1 ? check = 'checked' : check = '';
                                 html = `<div class="card-content">
@@ -3209,34 +3212,38 @@ function GenerarCurso(IDMov, FK_Becario, IDCurso, IDTipoCurso, OpDiario, NombreC
                                 </div>`;
                             }
                         }
-                        var popEvidencia = app.popup.create({
-                            content: `
-                            <div class="sheet-modal my-sheet" id="sheet-modal-3" name="sheet">
-                            <div class="toolbar">
-                                <div class="toolbar-inner">
-                                    <div class="left"></div>
-                                    <div class="right"><a class="link" id="close_sheet-3" href="#">Cerrar</a></div>
+                        if(!encontro){
+                            segundaBusqueda22(IDCurso, FK_Becario)
+                        } else {
+                            var popEvidencia = app.popup.create({
+                                content: `
+                                <div class="sheet-modal my-sheet" id="sheet-modal-3" name="sheet">
+                                <div class="toolbar">
+                                    <div class="toolbar-inner">
+                                        <div class="left"></div>
+                                        <div class="right"><a class="link" id="close_sheet-3" href="#">Cerrar</a></div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="sheet-modal-inner" style="overflow-y: scroll;">
-                                <div class="block">
-                                    ${html}
+                                <div class="sheet-modal-inner" style="overflow-y: scroll;">
+                                    <div class="block">
+                                        ${html}
+                                    </div>
                                 </div>
-                            </div>
-                        </div>`,
-                            swipeToClose: false,
-                            closeByOutsideClick: false,
-                            closeByBackdropClick: false,
-                            closeOnEscape: false,
-                            on: {
-                                open: function (popup) {
-                                    $('#close_sheet-3').click(function () {
-                                        app.sheet.close('#sheet-modal-3');
-                                    });
-                                },
-                            }
-                        });
-                        popEvidencia.open();
+                            </div>`,
+                                swipeToClose: false,
+                                closeByOutsideClick: false,
+                                closeByBackdropClick: false,
+                                closeOnEscape: false,
+                                on: {
+                                    open: function (popup) {
+                                        $('#close_sheet-3').click(function () {
+                                            app.sheet.close('#sheet-modal-3');
+                                        });
+                                    },
+                                }
+                            });
+                            popEvidencia.open();    
+                        }
                     }
                 }
             });
@@ -3247,6 +3254,92 @@ function GenerarCurso(IDMov, FK_Becario, IDCurso, IDTipoCurso, OpDiario, NombreC
     }
 }
 
+function segundaBusqueda22(IDCurso, FK_Becario){
+    console.log("ff")
+    var empresa = localStorage.getItem("empresa");
+    var html = ''
+    var NomJson = 'DatosEvaluacionD_' + empresa;
+    let encontro = false
+    app.request({
+        url: cordova.file.dataDirectory + "jsons_capacitacion/" + NomJson + ".json",
+        method: 'GET',
+        dataType: 'json',
+        success: function (data) {
+            var length = data.length;
+            if (length == 0) {
+            } else {
+                for (var j = 0; j < data.length; j++) {
+                    if (data[j].FK_IDCurso == IDCurso && data[j].FK_Becario == FK_Becario) {
+                        console.log(encontro)
+                        encontro = true
+                        var check = ''
+                        data[j].apto == 1 ? check = 'checked' : check = '';
+                        html = `<div class="card-content">
+                            <div class="card" style="text-align: center;padding-left: 15px;padding-right: 15px;border: 1px solid #005D99;border-radius: 10px;">
+                                <div class="container-check">
+                                    <span class="span FWM-span-form">Fecha Evaluacion</span>
+                                    <span class="span FWM-span-form span-dato" style="color:#005D99;">${data[j].fecha}</span>
+                                </div>
+                                <div class="container-check">
+                                    <span class="span FWM-span-form">Instructor</span>
+                                    <span class="span FWM-span-form span-dato" style="color:#005D99;">${data[j].nameInstructor}</span>
+                                </div>
+                                <div class="container-check">
+                                    <span class="span FWM-span-form">Becario</span>
+                                    <span class="span FWM-span-form span-dato" style="color:#005D99;">${data[j].nameBecario}</span>
+                                </div>
+                                <div class="container_options" style="display: flex;">
+                                    <span class="span FWM-span-form" style="width: 50%;">El candidato es Apto?:</span>
+                                    <div style="width: 50%;">
+                                        <input class="tgl tgl-skewed" id="cb3" type="checkbox" ${check}></input>
+                                        <label class="tgl-btn" data-tg-off="NO" data-tg-on="SI" for="" style="font-size: 20px;border-radius: 5px;"></label>
+                                    </div>
+                                </div>
+                                <div class="container-check">
+                                <span class="span FWM-span-form">Observaciones</span>
+                                <span class="span FWM-span-form span-dato" style="color:#005D99;">${data[j].observaciones}</span>
+                            </div>
+                            </div>
+                        </div>`;
+                    }
+                }
+                if(!encontro){
+                    console.log("No enconro", IDCurso, FK_Becario)
+                } else {
+                     var popEvidencia = app.popup.create({
+                         content: `
+                         <div class="sheet-modal my-sheet" id="sheet-modal-3" name="sheet">
+                         <div class="toolbar">
+                             <div class="toolbar-inner">
+                                 <div class="left"></div>
+                                 <div class="right"><a class="link" id="close_sheet-3" href="#">Cerrar</a></div>
+                             </div>
+                         </div>
+                         <div class="sheet-modal-inner" style="overflow-y: scroll;">
+                             <div class="block">
+                                 ${html}
+                             </div>
+                         </div>
+                     </div>`,
+                         swipeToClose: false,
+                         closeByOutsideClick: false,
+                         closeByBackdropClick: false,
+                         closeOnEscape: false,
+                         on: {
+                             open: function (popup) {
+                                 $('#close_sheet-3').click(function () {
+                                     app.sheet.close('#sheet-modal-3');
+                                 });
+                             },
+                         }
+                     });
+                     popEvidencia.open();    
+                 }
+            }
+        }
+    });
+}
+
 function actualizaRespuestaSiNoPuntuacion(id, valor, OpCorrecta) {
     var id_cedula = localStorage.getItem("IdCedula");
     var ids = id.split("-");
@@ -3254,33 +3347,58 @@ function actualizaRespuestaSiNoPuntuacion(id, valor, OpCorrecta) {
     if (check.includes('1')) {
         var respuesta = 1;
         var id_pregunta = ids[0].replace('op', '');
-        if (OpCorrecta == 1) {
-            var prePunto = 1 * valor;
-        } else {
-            var prePunto = -1 * valor;
-        }
+        // if (OpCorrecta == 1) {
+        //     var prePunto = 1 * valor;
+        // } else {
+        //     if(Number($("#calificacion_number").val()) == 0){
+        //         var prePunto = 0
+        //     } else {
+        //         if($("#"+checK1).prop("checked") == true || $("#"+checK2).prop("checked") == true){
+        //             var prePunto = -1 * valor;
+        //         } else {
+        //             var prePunto = 0
+        //         }
+        //     }
+        // }
 
     } else if (check.includes('0')) {
         var respuesta = 0;
         var id_pregunta = ids[0].replace('op', '');
-        if (OpCorrecta == 0) {
-            var prePunto = 1 * valor;
-        } else {
-            var prePunto = -1 * valor;
-        }
+        // if (OpCorrecta == 0) {
+        //     var prePunto = 1 * valor;
+        // } else {
+        //     if(Number($("#calificacion_number").val()) == 0){
+        //         var prePunto = 0
+        //     } else {
+        //         if($("#"+checK1).prop("checked") == true || $("#"+checK2).prop("checked") == true){
+        //             var prePunto = -1 * valor;
+        //         } else {
+        //             var prePunto = 0
+        //         }
+        //     }
+        // }
     }
-
-    var PuntosCurso = Number($("#calificacion_number").val());
-    var totalPuntos = PuntosCurso + prePunto;
-    $("#calificacion_number").val(totalPuntos)
-
-    getCalificacionCursoValor(totalPuntos)
 
     databaseHandler.db.transaction(
         function (tx) {
             tx.executeSql("UPDATE CAP_RespuestasSiNoPuntuacion SET Respuesta = ? WHERE id_cedula = ? AND FK_IDPregunta = ?",
                 [respuesta, id_cedula, id_pregunta],
                 function (tx, results) {
+                    databaseHandler.db.transaction(
+                        function(tx){
+                            tx.executeSql(
+                                "Select SUM(Valor) as cuenta from CAP_RespuestasSiNoPuntuacion WHERE id_cedula = ? AND Respuesta = OpCorrecta AND Respuesta IS NOT NULL",
+                                [id_cedula],
+                                function(tx, results){
+                                    var item3 = results.rows.item(0);
+                                    $("#calificacion_number").val(item3.cuenta)
+                                    getCalificacionCursoValor(item3.cuenta)
+                                }
+                            );
+                        },
+                        function(error){},
+                        function(){}
+                    );
                 },
                 function (tx, error) {
                     console.error("Error al guardar: " + error.message);
@@ -3295,8 +3413,8 @@ function actualizaRespuestaSiNoPuntuacion(id, valor, OpCorrecta) {
 function sincronizaDatosCapacitacion() {
     let EmpresaID = 1
     let paso = 1;
-    let urlBase2 = "http://192.168.100.4/Desarrollo/CISAApp/HMOFiles/Exec";
-    // var urlBase2 = "http://192.168.137.205/Desarrollo/CISAApp/HMOFiles/Exec";
+    // let urlBase2 = "http://192.168.100.4/Desarrollo/CISAApp/HMOFiles/Exec";
+    var urlBase2 = "http://172.16.0.143/Desarrollo/CISAApp/HMOFiles/Exec";
     // var urlBase2 = "http://mantto.ci-sa.com.mx/www.CISAAPP.com";
     let url = urlBase2 + "/capacitacion/datos.php?empresa=" + EmpresaID + "&paso=" + paso;
 
@@ -4025,7 +4143,9 @@ function continuarCed2(id_cedula, tipo) {
 
     if (tipo == 'tecnologiasHmo') {
         app.views.main.router.back('/yallegueTecnologiasHMO/', { force: true, ignoreCache: true, reload: true });
-    }
+    } else if (tipo == 'Relevos') {
+        app.views.main.router.back('/formRelevos1/', { force: true, ignoreCache: true, reload: true });
+    } 
 }
 
 function preInicioTech(){
@@ -4080,50 +4200,70 @@ function editarInspeccion(IdHeader){
 
 function inspeccionarUnidad(){
     if($("#id_unidad").val()){
-        let unidad = $("#autocomplete-dropdown-ajax").val()
-        let id_unidad = $("#id_unidad").val()
-        let id_operador = $("#id_operador").val()
-        let operador = $("#operador").val()
-        let credencial = $("#credencial").val()
-        let fecha_inicio = getDateWhitZeros();
-        let progress = 0;
-        let dialog = app.dialog.progress('Trabajando... ', progress, 'red');
-        let id_empresa = localStorage.getItem("empresa");
         let id_cedula = localStorage.getItem("IdCedula")
-        let NomJson = 'datos_check'+id_empresa;
-
-        productHandler.addDesTechHmoHeader(id_cedula, unidad, id_unidad, id_operador, operador, credencial, fecha_inicio);
         databaseHandler.db.transaction(
             function (tx) {
                 tx.executeSql(
-                "Select MAX(IdHeader) as IdHeader from DesTechHeader",
-                [],
-                function (tx, results) {
-                    var item = results.rows.item(0);
-                    localStorage.setItem("IdHeader", item.IdHeader);
-                    app.request({
-                        url: cordova.file.dataDirectory + "jsons_tecnologiasHmo/"+NomJson+".json",
-                        method: 'GET',
-                        dataType: 'json',
-                        success: function (data) {
-                            var aux = data.length;
-                            var aux2=0;
-                            if(aux == 0){
-                                app.dialog.close();
-                                swal("","Algo salió mal.","warning");
-                            }else{
-                                dialog.setText('1 de ' + aux);
-                                for (var j = 0; j < data.length; j++) {
-                                    aux2++;
-                                    productHandler.addDesTechHmoDetails(id_cedula,item.IdHeader, data[j].ID, data[j].Pregunta, data[j].Multiple, data[j].FK_formato, data[j].FK_equipo, aux, aux2);
-                                }
-                            }
+                "Select id_cedula from DesTechHeader WHERE id_cedula = ? AND id_unidad = ?",
+                    [id_cedula, $("#id_unidad").val()],
+                    function (tx, results) {
+                        let length = results.rows.length;
+                        if(length == 0){
+                            let unidad = $("#autocomplete-dropdown-ajax").val()
+                            let id_unidad = $("#id_unidad").val()
+                            let id_operador = $("#id_operador").val()
+                            let operador = $("#operador").val()
+                            let credencial = $("#credencial").val()
+                            let fecha_inicio = getDateWhitZeros();
+                            let progress = 0;
+                            let dialog = app.dialog.progress('Trabajando... ', progress, 'red');
+                            let id_empresa = localStorage.getItem("empresa");
+                            let NomJson = 'datos_check'+id_empresa;
+                    
+                            productHandler.addDesTechHmoHeader(id_cedula, unidad, id_unidad, id_operador, operador, credencial, fecha_inicio);
+                            databaseHandler.db.transaction(
+                                function (tx) {
+                                    tx.executeSql(
+                                    "Select MAX(IdHeader) as IdHeader from DesTechHeader",
+                                    [],
+                                    function (tx, results) {
+                                        var item = results.rows.item(0);
+                                        localStorage.setItem("IdHeader", item.IdHeader);
+                                        app.request({
+                                            url: cordova.file.dataDirectory + "jsons_tecnologiasHmo/"+NomJson+".json",
+                                            method: 'GET',
+                                            dataType: 'json',
+                                            success: function (data) {
+                                                var aux = data.length;
+                                                var aux2=0;
+                                                if(aux == 0){
+                                                    app.dialog.close();
+                                                    swal("","Algo salió mal.","warning");
+                                                }else{
+                                                    dialog.setText('1 de ' + aux);
+                                                    for (var j = 0; j < data.length; j++) {
+                                                        aux2++;
+                                                        productHandler.addDesTechHmoDetails(id_cedula,item.IdHeader, data[j].ID, data[j].Pregunta, data[j].Multiple, data[j].FK_formato, data[j].FK_equipo, aux, aux2);
+                                                    }
+                                                }
+                                            }
+                                        });
+                                    },
+                                    function (tx, error) {
+                                        console.log("Error al guardar cedula: " + error.message);
+                                    }
+                                    );
+                                },
+                                function (error) {},
+                                function () {}
+                            );
+                        } else {
+                            swal("","Esta unidad ya la tienes registrada.","warning");
                         }
-                    });
-                },
-                function (tx, error) {
-                    console.log("Error al guardar cedula: " + error.message);
-                }
+                    },
+                    function (tx, error) {
+                        console.log("Error al guardar cedula: " + error.message);
+                    }
                 );
             },
             function (error) {},
@@ -4147,30 +4287,35 @@ function TerminarCheckListHMO(){
                         if(length == 0){
                             let firma = $("#signate").val()
                             let observaciones = $("#observaciones").val()
-                            if(firma){
-                                databaseHandler.db.transaction(
-                                    function(tx){ tx.executeSql("UPDATE DesTecFirmas SET firma = ?, fecha = ? WHERE id_cedula = ? AND IdHeader = ?;", 
-                                    [firma,getDateWhitZeros(), id_cedula, IdHeader],
-                                    function(tx, results){ 
-                                        databaseHandler.db.transaction(
-                                            function(tx){ tx.executeSql("UPDATE DesTechHeader SET fecha_fin = ?, observaciones= ? WHERE id_cedula = ? AND IdHeader = ?;", 
-                                            [getDateWhitZeros(), observaciones, id_cedula, IdHeader],
-                                            function(tx, results){ regresaTechHmo() },
-                                            function(tx, error){ swal("Error al guardar",error.message,"error"); } ); }, function(error){}, function(){}
-                                        );
-                                 },
-                                    function(tx, error){ swal("Error al guardar",error.message,"error"); } ); }, function(error){}, function(){}
-                                );
+                            observaciones = observaciones.trim()
+                            if (firma || observaciones){
+                                if(firma){
+                                    databaseHandler.db.transaction(
+                                        function(tx){ tx.executeSql("UPDATE DesTecFirmas SET firma = ?, fecha = ? WHERE id_cedula = ? AND IdHeader = ?;", 
+                                        [firma,getDateWhitZeros(), id_cedula, IdHeader],
+                                        function(tx, results){ 
+                                            databaseHandler.db.transaction(
+                                                function(tx){ tx.executeSql("UPDATE DesTechHeader SET fecha_fin = ?, observaciones= ? WHERE id_cedula = ? AND IdHeader = ?;", 
+                                                [getDateWhitZeros(), observaciones, id_cedula, IdHeader],
+                                                function(tx, results){ regresaTechHmo() },
+                                                function(tx, error){ swal("Error al guardar",error.message,"error"); } ); }, function(error){}, function(){}
+                                            );
+                                     },
+                                        function(tx, error){ swal("Error al guardar",error.message,"error"); } ); }, function(error){}, function(){}
+                                    );
+                                } else {
+                                    databaseHandler.db.transaction(
+                                        function(tx){ tx.executeSql("UPDATE DesTechHeader SET fecha_fin = ?, observaciones= ? WHERE id_cedula = ? AND IdHeader = ?;", 
+                                        [getDateWhitZeros(), observaciones, id_cedula, IdHeader],
+                                        function(tx, results){ regresaTechHmo() },
+                                        function(tx, error){ swal("Error al guardar",error.message,"error"); } ); }, function(error){}, function(){}
+                                    );
+                                }
                             } else {
-                                databaseHandler.db.transaction(
-                                    function(tx){ tx.executeSql("UPDATE DesTechHeader SET fecha_fin = ?, observaciones= ? WHERE id_cedula = ? AND IdHeader = ?;", 
-                                    [getDateWhitZeros(), observaciones, id_cedula, IdHeader],
-                                    function(tx, results){ regresaTechHmo() },
-                                    function(tx, error){ swal("Error al guardar",error.message,"error"); } ); }, function(error){}, function(){}
-                                );
+                                swal("", "Los comentarios o la firma no puede estar vacío.", "warning");
                             }
                         } else {
-                            swal("", "Debes responder a todos los conceptos para poder continuar", "warning");
+                            swal("", "Debes responder a todos los conceptos para poder continuar.", "warning");
                         }
                     },
                     function(tx5, error){
@@ -4534,4 +4679,415 @@ function eliminarInspeccion(IdHeader){
     });
 }
 //Fin tecnologiasHmo
+//Inicio Relevos
+function scanRelevos(val){
+    if(val){
+        if(val == 1){
+            // cordova.plugins.barcodeScanner.scan(
+            //     function (result) {
+            //         $("#operador").val(result.text)
+            //     },
+            //     function (error) {
+            //         alert("Scanning failed: " + error);
+            //     },
+            //     {
+            //         preferFrontCamera : false,
+            //         showFlipCameraButton : true,
+            //         showTorchButton : true,
+            //         torchOn: false,
+            //         saveHistory: false,
+            //         prompt : "Coloca el código dentro de la zona marcada",
+            //         resultDisplayDuration: 500,
+            //         orientation : "portrait",
+            //         disableAnimations : true,
+            //         disableSuccessBeep: false
+            //     }
+            //  );
+            buscadorRelevos(555)
+        } else if(val == 2){
+            // cordova.plugins.barcodeScanner.scan(
+            //     function (result) {
+            //         $("#operador").val(result.text)
+            //     },
+            //     function (error) {
+            //         alert("Scanning failed: " + error);
+            //     },
+            //     {
+            //         preferFrontCamera : false,
+            //         showFlipCameraButton : true,
+            //         showTorchButton : true,
+            //         torchOn: false,
+            //         saveHistory: false,
+            //         prompt : "Coloca el código dentro de la zona marcada",
+            //         resultDisplayDuration: 500,
+            //         orientation : "portrait",
+            //         disableAnimations : true,
+            //         disableSuccessBeep: false
+            //     }
+            //  );
+            revisaRelevos(555)
+        }
+    }
+}
+
+function buscadorRelevos(valor){ //* buscar de licencias y operadores
+    app.dialog.progress('Buscando...','red');
+    $("#divPersonaEntra").css("display", "none")
+    $("#IDSale").val('')
+    $("#claveEmpleado").val('')
+    $("#fullName").val('')
+    $("#ID_personal").val('')
+    $("#Eco").val('')
+    $("#FKUnidad").val('')
+    $("#linea").val('')
+    $("#jornada").val('')
+    $("#IDEntra").val('')
+    $("#claveEmpleadoE").val('')
+    $("#fullNameE").val('')
+    $("#ID_personalE").val('')
+    $("#EcoE").val('')
+    $("#FKUnidadE").val('')
+    $("#lineaE").val('')
+    $("#jornadaE").val('')
+
+    empresa = localStorage.getItem("empresa")
+    var NomJson = 'personal_'+empresa;
+    app.request({
+        url: cordova.file.dataDirectory + "jsons_Relevos/" + NomJson + ".json",
+        method: 'GET',
+        dataType: 'json',
+        success: function (data) {
+            let encontro = false
+            for (var j = 0; j < data.length; j++) {
+                if (data[j].QR == valor) {
+                    encontro = true
+                    console.log("personal1", data[j])
+                    $("#claveEmpleado").val(data[j].claveEmpleado)
+                    $("#fullName").val(data[j].fullName)
+                    $("#ID_personal").val(data[j].ID_personal)
+
+                    segundaBusqueda(data[j].ID_personal)
+                    break
+                }
+            }
+
+            if(!encontro){
+                $("#IDSale").val('')
+                $("#claveEmpleado").val('')
+                $("#fullName").val('')
+                $("#ID_personal").val('')
+                $("#Eco").val('')
+                $("#FKUnidad").val('')
+                $("#linea").val('')
+                $("#jornada").val('')
+                swal("", "No se encontro al operador.", "warning")
+                app.dialog.close()
+            }
+        }
+    });
+}
+
+function segundaBusqueda(ID_personal){//* buscar turno 1
+    empresa = localStorage.getItem("empresa")
+    var NomJson = 'programa_'+empresa;
+    app.request({
+        url: cordova.file.dataDirectory + "jsons_Relevos/" + NomJson + ".json",
+        method: 'GET',
+        dataType: 'json',
+        success: function (data) {
+            let encontro = false
+            for (var j = 0; j < data.length; j++) {
+                if (data[j].FKPersonal == ID_personal && data[j].Turno == 1) {
+                    encontro = true
+                    console.log("programa 1", data[j])
+                    tercaraBusqeuda(data[j].Linea, data[j].Jornada, ID_personal)
+                    $("#IDSale").val(data[j].ID)
+                    $("#Eco").val(data[j].Eco)
+                    $("#linea").val(data[j].Linea)
+                    $("#jornada").val(data[j].Jornada)
+                    $("#FKUnidad").val(data[j].FKUnidad)
+                    break
+                }
+            }
+
+            if(!encontro){
+                $("#IDSale").val('')
+                $("#claveEmpleado").val('')
+                $("#fullName").val('')
+                $("#ID_personal").val('')
+                $("#Eco").val('')
+                $("#FKUnidad").val('')
+                $("#linea").val('')
+                $("#jornada").val('')
+                swal("", "No se encontro programación en este operador, sincroniza datos e inténtalo nuevamente.", "warning")
+                app.dialog.close()
+            }
+        }
+    });
+}
+function tercaraBusqeuda(Linea, Jornada, ID_personal){ //* buscar turno 2
+    empresa = localStorage.getItem("empresa")
+    var NomJson = 'programa_'+empresa;
+    app.request({
+        url: cordova.file.dataDirectory + "jsons_Relevos/" + NomJson + ".json",
+        method: 'GET',
+        dataType: 'json',
+        success: function (data) {
+            let encontro = false
+            for (var j = 0; j < data.length; j++) {
+                if (data[j].Linea == Linea && data[j].Jornada == Jornada && data[j].Turno == 2) {
+                    if(data[j].FKPersonal == 0 || data[j].FKPersonal == ''){
+                        swal("", "No existe un relevo en la asignación. Comunicarse con operación.", "warning")
+                    } else {
+                        if(ID_personal == data[j].FKPersonal){
+                            console.log("programa 2", data[j])
+                            encontro = true
+                            $("#IDSale").val('')
+                            $("#claveEmpleado").val('')
+                            $("#fullName").val('')
+                            $("#ID_personal").val('')
+                            $("#Eco").val('')
+                            $("#FKUnidad").val('')
+                            $("#linea").val('')
+                            $("#jornada").val('')
+                            swal("", "El relevo no es necesario.", "warning")
+                            app.dialog.close()
+                        } else {
+                            encontro = true
+                            console.log("programa 2", data[j])
+                            $("#IDEntra").val(data[j].ID)
+                            $("#EcoE").val(data[j].Eco)
+                            $("#lineaE").val(data[j].Linea)
+                            $("#jornadaE").val(data[j].Jornada)
+                            $("#FKUnidadE").val(data[j].FKUnidad)
+                            $("#ID_personalE").val(data[j].FKPersonal)
+                            app.dialog.close()
+                            guardaRelevo()
+                        }
+                    }
+                    break
+                }
+            }
+
+            if(!encontro){
+                swal("", "No existe un relevo en la asignación. Comunicarse con operación.", "warning")
+                app.dialog.close()
+            }
+        }
+    });
+}
+
+function revisaRelevos(valor){
+    app.dialog.progress('Buscando...','red');
+    empresa = localStorage.getItem("empresa")
+    var NomJson = 'personal_'+empresa;
+    app.request({
+        url: cordova.file.dataDirectory + "jsons_Relevos/" + NomJson + ".json",
+        method: 'GET',
+        dataType: 'json',
+        success: function (data) {
+            let encontro = false
+            for (var j = 0; j < data.length; j++) {
+                if (data[j].QR == valor) {
+                    encontro = true
+                    $("#claveEmpleadoE").val(data[j].claveEmpleado)
+                    $("#fullNameE").val(data[j].fullName)
+                    if(data[j].ID_personal == $("#ID_personalE").val()){
+                        if(data[j].EstatusOperador == 'Suspendido'){
+                            $("#claveEmpleadoE").val('')
+                            $("#fullNameE").val('')
+                            swal("Operador suspendido.", "Comunicate con operaciones para determinar su situcación.", "warning")
+                            return false
+                        } else {
+                            if(data[j].dias <= 0){
+                                $("#claveEmpleadoE").val('')
+                                $("#fullNameE").val('')
+                                swal("Licencia Vencida.", "Este operador tiene su licencia vencida y no se puede asignar.", "warning")
+                            }
+                            if(data[j].dias > 0 && data[j].dias <= 10){
+                                swal("Puedes continuar pero...", "Licencia cuenta con solo "+data[j].dias+" días de vigencia.", "warning")
+                            }
+                        }
+                    } else {
+                        $("#claveEmpleadoE").val('')
+                        $("#fullNameE").val('')
+                        swal("", "Este operador no esta en la asignación. Sincroniza datos e intenta nuevamente si el problema persiste comunicate con operaciones.", "warning")
+                    }
+                    app.dialog.close()
+                    break
+                }
+            }
+
+            if(!encontro){
+                swal("", "No se encontro al operador.", "warning")
+                app.dialog.close()
+            }
+        }
+    });
+}
+
+function guardaRelevo(){
+    let IDSale =$("#IDSale").val()
+    let claveEmpleado =$("#claveEmpleado").val()
+    let fullName =$("#fullName").val()
+    let ID_personal =$("#ID_personal").val()
+    let Eco =$("#Eco").val()
+    let FKUnidad =$("#FKUnidad").val()
+    let linea =$("#linea").val()
+    let jornada =$("#jornada").val()
+    let fechaSalida = getDateWhitZeros()
+    let UsuarioMov = localStorage.getItem("Usuario")
+    let FkUsuarioMov = localStorage.getItem("id_usuario")
+    let tipoCedula = localStorage.getItem("Modulos")
+    
+    let id_usuario = localStorage.getItem("id_usuario");
+    let nombre_usuario = localStorage.getItem("Usuario");
+    let fecha_llegada =  getDateWhitZeros();
+    let horario_programado = fecha_llegada;
+    let nombre_cliente = "Relevos";
+    let estatus = 0;
+    let geolocation = '';
+    let id_cliente = localStorage.getItem("empresa");
+    let tipo_cedula = localStorage.getItem("Modulos")
+
+    let IDEntra = $("#IDEntra").val()
+    let claveEmpleadoE = $("#claveEmpleadoE").val()
+    let fullNameE = $("#fullNameE").val()
+    let ID_personalE = $("#ID_personalE").val()
+    let EcoE = $("#EcoE").val()
+    let FKUnidadE = $("#FKUnidadE").val()
+    let lineaE = $("#lineaE").val()
+    let jornadaE = $("#jornadaE").val()
+    let id_cedula = localStorage.getItem("IdCedula")
+
+    $("#divPersonaEntra").css("display", "block")
+    
+    if(id_cedula){
+        productHandler.addRelevos(id_cedula, IDSale, claveEmpleado, fullName, ID_personal, Eco, FKUnidad, linea, jornada, fechaSalida, UsuarioMov, FkUsuarioMov, tipoCedula, IDEntra, claveEmpleadoE, fullNameE, ID_personalE, EcoE, FKUnidadE, lineaE, jornadaE)
+    } else {
+        productHandler.addCedulayb(id_usuario,nombre_usuario,fecha_llegada,geolocation,id_cliente,nombre_cliente,horario_programado,estatus,tipo_cedula);
+        databaseHandler.db.transaction(
+            function (tx) {
+                tx.executeSql(
+                "Select MAX(id_cedula) as Id from cedulas_general",
+                [],
+                function (tx, results) {
+                    var item = results.rows.item(0);
+                    localStorage.setItem("IdCedula", item.Id);
+                    let id_cedula = item.Id;
+                    productHandler.addRelevos(id_cedula, IDSale, claveEmpleado, fullName, ID_personal, Eco, FKUnidad, linea, jornada, fechaSalida, UsuarioMov, FkUsuarioMov, tipoCedula, IDEntra, claveEmpleadoE, fullNameE, ID_personalE, EcoE, FKUnidadE, lineaE, jornadaE)
+                },
+                function (tx, error) {
+                    console.log("Error al guardar cedula: " + error.message);
+                }
+                );
+            },
+            function (error) {},
+            function () {}
+        );
+    }
+}
+
+function guardarRelevos(){
+    // IDEntra int, claveEmpleadoE Text, fullNameE Text ID_personalE int, EcoE Text, FKUnidadE int, lineaE int, jornadaE int, fechaEntrada Text, UsuarioMovE Text, FkUsuarioMovE Text
+
+    if($("#claveEmpleadoE").val() && $("#fullNameE").val()){
+        let id_cedula = localStorage.getItem("IdCedula")
+        let IDEntra = $("#IDEntra").val()
+        let claveEmpleadoE = $("#claveEmpleadoE").val()
+        let fullNameE = $("#fullNameE").val()
+        let ID_personalE = $("#ID_personalE").val()
+        let EcoE = $("#EcoE").val()
+        let FKUnidadE = $("#FKUnidadE").val()
+        let lineaE = $("#lineaE").val()
+        let jornadaE = $("#jornadaE").val()
+        let fechaEntrada = getDateWhitZeros()
+        let UsuarioMovE = localStorage.getItem("Usuario")
+        let FkUsuarioMovE = localStorage.getItem("id_usuario")
+    
+        databaseHandler.db.transaction(
+            function(tx){
+                tx.executeSql("UPDATE Relevos SET IDEntra = ? , claveEmpleadoE = ?, fullNameE = ?, ID_personalE = ?, EcoE = ?, FKUnidadE = ?, lineaE = ?, jornadaE = ?, fechaEntrada = ?, UsuarioMovE = ?, FkUsuarioMovE = ? WHERE id_cedula = ?",
+                    [IDEntra, claveEmpleadoE, fullNameE, ID_personalE, EcoE, FKUnidadE, lineaE, jornadaE, fechaEntrada, UsuarioMovE, FkUsuarioMovE, id_cedula],
+                    function(tx, results){
+                        swal({
+                            title: "Aviso",
+                            text: "¿Estas seguro de querer finalizar el relevo?",
+                            icon: "warning",
+                            buttons: true,
+                            dangerMode: true,
+                        }).then((RESP) => {
+                            if (RESP == true) {
+                                var fecha_salida = getDateWhitZeros();
+                                var id_cedula = localStorage.getItem("IdCedula");
+                                var estatus = 1;
+                                databaseHandler.db.transaction(
+                                    function(tx){
+                                        tx.executeSql("UPDATE cedulas_general SET fecha_salida  = ?,estatus = ? WHERE id_cedula = ?",
+                                            [fecha_salida,estatus,id_cedula],
+                                            function(tx, results){
+                                                window.location.href = "./menu.html";
+                                            },
+                                            function(tx, error){
+                                                swal("Error al guardar",error.message,"error");
+                                            }
+                                        );
+                                    },
+                                    function(error){},
+                                    function(){}
+                                );        
+                            }
+                        });
+                    },
+                    function(tx, error){
+                        swal("Error al guardar",error.message,"error");
+                    }
+                );
+            },
+            function(error){},
+            function(){}
+        ); 
+    } else {
+        swal("", "Debes escanear la licencia del relevo para poder continuar.", "warning")
+    }
+}
+
+function busquedaEvaluacion2(IDCurso, FK_Becario){
+    let empresa = localStorage.getItem("empresa")
+    let NomJson = 'DatosEvaluacionS_'+empresa
+    let html = ''
+    app.request({
+        url: cordova.file.dataDirectory + "jsons_capacitacion/"+NomJson+".json",
+        method: 'GET',
+        dataType: 'json',
+        success: function (data) {
+            var length = data.length;
+            if(length == 0){
+            } else {
+                let encontro = false
+                for (var j = 0; j < data.length; j++) {
+                    if(data[j].FK_IDCurso == IDCurso && data[j].FK_Becario == FK_Becario){
+                        encontro = true
+                        var check = ''
+                        data[j].apto == 1 ? check = 'checked': check = '';
+                        html += `<div class="timeline-item">
+                            <div class="timeline-item-date">${data[j].fecha}</div>
+                            <div class="timeline-item-content">
+                                <div class="timeline-item-time">Apto</div>
+                                <div class="timeline-item-text">${data[j].apto == 1 ? 'Si' : 'No'}</div>
+                                <div class="timeline-item-time">Promedio</div>
+                                <div class="timeline-item-text">${data[j].promedio}</div>
+                                <div class="timeline-item-time">Observaciones</div>
+                                <div class="timeline-item-text">${data[j].observaciones}</div>
+                            </div>
+                        </div>`;
+                    }
+                }
+            }
+            $(".timeline-month").html(html);
+        }
+    });
+    $("#div_calificaciones").css("display", "block")
+}
+//Fin Relevos
 //fin HMO

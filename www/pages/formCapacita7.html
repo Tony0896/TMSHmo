@@ -183,7 +183,6 @@
                 var IDCurso = localStorage.getItem("IDCurso");
                 var FK_Becario = localStorage.getItem("FK_Becario");
                 var empresa = localStorage.getItem("empresa");
-                var NomJson = 'DatosEvaluacionD_'+empresa;
                 var html = '';        
         
                 databaseHandler.db.transaction(
@@ -200,8 +199,8 @@
                                 $("#nombreCandidato").html(item2.nombreCandidato);
                                 if (item2.OpDiario == 1) {
                                     console.log("si diario")
-                                    var IDCurso = localStorage.getItem("IDCurso");
-                                    var FK_Becario = localStorage.getItem("FK_Becario");
+                                    var IDCurso = item2.id_course
+                                    var FK_Becario = item2.id_candidato
                                     var empresa = localStorage.getItem("empresa");
                                     var NomJson = 'DatosEvaluacionD_'+empresa;
                                     var html = '';        
@@ -213,8 +212,10 @@
                                             var length = data.length;
                                             if(length == 0){
                                             } else {
+                                                let encontro = false
                                                 for (var j = 0; j < data.length; j++) {
                                                     if(data[j].FK_IDCurso == IDCurso && data[j].FK_Becario == FK_Becario){
+                                                        encontro = true
                                                         var check = ''
                                                         data[j].apto == 1 ? check = 'checked': check = '';
                                                         html += `<div class="timeline-item">

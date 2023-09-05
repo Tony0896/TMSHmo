@@ -133,6 +133,16 @@ var databaseHandler = {
                         console.error("Error al crear la tabla de detalle_recaudo: " + error.message);
                     }
                 );
+                tx.executeSql(
+                    "create table if not exists Relevos(id_relevo integer primary key, id_cedula integer, IDSale int, claveEmpleado Text, fullName Text, ID_personal int, Eco Text, FKUnidad int, linea int, jornada int, fechaSalida Text, UsuarioMov Text, FkUsuarioMov Text, tipoCedula Text, IDEntra int, claveEmpleadoE Text, fullNameE Text, ID_personalE int, EcoE Text, FKUnidadE int, lineaE int, jornadaE int, fechaEntrada Text, UsuarioMovE Text, FkUsuarioMovE Text)",
+                    [],
+                    function(tx, results){
+                        // console.log("Se creo Servicio tecnico DIPREC correctamente!");
+                    },
+                    function(tx, error){
+                        console.error("Error al crear la tabla de detalle_recaudo: " + error.message);
+                    }
+                );
             },
             function(error){
                 console.error("Error al crear la base de datos: " + error.message);
