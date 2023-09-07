@@ -18,7 +18,7 @@
         $(document).ready(function () {
             // Validar si ya habia iniciado sesion
             var Usuario = localStorage.getItem("Usuario");
-            localStorage.setItem("version", "1.3.2");
+            localStorage.setItem("version", "0.1.0");
             var url = "http://192.168.100.4/Desarrollo/CISAApp/HMOFiles/App";
             // var url = "http://192.168.137.205/Desarrollo/CISAApp/HMOFiles/App";
             // var url = "http://mantto.ci-sa.com.mx/www.CISAAPP.com/Archivos/App";
@@ -55,124 +55,24 @@
                 window.location.href = "offline.html";
             }
             //Traer las empresas
-            $("#nombre").change(function () {
-                if (this.value) {
-                    $.ajax({
-                        type: "POST",
-                        url: url + "/loginDatos.php",
-                        data: { metodo: 1, user: this.value },
-                        success: function (datares) {
-                            $("#id_user").val(0);
-                            let termino = "</html>";
-                            let posicion = datares.toLowerCase().indexOf(termino.toLowerCase());
-                            if (posicion !== -1) {
-                                swal("", "No cuentas con internet!", "error");
-                                $("#empresa").html(`<option value="">Selecciona una empresa</option>`);
-                            } else {
-                                if (datares) {
-                                    if (datares == 0) {
-                                        $("#empresa").html(`<option value="">Selecciona una empresa</option>`);
-                                        swal("", "Usuario no encontrado.", "warning");
-                                    } else {
-                                        $("#id_user").val(datares);
-                                        $.ajax({
-                                            type: "POST",
-                                            url: url + "/loginDatos.php",
-                                            data: { metodo: 2, user: datares },
-                                            success: function (data) {
-                                                let termino = "</html>";
-                                                let posicion = data.toLowerCase().indexOf(termino.toLowerCase());
-                                                if (posicion !== -1) {
-                                                    swal("", "No cuentas con internet!", "error");
-                                                    $("#empresa").html(`<option value="">Selecciona una empresa</option>`);
-                                                } else {
-                                                    if (data) {
-                                                        if (data == 0) {
-                                                            $("#empresa").html(`<option value="">Selecciona una empresa</option>`);
-                                                            swal("", "Usuario no encontrado.", "warning");
-                                                        } else {
-                                                            data ='<option value="1" selected>ACHSA</option>';
-                                                            $("#empresa").html(data);
-                                                            // cambiaimgempresa($("#empresa").val());
-                                                        }
-                                                    } else {
-                                                        $("#empresa").html(`<option value="">Selecciona una empresa</option>`);
-                                                    }
-                                                }
-                                            }
-                                        });
-                                    }
-                                } else {
-                                    $("#empresa").html(`<option value="">Selecciona una empresa</option>`);
-                                    swal("", "Usuario no encontrado.", "warning");
-                                }
-                            }
-                        }
-                    });
-                } else {
-                    $("#empresa").html(`<option value="">Selecciona una empresa</option>`);
-                }
-            });
+            
 
             // Validar datos de sesion
             $("#insert").click(function () {
-                var nombre = $('#id_user').val();
+                var nombre = $('#nombre').val();
                 var contra = $("#contra").val();
-                var datos = "nombre=" + nombre + "&contra=" + contra + "&insert=";
-                var url = localStorage.getItem("url");
                 if ($.trim(nombre).length > 0 & $.trim(contra).length > 0) {
-                    if ($("#empresa").val()) {
-                        $.ajax({
-                            type: "POST",
-                            url: url + "/loginDatos.php",
-                            data: { metodo: 3, user: nombre, pwd: contra },
-                            success: function (data) {
-                                let termino = "</html>";
-                                let posicion = data.toLowerCase().indexOf(termino.toLowerCase());
-                                if (posicion !== -1) {
-                                    swal("", "No cuentas con internet!", "error");
-                                    $("#empresa").html(`<option value="">Selecciona una empresa</option>`);
-                                } else {
-                                    if (data) {
-                                        var content = JSON.parse(data);
-                                        if (content.code == 0) {
-                                            var ID_usuario = content.datosUser[0].ID_usuario;
-                                            var name = content.datosUser[0].name;
-                                            var tipo_usua = content.datosUser[0].tipo_usua;
-                                            var usuario_usua = content.datosUser[0].usuario_usua;
-                                            var modulo = '';
-                                            for (i = 0; i < content.accesos.length; i++) {
-                                                modulo = modulo + content.accesos[i].nombre_n1_modu.trim() + ",";
-                                            }
-                                            var modulos = modulo.slice(0, -1);
-                                            localStorage.setItem("sendFlag", 0);
-                                            localStorage.setItem("Usuario", usuario_usua);
-                                            localStorage.setItem("nombre", name);
-                                            localStorage.setItem("tipo_usua", tipo_usua);
-                                            localStorage.setItem("Modulo", modulos);
-                                            localStorage.setItem("id_usuario", ID_usuario);
-                                            localStorage.setItem("empresa", 1);
-                                            window.location.href = "menu.html";
-                                        } else if (content.code == 1) {
-                                            swal("", "Algo salió mal.", "warning");
-                                        } else if (content.code == 2) {
-                                            swal("", "Algo salió mal.", "warning");
-                                        } else if (content.code == 3) {
-                                            swal("", "Las credenciales no coinciden.", "warning");
-                                        } else if (content.code == 4) {
-                                            swal("", "Al parecer aún no tienes permisos para entrar a la app.", "warning");
-                                        }
-                                    } else {
-                                        swal("", "Algo salió mal!", "error");
-                                    }
-                                }
-                            },
-                            error: function () {
-                                swal("", "Revisa tu conexión a Internet.", "warning");
-                            }
-                        });
+                    if(nombre == 'Test' && contra == 'test123'){
+                        localStorage.setItem("sendFlag", 0);
+                        localStorage.setItem("Usuario", "Test");
+                        localStorage.setItem("nombre", "Test");
+                        localStorage.setItem("tipo_usua", "admin");
+                        localStorage.setItem("Modulo", "Escaner");
+                        localStorage.setItem("id_usuario", "5");
+                        localStorage.setItem("empresa", 1);
+                        window.location.href = "menu.html";
                     } else {
-                        swal("", "Favor de seleccionar una empresa.", "warning");
+                        swal("", "Las credenciales no son correctas.", "warning");    
                     }
                 } else {
                     swal("", "Debes de ingresar tus credenciales.", "warning");
@@ -228,61 +128,6 @@
                 $("#togglePassword").addClass("bi-eye-slash");
             }
         });
-        // function cambiaimgempresa(val) {
-        //     if (val == 1) {
-        //         $("#img_logo").attr("src", "img/ACHSA.png");
-        //     } else if (val == 35) {
-        //         $("#img_logo").attr("src", "img/AMTM.png");
-        //     } else if (val == 2) {
-        //         $("#img_logo").attr("src", "img/ATROL.png");
-        //     } else if (val == 37) {
-        //         $("#img_logo").attr("src", "img/AULSA.png");
-        //     } else if (val == 20) {
-        //         $("#img_logo").attr("src", "img/BUSSI.png");
-        //     } else if (val == 3) {
-        //         $("#img_logo").attr("src", "img/CCA.png");
-        //     } else if (val == 4) {
-        //         $("#img_logo").attr("src", "img/CISA.png");
-        //     } else if (val == 5) {
-        //         $("#img_logo").attr("src", "img/COAVE.png");
-        //     } else if (val == 41) {
-        //         $("#img_logo").attr("src", "img/CODIV.png");
-        //     } else if (val == 6) {
-        //         $("#img_logo").attr("src", "img/COPE.png");
-        //     } else if (val == 7) {
-        //         $("#img_logo").attr("src", "img/CORENSA.png");
-        //     } else if (val == 8) {
-        //         $("#img_logo").attr("src", "img/COREV.png");
-        //     } else if (val == 9) {
-        //         $("#img_logo").attr("src", "img/COTAN.png");
-        //     } else if (val == 10) {
-        //         $("#img_logo").attr("src", "img/COTOBUSA.png");
-        //     } else if (val == 39) {
-        //         $("#img_logo").attr("src", "img/COTXS.png");
-        //     } else if (val == 22) {
-        //         $("#img_logo").attr("src", "img/ESASA.png");
-        //     } else if (val == 11) {
-        //         $("#img_logo").attr("src", "img/MIHSA.png");
-        //     } else if (val == 12) {
-        //         $("#img_logo").attr("src", "img/RECSA.png");
-        //     } else if (val == 13) {
-        //         $("#img_logo").attr("src", "img/SIMES.png");
-        //     } else if (val == 14) {
-        //         $("#img_logo").attr("src", "img/SKYBUS.png");
-        //     } else if (val == 15) {
-        //         $("#img_logo").attr("src", "img/STMP.png");
-        //     } else if (val == 16) {
-        //         $("#img_logo").attr("src", "img/TCGSA.png");
-        //     } else if (val == 17) {
-        //         $("#img_logo").attr("src", "img/TREPSA.png");
-        //     } else if (val == 19) {
-        //         $("#img_logo").attr("src", "img/TUZOBUS.png");
-        //     } else if (val == 18) {
-        //         $("#img_logo").attr("src", "img/VYCSA.png");
-        //     } else {
-        //         $("#img_logo").attr("src", "img/logo1.png");
-        //     }
-        // }
     </script>
 </body>
 

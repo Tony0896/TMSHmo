@@ -133,6 +133,16 @@ var databaseHandler = {
                         console.error("Error al crear la tabla de detalle_recaudo: " + error.message);
                     }
                 );
+                tx.executeSql(
+                    "create table if not exists LicenciasDetails(ID integer primary key, id_cedula integer, FK_operador integer, operador text, credencial text, qrData text, estatus bit, IDServidor int, tipo text, vigencia text)",
+                    [],
+                    function(tx, results){
+                        // console.log("Se creo Servicio tecnico DIPREC correctamente!");
+                    },
+                    function(tx, error){
+                        console.error("Error al crear la tabla de detalle_recaudo: " + error.message);
+                    }
+                );
             },
             function(error){
                 console.error("Error al crear la base de datos: " + error.message);

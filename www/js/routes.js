@@ -128,12 +128,20 @@ var routes = [
     name: 'formtecnologiasHmo1',
     path: '/formtecnologiasHmo1/',
     componentUrl: './pages/formtecnologiasHmo1.html',
-  },{
+  },
+  {
     name: 'formtecnologiasHmo2',
     path: '/formtecnologiasHmo2/',
     componentUrl: './pages/formtecnologiasHmo2.html',
   },
   //?Fin tecnologiasHmo
+  //? Inicio Escaner
+  {
+    name: 'yallegueEscaner',
+    path: '/yallegueEscaner/',
+    componentUrl: './pages/yallegueEscaner.html',
+  },
+  //? Fin Escaner
   //************************************** fin HMO **************************************
   {
     name: 'visualizar',

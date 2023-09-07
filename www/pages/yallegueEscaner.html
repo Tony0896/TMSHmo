@@ -1,0 +1,186 @@
+
+<template>
+    <div class="page">
+        <div class="navbar" style="background-color: #2B5875;height: 5px;">
+            <div class="left top-left" style="justify-content: space-between;">
+                <a href="javascript:location.reload()" style="margin-left: 10px; display: inline-flex;align-items: center;">
+                    <i class="icon material-icons md-only" style="font-weight: 900;font-size: 30px;">arrow_back</i>
+                </a>
+                <div class="title" style="font-size: 18px;"> Registro de licencias </div>
+                <a style="margin-right: 10px;">
+                    <i class="icon material-icons md-only" style="color: #2B5875; font-weight: 900;">arrow_back</i>
+                </a>
+            </div>
+        </div>
+
+        
+        <div class="page-content" style="border-radius: 0;">
+            <div style="text-align: center; justify-content:center; margin-right:auto; margin-left:auto; width: 99%;margin-top: 50px;">
+                <div class="list" id="demo-form">
+                    <div class="list no-hairlines-md">
+                        <div class="list FWM-fixing-form" style="margin-inline: 15px;width: 95%;">
+                            <span class="span FWM-span-form" name="">Buscador por Operador</span>
+                            <input type="text" placeholder="Escribe el nombre del operador" id="autocomplete-dropdown-ajax" class="FWM-input autocomplete-dropdown item-title" style="padding-right: 5px;">
+
+                            <button class="col button button-small button-round button-outline" style="height: 100%;border-color: #FF0037;color: #FF0037; font-size: 15px; padding: 5px 40px; width: fit-content; margin: 25px auto;" onclick="escanearOperador();">Escanear Licencia<i class="material-icons md-light" style="color: #FF0037;vertical-align: middle;font-size: 30px;margin-left: 35px;">center_focus_strong</i></button>
+
+                            <span class="span FWM-span-form" name="">Data de QR</span>
+                            <textarea class="FWM-input" style="font-family: 'ITC Avant Garde Gothic', sans-serif;" id="dataQR" cols="30" rows="10" maxlength="255" readonly></textarea>
+
+                            <span class="span FWM-span-form" name="">Vigencia de licencia</span>
+                            <input type="date" id="vigencia" class="FWM-input" style="padding-right: 5px;">
+
+                            <span class="span FWM-span-form" name="">Tipo de licencia</span>
+                            <input type="text" id="tipo" class="FWM-input" style="padding-right: 5px;" maxlength="5">
+
+                            <button id="btnGuarda" class="col button button-small button-round button-outline" style="height: 100%;border-color: #2B5875;color: #2B5875; font-size: 15px; padding: 5px 40px; width: fit-content; margin: 25px auto;" onclick="guardarRegistro();">Guardar<i class="material-icons md-light" style="color: #2B5875;vertical-align: middle;font-size: 30px;margin-left: 35px;">save</i></button>
+                            <input type="hidden" id="id_operador">
+                            <input type="hidden" id="operador">
+                            <input type="hidden" id="credencial">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="block-title FWM-subtitulo" style="color: #000;margin-top: -10px;">Operadores Registrados</div>
+                <div class="card data-table" style="margin-bottom: 50px;">
+                    <div class="infinite-scroll-content">
+                        <table style="text-align: center;">
+                            <thead>
+                                <tr>
+                                    <th class="numeric-cell" style="text-align: center;background-color: #2B5875;color: white;width: 10%;" id="thtema">&nbsp;</th>
+                                    <th class="numeric-cell" style="text-align: center;background-color: #2B5875;color: white;" id="thtema">Operador</th>
+                                    <th class="numeric-cell" style="text-align: center;background-color: #2B5875;color: white;" id="thtema">Acciones</th>
+                                </tr>
+                            </thead>
+                                <tbody id="tb_detalle"></tbody>
+                        </table>
+                        <div id="message-nr" style="width: 100%;text-align: center;font-family: 'ITC Avant Garde Gothic', sans-serif;font-size: 16px;" style="display: none;">
+                            <p>Sin registros</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="height: 100px;"></div>
+            </div>
+        </div>
+    </div>
+</template>
+<script>
+    return {
+        on: {      
+            pageInit: function () {
+                var empresa = localStorage.getItem("empresa");
+                var self = this;
+                var app = self.$app;
+                var NomJson = 'operadores';
+                // app.preloader.show('red');
+                var id_cedula = localStorage.getItem("IdCedula");
+
+                let html = ``
+                databaseHandler.db.transaction(
+                    function(tx5){
+                        tx5.executeSql("SELECT * FROM LicenciasDetails WHERE id_cedula = ?",
+                            [id_cedula],
+                            function(tx5, results){
+                                let length = results.rows.length;
+                                if(length > 0){
+                                    $("#message-nr").css("display", "none")
+                                    for(let i = 0; i< length; i++){
+                                        let item = results.rows.item(i);
+                                        let burbuja
+                                        if(item.estatus == 0){
+                                            burbuja = `<td style="padding: 0;text-align: center;"><i class="material-icons md-light panel-cerrar" style="color: #FF0037;margin-right: 0px !important; padding: 20px;padding-right: 0px;" >fiber_manual_record</i></td>`
+                                        } else if(item.estatus == 1){
+                                            burbuja = `<td style="padding: 0;text-align: center;"><i class="material-icons md-light panel-cerrar" style="color: #2ECC71;margin-right: 0px !important; padding: 20px;padding-right: 0px;" >fiber_manual_record</i></td>`
+                                        } else if(item.estatus == 2){
+                                            burbuja = `<td style="padding: 0;text-align: center;"><i class="material-icons md-light panel-cerrar" style="color: #F39C12;margin-right: 0px !important; padding: 20px;padding-right: 0px;" >fiber_manual_record</i></td>`
+                                        }
+                                        html += `
+                                            <tr id="renglon_${item.ID}">
+                                                ${burbuja}
+                                                <td>${item.credencial} - ${item.operador}</td>
+                                                <td style="padding: 10px 0px;">
+                                                    <div style="display: flex;justify-content: space-evenly;"> <div class='item-after'><a href='#' class='send-ced' onclick='llevarLicencia(${item.estatus},${item.ID});' style='border: none; outline:none;'><img src='img/send.svg'  width='30px' height='30px' /></a></div> </div>
+                                                </td>
+                                            </tr>
+                                        `
+                                    }
+                                    $("#tb_detalle").html(html)
+                                }
+                            },
+                            function(tx5, error){
+                                console.error("Error al consultar bandeja de salida: " + error.message);
+                            }
+                        );  
+                    },
+                    function(error){},
+                    function(){}
+                );
+
+                self.autocompleteDropdownAjax = app.autocomplete.create({
+                    inputEl: '#autocomplete-dropdown-ajax',
+                    openIn: 'dropdown',
+                    preloader: true, //enable preloader
+                    valueProperty: 'Personal', //object's "value" property name
+                    textProperty:  'fullName', //object's "text" property name
+                    limit: 10, //limit to [number] results
+                    dropdownPlaceholderText: 'Selecciona una Unidad...',
+                    source: function (query, render) {
+                        var autocomplete = this;
+                        var results = [];
+                        if (query.length === 0) {
+                            render(results);
+                            return;
+                        }
+                        autocomplete.preloaderShow();
+                        app.request({
+                            url: cordova.file.dataDirectory + "jsons_Escaner/"+NomJson+".json", 
+                            method: 'GET',
+                            dataType: 'json',
+                            data: {
+                                query: query,
+                            },success: function (data) {
+                                for (var i = 0; i < data.length; i++) {
+                                    if (data[i].fullName.toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(data[i]);
+                                }
+                                autocomplete.preloaderHide();
+                                render(results); 
+                            }
+                        }); 
+                    }
+                });
+
+                $('#autocomplete-dropdown-ajax').change(function () {
+                    var ID = $("#autocomplete-dropdown-ajax").val();
+                    var encontro = false;
+                    
+                    app.request.get(cordova.file.dataDirectory + "jsons_Escaner/"+NomJson+".json", function (data) {
+                        var content2 = JSON.parse(data);
+                        for(var x = 0; x < content2.length; x++) {
+                            if(content2[x].Personal == ID){
+                                $("#autocomplete-dropdown-ajax").val(content2[x].fullName);
+                                $("#id_operador").val(content2[x].Personal);
+                                $("#operador").val(content2[x].operador)
+                                $("#dataQR").val("")
+                                $("#vigencia").val("")
+                                
+                                encontro = true;
+                            }         
+                        }
+                        
+                        if(!encontro){
+                            $("#dataQR").val("")
+                            $("#autocomplete-dropdown-ajax").val("");
+                            $("#id_operador").val("");
+                            $("#operador").val("")
+                            $("#tipo").val("")
+                            $("#vigencia").val("")
+                        } else {
+                            validaOperadorEscaner()
+                        }
+                    });
+                });
+            }
+        }
+    }
+</script>
