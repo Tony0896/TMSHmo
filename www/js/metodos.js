@@ -7,7 +7,7 @@ function logaout() {
             tx5.executeSql("DELETE FROM Actualizaciones",
                 [],
                 function (tx5, results) {
-                    StatusBar.backgroundColorByHexString("#2B5875");
+                    StatusBar.backgroundColorByHexString("#1E9FB4");
                     window.localStorage.clear();
                     window.location.href = "index.html";
                 }
@@ -137,9 +137,9 @@ function capturePhoto() {
                             <div class="action rotate-left" id="rotateLeft" onClick="onRotateLeft()" style="display:none"><img id="flash" src="img/rotate-left.svg" width="30px"></div>
                         </div>
                         
-                        <audio id="audio" controls style="display: none;">
-                            <source type="audio/mp3" src="img/camera.mp3">
-                        </audio>
+                        // <audio id="audio" controls style="display: none;">
+                        //     <source type="audio/mp3" src="img/camera.mp3">
+                        // </audio>
                         <input type="hidden" id="deviceOrientation" name="deviceOrientation"/>
                     </div>
                     <fwm></fwm>
@@ -368,9 +368,9 @@ function capturaFirma() {
                         <div class="right-action">
                             <div class="switch" id="switch" onClick="onSwitch()"><img class="image-switch" src="img/flip.svg"></div>
                         </div>
-                        <audio id="audio" controls style="display: none;">
-                            <source type="audio/mp3" src="img/camera.mp3">
-                        </audio>
+                        // <audio id="audio" controls style="display: none;">
+                        //     <source type="audio/mp3" src="img/camera.mp3">
+                        // </audio>
                         <input type="hidden" id="deviceOrientation" name="deviceOrientation"/>
                     </div>
                     <fwm></fwm>
@@ -3413,8 +3413,8 @@ function actualizaRespuestaSiNoPuntuacion(id, valor, OpCorrecta) {
 function sincronizaDatosCapacitacion() {
     let EmpresaID = 1
     let paso = 1;
-    // let urlBase2 = "http://192.168.100.4/Desarrollo/CISAApp/HMOFiles/Exec";
-    var urlBase2 = "http://172.16.0.143/Desarrollo/CISAApp/HMOFiles/Exec";
+    let urlBase2 = "http://192.168.1.73/Desarrollo/CISAApp/HMOFiles/Exec";
+    // var urlBase2 = "http://172.16.0.143/Desarrollo/CISAApp/HMOFiles/Exec";
     // var urlBase2 = "http://mantto.ci-sa.com.mx/www.CISAAPP.com";
     let url = urlBase2 + "/capacitacion/datos.php?empresa=" + EmpresaID + "&paso=" + paso;
 
@@ -4683,49 +4683,51 @@ function eliminarInspeccion(IdHeader){
 function scanRelevos(val){
     if(val){
         if(val == 1){
-            // cordova.plugins.barcodeScanner.scan(
-            //     function (result) {
-            //         $("#operador").val(result.text)
-            //     },
-            //     function (error) {
-            //         alert("Scanning failed: " + error);
-            //     },
-            //     {
-            //         preferFrontCamera : false,
-            //         showFlipCameraButton : true,
-            //         showTorchButton : true,
-            //         torchOn: false,
-            //         saveHistory: false,
-            //         prompt : "Coloca el código dentro de la zona marcada",
-            //         resultDisplayDuration: 500,
-            //         orientation : "portrait",
-            //         disableAnimations : true,
-            //         disableSuccessBeep: false
-            //     }
-            //  );
-            buscadorRelevos(555)
+            cordova.plugins.barcodeScanner.scan(
+                function (result) {
+                    //$("#operador").val(result.text)
+                    buscadorRelevos(result.text)
+                },
+                function (error) {
+                    alert("Scanning failed: " + error);
+                },
+                {
+                    preferFrontCamera : false,
+                    showFlipCameraButton : true,
+                    showTorchButton : true,
+                    torchOn: false,
+                    saveHistory: false,
+                    prompt : "Coloca el código dentro de la zona marcada",
+                    resultDisplayDuration: 500,
+                    orientation : "portrait",
+                    disableAnimations : true,
+                    disableSuccessBeep: false
+                }
+             );
+            
         } else if(val == 2){
-            // cordova.plugins.barcodeScanner.scan(
-            //     function (result) {
-            //         $("#operador").val(result.text)
-            //     },
-            //     function (error) {
-            //         alert("Scanning failed: " + error);
-            //     },
-            //     {
-            //         preferFrontCamera : false,
-            //         showFlipCameraButton : true,
-            //         showTorchButton : true,
-            //         torchOn: false,
-            //         saveHistory: false,
-            //         prompt : "Coloca el código dentro de la zona marcada",
-            //         resultDisplayDuration: 500,
-            //         orientation : "portrait",
-            //         disableAnimations : true,
-            //         disableSuccessBeep: false
-            //     }
-            //  );
-            revisaRelevos(555)
+            cordova.plugins.barcodeScanner.scan(
+                function (result) {
+                    //$("#operador").val(result.text)
+                    revisaRelevos(result.text)
+                },
+                function (error) {
+                    alert("Scanning failed: " + error);
+                },
+                {
+                    preferFrontCamera : false,
+                    showFlipCameraButton : true,
+                    showTorchButton : true,
+                    torchOn: false,
+                    saveHistory: false,
+                    prompt : "Coloca el código dentro de la zona marcada",
+                    resultDisplayDuration: 500,
+                    orientation : "portrait",
+                    disableAnimations : true,
+                    disableSuccessBeep: false
+                }
+             );
+            
         }
     }
 }

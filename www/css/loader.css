@@ -14,7 +14,10 @@ body{
     -webkit-box-align: center;
             align-items: center;
     background: #355274;
-    background-image: url("./../img/screen/screen.png")
+    background-image: url("./../img/screen/screen.png");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
   }
   
   .dank-ass-loader {

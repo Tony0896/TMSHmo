@@ -91,7 +91,7 @@ function onTake() {
                 advanced: [{ torch: this.flash }]
             }).catch(e => console.log(e));
         }
-        audio.play();
+        // audio.play();
         setTimeout(function(){
             cameraSensor.width = cameraView.videoWidth;
             cameraSensor.height = cameraView.videoHeight;
@@ -113,7 +113,7 @@ function onTake() {
             this.flash = true;
         }, 1500);
     } else {
-        audio.play();
+        // audio.play();
         cameraSensor.width = cameraView.videoWidth;
         cameraSensor.height = cameraView.videoHeight;
         cameraSensor.getContext("2d").drawImage(cameraView, 0, 0);

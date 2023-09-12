@@ -154,13 +154,15 @@ iframe {
   justify-content: center;
   align-items: center;
   padding: 15px;
-  background-image: url("./../img/screen/screen.png")
+  background-image: url("./../img/screen/screen.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 
 .wrap-login100 {
   width: 670px;
-  background: #ffffff;
   border-radius: 10px;
   overflow: hidden;
   position: relative;
@@ -430,6 +432,9 @@ input.input100 {
   background-repeat: no-repeat;
   background-position: right 30px center;
   font-weight: 600;
+  -webkit-box-shadow: 1px 1px 30px -9px rgba(255,255,255,1);
+  -moz-box-shadow: 1px 1px 30px -9px rgba(255,255,255,1);
+  box-shadow: 1px 1px 30px -9px rgba(255,255,255,1);
 }
 
 .login100-form-btn:hover {
@@ -470,6 +475,9 @@ input.input100 {
   position: relative;
   box-shadow: 0pt 3pt 8pt 0px #00000057;
   border-radius: 10px;
+  -webkit-box-shadow: 1px 1px 30px -9px rgba(255,255,255,1);
+  -moz-box-shadow: 1px 1px 30px -9px rgba(255,255,255,1);
+  box-shadow: 1px 1px 30px -9px rgba(255,255,255,1);
 }
 
 .alert-validate::before {

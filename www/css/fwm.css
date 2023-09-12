@@ -110,7 +110,7 @@
     margin-right: 22.84px;
   }
   .statusbar{
-      background-color: #2B5875;
+      background-color: #1E9FB4;
   }
   .body {
     position: relative;
@@ -122,7 +122,7 @@
     width:101%;
     display: flex;
     height: 45px;
-    background-color: #2B5875;
+    background-color: #1E9FB4;
     margin-left: -2px;
   }
   .footer-nav{
@@ -137,7 +137,7 @@
   }
   .footer-nav div{
     font-family: 'ITC Avant Garde Gothic', sans-serif;
-    background-color:#2B5875;
+    background-color:#1E9FB4;
     font-size: 11px;
     width: 100%;
     height: 43px;
@@ -242,7 +242,7 @@
 /* Fin Menu */
 /* Inicio Recorrido */
 .fwm-button-send{
-  background-color: #2B5875;
+  background-color: #1E9FB4;
   border-radius: 15px;
   padding: 15px 30px 12px 30px;
   color: #FFFFFF;
@@ -749,7 +749,7 @@ background: transparent;
   background-color: #ffffff;
 }
 .page-current{
-  background-color: #2B5875;
+  background-color: #1E9FB4;
 }
 .span-pregunta{
   margin-left: 0px;

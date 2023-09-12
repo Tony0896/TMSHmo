@@ -887,6 +887,7 @@ function EliminarRegistrosAntiguos(){
     );
 }
 function EliminarReg(id_cedula,tipo_cedula){
+    console.log(id_cedula, tipo_cedula)
     swal({
         title: "Aviso",
         text: "Estas apunto de eliminar todos los datos de este registro, ¿Estas seguro continuar con la acción?",
@@ -943,6 +944,12 @@ function EliminarReg(id_cedula,tipo_cedula){
                 databaseHandler.db.transaction( function(tx){ tx.executeSql("DELETE FROM CAP_RespuestasMultiple WHERE id_cedula = ?", [id_cedula], function(tx, results){ }, function(tx, error){ } ); },function(error){},function(){} );
                 databaseHandler.db.transaction( function(tx){ tx.executeSql("DELETE FROM CAP_OPMultipleOpts WHERE id_cedula = ?", [id_cedula], function(tx, results){ }, function(tx, error){ } ); },function(error){},function(){} );
                 databaseHandler.db.transaction( function(tx){ tx.executeSql("DELETE FROM CAP_Evidencias WHERE id_cedula = ?", [id_cedula], function(tx, results){ }, function(tx, error){ } ); },function(error){},function(){} );
+            } else if(tipo_cedula == "tecnologiasHmo"){
+                $("#conc" + id_cedula).remove();
+                swal("","Eliminado correctamente","success");
+                databaseHandler.db.transaction( function(tx){ tx.executeSql("DELETE FROM DesTechDetails WHERE id_cedula = ?", [id_cedula], function(tx, results){ }, function(tx, error){ } ); },function(error){},function(){} );
+                databaseHandler.db.transaction( function(tx){ tx.executeSql("DELETE FROM DesTechHeader WHERE id_cedula = ?", [id_cedula], function(tx, results){ }, function(tx, error){ } ); },function(error){},function(){} );
+                databaseHandler.db.transaction( function(tx){ tx.executeSql("DELETE FROM DesTecFirmas WHERE id_cedula = ?", [id_cedula], function(tx, results){ }, function(tx, error){ } ); },function(error){},function(){} );
             }
         } 
     });
