@@ -3297,9 +3297,10 @@ function actualizaRespuestaSiNoPuntuacion(id, valor, OpCorrecta) {
 function sincronizaDatosCapacitacion() {
     let EmpresaID = 1
     let paso = 1;
-    let urlBase2 = "http://192.168.100.4/Desarrollo/CISAApp/HMOFiles/Exec";
+    // let urlBase2 = "http://192.168.100.2/Desarrollo/CISAApp/HMOFiles/Exec";
     // var urlBase2 = "http://192.168.137.205/Desarrollo/CISAApp/HMOFiles/Exec";
     // var urlBase2 = "http://mantto.ci-sa.com.mx/www.CISAAPP.com";
+    let urlBase2 = "http://mantto.ci-sa.com.mx/www.CISAAPP.com/HMOFiles/Exec";
     let url = urlBase2 + "/capacitacion/datos.php?empresa=" + EmpresaID + "&paso=" + paso;
 
     fetch(url)
@@ -4613,91 +4614,99 @@ function escanearOperador(){
 }
 
 function guardarRegistro(){
-    if($("#id_operador").val() && $("#dataQR").val() && $("#tipo").val() && $("#vigencia").val()){
-        $("#btnGuarda").prop("disabled", true)
-        var id_cedula = localStorage.getItem("IdCedula");
-        databaseHandler.db.transaction(
-            function(tx5){
-                tx5.executeSql("SELECT * FROM LicenciasDetails WHERE id_cedula = ? AND credencial = ?",
-                    [id_cedula, $("#id_operador").val()],
-                    function(tx5, results){
-                        let length = results.rows.length;
-                        if(length > 0){
-                            $("#btnGuarda").prop("disabled", false)
-                            swal("", "Este operador ya fue registrado.", "warning")
-                        } else {
-                            databaseHandler.db.transaction( function(tx5){
-                                tx5.executeSql("INSERT INTO LicenciasDetails (id_cedula, FK_operador, operador, credencial, qrData, estatus, IDServidor, tipo, vigencia) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                                    [id_cedula, $("#id_operador").val(), $("#operador").val(), $("#id_operador").val(), $("#dataQR").val(), 0, 0, $("#tipo").val(), $("#vigencia").val()],
-                                    function(tx5, results){
-                                        swal("", "Guardado correctamente", "success")
-                                        var id_cedula = localStorage.getItem("IdCedula")
-                                        let html
-                                        databaseHandler.db.transaction(
-                                            function(tx5){
-                                                tx5.executeSql("SELECT * FROM LicenciasDetails WHERE id_cedula = ?",
-                                                    [id_cedula],
-                                                    function(tx5, results){
-                                                        let length = results.rows.length;
-                                                        if(length > 0){
-                                                            $("#message-nr").css("display", "none")
-                                                            for(let i = 0; i< length; i++){
-                                                                let item = results.rows.item(i);
-                                                                let burbuja
-                                                                if(item.estatus == 0){
-                                                                    burbuja = `<td style="padding: 0;text-align: center;"><i class="material-icons md-light panel-cerrar" style="color: #FF0037;margin-right: 0px !important; padding: 20px;padding-right: 0px;" >fiber_manual_record</i></td>`
-                                                                } else if(item.estatus == 1){
-                                                                    burbuja = `<td style="padding: 0;text-align: center;"><i class="material-icons md-light panel-cerrar" style="color: #2ECC71;margin-right: 0px !important; padding: 20px;padding-right: 0px;" >fiber_manual_record</i></td>`
-                                                                } else if(item.estatus == 2){
-                                                                    burbuja = `<td style="padding: 0;text-align: center;"><i class="material-icons md-light panel-cerrar" style="color: #F39C12;margin-right: 0px !important; padding: 20px;padding-right: 0px;" >fiber_manual_record</i></td>`
-                                                                }
-                                                                html += `
-                                                                    <tr id="renglon_${item.ID}">
-                                                                        ${burbuja}
-                                                                        <td>${item.credencial} - ${item.operador}</td>
-                                                                        <td style="padding: 10px 0px;">
-                                                                            <div style="display: flex;justify-content: space-evenly;"> <div class='item-after'><a href='#' class='send-ced' onclick='llevarLicencia(${item.estatus},${item.ID});' style='border: none; outline:none;'><img src='img/send.svg'  width='30px' height='30px' /></a></div> </div>
-                                                                        </td>
-                                                                    </tr>
-                                                                `
-                                                            }
-                                                            $("#tb_detalle").html(html)
-                                                        }
-                                                    },
-                                                    function(tx5, error){
-                                                        console.error("Error al consultar bandeja de salida: " + error.message);
-                                                    }
-                                                );  
-                                            },
-                                            function(error){},
-                                            function(){}
-                                        );
-                                        $("#dataQR").val("")
-                                        $("#autocomplete-dropdown-ajax").val("");
-                                        $("#id_operador").val("");
-                                        $("#operador").val("")
-                                        $("#tipo").val("")
-                                        $("#vigencia").val("")
-                                        $("#btnGuarda").prop("disabled", false)
-                                    }, function(tx5, error){ console.error("Error al consultar bandeja de salida: " + error.message); }
-                                ); }, function(error){}, function(){}
-                            );
-                        }
-                    },
-                    function(tx5, error){
-                        $("#btnGuarda").prop("disabled", false)
-                        console.error("Error al consultar bandeja de salida: " + error.message);
-                    }
-                );  
-            },
-            function(error){
-                $("#btnGuarda").prop("disabled", false)
-            },
-            function(){}
-        );
+    if($("#cboxEscaner").prop("checked")){
+        if($("#id_operador").val() && $("#vigencia").val()){} else {
+            swal("", "Selecciona primero un operador e indicar la fecha de vigencia para poder guardar", "warning")
+            return false
+        }
     } else {
-        swal("", "Selecciona primero un operador, escanea la licencia, indicar la fecha de vigencia e indicar el tipo de licencia para poder guardar", "warning")
+        if($("#id_operador").val() && $("#dataQR").val() && $("#tipo").val() && $("#vigencia").val()){} else {
+            swal("", "Selecciona primero un operador, escanea la licencia e indica la fecha de vigencia para poder guardar", "warning")
+            return false
+        }
     }
+    
+    $("#btnGuarda").prop("disabled", true)
+    var id_cedula = localStorage.getItem("IdCedula");
+    databaseHandler.db.transaction(
+        function(tx5){
+            tx5.executeSql("SELECT * FROM LicenciasDetails WHERE id_cedula = ? AND credencial = ?",
+                [id_cedula, $("#id_operador").val()],
+                function(tx5, results){
+                    let length = results.rows.length;
+                    if(length > 0){
+                        $("#btnGuarda").prop("disabled", false)
+                        swal("", "Este operador ya fue registrado.", "warning")
+                    } else {
+                        databaseHandler.db.transaction( function(tx5){
+                            tx5.executeSql("INSERT INTO LicenciasDetails (id_cedula, FK_operador, operador, credencial, qrData, estatus, IDServidor, tipo, vigencia) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                                [id_cedula, $("#id_operador").val(), $("#operador").val(), $("#id_operador").val(), $("#dataQR").val(), 0, 0, $("#tipo").val(), $("#vigencia").val()],
+                                function(tx5, results){
+                                    swal("", "Guardado correctamente", "success")
+                                    $("#cboxEscaner").prop("checked", false)
+                                    var id_cedula = localStorage.getItem("IdCedula")
+                                    let html
+                                    databaseHandler.db.transaction(
+                                        function(tx5){
+                                            tx5.executeSql("SELECT * FROM LicenciasDetails WHERE id_cedula = ?",
+                                                [id_cedula],
+                                                function(tx5, results){
+                                                    let length = results.rows.length;
+                                                    if(length > 0){
+                                                        $("#message-nr").css("display", "none")
+                                                        for(let i = 0; i< length; i++){
+                                                            let item = results.rows.item(i);
+                                                            let burbuja
+                                                            if(item.estatus == 0){
+                                                                burbuja = `<td style="padding: 0;text-align: center;"><i class="material-icons md-light panel-cerrar" style="color: #FF0037;margin-right: 0px !important; padding: 20px;padding-right: 0px;" >fiber_manual_record</i></td>`
+                                                            } else if(item.estatus == 1){
+                                                                burbuja = `<td style="padding: 0;text-align: center;"><i class="material-icons md-light panel-cerrar" style="color: #2ECC71;margin-right: 0px !important; padding: 20px;padding-right: 0px;" >fiber_manual_record</i></td>`
+                                                            } else if(item.estatus == 2){
+                                                                burbuja = `<td style="padding: 0;text-align: center;"><i class="material-icons md-light panel-cerrar" style="color: #F39C12;margin-right: 0px !important; padding: 20px;padding-right: 0px;" >fiber_manual_record</i></td>`
+                                                            }
+                                                            html += `
+                                                                <tr id="renglon_${item.ID}">
+                                                                    ${burbuja}
+                                                                    <td>${item.credencial} - ${item.operador}</td>
+                                                                    <td style="padding: 10px 0px;">
+                                                                        <div style="display: flex;justify-content: space-evenly;"> <div class='item-after'><a href='#' class='send-ced' onclick='llevarLicencia(${item.estatus},${item.ID});' style='border: none; outline:none;'><img src='img/send.svg'  width='30px' height='30px' /></a></div> </div>
+                                                                    </td>
+                                                                </tr>
+                                                            `
+                                                        }
+                                                        $("#tb_detalle").html(html)
+                                                    }
+                                                },
+                                                function(tx5, error){
+                                                    console.error("Error al consultar bandeja de salida: " + error.message);
+                                                }
+                                            );  
+                                        },
+                                        function(error){},
+                                        function(){}
+                                    );
+                                    $("#dataQR").val("")
+                                    $("#autocomplete-dropdown-ajax").val("");
+                                    $("#id_operador").val("");
+                                    $("#operador").val("")
+                                    $("#vigencia").val("")
+                                    $("#btnGuarda").prop("disabled", false)
+                                }, function(tx5, error){ console.error("Error al consultar bandeja de salida: " + error.message); }
+                            ); }, function(error){}, function(){}
+                        );
+                    }
+                },
+                function(tx5, error){
+                    $("#btnGuarda").prop("disabled", false)
+                    console.error("Error al consultar bandeja de salida: " + error.message);
+                }
+            );  
+        },
+        function(error){
+            $("#btnGuarda").prop("disabled", false)
+        },
+        function(){}
+    );
 }
 
 function validaOperadorEscaner(){
@@ -4711,7 +4720,6 @@ function validaOperadorEscaner(){
                     if(length > 0){
                         $("#btnGuarda").prop("disabled", false)
                         $("#dataQR").val("")
-                        $("#tipo").val("")
                         $("#vigencia").val("")
                         $("#autocomplete-dropdown-ajax").val("");
                         $("#id_operador").val("");

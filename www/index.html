@@ -19,9 +19,10 @@
             // Validar si ya habia iniciado sesion
             var Usuario = localStorage.getItem("Usuario");
             localStorage.setItem("version", "0.1.0");
-            var url = "http://192.168.100.4/Desarrollo/CISAApp/HMOFiles/App";
+            // var url = "http://192.168.100.2/Desarrollo/CISAApp/HMOFiles/App";
             // var url = "http://192.168.137.205/Desarrollo/CISAApp/HMOFiles/App";
             // var url = "http://mantto.ci-sa.com.mx/www.CISAAPP.com/Archivos/App";
+            var url = "http://mantto.ci-sa.com.mx/www.CISAAPP.com/HMOFiles/App";
             localStorage.setItem("url", url);
             if (Usuario) {
                 localStorage.setItem("sendFlag", 0);
@@ -96,7 +97,7 @@
 
                 <div class="wrap-input100 validate-input m-b-18">
                     <div style="position:relative">
-                        <input class="input100" type="password" name="contra" id="contra" placeholder="Contraseña"
+                        <input class="input100" type="password" name="contra" id="contra" placeholder="Contrase&ntilde;a"
                             required>
                         <i style="position: absolute;top: 30%;right: 7px;font-size: 29px;color: gray;"
                             class="bi bi-eye-slash" id="togglePassword"></i>

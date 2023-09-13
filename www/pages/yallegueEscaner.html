@@ -21,6 +21,8 @@
                         <div class="list FWM-fixing-form" style="margin-inline: 15px;width: 95%;">
                             <span class="span FWM-span-form" name="">Buscador por Operador</span>
                             <input type="text" placeholder="Escribe el nombre del operador" id="autocomplete-dropdown-ajax" class="FWM-input autocomplete-dropdown item-title" style="padding-right: 5px;">
+                            <br><br>
+                            <label class="label_modal"><input class="cbox_modal" type="checkbox" id="cboxEscaner">Licencia en mal estado</label><br>
 
                             <button class="col button button-small button-round button-outline" style="height: 100%;border-color: #FF0037;color: #FF0037; font-size: 15px; padding: 5px 40px; width: fit-content; margin: 25px auto;" onclick="escanearOperador();">Escanear Licencia<i class="material-icons md-light" style="color: #FF0037;vertical-align: middle;font-size: 30px;margin-left: 35px;">center_focus_strong</i></button>
 
@@ -31,7 +33,7 @@
                             <input type="date" id="vigencia" class="FWM-input" style="padding-right: 5px;">
 
                             <span class="span FWM-span-form" name="">Tipo de licencia</span>
-                            <input type="text" id="tipo" class="FWM-input" style="padding-right: 5px;" maxlength="5">
+                            <input type="text" id="tipo" class="FWM-input" style="padding-right: 5px;" maxlength="5" value="OPERADOR DE TRANSPORTE URBANO" disabled>
 
                             <button id="btnGuarda" class="col button button-small button-round button-outline" style="height: 100%;border-color: #2B5875;color: #2B5875; font-size: 15px; padding: 5px 40px; width: fit-content; margin: 25px auto;" onclick="guardarRegistro();">Guardar<i class="material-icons md-light" style="color: #2B5875;vertical-align: middle;font-size: 30px;margin-left: 35px;">save</i></button>
                             <input type="hidden" id="id_operador">
@@ -124,7 +126,7 @@
                     valueProperty: 'Personal', //object's "value" property name
                     textProperty:  'fullName', //object's "text" property name
                     limit: 10, //limit to [number] results
-                    dropdownPlaceholderText: 'Selecciona una Unidad...',
+                    dropdownPlaceholderText: 'Selecciona un operador...',
                     source: function (query, render) {
                         var autocomplete = this;
                         var results = [];
@@ -173,7 +175,6 @@
                             $("#autocomplete-dropdown-ajax").val("");
                             $("#id_operador").val("");
                             $("#operador").val("")
-                            $("#tipo").val("")
                             $("#vigencia").val("")
                         } else {
                             validaOperadorEscaner()
