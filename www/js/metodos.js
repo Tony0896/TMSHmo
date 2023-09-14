@@ -3413,9 +3413,9 @@ function actualizaRespuestaSiNoPuntuacion(id, valor, OpCorrecta) {
 function sincronizaDatosCapacitacion() {
     let EmpresaID = 1
     let paso = 1;
-    let urlBase2 = "http://192.168.100.2/Desarrollo/CISAApp/HMOFiles/Exec";
+    // let urlBase2 = "http://192.168.100.2/Desarrollo/CISAApp/HMOFiles/Exec";
     // var urlBase2 = "http://172.16.0.143/Desarrollo/CISAApp/HMOFiles/Exec";
-    // var urlBase2 = "http://mantto.ci-sa.com.mx/www.CISAAPP.com";
+    let urlBase2 = "http://mantto.ci-sa.com.mx/www.CISAAPP.com/HMOFiles/Exec";
     let url = urlBase2 + "/capacitacion/datos.php?empresa=" + EmpresaID + "&paso=" + paso;
 
     fetch(url)
