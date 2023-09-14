@@ -38,38 +38,6 @@
                         <span class="span FWM-span-form">Observaciones Generales:</span>
                         <textarea class="FWM-input" style="font-family: 'ITC Avant Garde Gothic', sans-serif; width: 100%;padding-top: 10px;" id="observaciones" cols="30" rows="10" onchange=""></textarea>
                     </div>
-                    
-                    <div class="container_options">
-                        <span class="span FWM-span-form" id="operador_firma"></span>
-                        <input type="hidden" name="signate" id="signate" placeholder="sfirmc">
-                        <input type="hidden" id="whitfirma">
-                        <center>
-                            <img id="ImagenFirmaView" src="" width="70%"><br>
-                            <span id="VolverFirmar" style="display: none;"></span>
-                            <input type="button" style="position:absolute;display:none;margin:0 !important;color:white;background-color: #019cdc;top:40px;margin-left:160px !important" value="Volver a Firmar">
-                        </center>
-                        <div class="row align-items-stretch" style="text-align: center;">
-                            <div class="col-100 medium-50" style="min-width: 50px; border-style: none;">
-                                <span class="resize-handler"></span>
-                                <a href="#" onclick="createFirma()" data-popup=".popup-services" style="background-color: #005D99;" class="link popup-open boton-equipo" id="VolverAFirmar">Agregar Firma <i class="icon material-icons md-only" style="display: inline-block;margin-left: 12px;">border_color</i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="popup popup-services" style="background-color: #f0f8ff;">
-                    <br>
-                    <div class="popup-container" style="height: 300px;">
-                         <div class="headerPopupPhoto" style="width: 90%;display: flex;justify-content: space-between;padding-left: 20px;margin-bottom: 30px;">
-                            <a class="link popup-close" onclick="gfirma(1)" href="#">Guardar Firma</a>
-                            <a class="link" onclick="cleanFirma()" href="#">Limpiar</a>
-                            <a class="link popup-close" onclick="gClose()" href="#">Cerrar</a>
-                        </div>
-                        
-                        <div style="display: flex;flex-direction: column;justify-content: center;align-content: center;align-items: center;">
-                            <canvas id="signature-pad" class="signature-pad" width="600" height="250" style="background-color: #fff; touch-action: none; border: 2px solid #005D99; border-radius: 15px;"></canvas>
-                        </div>
-                    </div>
                 </div>
                 
                 <div class="block grid-resizable-demo" style="top: 25px;margin-bottom: 80px;"></div>
@@ -161,35 +129,35 @@ return {
                 function(){}
             );
 
-            databaseHandler.db.transaction(
-                function(tx5){
-                    tx5.executeSql("SELECT * FROM DesTecFirmas WHERE id_cedula = ? AND IdHeader = ?",
-                        [id_cedula, localStorage.getItem("IdHeader")],
-                        function(tx5, results){
-                            let val = 1
-                            let length = results.rows.length;
-                            let item2 = results.rows.item(0);
-                            let data = item2.firma
-                            if(data){
-                                $("#signate").val(data);
-                                $('#ImagenFirmaView').attr('src', data);
-                                $('#VolverFirmar').html("Evidencia");
-                                $("#VolverAFirmar").html("Volver a Firmar <i class='icon material-icons md-only' style='display: inline-block;margin-left: 12px;'>border_color</i>");
-                            }
+            // databaseHandler.db.transaction(
+            //     function(tx5){
+            //         tx5.executeSql("SELECT * FROM DesTecFirmas WHERE id_cedula = ? AND IdHeader = ?",
+            //             [id_cedula, localStorage.getItem("IdHeader")],
+            //             function(tx5, results){
+            //                 let val = 1
+            //                 let length = results.rows.length;
+            //                 let item2 = results.rows.item(0);
+            //                 let data = item2.firma
+            //                 if(data){
+            //                     $("#signate").val(data);
+            //                     $('#ImagenFirmaView').attr('src', data);
+            //                     $('#VolverFirmar').html("Evidencia");
+            //                     $("#VolverAFirmar").html("Volver a Firmar <i class='icon material-icons md-only' style='display: inline-block;margin-left: 12px;'>border_color</i>");
+            //                 }
                             
-                            if (val) {
-                                var element = document.querySelector(".page-content");
-                                element.scrollTop = element.scrollHeight;
-                            }
-                        },
-                        function(tx5, error){
-                            console.error("Error al consultar bandeja de salida: " + error.message);
-                        }
-                    );  
-                },
-                function(error){},
-                function(){}
-            );
+            //                 if (val) {
+            //                     var element = document.querySelector(".page-content");
+            //                     element.scrollTop = element.scrollHeight;
+            //                 }
+            //             },
+            //             function(tx5, error){
+            //                 console.error("Error al consultar bandeja de salida: " + error.message);
+            //             }
+            //         );  
+            //     },
+            //     function(error){},
+            //     function(){}
+            // );
 
             var empresa = localStorage.getItem("empresa");
 

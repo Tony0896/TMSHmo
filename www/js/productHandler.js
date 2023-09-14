@@ -342,16 +342,16 @@ var productHandler = {
 					[id_cedula, IdHeader, Fk_pregunta, pregunta, multiple, Fk_id_formato,FK_equipo, 1],
 					function (tx, results) {
 						if (aux == aux2) {
-							databaseHandler.db.transaction(
-								function (tx) {
-									tx.executeSql(
-										"insert into DesTecFirmas(id_cedula, IdHeader) values(?, ?)",
-										[id_cedula, IdHeader],
-										function (tx, results) { },
-										function (tx, error) { console.error("Error registrar:" + error.message); }
-									);
-								}, function (error) { console.log(error) }, function () { }
-							);
+							// databaseHandler.db.transaction(
+							// 	function (tx) {
+							// 		tx.executeSql(
+							// 			"insert into DesTecFirmas(id_cedula, IdHeader) values(?, ?)",
+							// 			[id_cedula, IdHeader],
+							// 			function (tx, results) { },
+							// 			function (tx, error) { console.error("Error registrar:" + error.message); }
+							// 		);
+							// 	}, function (error) { console.log(error) }, function () { }
+							// );
 							app.dialog.close();
 							app.views.main.router.navigate({ name: 'formtecnologiasHmo1' });
 						} else {

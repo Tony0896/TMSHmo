@@ -126,16 +126,16 @@ var databaseHandler = {
                         console.error("Error al crear la tabla de detalle_recaudo: " + error.message);
                     }
                 );
-                tx.executeSql(
-                    "create table if not exists DesTecFirmas(id_firma integer primary key, id_cedula integer, IdHeader integer, firma text, fecha text)",
-                    [],
-                    function(tx, results){
-                        // console.log("Se creo Servicio tecnico DIPREC correctamente!");
-                    },
-                    function(tx, error){
-                        console.error("Error al crear la tabla de detalle_recaudo: " + error.message);
-                    }
-                );
+                // tx.executeSql(
+                //     "create table if not exists DesTecFirmas(id_firma integer primary key, id_cedula integer, IdHeader integer, firma text, fecha text)",
+                //     [],
+                //     function(tx, results){
+                //         // console.log("Se creo Servicio tecnico DIPREC correctamente!");
+                //     },
+                //     function(tx, error){
+                //         console.error("Error al crear la tabla de detalle_recaudo: " + error.message);
+                //     }
+                // );
                 // fin tecnologías
                 // inicio relevos
                 tx.executeSql(

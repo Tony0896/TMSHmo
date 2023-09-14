@@ -3413,7 +3413,7 @@ function actualizaRespuestaSiNoPuntuacion(id, valor, OpCorrecta) {
 function sincronizaDatosCapacitacion() {
     let EmpresaID = 1
     let paso = 1;
-    let urlBase2 = "http://192.168.1.73/Desarrollo/CISAApp/HMOFiles/Exec";
+    let urlBase2 = "http://192.168.100.2/Desarrollo/CISAApp/HMOFiles/Exec";
     // var urlBase2 = "http://172.16.0.143/Desarrollo/CISAApp/HMOFiles/Exec";
     // var urlBase2 = "http://mantto.ci-sa.com.mx/www.CISAAPP.com";
     let url = urlBase2 + "/capacitacion/datos.php?empresa=" + EmpresaID + "&paso=" + paso;
@@ -4285,35 +4285,14 @@ function TerminarCheckListHMO(){
                     function(tx5, results){
                         let length = results.rows.length;
                         if(length == 0){
-                            let firma = $("#signate").val()
                             let observaciones = $("#observaciones").val()
                             observaciones = observaciones.trim()
-                            if (firma || observaciones){
-                                if(firma){
-                                    databaseHandler.db.transaction(
-                                        function(tx){ tx.executeSql("UPDATE DesTecFirmas SET firma = ?, fecha = ? WHERE id_cedula = ? AND IdHeader = ?;", 
-                                        [firma,getDateWhitZeros(), id_cedula, IdHeader],
-                                        function(tx, results){ 
-                                            databaseHandler.db.transaction(
-                                                function(tx){ tx.executeSql("UPDATE DesTechHeader SET fecha_fin = ?, observaciones= ? WHERE id_cedula = ? AND IdHeader = ?;", 
-                                                [getDateWhitZeros(), observaciones, id_cedula, IdHeader],
-                                                function(tx, results){ regresaTechHmo() },
-                                                function(tx, error){ swal("Error al guardar",error.message,"error"); } ); }, function(error){}, function(){}
-                                            );
-                                     },
-                                        function(tx, error){ swal("Error al guardar",error.message,"error"); } ); }, function(error){}, function(){}
-                                    );
-                                } else {
-                                    databaseHandler.db.transaction(
-                                        function(tx){ tx.executeSql("UPDATE DesTechHeader SET fecha_fin = ?, observaciones= ? WHERE id_cedula = ? AND IdHeader = ?;", 
-                                        [getDateWhitZeros(), observaciones, id_cedula, IdHeader],
-                                        function(tx, results){ regresaTechHmo() },
-                                        function(tx, error){ swal("Error al guardar",error.message,"error"); } ); }, function(error){}, function(){}
-                                    );
-                                }
-                            } else {
-                                swal("", "Los comentarios o la firma no puede estar vacío.", "warning");
-                            }
+                            databaseHandler.db.transaction(
+                                function(tx){ tx.executeSql("UPDATE DesTechHeader SET fecha_fin = ?, observaciones= ? WHERE id_cedula = ? AND IdHeader = ?;", 
+                                [getDateWhitZeros(), observaciones, id_cedula, IdHeader],
+                                function(tx, results){ regresaTechHmo() },
+                                function(tx, error){ swal("Error al guardar",error.message,"error"); } ); }, function(error){}, function(){}
+                            );
                         } else {
                             swal("", "Debes responder a todos los conceptos para poder continuar.", "warning");
                         }
@@ -4427,7 +4406,7 @@ function actualizacheckControlTec(id){
     }
 }
 
-function agregaComentariosCtlTec(id_pregunta,mul){
+function agregaComentariosCtlTec(id_pregunta,mul,FK_equipo){
     if(mul == 1 || mul == 2){
         var seleccionados = $("#opts_modal").val();
         if(seleccionados.length == 0){
@@ -4451,46 +4430,58 @@ function agregaComentariosCtlTec(id_pregunta,mul){
     var FKs = ''
     
     campos = document.querySelectorAll('#div_cboxs .obligatorio');
-    var valido = false;
+    var valido = false, valido2 = false;
 
     [].slice.call(campos).forEach(function(campo) {
         if (campo.checked == true) {
-            valido = true;
+            valido = true
+            valido2 = true
             comentarios = comentarios+", "+campo.value;
             FKs = FKs+","+campo.id.replace("cbox", "");
         }
     });
 
+    if(FK_equipo == 0){
+        let obs_generales = $("#obs_generales").val()
+        if(obs_generales.trim()){
+            valido2 = true
+        }
+        valido = true;
+    }
+
     if (valido) {
-        var str = comentarios;
-        var name = str.slice(1);
-        var name2 = FKs.slice(1)
-        name = opts+""+name;
-        name = name.trim();
-        name = capitalizarPrimeraLetra(name);
-        var id_cedula = localStorage.getItem("IdCedula");
-        var IdHeader = localStorage.getItem("IdHeader");
-        var obs_generales = $("#obs_generales").val();
-
-        databaseHandler.db.transaction(
-            function(tx){
-                tx.executeSql("UPDATE DesTechDetails SET falla = ?, comentarios = ?, FKsFallas = ? WHERE id_cedula = ? AND Fk_pregunta = ? AND IdHeader = ?",
-                    [name,obs_generales,name2,id_cedula,id_pregunta, IdHeader],
-                    function(tx, results){
-                        $("#span-"+id_pregunta).html(name);
-                        $("#spanComentarios-"+id_pregunta).html(obs_generales ? `Comentarios:  ${obs_generales}` : ``);
-                        app.sheet.close('#sheet-modal');
-                        swal("","Comentario guardado correctamente","success");
-                    },
-                    function(tx, error){
-                        console.error("Error al guardar cierre: " + error.message);
-                    }
-                );
-            },
-            function(error){},
-            function(){}
-        );
-
+        if(valido2){
+            var str = comentarios;
+            var name = str.slice(1);
+            var name2 = FKs.slice(1)
+            name = opts+""+name;
+            name = name.trim();
+            name = capitalizarPrimeraLetra(name);
+            var id_cedula = localStorage.getItem("IdCedula");
+            var IdHeader = localStorage.getItem("IdHeader");
+            var obs_generales = $("#obs_generales").val();
+    
+            databaseHandler.db.transaction(
+                function(tx){
+                    tx.executeSql("UPDATE DesTechDetails SET falla = ?, comentarios = ?, FKsFallas = ? WHERE id_cedula = ? AND Fk_pregunta = ? AND IdHeader = ?",
+                        [name,obs_generales,name2,id_cedula,id_pregunta, IdHeader],
+                        function(tx, results){
+                            $("#span-"+id_pregunta).html(name);
+                            $("#spanComentarios-"+id_pregunta).html(obs_generales ? `Comentarios:  ${obs_generales}` : ``);
+                            app.sheet.close('#sheet-modal');
+                            swal("","Comentario guardado correctamente","success");
+                        },
+                        function(tx, error){
+                            console.error("Error al guardar cierre: " + error.message);
+                        }
+                    );
+                },
+                function(error){},
+                function(){}
+            );
+        } else {
+            swal("","Debes indicar tus comentarios sobre la falla","warning");
+        }
     } else {
         swal("","Selecciona almenos un daño para poder guardar","warning");
     }
@@ -4510,7 +4501,8 @@ function CreaModalOptionCtlTec(id, opciones, mul, titulo_modal, FK_equipo){
 
     var NomDescCli = "fallos";
     var html = '';
-
+    let texto 
+    FK_equipo == 0 ? texto = 'Describe la falla que tiene' : texto = 'Selecciona una o varias fallas'
     app.request.get(cordova.file.dataDirectory + "jsons_tecnologiasHmo/"+NomDescCli+".json", function (data) {
         var content2 = JSON.parse(data);
         for(var x = 0; x < content2.length; x++) {
@@ -4529,7 +4521,7 @@ function CreaModalOptionCtlTec(id, opciones, mul, titulo_modal, FK_equipo){
             </div>
             <div class="sheet-modal-inner" style="overflow-y: scroll;">
                 <div class="block">
-                    <h3 class="FWN-titulo-2">¿Que tipo de daño es?</h3><hr>
+                    <h3 class="FWN-titulo-2">${texto}</h3><hr>
                     <span id="titulo_modal" style="display:${display1};color: #FF0037;" class="span FWM-span-form">${titulo_modal}</span>
                     <div id="div_opt" style="display:${display}; padding-top: 10px;margin-bottom: 20px;">
                     ${opciones}
@@ -4539,14 +4531,14 @@ function CreaModalOptionCtlTec(id, opciones, mul, titulo_modal, FK_equipo){
                         <input type="hidden" id="pasa" value="0">
                             ${html}
                         <div>
-                            <span style="color: #005D99;" class="span FWM-span-form">Comentarios adicionales</span>
+                            <span style="color: #005D99;" class="span FWM-span-form">Comentarios</span>
                             <textarea class="FWM-input" style="font-family: 'ITC Avant Garde Gothic', sans-serif;" id="obs_generales" cols="30" rows="10" maxlength="255"></textarea>
                         </div>
                         <div class="block grid-resizable-demo" style="margin-bottom: 70px;padding-top: 35px;">
                             <div class="row align-items-stretch" style="text-align: center;">
                                 <div class="col-100 medium-50" style="min-width: 50px; border-style: none;">
                                     <span class="resize-handler"></span>
-                                    <a href="#" onclick="agregaComentariosCtlTec(${id},${mul});" style="background-color: #FF0037;padding-left: 50px;padding-right: 50px;" class="boton-equipo">Guardar</a>
+                                    <a href="#" onclick="agregaComentariosCtlTec(${id},${mul},${FK_equipo});" style="background-color: #FF0037;padding-left: 50px;padding-right: 50px;" class="boton-equipo">Guardar</a>
                                 </div>
                             </div>
                         </div>
@@ -4669,10 +4661,8 @@ function eliminarInspeccion(IdHeader){
         if (RESP == true) {
             databaseHandler.db.transaction( function(tx){ tx.executeSql("DELETE FROM DesTechDetails WHERE id_cedula = ?", [id_cedula], function(tx, results){
                 databaseHandler.db.transaction( function(tx){ tx.executeSql("DELETE FROM DesTechHeader WHERE id_cedula = ? AND IdHeader = ?", [id_cedula, IdHeader], function(tx, results){
-                    databaseHandler.db.transaction( function(tx){ tx.executeSql("DELETE FROM DesTecFirmas WHERE id_cedula = ? AND IdHeader = ?", [id_cedula, IdHeader], function(tx, results){
-                        $("#renglon_"+IdHeader).remove()
-                        swal("", "Eliminado correctamente", "success")
-                    }, function(tx, error){ } ); }, function(error){}, function(){} );
+                    $("#renglon_"+IdHeader).remove()
+                    swal("", "Eliminado correctamente", "success")
                 }, function(tx, error){ } ); }, function(error){}, function(){} );
             }, function(tx, error){ } ); }, function(error){}, function(){} );
         }
