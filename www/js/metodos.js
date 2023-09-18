@@ -4723,6 +4723,7 @@ function scanRelevos(val){
 }
 
 function buscadorRelevos(valor){ //* buscar de licencias y operadores
+    console.log(valor)
     app.dialog.progress('Buscando...','red');
     $("#divPersonaEntra").css("display", "none")
     $("#IDSale").val('')
@@ -4772,7 +4773,7 @@ function buscadorRelevos(valor){ //* buscar de licencias y operadores
                 $("#FKUnidad").val('')
                 $("#linea").val('')
                 $("#jornada").val('')
-                swal("", "No se encontro al operador.", "warning")
+                swal("", "Código escaneado no existe", "warning")
                 app.dialog.close()
             }
         }
@@ -4811,7 +4812,7 @@ function segundaBusqueda(ID_personal){//* buscar turno 1
                 $("#FKUnidad").val('')
                 $("#linea").val('')
                 $("#jornada").val('')
-                swal("", "No se encontro programación en este operador, sincroniza datos e inténtalo nuevamente.", "warning")
+                swal("", "El operador no tiene nada asignado para este día.", "warning")
                 app.dialog.close()
             }
         }
@@ -4829,7 +4830,7 @@ function tercaraBusqeuda(Linea, Jornada, ID_personal){ //* buscar turno 2
             for (var j = 0; j < data.length; j++) {
                 if (data[j].Linea == Linea && data[j].Jornada == Jornada && data[j].Turno == 2) {
                     if(data[j].FKPersonal == 0 || data[j].FKPersonal == ''){
-                        swal("", "No existe un relevo en la asignación. Comunicarse con operación.", "warning")
+                        swal("", "No existe un relevo en la asignación.", "warning")
                     } else {
                         if(ID_personal == data[j].FKPersonal){
                             console.log("programa 2", data[j])
@@ -4862,7 +4863,7 @@ function tercaraBusqeuda(Linea, Jornada, ID_personal){ //* buscar turno 2
             }
 
             if(!encontro){
-                swal("", "No existe un relevo en la asignación. Comunicarse con operación.", "warning")
+                swal("", "No existe un relevo en la asignación.", "warning")
                 app.dialog.close()
             }
         }
@@ -4886,24 +4887,25 @@ function revisaRelevos(valor){
                     $("#fullNameE").val(data[j].fullName)
                     if(data[j].ID_personal == $("#ID_personalE").val()){
                         if(data[j].EstatusOperador == 'Suspendido'){
+                            app.dialog.close()
                             $("#claveEmpleadoE").val('')
                             $("#fullNameE").val('')
-                            swal("Operador suspendido.", "Comunicate con operaciones para determinar su situcación.", "warning")
+                            swal("", "Operador suspendido.", "warning")
                             return false
                         } else {
                             if(data[j].dias <= 0){
                                 $("#claveEmpleadoE").val('')
                                 $("#fullNameE").val('')
-                                swal("Licencia Vencida.", "Este operador tiene su licencia vencida y no se puede asignar.", "warning")
+                                swal("", "Licencia Vencida.", "warning")
                             }
                             if(data[j].dias > 0 && data[j].dias <= 10){
-                                swal("Puedes continuar pero...", "Licencia cuenta con solo "+data[j].dias+" días de vigencia.", "warning")
+                                swal("", "Licencia esta a "+data[j].dias+" días de vencer.", "warning")
                             }
                         }
                     } else {
                         $("#claveEmpleadoE").val('')
                         $("#fullNameE").val('')
-                        swal("", "Este operador no esta en la asignación. Sincroniza datos e intenta nuevamente si el problema persiste comunicate con operaciones.", "warning")
+                        swal("", "Código escaneado no existe.", "warning")
                     }
                     app.dialog.close()
                     break
