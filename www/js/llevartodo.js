@@ -123,7 +123,7 @@ function llevarTodo(id_cedula,tipo_cedula){
                                                                         );
                                                                     }
                                                                 } else {
-                                                                    AlmacenarError(respuesta);
+                                                                    AlmacenarError(respuesta, "Checklist");
                                                                 }
                                                             },
                                                             error: function(){
@@ -212,7 +212,7 @@ function llevarTodo(id_cedula,tipo_cedula){
                                                                             );
                                                                         }
                                                                     } else {
-                                                                        AlmacenarError(respuesta);
+                                                                        AlmacenarError(respuesta, "Cap_DG");
                                                                     }
                                                                 },
                                                                 error: function(){
@@ -298,7 +298,7 @@ function llevarTodo(id_cedula,tipo_cedula){
                                                                                 );
                                                                             }
                                                                         } else {
-                                                                            AlmacenarError(respuesta);
+                                                                            AlmacenarError(respuesta, "Cap_LA");
                                                                         }
                                                                     },
                                                                     error: function(){
@@ -384,7 +384,7 @@ function llevarTodo(id_cedula,tipo_cedula){
                                                                                 );
                                                                             }
                                                                         } else {
-                                                                            AlmacenarError(respuesta);
+                                                                            AlmacenarError(respuesta, "CAP_CF");
                                                                         }
                                                                     },
                                                                     error: function(){
@@ -470,7 +470,7 @@ function llevarTodo(id_cedula,tipo_cedula){
                                                                                 );
                                                                             }
                                                                         } else {
-                                                                            AlmacenarError(respuesta);
+                                                                            AlmacenarError(respuesta, "CAP_SNP");
                                                                         }
                                                                     },
                                                                     error: function(){
@@ -557,7 +557,7 @@ function llevarTodo(id_cedula,tipo_cedula){
                                                                                 );
                                                                             }
                                                                         } else {
-                                                                            AlmacenarError(respuesta);
+                                                                            AlmacenarError(respuesta, "CAP_GOPM");
                                                                         }
                                                                     },
                                                                     error: function(){
@@ -643,7 +643,7 @@ function llevarTodo(id_cedula,tipo_cedula){
                                                                                 );
                                                                             }
                                                                         } else {
-                                                                            AlmacenarError(respuesta);
+                                                                            AlmacenarError(respuesta, "CAP_CE");
                                                                         }
                                                                     },
                                                                     error: function(){
@@ -741,7 +741,7 @@ function llevarTodo(id_cedula,tipo_cedula){
                                                                                         );
                                                                                     }
                                                                                 } else {
-                                                                                    AlmacenarError(respuesta);
+                                                                                    AlmacenarError(respuesta, "TEC_");
                                                                                 }
                                                                             },
                                                                             error: function(){
