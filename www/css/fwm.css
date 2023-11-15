@@ -892,3 +892,27 @@ table th {
 .radio_multiple{
   margin-bottom: 15px;
 }
+.item-inner2{
+  position: relative;
+  width: 100%;
+  min-width: 0;
+  display: flex;
+  justify-content: space-between;
+  box-sizing: border-box;
+  align-items: center;
+  align-self: stretch;
+  padding-top: var(--f7-list-item-padding-vertical);
+  padding-bottom: var(--f7-list-item-padding-vertical);
+  min-height: var(--f7-list-item-min-height);
+  padding-right: calc(var(--f7-list-item-padding-horizontal) + var(--f7-safe-area-right));
+}
+.item-after2{
+  margin-left: 15px !important;
+  transform: scale(1.8);
+}
+.toggle-icon2 {
+  --f7-theme-color: #2ECC71;
+  --f7-theme-color-rgb: 46, 204, 113;
+  --f7-theme-color-shade: #2ECC71;
+  --f7-theme-color-tint: #2ECC71;
+}

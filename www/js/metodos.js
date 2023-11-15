@@ -206,8 +206,8 @@ function capturePhoto() {
         navigator.camera.getPicture(onPhotoDataSuccess, onFail, {
             quality: 100,
             destinationType: destinationType.DATA_URL,
-            targetWidth: 500,
-            targetHeight: 500,
+            targetWidth: 1500,
+            targetHeight: 1500,
             correctOrientation: true,
         });
     }
@@ -437,8 +437,8 @@ function capturaFirma() {
         navigator.camera.getPicture(onPhotoSingSuccess, onFail, {
             quality: 100,
             destinationType: destinationType.DATA_URL,
-            targetWidth: 500,
-            targetHeight: 500,
+            targetWidth: 1500,
+            targetHeight: 1500,
             correctOrientation: true
         });
     }
@@ -3002,7 +3002,7 @@ function verSeguimientoCapacitacion(ID, FKPersonalBecario, nameBecario) {
                 <div class="card-content">
                     <div class="card" style="text-align: center;">
                         <a href="#" onclick="LLamarIMTES(${ID}, ${FKPersonalBecario}, '${nameBecario}');">
-                            <p class="texto_master" style="margin: 20px 0 20px 0;">IMTES</p>
+                            <p class="texto_master" style="margin: 20px 0 20px 0;">TRÁMITES</p>
                         </a>
                     </div>
                 </div>
@@ -3200,8 +3200,16 @@ function GenerarCurso(IDMov, FK_Becario, IDCurso, IDTipoCurso, OpDiario, NombreC
                                         <div class="container_options" style="display: flex;">
                                             <span class="span FWM-span-form" style="width: 50%;">El candidato es Apto?:</span>
                                             <div style="width: 50%;">
-                                                <input class="tgl tgl-skewed" id="cb3" type="checkbox" ${check}></input>
-                                                <label class="tgl-btn" data-tg-off="NO" data-tg-on="SI" for="" style="font-size: 20px;border-radius: 5px;"></label>
+                                                <label class="item-content">
+                                                    <div class="item-inner2">
+                                                        <div class="item-after item-after2">
+                                                            <div class="toggle toggle-init color-green">
+                                                                <input id="cb3" type="checkbox" ${check} onclick="return false;">
+                                                                <span class="toggle-icon toggle-icon2"></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </label>
                                             </div>
                                         </div>
                                         <div class="container-check">
@@ -3291,8 +3299,16 @@ function segundaBusqueda22(IDCurso, FK_Becario){
                                 <div class="container_options" style="display: flex;">
                                     <span class="span FWM-span-form" style="width: 50%;">El candidato es Apto?:</span>
                                     <div style="width: 50%;">
-                                        <input class="tgl tgl-skewed" id="cb3" type="checkbox" ${check}></input>
-                                        <label class="tgl-btn" data-tg-off="NO" data-tg-on="SI" for="" style="font-size: 20px;border-radius: 5px;"></label>
+                                        <label class="item-content">
+                                            <div class="item-inner2">
+                                                <div class="item-after item-after2">
+                                                    <div class="toggle toggle-init color-green">
+                                                        <input id="cb3" type="checkbox" ${check}>
+                                                        <span class="toggle-icon toggle-icon2"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </label>
                                     </div>
                                 </div>
                                 <div class="container-check">
@@ -3413,9 +3429,9 @@ function actualizaRespuestaSiNoPuntuacion(id, valor, OpCorrecta) {
 function sincronizaDatosCapacitacion() {
     let EmpresaID = 1
     let paso = 1;
-    // let urlBase2 = "http://192.168.100.2/Desarrollo/CISAApp/HMOFiles/Exec";
+    // let urlBase2 = "http://192.168.100.4/Desarrollo/CISAApp/HMOFiles/Exec";
     // var urlBase2 = "http://172.16.0.143/Desarrollo/CISAApp/HMOFiles/Exec";
-    let urlBase2 = "http://mantto.ci-sa.com.mx/www.CISAAPP.com/HMOFiles/Exec";
+    let urlBase2 = "http://tmshmo.ci-sa.com.mx/www.CISAAPP.com/HMOFiles_dev/Exec";
     let url = urlBase2 + "/capacitacion/datos.php?empresa=" + EmpresaID + "&paso=" + paso;
 
     fetch(url)
@@ -3563,8 +3579,16 @@ function verDetalleCapacitacion(ID, FKPersonalBecario, nameBecario) {
                             <h2 style=" font-size: 18px;color: #000;">${data[j].NombreCurso}</h2>
                             <div class="container_options">
                                 <span class="span FWM-span-form">El candidato es Apto?:</span>
-                                <input class="tgl tgl-skewed" id="cb3" type="checkbox" ${apto} onclick="return false;"></input>
-                                <label class="tgl-btn" data-tg-off="NO" data-tg-on="SI" for="cb3" style="font-size: 20px;border-radius: 5px;"></label>
+                                <label class="item-content">
+                                    <div class="item-inner2" style="display: flex; justify-content: center;">
+                                        <div class="item-after item-after2">
+                                            <div class="toggle toggle-init color-green">
+                                                <input id="cb3" type="checkbox" ${apto} onclick="return false;">
+                                                <span class="toggle-icon toggle-icon2"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </label>
                             </div>
                         </div>`
                     } else {
@@ -3573,8 +3597,16 @@ function verDetalleCapacitacion(ID, FKPersonalBecario, nameBecario) {
                             <h2 style=" font-size: 18px;color: #000;">${data[j].NombreCurso}</h2>
                             <div class="container_options">
                                 <span class="span FWM-span-form">El candidato es Apto?:</span>
-                                <input class="tgl tgl-skewed" id="cb3" type="checkbox" ${apto} onclick="return false;"></input>
-                                <label class="tgl-btn" data-tg-off="NO" data-tg-on="SI" for="cb3" style="font-size: 20px;border-radius: 5px;"></label>
+                                <label class="item-content">
+                                    <div class="item-inner2" style="display: flex; justify-content: center;">
+                                        <div class="item-after item-after2">
+                                            <div class="toggle toggle-init color-green">
+                                                <input id="cb3" type="checkbox" ${apto} onclick="return false;">
+                                                <span class="toggle-icon toggle-icon2"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </label>
                             </div>
                         </div>`
                     }
@@ -3608,7 +3640,7 @@ function verDetalleCapacitacion(ID, FKPersonalBecario, nameBecario) {
                             <div class="card">
                                 <div>
                                     <div>
-                                        <h2 style="width: fit-content;margin-left: auto;margin-right: auto;background-color: #cce7ff;padding: 10px 25px 8px 25px;border-radius: 10px;">IMTES</h2>
+                                        <h2 style="width: fit-content;margin-left: auto;margin-right: auto;background-color: #cce7ff;padding: 10px 25px 8px 25px;border-radius: 10px;">TRÁMITES</h2>
                                     </div>   
                                 </div>
                                 <div id="div_imtes" class="card">
@@ -3746,7 +3778,7 @@ function guardarCursoEvidencias() {
                 [id_cedula],
                 function(tx, results){
                     var item3 = results.rows.item(0);
-                    if(item3.cuenta < 0){
+                    if(item3.cuenta <= 0){
                         swal("", "Aún no haz agregado evidencias", "warning");
                         return false
                     } else {
@@ -4049,7 +4081,7 @@ function validaEventosDetails(fecha, id_becario) {
                             $("#div_evento_" + id_becario).html(`
                                 <span class="element_asis_evt">${data[j].flag_incidencia}</span>
                             `)
-                            $("#toogle_" + id_becario).attr("data-tg-on", "Confirmado")
+                            // $(".toogle_" + id_becario).attr("data-tg-on", "Confirmado")
                         }
                     }
                 }
@@ -4198,6 +4230,14 @@ function editarInspeccion(IdHeader){
     app.views.main.router.navigate({ name: 'formtecnologiasHmo1' });
 }
 
+function preInspeccionarUnidad(){
+    app.dialog.progress('Trabajando... ', 'red');
+    setTimeout(() => {
+        inspeccionarUnidad()
+        app.dialog.close();
+    }, "250");
+}
+
 function inspeccionarUnidad(){
     if($("#id_unidad").val()){
         let id_cedula = localStorage.getItem("IdCedula")
@@ -4258,6 +4298,10 @@ function inspeccionarUnidad(){
                                 function () {}
                             );
                         } else {
+                            $("#id_unidad").val("")
+                            $("#id_operador").val("")
+                            $("#credencial").val("")
+                            $("#operador").val("")
                             swal("","Esta unidad ya la tienes registrada.","warning");
                         }
                     },
@@ -4611,39 +4655,39 @@ function FinalizarInspecciones(){
     databaseHandler.db.transaction(
         function (tx) { tx.executeSql( "Select COUNT(id_cedula) as cuenta from DesTechHeader WHERE id_cedula = ? AND (id_operador IS NULL OR id_operador = '')", [id_cedula],
         function (tx, results) { 
-            var item = results.rows.item(0);
-            if(item.cuenta > 0){
-                swal("", "Tienes unidades sin operador, para poder continuar debes completar el registro", "warning")
-            } else {
-                swal({
-                    title: "Aviso",
-                    text: "¿Estas seguro de querer finalizar la revisión?",
-                    icon: "warning",
-                    buttons: true,
-                    dangerMode: true,
-                }).then((RESP) => {
-                    if (RESP == true) {
-                        var fecha_salida = getDateWhitZeros();
-                        var id_cedula = localStorage.getItem("IdCedula");
-                        var estatus = 1;
-                        databaseHandler.db.transaction(
-                            function(tx){
-                                tx.executeSql("UPDATE cedulas_general SET fecha_salida  = ?,estatus = ? WHERE id_cedula = ?",
-                                    [fecha_salida,estatus,id_cedula],
-                                    function(tx, results){
-                                        window.location.href = "./menu.html";
-                                    },
-                                    function(tx, error){
-                                        swal("Error al guardar",error.message,"error");
-                                    }
-                                );
-                            },
-                            function(error){},
-                            function(){}
-                        );        
-                    }
-                });
-            }
+            // var item = results.rows.item(0);
+            // if(item.cuenta > 0){
+            //     swal("", "Tienes unidades sin operador, para poder continuar debes completar el registro", "warning")
+            // } else {
+            // }
+            swal({
+                title: "Aviso",
+                text: "¿Estas seguro de querer finalizar la revisión?",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            }).then((RESP) => {
+                if (RESP == true) {
+                    var fecha_salida = getDateWhitZeros();
+                    var id_cedula = localStorage.getItem("IdCedula");
+                    var estatus = 1;
+                    databaseHandler.db.transaction(
+                        function(tx){
+                            tx.executeSql("UPDATE cedulas_general SET fecha_salida  = ?,estatus = ? WHERE id_cedula = ?",
+                                [fecha_salida,estatus,id_cedula],
+                                function(tx, results){
+                                    window.location.href = "./menu.html";
+                                },
+                                function(tx, error){
+                                    swal("Error al guardar",error.message,"error");
+                                }
+                            );
+                        },
+                        function(error){},
+                        function(){}
+                    );        
+                }
+            });
         },
         function (tx, error) { console.log("Error al guardar cedula: " + error.message); } ); }, function (error) {}, function () {}
     );
@@ -4752,7 +4796,7 @@ function buscadorRelevos(valor){ //* buscar de licencias y operadores
         success: function (data) {
             let encontro = false
             for (var j = 0; j < data.length; j++) {
-                if (data[j].QR == valor) {
+                if (data[j].QR == valor || data[j].QR2 == valor) {
                     encontro = true
                     console.log("personal1", data[j])
                     $("#claveEmpleado").val(data[j].claveEmpleado)
@@ -4881,7 +4925,7 @@ function revisaRelevos(valor){
         success: function (data) {
             let encontro = false
             for (var j = 0; j < data.length; j++) {
-                if (data[j].QR == valor) {
+                if (data[j].QR == valor || data[j].QR2 == valor) {
                     encontro = true
                     $("#claveEmpleadoE").val(data[j].claveEmpleado)
                     $("#fullNameE").val(data[j].fullName)
