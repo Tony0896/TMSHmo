@@ -1,0 +1,200 @@
+<template>
+    <div class="page">
+        <!-- Navsbars -->
+        <nav class="left top-left" style="justify-content: space-between;">
+            <a href="javascript:location.reload()" style="margin-left: 10px; display: inline-flex;align-items: center;">
+                <i class="icon material-icons md-only" style="font-weight: 900;font-size: 30px;">arrow_back</i>
+            </a>
+            <div class="title">Reelevos</div>
+            <a style="margin-right: 10px;">
+                <i class="icon material-icons md-only" style="color: #1E9FB4; font-weight: 900;">arrow_back</i>
+            </a>
+        </nav>
+        <div class="toolbar tabbar toolbar-bottom">
+            <div class="toolbar-inner" style="background-color: #1E9FB4;">
+                <a href="#" onclick="guardarRelevos();"
+                    style="margin: auto;color: #fff;font-weight: bold;font-size: 18px;width: 100%;text-align: center;">Guardar Relevo</a>
+            </div>
+        </div>
+        <!-- Contenido Page -->
+        <div class="page-content" style="height: 98%;">
+            <div
+                style="text-align: center; justify-content:center; margin-right:auto; margin-left:auto; width: 99%;margin-top: 30px;">
+
+                <div style="text-align: left;">
+
+                    <h2 class="FWN-titulo-2" style="margin-bottom: 0px;margin-top: 10px;text-align: center;">Datos de la persona y ruta que sale</h2>
+
+                    <div class="row align-items-stretch" style="text-align: center;">
+                        <div class="col-100 medium-50" style="min-width: 50px;border-style: none;margin: 35px 0px;">
+                            <span class="resize-handler"></span>
+                            <a href="#" onclick="scanRelevos(1)" style="background-color: #005D99;" class="boton-equipo"> 
+                                <i class="icon material-icons md-only"
+                                    style="display: inline-block;margin-left: 12px;">filter_center_focus</i>
+                                Escanear
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="list FWM-fixing-form" style="margin-top: 5px;">
+                        <input type="hidden" id="IDSale" class="FWM-input">
+                        <span class="span FWM-span-form">Clave:</span>
+                        <input type="text" class="FWM-input" style="font-family: 'ITC Avant Garde Gothic', sans-serif;" id="claveEmpleado" readonly>
+                        <span class="span FWM-span-form">Nombre:</span>
+                        <input type="text" class="FWM-input" style="font-family: 'ITC Avant Garde Gothic', sans-serif;" id="fullName" readonly>
+                        <input type="hidden" id="ID_personal" class="FWM-input">
+                        <span class="span FWM-span-form">Unidad:</span>
+                        <input type="text" class="FWM-input" style="font-family: 'ITC Avant Garde Gothic', sans-serif;" id="Eco" readonly>
+                        <input type="hidden" id="FKUnidad" class="FWM-input">
+                        <span class="span FWM-span-form">Linea:</span>
+                        <input type="text" class="FWM-input" style="font-family: 'ITC Avant Garde Gothic', sans-serif;" id="linea" readonly>
+                        <span class="span FWM-span-form">Jornada:</span>
+                        <input type="text" class="FWM-input" style="font-family: 'ITC Avant Garde Gothic', sans-serif;" id="jornada" readonly>
+                    </div>
+
+                    <div id="divPersonaEntra" style="display: none;">
+                        <h2 class="FWN-titulo-2" style="margin-bottom: 0px;margin-top: 10px;text-align: center;">Datos de la persona y ruta que entrar</h2>
+
+                        <div class="row align-items-stretch" style="text-align: center;">
+                            <div class="col-100 medium-50" style="min-width: 50px; border-style: none;margin: 35px 0px;">
+                                <span class="resize-handler"></span>
+                                <a href="#" onclick="scanRelevos(2)" style="background-color: #005D99;" class="boton-equipo">
+                                    <i class="icon material-icons md-only"
+                                        style="display: inline-block;margin-left: 12px;">filter_center_focus</i>
+                                    Escanear
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="list FWM-fixing-form" style="margin-top: 5px;">
+                            <input type="hidden" id="IDEntra" class="FWM-input">
+                            <span class="span FWM-span-form">Clave:</span>
+                            <input type="text" class="FWM-input" style="font-family: 'ITC Avant Garde Gothic', sans-serif;" id="claveEmpleadoE" readonly>
+                            <span class="span FWM-span-form">Nombre:</span>
+                            <input type="text" class="FWM-input" style="font-family: 'ITC Avant Garde Gothic', sans-serif;" id="fullNameE" readonly>
+                            <input type="hidden" id="ID_personalE" class="FWM-input">
+                            <span class="span FWM-span-form">Unidad:</span>
+                            <input type="text" class="FWM-input" style="font-family: 'ITC Avant Garde Gothic', sans-serif;" id="EcoE">
+                            <input type="hidden" id="FKUnidadE" class="FWM-input">
+                            <span class="span FWM-span-form">Linea:</span>
+                            <input type="number" class="FWM-input" style="font-family: 'ITC Avant Garde Gothic', sans-serif;" id="lineaE" >
+                            <span class="span FWM-span-form">Jornada:</span>
+                            <input type="number" class="FWM-input" style="font-family: 'ITC Avant Garde Gothic', sans-serif;" id="jornadaE" >
+                        </div>
+                    </div>
+
+                    <div class="block grid-resizable-demo" style="top: 25px;margin-bottom: 80px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+<script>
+    return {
+        on: {
+            pageInit: function () {
+                var empresa = localStorage.getItem("empresa");
+                var self = this;
+                var app = self.$app;
+                var NomJson = 'Unidades_empresa'+empresa;
+
+                var id_cedula = localStorage.getItem("IdCedula");
+
+                app.preloader.show('red');
+                $("#fase_titulo").html("Datos de la persona y ruta que sale")
+
+                databaseHandler.db.transaction(
+                    function(tx){
+                        tx.executeSql(
+                            "Select * from Relevos where id_cedula= ?",
+                            [id_cedula],
+                            function(tx, results){
+                                var length = results.rows.length;
+                                var item3 = results.rows.item(0);
+                                console.log(item3)
+                                if(item3){
+                                    $("#divPersonaEntra").css("display", "block")
+                                    $("#IDSale").val(item3.IDSale)
+                                    $("#claveEmpleado").val(item3.claveEmpleado)
+                                    $("#fullName").val(item3.fullName)
+                                    $("#ID_personal").val(item3.ID_personal)
+                                    $("#Eco").val(item3.Eco)
+                                    $("#FKUnidad").val(item3.FKUnidad)
+                                    $("#linea").val(item3.linea)
+                                    $("#jornada").val(item3.jornada)
+
+                                    $("#IDEntra").val(item3.IDEntra)
+                                    $("#claveEmpleadoE").val(item3.claveEmpleadoE)
+                                    $("#fullNameE").val(item3.fullNameE)
+                                    $("#ID_personalE").val(item3.ID_personalE)
+                                    $("#EcoE").val(item3.EcoE)
+                                    $("#FKUnidadE").val(item3.FKUnidadE)
+                                    $("#lineaE").val(item3.lineaE)
+                                    $("#jornadaE").val(item3.jornadaE)
+                                }
+                            }
+                        );
+                    },
+                    function(error){},
+                    function(){}
+                );
+
+                self.autocompleteDropdownAjax = app.autocomplete.create({
+                    inputEl: '#EcoE',
+                    openIn: 'dropdown',
+                    preloader: true, //enable preloader
+                    valueProperty: 'ID', //object's "value" property name
+                    textProperty:  'Unidad', //object's "text" property name
+                    limit: 10, //limit to [number] results
+                    dropdownPlaceholderText: 'Selecciona una Unidad...',
+                    source: function (query, render) {
+                        var autocomplete = this;
+                        var results = [];
+                        if (query.length === 0) {
+                            render(results);
+                            return;
+                        }
+                        autocomplete.preloaderShow();
+                        app.request({
+                            url: cordova.file.dataDirectory + "jsons_Relevos/"+NomJson+".json", 
+                            method: 'GET',
+                            dataType: 'json',
+                            data: {
+                                query: query,
+                            },success: function (data) {
+                                for (var i = 0; i < data.length; i++) {
+                                    if (data[i].Unidad.toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(data[i]);
+                                }
+                                autocomplete.preloaderHide();
+                                render(results); 
+                            }
+                        }); 
+                    }
+                });
+
+                $('#EcoE').change(function () {
+                    var ID = $("#EcoE").val();
+                    var encontro = false;
+                    
+                    app.request.get(cordova.file.dataDirectory + "jsons_tecnologiasHmo/"+NomJson+".json", function (data) {
+                        var content2 = JSON.parse(data);
+                        for(var x = 0; x < content2.length; x++) {
+                            if(content2[x].ID == ID){
+                                $("#EcoE").val(content2[x].Unidad);
+                                $("#FKUnidadE").val(content2[x].ID);
+                                encontro = true;
+                            }         
+                        }
+                        
+                        if(!encontro){
+                            $("#EcoE").val("");
+                            $("#FKUnidadE").val("");
+                        }
+                    });
+                });
+
+                app.preloader.hide();
+            }
+        }
+    }
+</script>

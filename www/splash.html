@@ -4,13 +4,14 @@
     <meta name="viewport" content="width=device-width, user-scalable=no">
     <title>SPLASH</title>
     <link rel="stylesheet" href="css/loader.css">
+    <script src="js/jquery-1.11.3.min.js"></script>
   </head>
   <body>
     <main>
       <div class="dank-ass-loader">
-          <img class="loader-image" src="img/logo_round.png" alt="Logo CISA">
-          <div id="contenedor" style="display: none;-webkit-box-orient: vertical;-webkit-box-direction: normal;flex-direction: column;-webkit-box-align: end;align-items: center;">
-            <img class="loader-image" src="img/logo-CISA.png" alt="esr" style="margin-bottom: 1vw;margin-top: 100%;">
+          <img class="loader-image" src="img/screen/TMS_HERMOSILLO B.png" alt="Logo CISA" style="display: none;">
+          <div id="contenedor" style="-webkit-box-orient: vertical;-webkit-box-direction: normal;flex-direction: column;-webkit-box-align: end;align-items: center;">
+            <img class="loader-image" src="img/screen/grupoCisa.png" alt="esr" style="margin-bottom: 1vw;margin-top: 50%;width: 20vw;display: none;">
           </div>   
       </div>
     </main>
@@ -19,6 +20,7 @@
     function pasar(){
       window.location.href = "index.html";
     }
-    setTimeout('pasar()',4000);
+    $('body').fadeOut(3000);
+    setTimeout('pasar()',3000);
   </script>
 </html>

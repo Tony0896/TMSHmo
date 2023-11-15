@@ -7,11 +7,11 @@
             </a>
             <div class="title">Revisión de Imagen</div>
             <a style="margin-right: 10px;">
-                <i class="icon material-icons md-only" style="color: #2B5875; font-weight: 900;">arrow_back</i>
+                <i class="icon material-icons md-only" style="color: #1E9FB4; font-weight: 900;">arrow_back</i>
             </a>
         </nav>
         <div class="toolbar tabbar toolbar-bottom" >
-            <div class="toolbar-inner" style="background-color: #2B5875;" id="toolbar_down">
+            <div class="toolbar-inner" style="background-color: #1E9FB4;" id="toolbar_down">
             </div>
         </div>
         <!-- Contenido Page -->
@@ -52,7 +52,7 @@ return {
                                     $("#toolbar_down").css("background-color","#239B56")
                                 }else{
                                     var Anterior = fase-1;
-                                    $("#toolbar_down").css("background-color","#2B5875");
+                                    $("#toolbar_down").css("background-color","#1E9FB4");
                                     var Siguiente = fase+1;
                                     $("#toolbar_down").append(`<a href="#" onclick="moveChecklist(`+Anterior+`);" style="margin: auto;color: #fff;font-weight: bold;font-size: 18px;width: 100%;text-align: center;">Anterior</a>
                                     <a href="#" onclick="moveChecklist(`+Siguiente+`);" style="margin: auto;color: #fff;font-weight: bold;font-size: 18px;width: 100%;text-align: center;">Siguiente</a>`);

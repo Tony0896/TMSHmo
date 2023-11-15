@@ -33,7 +33,7 @@
                     <div class="title">Bienvenido</div>
                 </nav>
                 <div class="toolbar tabbar tabbar-labels toolbar-bottom">
-                    <div class="toolbar-inner" style="background-color: #2B5875;">
+                    <div class="toolbar-inner" style="background-color: #1E9FB4;">
                         <a href="#tab-1" class="tab-link tab-link-active">
                             <i class="icon material-icons md-only">account_circle</i>
                             <span class="tabbar-label">Usuario</span>
@@ -57,8 +57,7 @@
                                 style="background-color: rgb(245, 245, 245);">
                                 <div class="block" style="padding-left: 15px;padding-top: 0;padding-right: 15px;">
                                     <div class="container_empresa">
-                                        <img class="loader-image" src="img/logo1.png" style="width: 50vw;"
-                                            id="img_logo">
+                                        <img class="loader-image" src="img/screen/TMS_HERMOSILLO_GP.png" style="width: 50vw;">
                                     </div>
                                     <div>
                                         <div id="visitsContainer">
@@ -206,6 +205,13 @@
                                                     </div>
                                                 </td>
                                             </tr>
+                                            <tr class="menu_Relevos menus" style="display: none;">
+                                                <td>
+                                                    <div>
+                                                        <a class="item-content item-link entrar principalButton" href="#" onclick="moveMenu();"><img src="img/iconsMenu/bus_tech.svg" height="60px"><p style="color: #000000;font-size: 19px;">Relevo</p><i class="material-icons md-light" style="color: #ff0000;margin-right: 10px;">chevron_right</i></a>
+                                                    </div>
+                                                </td>
+                                            </tr>
                                         </table>
                                     </div>
                                 </div>
@@ -220,7 +226,7 @@
                                             style="background-color:white;margin-top: 0;margin-bottom: 0;">
                                             <p style="margin-bottom: 15px;font-size: 1.2em;">
                                                 <label
-                                                    style="color:#2B5875;font-family: 'ITC Avant Garde Gothic', sans-serif;font-weight: 600;">Sin
+                                                    style="color:#1E9FB4;font-family: 'ITC Avant Garde Gothic', sans-serif;font-weight: 600;">Sin
                                                     Terminar</label>
                                             </p>
                                             <ul id="pendientes" style="background-color: white;">
@@ -228,7 +234,7 @@
                                             <hr>
                                             <p style="margin-bottom: 15px;font-size: 1.2em;">
                                                 <label
-                                                    style="color:#2B5875;font-family: 'ITC Avant Garde Gothic', sans-serif;font-weight: 600;">Por
+                                                    style="color:#1E9FB4;font-family: 'ITC Avant Garde Gothic', sans-serif;font-weight: 600;">Por
                                                     enviar</label>
                                             </p>
                                             <ul id="bandeja" style="background-color: white;">
@@ -364,9 +370,9 @@
             alert("Failed because: "+message);
         }
         function updateData() {
-            var urlBase2 = "http://192.168.100.4/Desarrollo/CISAApp/HMOFiles/JSONS";
-            // var urlBase2 = "http://192.168.137.205/Desarrollo/CISAApp/HMOFiles/JSONS";
-            // var urlBase2 = "http://mantto.ci-sa.com.mx/www.CISAAPP.com";
+            // var urlBase2 = "http://192.168.100.4/Desarrollo/CISAApp/HMOFiles/JSONS";
+            // var urlBase2 = "http://172.16.0.143/Desarrollo/CISAApp/HMOFiles/JSONS";
+            var urlBase2 = "http://tmshmo.ci-sa.com.mx/www.CISAAPP.com/HMOFiles_dev/JSONS";
             if (localStorage.getItem("Modulos")) {
                 if (localStorage.getItem("Modulos") == 'Limpieza') {
                     var RutaJSONS = urlBase2 + "/Archivos/JSON_limp/";
@@ -518,7 +524,7 @@
         }
         // Evento de inicio de base de datos y consuLtas
         document.addEventListener("deviceready", function () {
-            StatusBar.backgroundColorByHexString("#2B5875");
+            StatusBar.backgroundColorByHexString("#1E9FB4");
             StatusBar.styleLightContent();
             //cambio de picture()
             var empresa = localStorage.getItem("empresa");

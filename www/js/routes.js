@@ -128,12 +128,20 @@ var routes = [
     name: 'formtecnologiasHmo1',
     path: '/formtecnologiasHmo1/',
     componentUrl: './pages/formtecnologiasHmo1.html',
-  },{
+  },
+  {
     name: 'formtecnologiasHmo2',
     path: '/formtecnologiasHmo2/',
     componentUrl: './pages/formtecnologiasHmo2.html',
   },
   //?Fin tecnologiasHmo
+  //?Inicio relevos
+  {
+    name: 'formRelevos1',
+    path: '/formRelevos1/',
+    componentUrl: './pages/formRelevos1.html',
+  },
+  //?Fin relevos
   //************************************** fin HMO **************************************
   {
     name: 'visualizar',

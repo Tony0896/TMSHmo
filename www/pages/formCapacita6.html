@@ -5,7 +5,7 @@
 </style>
 <template>
     <div class="page">
-        <div class="navbar" style="background-color: #2B5875;height: 5px;">
+        <div class="navbar" style="background-color: #1E9FB4;height: 5px;">
             <div class="left top-left" style="justify-content: space-between;">
                 <a href="javascript:location.reload()"
                     style="margin-left: 10px; display: inline-flex;align-items: center;">
@@ -13,13 +13,13 @@
                 </a>
                 <div class="title" style="font-size: 18px;">Cursos</div>
                 <a style="margin-right: 10px;">
-                    <i class="icon material-icons md-only" style="color: #2B5875; font-weight: 900;">arrow_back</i>
+                    <i class="icon material-icons md-only" style="color: #1E9FB4; font-weight: 900;">arrow_back</i>
                 </a>
             </div>
         </div>
 
         <div class="toolbar tabbar toolbar-bottom">
-            <div class="toolbar-inner" style="background-color: #2B5875;" id="toolbar_down">
+            <div class="toolbar-inner" style="background-color: #1E9FB4;" id="toolbar_down">
                 <a href="#" onclick="guardarCursoMultiple();"
                     style="margin: auto;color: #fff;font-weight: bold;font-size: 18px;width: 100%;text-align: center;">Guardar <i
                         class="icon material-icons md-only" style="display: inline-block;">chevron_right</i></a>
@@ -94,8 +94,18 @@
 
                             <div class="container_options">
                                 <span class="span FWM-span-form">El candidato es Apto?:</span>
-                                <input class="tgl tgl-skewed" id="cb3" type="checkbox"></input>
-                                <label class="tgl-btn" data-tg-off="NO" data-tg-on="SI" for="cb3" style="font-size: 20px;border-radius: 5px;"></label>
+                                <!-- <input class="tgl tgl-skewed" id="cb3" type="checkbox"></input>
+                                <label class="tgl-btn" data-tg-off="NO" data-tg-on="SI" for="cb3" style="font-size: 20px;border-radius: 5px;"></label> -->
+                                <label class="item-content">
+                                    <div class="item-inner2">
+                                        <div class="item-after item-after2">
+                                            <div class="toggle toggle-init color-green">
+                                                <input id="cb3" type="checkbox">
+                                                <span class="toggle-icon toggle-icon2"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </label>
                             </div>
                             
                             <div class="container_options">
@@ -150,7 +160,6 @@
                 var IDCurso = localStorage.getItem("IDCurso");
                 var FK_Becario = localStorage.getItem("FK_Becario");
                 var empresa = localStorage.getItem("empresa");
-                var NomJson = 'DatosEvaluacionD_'+empresa;
                 var html = '';        
         
                 databaseHandler.db.transaction(
@@ -167,8 +176,8 @@
                                 $("#nombreCandidato").html(item2.nombreCandidato);
                                 if (item2.OpDiario == 1) {
                                     console.log("si diario")
-                                    var IDCurso = localStorage.getItem("IDCurso");
-                                    var FK_Becario = localStorage.getItem("FK_Becario");
+                                    var IDCurso = item2.id_course
+                                    var FK_Becario = item2.id_candidato
                                     var empresa = localStorage.getItem("empresa");
                                     var NomJson = 'DatosEvaluacionD_'+empresa;
                                     var html = '';        
@@ -180,8 +189,10 @@
                                             var length = data.length;
                                             if(length == 0){
                                             } else {
+                                                let encontro = false
                                                 for (var j = 0; j < data.length; j++) {
                                                     if(data[j].FK_IDCurso == IDCurso && data[j].FK_Becario == FK_Becario){
+                                                        encontro = true
                                                         var check = ''
                                                         data[j].apto == 1 ? check = 'checked': check = '';
                                                         html += `<div class="timeline-item">
@@ -196,6 +207,9 @@
                                                             </div>
                                                         </div>`;
                                                     }
+                                                }
+                                                if(!encontro){
+                                                    busquedaEvaluacion2(IDCurso, FK_Becario)
                                                 }
                                             }
                                             $(".timeline-month").html(html);

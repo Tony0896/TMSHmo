@@ -1,20 +1,20 @@
 
 <template>
     <div class="page">
-        <div class="navbar" style="background-color: #005D99;height: 5px;">
+        <div class="navbar" style="background-color: #1E9FB4;height: 5px;">
             <div class="left top-left" style="justify-content: space-between;">
                 <a href="javascript:location.reload()" style="margin-left: 10px; display: inline-flex;align-items: center;">
                     <i class="icon material-icons md-only" style="font-weight: 900;font-size: 30px;">arrow_back</i>
                 </a>
                 <div class="title" style="font-size: 18px;">Inspección tecnologías </div>
                 <a style="margin-right: 10px;">
-                    <i class="icon material-icons md-only" style="color: #005D99; font-weight: 900;">arrow_back</i>
+                    <i class="icon material-icons md-only" style="color: #1E9FB4; font-weight: 900;">arrow_back</i>
                 </a>
             </div>
         </div>
 
         <div class="toolbar tabbar toolbar-bottom">
-            <div class="toolbar-inner" style="background-color: #005D99;">
+            <div class="toolbar-inner" style="background-color: #1E9FB4;">
                 <a href="#" onclick="FinalizarInspecciones();" id="fin_recaudo" style="margin: auto;color: #fff;font-weight: bold;font-size: 18px;width: 100%;text-align: center;">Finalizar <i class="icon material-icons md-only" style="display: inline-block;">chevron_right</i></a>
             </div>
         </div>
@@ -28,7 +28,7 @@
                             <div style="display: flex;">
                                 <input type="text" placeholder="Escribe el No. de la unidad" id="autocomplete-dropdown-ajax" class="FWM-input autocomplete-dropdown item-title" style="padding-right: 5px;">
                                 <span style="min-width: 20%;padding-left: 10px;">
-                                    <button class="col button button-small button-round button-outline" style="height: 100%;border-color: #FF0037;" onclick="inspeccionarUnidad();"><i class="material-icons md-light" style="color: #FF0037;vertical-align: middle;font-size: 30px;">play_circle_outline</i></button>
+                                    <button class="col button button-small button-round button-outline" style="height: 100%;border-color: #FF0037;" onclick="preInspeccionarUnidad();"><i class="material-icons md-light" style="color: #FF0037;vertical-align: middle;font-size: 30px;">play_circle_outline</i></button>
                                 </span>
                             </div>
                             <input type="hidden" id="id_unidad">

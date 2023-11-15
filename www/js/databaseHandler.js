@@ -23,6 +23,7 @@ var databaseHandler = {
                         console.error("Error al crear la tabla de cedulas_general: " + error.message);
                     }
                 );
+                //inicio Capacitacion
                 tx.executeSql(
                     "create table if not exists datosGeneralesCurso(id_dato integer primary key, id_cedula integer, fecha text, nombreInstructor text, id_instructor integer, id_candidato integer, nombreCandidato text, edad float, telCelular int, antecedentesManejo text, name_course text, fecha_captura text, id_course integer, apto integer, observaciones text, firmaInstructor blob, promedio float, costo float, ID_AT int, Prueba int, OpDiario int)",
                     [],
@@ -103,6 +104,8 @@ var databaseHandler = {
                         console.error("Error al crear la tabla de detalle_recaudo: " + error.message);
                     }
                 );
+                //Fin cacpacitacion
+                //inicio Tecnologias
                 tx.executeSql(
                     "create table if not exists DesTechDetails(id_detalle integer primary key, id_cedula integer, IdHeader integer, Fk_pregunta integer, respuesta integer, falla text, comentarios text, pregunta text, multiple bit, id_formato int, FK_equipo int, FKsFallas text)",
                     [],
@@ -123,8 +126,20 @@ var databaseHandler = {
                         console.error("Error al crear la tabla de detalle_recaudo: " + error.message);
                     }
                 );
+                // tx.executeSql(
+                //     "create table if not exists DesTecFirmas(id_firma integer primary key, id_cedula integer, IdHeader integer, firma text, fecha text)",
+                //     [],
+                //     function(tx, results){
+                //         // console.log("Se creo Servicio tecnico DIPREC correctamente!");
+                //     },
+                //     function(tx, error){
+                //         console.error("Error al crear la tabla de detalle_recaudo: " + error.message);
+                //     }
+                // );
+                // fin tecnologías
+                // inicio relevos
                 tx.executeSql(
-                    "create table if not exists DesTecFirmas(id_firma integer primary key, id_cedula integer, IdHeader integer, firma text, fecha text)",
+                    "create table if not exists Relevos(id_relevo integer primary key, id_cedula integer, IDSale int, claveEmpleado Text, fullName Text, ID_personal int, Eco Text, FKUnidad int, linea int, jornada int, fechaSalida Text, UsuarioMov Text, FkUsuarioMov Text, tipoCedula Text, IDEntra int, claveEmpleadoE Text, fullNameE Text, ID_personalE int, EcoE Text, FKUnidadE int, lineaE int, jornadaE int, fechaEntrada Text, UsuarioMovE Text, FkUsuarioMovE Text)",
                     [],
                     function(tx, results){
                         // console.log("Se creo Servicio tecnico DIPREC correctamente!");
@@ -133,6 +148,7 @@ var databaseHandler = {
                         console.error("Error al crear la tabla de detalle_recaudo: " + error.message);
                     }
                 );
+                //fin relevos
             },
             function(error){
                 console.error("Error al crear la base de datos: " + error.message);

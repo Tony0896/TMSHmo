@@ -672,10 +672,9 @@ function llevarTodo(id_cedula,tipo_cedula){
                                 );
                             }
                         }
-                    } else if (tipo = "tecnologiasHmo"){
+                    } else if (tipo == "tecnologiasHmo"){
                         var DesTechHeader = new Array();
                         var DesTechDetails = new Array();
-                        var DesTecFirmas = new Array();
                         databaseHandler.db.transaction(
                             function(tx){
                                 tx.executeSql("SELECT IdHeader, credencial, REPLACE(fecha_fin, ' ', 'T') as fecha_fin, REPLACE(fecha_inicio, ' ', 'T') as fecha_inicio, id_cedula, id_operador, id_unidad, observaciones, operador, unidad FROM DesTechHeader WHERE id_cedula = ?",
@@ -696,69 +695,48 @@ function llevarTodo(id_cedula,tipo_cedula){
                                                             var item2 = results.rows.item(i);
                                                             DesTechDetails[i] = item2;
                                                         }
-                                                        databaseHandler.db.transaction(
-                                                            function(tx){
-                                                                tx.executeSql("SELECT IdHeader, REPLACE(fecha, ' ', 'T') as fecha, firma, id_cedula, id_firma FROM DesTecFirmas WHERE id_cedula = ?",
-                                                                    [id_cedula],
-                                                                    function(tx, results){
-                                                                        var length = results.rows.length;
-                                                                        for(var i = 0; i< length; i++){
-                                                                            var item1 = results.rows.item(i);
-                                                                            DesTecFirmas[i] = item1;
-                                                                        }
-                                                                        console.log(datosCedulaGeneral)
-                                                                        console.log(DesTechHeader)
-                                                                        console.log(DesTechDetails)
-                                                                        console.log(DesTecFirmas)
-                                                                        $.ajax({
-                                                                            type: "POST",
-                                                                            async : true,
-                                                                            url: url+"/tecnologiasHmo/guardarTecHmo.php",
-                                                                            dataType: 'html',
-                                                                            data: {'datosCedulaGeneral': JSON.stringify(datosCedulaGeneral),
-                                                                            'DesTechHeader': JSON.stringify(DesTechHeader),
-                                                                            'DesTechDetails': JSON.stringify(DesTechDetails),
-                                                                            'DesTecFirmas': JSON.stringify(DesTecFirmas)},
-                                                                            success: function(respuesta){
-                                                                                var respu1 = respuesta.split("._.");
-                                                                                var dat1 = respu1[0];
-                                                                                var dat2 = respu1[1];
-                                                                                if(dat1 == "CEDULA"){
-                                                                                    if(dat2 > 0){
-                                                                                        databaseHandler.db.transaction(
-                                                                                            function(tx7){
-                                                                                                tx7.executeSql(
-                                                                                                    "UPDATE cedulas_general SET estatus = 3 WHERE id_cedula = ?",
-                                                                                                    [id_cedula],
-                                                                                                    function(tx7, results){
-                                                                                                        $(".send-ced").css("pointer-events", "all");
-                                                                                                        localStorage.setItem("sendFlag", 0);
-                                                                                                        $("#li-"+item.id_cedula).remove();
-                                                                                                        swal("Enviado!", "", "success");
-                                                                                                    }
-                                                                                                );
-                                                                                            }
-                                                                                        );
+                                                        console.log(datosCedulaGeneral)
+                                                        console.log(DesTechHeader)
+                                                        console.log(DesTechDetails)
+                                                        $.ajax({
+                                                            type: "POST",
+                                                            async : true,
+                                                            url: url+"/tecnologiasHmo/guardarTecHmo.php",
+                                                            dataType: 'html',
+                                                            data: {'datosCedulaGeneral': JSON.stringify(datosCedulaGeneral),
+                                                            'DesTechHeader': JSON.stringify(DesTechHeader),
+                                                            'DesTechDetails': JSON.stringify(DesTechDetails)},
+                                                            success: function(respuesta){
+                                                                var respu1 = respuesta.split("._.");
+                                                                var dat1 = respu1[0];
+                                                                var dat2 = respu1[1];
+                                                                if(dat1 == "CEDULA"){
+                                                                    if(dat2 > 0){
+                                                                        databaseHandler.db.transaction(
+                                                                            function(tx7){
+                                                                                tx7.executeSql(
+                                                                                    "UPDATE cedulas_general SET estatus = 3 WHERE id_cedula = ?",
+                                                                                    [id_cedula],
+                                                                                    function(tx7, results){
+                                                                                        $(".send-ced").css("pointer-events", "all");
+                                                                                        localStorage.setItem("sendFlag", 0);
+                                                                                        $("#li-"+item.id_cedula).remove();
+                                                                                        swal("Enviado!", "", "success");
                                                                                     }
-                                                                                } else {
-                                                                                    AlmacenarError(respuesta);
-                                                                                }
-                                                                            },
-                                                                            error: function(){
-                                                                                console.log("Error en la comunicacion");
-                                                                                swal("Fallo el envío, por conexión!", "", "error");
-                                                                                $(".send-ced").css("pointer-events", "all")
+                                                                                );
                                                                             }
-                                                                        });
-                                                                    },
-                                                                    function(tx, error){
-                                                                        console.log("Error al consultar: " + error.message);
+                                                                        );
                                                                     }
-                                                                );
+                                                                } else {
+                                                                    AlmacenarError(respuesta);
+                                                                }
                                                             },
-                                                            function(error){},
-                                                            function(){}
-                                                        );
+                                                            error: function(){
+                                                                console.log("Error en la comunicacion");
+                                                                swal("Fallo el envío, por conexión!", "", "error");
+                                                                $(".send-ced").css("pointer-events", "all")
+                                                            }
+                                                        });
                                                     },
                                                     function(tx, error){
                                                         console.log("Error al consultar: " + error.message);
@@ -768,6 +746,67 @@ function llevarTodo(id_cedula,tipo_cedula){
                                             function(error){},
                                             function(){}
                                         );
+                                    },
+                                    function(tx, error){
+                                        console.log("Error al consultar: " + error.message);
+                                    }
+                                );
+                            },
+                            function(error){},
+                            function(){}
+                        );
+                    } else if (tipo == "Relevos"){
+                        var Relevos = new Array();
+                        databaseHandler.db.transaction(
+                            function(tx){
+                                tx.executeSql("SELECT Eco, EcoE, FKUnidad, FKUnidadE, FkUsuarioMov, FkUsuarioMovE, IDEntra, IDSale, ID_personal, ID_personalE, UsuarioMov, UsuarioMovE, claveEmpleado, claveEmpleadoE, REPLACE(fechaEntrada, ' ', 'T') as fechaEntrada, REPLACE(fechaSalida, ' ', 'T') as fechaSalida, fullName, fullNameE, id_cedula, id_relevo, jornada, jornadaE, linea, lineaE, tipoCedula FROM Relevos WHERE id_cedula = ?",
+                                    [id_cedula],
+                                    function(tx, results){
+                                        var length = results.rows.length;
+                                        for(var i = 0; i< length; i++){
+                                            var item1 = results.rows.item(i);
+                                            Relevos[i] = item1;
+                                        }
+                                        console.log(datosCedulaGeneral)
+                                        console.log(Relevos)
+                                        $.ajax({
+                                            type: "POST",
+                                            async : true,
+                                            url: url+"/Relevos/guardarRelevos.php",
+                                            dataType: 'html',
+                                            data: {'datosCedulaGeneral': JSON.stringify(datosCedulaGeneral),
+                                            'Relevos': JSON.stringify(Relevos)},
+                                            success: function(respuesta){
+                                                var respu1 = respuesta.split("._.");
+                                                var dat1 = respu1[0];
+                                                var dat2 = respu1[1];
+                                                if(dat1 == "CEDULA"){
+                                                    if(dat2 > 0){
+                                                        databaseHandler.db.transaction(
+                                                            function(tx7){
+                                                                tx7.executeSql(
+                                                                    "UPDATE cedulas_general SET estatus = 3 WHERE id_cedula = ?",
+                                                                    [id_cedula],
+                                                                    function(tx7, results){
+                                                                        $(".send-ced").css("pointer-events", "all");
+                                                                        localStorage.setItem("sendFlag", 0);
+                                                                        $("#li-"+item.id_cedula).remove();
+                                                                        swal("Enviado!", "", "success");
+                                                                    }
+                                                                );
+                                                            }
+                                                        );
+                                                    }
+                                                } else {
+                                                    AlmacenarError(respuesta);
+                                                }
+                                            },
+                                            error: function(){
+                                                console.log("Error en la comunicacion");
+                                                swal("Fallo el envío, por conexión!", "", "error");
+                                                $(".send-ced").css("pointer-events", "all")
+                                            }
+                                        });
                                     },
                                     function(tx, error){
                                         console.log("Error al consultar: " + error.message);
@@ -826,6 +865,7 @@ function EliminarRegistrosAntiguos(){
     );
 }
 function EliminarReg(id_cedula,tipo_cedula){
+    console.log(id_cedula, tipo_cedula)
     swal({
         title: "Aviso",
         text: "Estas apunto de eliminar todos los datos de este registro, ¿Estas seguro continuar con la acción?",
@@ -882,6 +922,12 @@ function EliminarReg(id_cedula,tipo_cedula){
                 databaseHandler.db.transaction( function(tx){ tx.executeSql("DELETE FROM CAP_RespuestasMultiple WHERE id_cedula = ?", [id_cedula], function(tx, results){ }, function(tx, error){ } ); },function(error){},function(){} );
                 databaseHandler.db.transaction( function(tx){ tx.executeSql("DELETE FROM CAP_OPMultipleOpts WHERE id_cedula = ?", [id_cedula], function(tx, results){ }, function(tx, error){ } ); },function(error){},function(){} );
                 databaseHandler.db.transaction( function(tx){ tx.executeSql("DELETE FROM CAP_Evidencias WHERE id_cedula = ?", [id_cedula], function(tx, results){ }, function(tx, error){ } ); },function(error){},function(){} );
+            } else if(tipo_cedula == "tecnologiasHmo"){
+                $("#conc" + id_cedula).remove();
+                swal("","Eliminado correctamente","success");
+                databaseHandler.db.transaction( function(tx){ tx.executeSql("DELETE FROM DesTechDetails WHERE id_cedula = ?", [id_cedula], function(tx, results){ }, function(tx, error){ } ); },function(error){},function(){} );
+                databaseHandler.db.transaction( function(tx){ tx.executeSql("DELETE FROM DesTechHeader WHERE id_cedula = ?", [id_cedula], function(tx, results){ }, function(tx, error){ } ); },function(error){},function(){} );
+                // databaseHandler.db.transaction( function(tx){ tx.executeSql("DELETE FROM DesTecFirmas WHERE id_cedula = ?", [id_cedula], function(tx, results){ }, function(tx, error){ } ); },function(error){},function(){} );
             }
         } 
     });

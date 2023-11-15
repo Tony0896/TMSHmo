@@ -18,17 +18,18 @@
         $(document).ready(function () {
             // Validar si ya habia iniciado sesion
             var Usuario = localStorage.getItem("Usuario");
-            localStorage.setItem("version", "1.3.2");
-            var url = "http://192.168.100.4/Desarrollo/CISAApp/HMOFiles/App";
-            // var url = "http://192.168.137.205/Desarrollo/CISAApp/HMOFiles/App";
-            // var url = "http://mantto.ci-sa.com.mx/www.CISAAPP.com/Archivos/App";
+            localStorage.setItem("version", "1.1.3");
+            // var url = "http://192.168.100.4/Desarrollo/CISAApp/HMOFiles/App";
+            // var url = "http://172.16.0.143/Desarrollo/CISAApp/HMOFiles/App"; 
+            var url = "http://tmshmo.ci-sa.com.mx/www.CISAAPP.com/HMOFiles_dev/App";
+            
             localStorage.setItem("url", url);
             if (Usuario) {
                 localStorage.setItem("sendFlag", 0);
                 window.location.href = "menu.html";
             }
 
-            // StatusBar.backgroundColorByHexString("#2B5875");
+            // StatusBar.backgroundColorByHexString("#1E9FB4");
             // StatusBar.styleLightContent();
             $('body').fadeIn(1000);
             document.addEventListener('backbutton', function (e) {
@@ -186,7 +187,7 @@
     <div class="container-login100">
         <div class="wrap-login100">
             <div style="text-align: center;padding-bottom: 25px;width: 100%;padding-top: 25px;">
-                <img src="img/logo_round.png" height="100px" alt="Logo CISA" id="img_logo">
+                <img src="img/screen/TMS_HERMOSILLO B.png" height="100px" alt="Logo CISA" id="img_logo">
             </div>
             <form method="post" class="login100-form validate-form" id="formulario">
                 <div class="wrap-input100 validate-input m-b-18">

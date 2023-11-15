@@ -5,7 +5,7 @@
 </style>
 <template>
     <div class="page">
-        <div class="navbar" style="background-color: #2B5875;height: 5px;">
+        <div class="navbar" style="background-color: #1E9FB4;height: 5px;">
             <div class="left top-left" style="justify-content: space-between;">
                 <a href="javascript:location.reload()"
                     style="margin-left: 10px; display: inline-flex;align-items: center;">
@@ -13,13 +13,13 @@
                 </a>
                 <div class="title" style="font-size: 18px;">Lista de Asistencia</div>
                 <a style="margin-right: 10px;">
-                    <i class="icon material-icons md-only" style="color: #2B5875; font-weight: 900;">arrow_back</i>
+                    <i class="icon material-icons md-only" style="color: #1E9FB4; font-weight: 900;">arrow_back</i>
                 </a>
             </div>
         </div>
 
         <div class="toolbar tabbar toolbar-bottom">
-            <div class="toolbar-inner" style="background-color: #2B5875;" id="toolbar_down">
+            <div class="toolbar-inner" style="background-color: #1E9FB4;" id="toolbar_down">
                 <a href="#" onclick="guardarAsistencia();"
                     style="margin: auto;color: #fff;font-weight: bold;font-size: 18px;width: 100%;text-align: center;">Guardar <i
                         class="icon material-icons md-only" style="display: inline-block;">chevron_right</i></a>
@@ -87,8 +87,10 @@
                                                             <tbody class="tbody_asistencia">`;
                                                 if(length == 0){
                                                 }else{
+                                                    var asiste
                                                     for(var i = 0; i< length; i++){
                                                         var item = results.rows.item(i);
+                                                        item.asiste == 1 ? asiste = 'checked' : asiste = ''
                                                         html += `
                                                             <tr>
                                                                 <td style="padding: 10px;"><span>${item.claveBecario}</span></td>
@@ -99,8 +101,16 @@
                                                                             <div id="div_evento_${item.id_becario}"></div>
                                                                         </div>
                                                                         <div style="margin-bottom: 10px;">
-                                                                            <input class="tgl tgl-skewed" id="cb3-${item.id_asistenciaD}" type="checkbox" onchange="actualizaLista(this.id)"></input>
-                                                                            <label id="toogle_${item.id_becario}" class="tgl-btn" data-tg-off="Falta" data-tg-on="Asistencia" for="cb3-${item.id_asistenciaD}" style="border-radius: 5px;margin: auto;"></label>
+                                                                            <label class="item-content">
+                                                                                <div class="item-inner2">
+                                                                                    <div class="item-after item-after2">
+                                                                                        <div class="toggle toggle-init color-green">
+                                                                                            <input id="cb3-${item.id_asistenciaD}" class="toogle_${item.id_becario}" type="checkbox" onchange="actualizaLista(this.id)" ${asiste}>
+                                                                                            <span class="toggle-icon toggle-icon2"></span>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </label>
                                                                         </div>
                                                                     </div>
                                                                 </td>

@@ -342,16 +342,16 @@ var productHandler = {
 					[id_cedula, IdHeader, Fk_pregunta, pregunta, multiple, Fk_id_formato,FK_equipo, 1],
 					function (tx, results) {
 						if (aux == aux2) {
-							databaseHandler.db.transaction(
-								function (tx) {
-									tx.executeSql(
-										"insert into DesTecFirmas(id_cedula, IdHeader) values(?, ?)",
-										[id_cedula, IdHeader],
-										function (tx, results) { },
-										function (tx, error) { console.error("Error registrar:" + error.message); }
-									);
-								}, function (error) { console.log(error) }, function () { }
-							);
+							// databaseHandler.db.transaction(
+							// 	function (tx) {
+							// 		tx.executeSql(
+							// 			"insert into DesTecFirmas(id_cedula, IdHeader) values(?, ?)",
+							// 			[id_cedula, IdHeader],
+							// 			function (tx, results) { },
+							// 			function (tx, error) { console.error("Error registrar:" + error.message); }
+							// 		);
+							// 	}, function (error) { console.log(error) }, function () { }
+							// );
 							app.dialog.close();
 							app.views.main.router.navigate({ name: 'formtecnologiasHmo1' });
 						} else {
@@ -365,4 +365,46 @@ var productHandler = {
 		);
 	},
 	//! Fin Control Tecnologías
+	//! inicio Relevos
+	addRelevos: function(id_cedula, IDSale, claveEmpleado, fullName, ID_personal, Eco, FKUnidad, linea, jornada, fechaSalida, UsuarioMov, FkUsuarioMov, tipoCedula, IDEntra, claveEmpleadoE, fullNameE, ID_personalE, EcoE, FKUnidadE, lineaE, jornadaE){
+		databaseHandler.db.transaction(
+			function (tx) {
+				tx.executeSql(
+					"SELECT id_cedula FROM Relevos WHERE id_cedula = ?",
+					[id_cedula],
+					function (tx, results) {
+						var item = results.rows.item(0);
+						console.log(item)
+						if(item){
+							console.log("uodate")
+							databaseHandler.db.transaction(
+								function (tx) {
+									tx.executeSql(
+										"UPDATE Relevos SET IDSale = ?, claveEmpleado = ?, fullName = ?, ID_personal = ?, Eco = ?, FKUnidad = ?, linea = ?, jornada = ?, fechaSalida = ?, UsuarioMov = ?, FkUsuarioMov = ?, tipoCedula = ?, IDEntra = ?, ID_personalE = ?, EcoE = ?, FKUnidadE = ?, lineaE = ?, jornadaE = ? WHERE id_cedula = ?",
+										[IDSale, claveEmpleado, fullName, ID_personal, Eco, FKUnidad, linea, jornada, fechaSalida, UsuarioMov, FkUsuarioMov, tipoCedula, IDEntra, ID_personalE, EcoE, FKUnidadE, lineaE, jornadaE, id_cedula],
+										function (tx, results) { }, 
+										function (tx, error) { console.error("Error registrar:" + error.message); }
+									);
+								}, function (error) { console.log(error) }, function () { }
+							);
+						} else {
+							console.log("insert")
+							databaseHandler.db.transaction(
+								function (tx) {
+									tx.executeSql(
+										"insert into Relevos(id_cedula, IDSale, claveEmpleado, fullName, ID_personal, Eco, FKUnidad, linea, jornada, fechaSalida, UsuarioMov, FkUsuarioMov, tipoCedula, IDEntra, ID_personalE, EcoE, FKUnidadE, lineaE, jornadaE) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+										[id_cedula, IDSale, claveEmpleado, fullName, ID_personal, Eco, FKUnidad, linea, jornada, fechaSalida, UsuarioMov, FkUsuarioMov, tipoCedula, IDEntra, ID_personalE, EcoE, FKUnidadE, lineaE, jornadaE],
+										function (tx, results) { }, 
+										function (tx, error) { console.error("Error registrar:" + error.message); }
+									);
+								}, function (error) { console.log(error) }, function () { }
+							);
+						}
+					}, 
+					function (tx, error) { console.error("Error registrar:" + error.message); }
+				);
+			}, function (error) { console.log(error) }, function () { }
+		);
+	},
+	//! Fin Relevos
 };
