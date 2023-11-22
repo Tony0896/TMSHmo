@@ -149,6 +149,29 @@ var databaseHandler = {
                     }
                 );
                 //fin relevos
+                //? Inicio Campanias
+                    // IEN_Header(id_cedula, FKCampaña, nombreCampania, FKFormato, FK_registro, fechaFin, fechaInicio, FK_Unidad, observaciones, unidad
+                    tx.executeSql(
+                        "create table if not exists IEN_Header(ID_Header integer primary key, id_cedula integer, FKCampaña integer, nombreCampania text, FKFormato integer, FK_registro integer, fechaFin text, fechaInicio text, FK_Unidad integer, observaciones text, unidad text)",
+                        [],
+                        function(tx, results){
+                            // console.log("Se creo Servicio tecnico DIPREC correctamente!");
+                        },
+                        function(tx, error){
+                            console.error("Error al crear la tabla de detalle_recaudo: " + error.message);
+                        }
+                    );
+                    tx.executeSql(
+                        "create table if not exists IEN_Details(ID_Detail integer primary key, id_cedula integer, FKHeader integer, FK_formato integer, Fk_pregunta integer, pregunta text, multiple integer, respuesta int, Opcion_1 text, Opcion_2 text, falla text, FKsFallas text, comentarios text)",
+                        [],
+                        function(tx, results){
+                            // console.log("Se creo Servicio tecnico DIPREC correctamente!");
+                        },
+                        function(tx, error){
+                            console.error("Error al crear la tabla de detalle_recaudo: " + error.message);
+                        }
+                    );
+                //? Fin Campanias
             },
             function(error){
                 console.error("Error al crear la base de datos: " + error.message);

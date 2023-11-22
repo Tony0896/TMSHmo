@@ -407,4 +407,38 @@ var productHandler = {
 		);
 	},
 	//! Fin Relevos
+	//! inicio Relevos
+	insertHeaderInsEncierro: function(id_cedula, FKCampaña, nombreCampania, FKFormato, fechaFin, fechaInicio, FK_Unidad, observaciones, unidad) {
+		databaseHandler.db.transaction(
+			function (tx) {
+				tx.executeSql(
+					"insert into IEN_Header(id_cedula, FKCampaña, nombreCampania, FKFormato, fechaFin, fechaInicio, FK_Unidad, observaciones, unidad) values(?, ?, ?, ?, ?, ?, ?, ?, ?)",
+					[id_cedula, FKCampaña, nombreCampania, FKFormato, fechaFin, fechaInicio, FK_Unidad, observaciones, unidad],
+					function (tx, results) { },
+					function (tx, error) { console.error("Error registrar:" + error.message); }
+				);
+			}, function (error) { console.log(error) }, function () { }
+		);
+	},
+	insertPreguntasInsEncierro: function(id_cedula,FKHeader,Fk_pregunta,pregunta,multiple,FK_formato,Opcion1,Opcion2,respuesta, aux, aux2) {
+		databaseHandler.db.transaction(
+			function (tx) {
+				tx.executeSql(// FK_formato integer, Fk_pregunta integer, pregunta text, multiple integer, respuesta int, Opcion_1 text, Opcion_2 text
+					"insert into IEN_Details(id_cedula,FKHeader,Fk_pregunta,pregunta,multiple,FK_formato,Opcion_1,Opcion_2,respuesta) values(?,?,?,?,?,?,?,?,?)",
+					[id_cedula,FKHeader,Fk_pregunta,pregunta,multiple,FK_formato,Opcion1,Opcion2,respuesta],
+					function (tx, results) {
+						if (aux == aux2) {
+							app.dialog.close();
+							app.views.main.router.navigate({ name: 'formEncierro2' });
+						} else {
+							var dialog = app.dialog.get();
+							dialog.setProgress((aux2 * 100) / aux);
+							dialog.setText(aux2 + ' de ' + aux);
+						}
+					}, function (tx, error) { console.error("Error registrar:" + error.message); }
+				);
+			}, function (error) { console.log(error) }, function () { }
+		);
+	}
+	//! Fin Relevos
 };

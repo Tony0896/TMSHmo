@@ -232,13 +232,12 @@ function checkStatus(check) {
 }
 function moveMenu(val) {
     if (val) {
-        val == 1
-            ? app.views.main.router.navigate({ name: 'formCapacita1' })
-            : val == 2
-                ? generarAsistencia()
-                : val == 3
-                    ? app.views.main.router.back('/formCapacita4/', { force: true, ignoreCache: true, reload: true })
-                    : false;
+        val == 1 ? app.views.main.router.navigate({ name: 'formCapacita1' })
+        : val == 2 ? generarAsistencia()
+        : val == 3 ? app.views.main.router.back('/formCapacita4/', { force: true, ignoreCache: true, reload: true })
+        : val == 4 ? app.views.main.router.back('/yallegueCampanias/', { force: true, ignoreCache: true, reload: true })
+        : val == 5 ? console.log("gg5")
+        : false;
     } else {
         var Modulos = localStorage.getItem("Modulos");
         localStorage.setItem("Opcion", '1');
@@ -834,33 +833,98 @@ function validaradios(id, numero, pregunta, multiple, FK_equipo) {
             }
         }
         actualizacheck(id);
-    } else if(numero == 4){
-        var ids = id.split("-");
-        var check = ids[1];
-        if(check.includes('1')){
-            var valCheck = document.getElementById(ids[0]+"-"+ids[1]).checked;
-            if(valCheck ==true){
-                var otherCheck = ids[0] + "-2";
-                document.getElementById(otherCheck).checked = false;
-                var labels1 = ids[0].replace('radio','label') +"-1";
-                var labels2 = ids[0].replace('radio','label') +"-2";
-                $("#"+labels1).addClass("checked");
-                $("#"+labels2).removeClass("checked");
+    } else if(numero == 4 || numero == 5){
+        if(numero == 4){
+            var ids = id.split("-");
+            var check = ids[1];
+            if(check.includes('1')){
+                var valCheck = document.getElementById(ids[0]+"-"+ids[1]).checked;
+                if(valCheck ==true){
+                    var otherCheck = ids[0] + "-2";
+                    document.getElementById(otherCheck).checked = false;
+                    var labels1 = ids[0].replace('radio','label') +"-1";
+                    var labels2 = ids[0].replace('radio','label') +"-2";
+                    $("#"+labels1).addClass("checked");
+                    $("#"+labels2).removeClass("checked");
+                }
+            }else if(check.includes('2')){
+                var valCheck = document.getElementById(ids[0]+"-"+ids[1]).checked;
+                if(valCheck ==true){
+                    var otherCheck = ids[0] + "-1";
+                    document.getElementById(otherCheck).checked = false;
+                    var labels1 = ids[0].replace('radio','label') +"-1";
+                    var labels2 = ids[0].replace('radio','label') +"-2";
+                    $("#"+labels2).addClass("checked");
+                    $("#"+labels1).removeClass("checked");
+                    var id_pregunta = ids[0].replace('radio','');
+                    if(numero == 4){
+                        SeleccionarDanosControlTec(id_pregunta, pregunta, multiple, FK_equipo)
+                    } else if(numero == 5){
+                        SeleccionarDanosInsEncierro(id_pregunta, pregunta, multiple)
+                    }
+                }
             }
-        }else if(check.includes('2')){
-            var valCheck = document.getElementById(ids[0]+"-"+ids[1]).checked;
-            if(valCheck ==true){
-                var otherCheck = ids[0] + "-1";
-                document.getElementById(otherCheck).checked = false;
-                var labels1 = ids[0].replace('radio','label') +"-1";
-                var labels2 = ids[0].replace('radio','label') +"-2";
-                $("#"+labels2).addClass("checked");
-                $("#"+labels1).removeClass("checked");
-                var id_pregunta = ids[0].replace('radio','');
-                SeleccionarDanosControlTec(id_pregunta, pregunta, multiple, FK_equipo);
+        } else if(numero == 5){
+            var ids = id.split("-");
+            var check = ids[1];
+            if(check.includes('1')){
+                var valCheck = document.getElementById(ids[0]+"-"+ids[1]).checked;
+                if(valCheck ==true){
+                    var otherCheck = ids[0] + "-2";
+                    var otherCheck1 = ids[0] + "-0";
+                    document.getElementById(otherCheck).checked = false;
+                    document.getElementById(otherCheck1).checked = false;
+                    var labels0 = ids[0].replace('radio','label') +"-0";
+                    var labels1 = ids[0].replace('radio','label') +"-1";
+                    var labels2 = ids[0].replace('radio','label') +"-2";
+                    $("#"+labels0).removeClass("checked");
+                    $("#"+labels1).addClass("checked");
+                    $("#"+labels2).removeClass("checked");
+                }
+            }else if(check.includes('2')){
+                var valCheck = document.getElementById(ids[0]+"-"+ids[1]).checked;
+                if(valCheck ==true){
+                    var otherCheck = ids[0] + "-1";
+                    var otherCheck1 = ids[0] + "-0";
+                    document.getElementById(otherCheck).checked = false;
+                    document.getElementById(otherCheck1).checked = false;
+                    var labels0 = ids[0].replace('radio','label') +"-0";
+                    var labels1 = ids[0].replace('radio','label') +"-1";
+                    var labels2 = ids[0].replace('radio','label') +"-2";
+                    $("#"+labels0).removeClass("checked");
+                    $("#"+labels2).addClass("checked");
+                    $("#"+labels1).removeClass("checked");
+                    var id_pregunta = ids[0].replace('radio','');
+                    if(numero == 4){
+                        SeleccionarDanosControlTec(id_pregunta, pregunta, multiple, FK_equipo)
+                    } else if(numero == 5){
+                        SeleccionarDanosInsEncierro(id_pregunta, pregunta, multiple)
+                    }
+                }
+            } else if(check.includes('0')){
+                if(numero == 5){
+                    var valCheck = document.getElementById(ids[0]+"-"+ids[1]).checked;
+                    if(valCheck ==true){
+                        var otherCheck = ids[0] + "-2";
+                        var otherCheck1 = ids[0] + "-1";
+                        document.getElementById(otherCheck).checked = false;
+                        document.getElementById(otherCheck1).checked = false;
+                        var labels0 = ids[0].replace('radio','label') +"-0";
+                        var labels1 = ids[0].replace('radio','label') +"-1";
+                        var labels2 = ids[0].replace('radio','label') +"-2";
+                        $("#"+labels0).addClass("checked");
+                        $("#"+labels1).removeClass("checked");
+                        $("#"+labels2).removeClass("checked");
+                    }
+                }
             }
         }
-        actualizacheckControlTec(id);
+        
+        if(numero == 4){
+            actualizacheckControlTec(id);
+        } else if(numero == 5){
+            actualizacheckInsEncierro(id);
+        }
     }
 }
 
@@ -5128,4 +5192,558 @@ function busquedaEvaluacion2(IDCurso, FK_Becario){
     $("#div_calificaciones").css("display", "block")
 }
 //Fin Relevos
+//?Inicio Campanias
+
+function continuarCedInsEncierro(id_cedula, tipo){
+    localStorage.setItem("IdCedula", id_cedula);
+    if (tipo == 1) {
+        databaseHandler.db.transaction(
+            function (tx) {
+                tx.executeSql(
+                    "Select * from cedulas_general where id_cedula= ?",
+                    [id_cedula],
+                    function (tx, results) {
+                        let item2 = results.rows.item(0);
+                        localStorage.setItem("IDCampania", item2.geolocalizacion_entrada)
+                        localStorage.setItem("nombreCampania", item2.nombre_evalua)
+                        localStorage.setItem("FK_formato", item2.geolocalizacion_salida)
+
+                        app.views.main.router.back('/formEncierro1/', { force: true, ignoreCache: true, reload: true })
+                    }
+                );
+            },
+            function (error) { },
+            function () { }
+        );
+    }
+}
+
+function preCreaCampania(IDCampania,nombreCampania,FK_formato){
+    swal({
+        title: "Aviso",
+        text: "¿Deseas crear una nueva campaña de: "+nombreCampania+"?",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+    }).then((RESP) => {
+        if (RESP == true) {
+            var id_usuario = localStorage.getItem("id_usuario")
+            var nombre_usuario = localStorage.getItem("Usuario")
+            var fecha_llegada = getDateWhitZeros()
+            var id_cliente = localStorage.getItem("empresa")
+            var horario_programado = fecha_llegada
+            var estatus = 0
+            var tipo_cedula = localStorage.getItem("Modulos")
+            var nombre_evalua = 'Campaña'
+            localStorage.setItem("IDCampania", IDCampania)
+            localStorage.setItem("nombreCampania", nombreCampania)
+            localStorage.setItem("FK_formato", FK_formato)
+
+            productHandler.addCedula(id_usuario, nombre_usuario, fecha_llegada, IDCampania, id_cliente, nombre_evalua, horario_programado, estatus, tipo_cedula, nombreCampania, FK_formato);
+            databaseHandler.db.transaction(
+                function (tx) {
+                    tx.executeSql(
+                        "Select MAX(id_cedula) as Id from cedulas_general",
+                        [],
+                        function (tx, results) {
+                            var item = results.rows.item(0);
+                            localStorage.setItem("IdCedula", item.Id);
+                            app.views.main.router.back('/formEncierro1/', { force: true, ignoreCache: true, reload: true })
+                        },
+                        function (tx, error) {
+                            console.log("Error al guardar cedula: " + error.message);
+                        }
+                    );
+                },
+                function (error) { },
+                function () { }
+            );     
+        }
+    });
+}
+
+function creaRevisiones(){
+    let id_cedula = localStorage.getItem("IdCedula")
+    let paso = 0
+    let NomJson = 'revisones_1'
+    let progress = 0;
+    let dialog = app.dialog.progress('Generando Lista', progress, 'red');
+    let empresa = localStorage.getItem("empresa");
+    app.request({
+        url: cordova.file.dataDirectory + "jsons_InsEncierro/" + NomJson + ".json",
+        method: 'GET',
+        dataType: 'json',
+        success: function (data) {
+            let length = data.length
+            if(length == 0){
+            } else {
+                var aux2 = 0;
+                var fecha_captura = getDateWhitZeros();
+                dialog.setText('1 de ' + data.length);
+                for (var j = 0; j < data.length; j++) {
+                    aux2++;
+                    if(data[j].FK_formato == FK_formato){
+                        if(paso == 0){
+                            // insertHeaderInsEncierro: function(id_cedula, FKCampaña, nombreCampania, FKFormato, fechaFin, fechaInicio, FK_Unidad, observaciones, unidad)
+                            productHandler.insertHeaderInsEncierro(id_cedula, IDCampania, nombreCampania, data[j].FK_formato, data[j].NombreFormato, fecha_captura, FKunidad, observaciones, unidad)
+                            // insertPreguntasInsEncierro: function(id_cedula,Fk_pregunta,pregunta,multiple,FK_formato,Opcion1,Opcion2,respuesta, aux, aux2)
+                            id_cedula = 1
+                            productHandler.insertPreguntasInsEncierro(id_cedula, data[j].ID, data[j].Pregunta, data[j].Multiple, data[j].FK_formato, data[j].Opcion_1, data[j].Opcion_2, 0, aux, aux2)
+                            paso++
+                        } else {
+                            id_cedula = localStorage.getItem("IdCedula")
+                            productHandler.insertPreguntasInsEncierro(id_cedula, data[j].ID, data[j].Pregunta, data[j].Multiple, data[j].FK_formato, data[j].Opcion_1, data[j].Opcion_2, 0, aux, aux2)
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
+
+function preInspeccionEncierro(){
+    app.dialog.progress('Trabajando... ', 'red');
+    setTimeout(() => {
+        inspeccionarUnidadEncierro()
+        app.dialog.close();
+    }, "250");
+}
+
+function inspeccionarUnidadEncierro(){
+    if($("#id_unidad").val()){
+        let id_cedula = localStorage.getItem("IdCedula")
+        // databaseHandler.db.transaction(
+        //     function (tx) {
+        //         tx.executeSql(
+        //         "Select id_cedula from DesTechHeader WHERE id_cedula = ? AND id_unidad = ?",
+        //             [id_cedula, $("#id_unidad").val()],
+        //             function (tx, results) {
+        //                 let length = results.rows.length;
+        //                 if(length == 0){
+                            let unidad = $("#autocomplete-dropdown-ajax").val()
+                            let id_unidad = $("#id_unidad").val()
+                            let fecha_captura = getDateWhitZeros();
+                            let progress = 0;
+                            let dialog = app.dialog.progress('Trabajando... ', progress, 'red');
+                            let id_empresa = localStorage.getItem("empresa");
+                            let IDCampania = localStorage.getItem("IDCampania")
+                            let nombreCampania = localStorage.getItem("nombreCampania")
+                            let FK_formato = localStorage.getItem("FK_formato")
+                            let NombreFormato = ''
+                            let observaciones = ''
+                            let NomJson = 'revisones_1'
+
+                            productHandler.insertHeaderInsEncierro(id_cedula, IDCampania, nombreCampania, FK_formato, NombreFormato, fecha_captura, id_unidad, observaciones, unidad)
+
+                            databaseHandler.db.transaction(
+                                function (tx) {
+                                    tx.executeSql(
+                                    "Select MAX(ID_Header) as IdHeader from IEN_Header",
+                                    [],
+                                    function (tx, results) {
+                                        var item = results.rows.item(0);
+                                        localStorage.setItem("IdHeader", item.IdHeader);
+                                        app.request({
+                                            url: cordova.file.dataDirectory + "jsons_InsEncierro/"+NomJson+".json",
+                                            method: 'GET',
+                                            dataType: 'json',
+                                            success: function (data) {
+                                                var aux = data.length;
+                                                var aux2=0;
+                                                if(aux == 0){
+                                                    app.dialog.close()
+                                                    swal("","Algo salió mal.","warning");
+                                                }else{
+                                                    dialog.setText('1 de ' + aux);
+                                                    for (var j = 0; j < data.length; j++) {
+                                                        aux2++;
+                                                        productHandler.insertPreguntasInsEncierro(id_cedula, item.IdHeader, data[j].ID, data[j].Pregunta, data[j].Multiple, data[j].FK_formato, data[j].Opcion_1, data[j].Opcion_2, 0, aux, aux2)
+                                                    }
+                                                }
+                                            }
+                                        });
+                                    },
+                                    function (tx, error) {
+                                        console.log("Error al guardar cedula: " + error.message);
+                                    }
+                                    );
+                                },
+                                function (error) {},
+                                function () {}
+                            );
+        //                 } else {
+        //                     $("#id_unidad").val("")
+        //                     $("#id_operador").val("")
+        //                     $("#credencial").val("")
+        //                     $("#operador").val("")
+        //                     swal("","Esta unidad ya la tienes registrada.","warning");
+        //                 }
+        //             },
+        //             function (tx, error) {
+        //                 console.log("Error al guardar cedula: " + error.message);
+        //             }
+        //         );
+        //     },
+        //     function (error) {},
+        //     function () {}
+        // );
+    }else{
+        swal("","Selecciona una unidad para poder continuar.","warning");
+    }
+}
+
+function TerminarInspeccionHMO(){
+    let fechaFin = getDateWhitZeros()
+    let observaciones = $("#observaciones").val()
+    databaseHandler.db.transaction(
+        function(tx5){
+            tx5.executeSql("UPDATE IEN_Header SET fechaFin = ?, observaciones = ? WHERE id_cedula = ? AND ID_Header = ?",
+                [fechaFin, observaciones, localStorage.getItem("IdCedula"), localStorage.getItem("IdHeader")],
+                function(tx5, results){
+                    app.views.main.router.back('/formEncierro1/', { force: true, ignoreCache: true, reload: true })                
+                },
+                function(tx5, error){
+                    console.error("Error al consultar bandeja de salida: " + error.message);
+                }
+            );  
+        },
+        function(error){},
+        function(){}
+    );
+    
+}
+
+function editarInspeccionEncierro(IdHeader){
+    localStorage.setItem("IdHeader", IdHeader);
+    app.views.main.router.navigate({ name: 'formEncierro2' });
+}
+
+function eliminarInspeccionEncierro(IdHeader){
+
+}
+
+function CreaModalOptionInsEncierro(id, opciones, mul, titulo_modal){
+    if(mul==3){
+        var display = "none";//div_opt
+        var display1 = "none";//titulo_modal
+    }else if(mul == 2){
+        var display = "block";//div_opt
+        var display1 = "none";//titulo_modal
+    }else if(mul == 1){
+        var display = "block";//div_opt
+        var display1 = "block";//titulo_modal
+    }
+
+    var NomDescCli = "fallos";
+    var html = '';
+    let texto 
+    texto = 'Selecciona una o varias fallas'
+    app.request.get(cordova.file.dataDirectory + "jsons_InsEncierro/"+NomDescCli+".json", function (data) {
+        var content2 = JSON.parse(data);
+        for(var x = 0; x < content2.length; x++) {
+            html += `<label class="label_modal"><input class="cbox_modal obligatorio" type="checkbox" id="cbox${content2[x].id_danio}" value="${content2[x].tipo_danio}">${content2[x].tipo_danio}</label><br>`;
+        }
+
+        var popEvidencia = app.popup.create({
+            content: `
+            <div class="sheet-modal my-sheet" id="sheet-modal" name="sheet">
+                <div class="toolbar">
+                    <div class="toolbar-inner">
+                        <div class="left"></div>
+                        <div class="right"><a class="link" id="close_sheet" href="#">Cerrar</a></div>
+                    </div>
+                </div>
+                <div class="sheet-modal-inner" style="overflow-y: scroll;">
+                    <div class="block">
+                        <h3 class="FWN-titulo-2">${texto}</h3><hr>
+                        <span id="titulo_modal" style="display:${display1};color: #FF0037;" class="span FWM-span-form">${titulo_modal}</span>
+                        <div id="div_opt" style="display:${display}; padding-top: 10px;margin-bottom: 20px;">
+                            ${opciones}
+                        </div>
+                        <div>
+                            <input type="text" placeholder="¿Buscas una falla en específico?" id="buscadorFallas" class="FWM-input" style="padding-right: 5px;width: 98%;height: 40px;margin: 30px 0px;">
+                        </div>
+                            <input type="hidden" id="inputEvidencia" value=${id}>
+                            <input type="hidden" id="pasa" value="0">
+                        <div class="list FWM-fixing-form" id="div_cboxs" style="margin-top: 25px;"> 
+                            ${html}
+                        </div>
+                        <div>
+                            <span style="color: #005D99;" class="span FWM-span-form">Comentarios</span>
+                            <textarea class="FWM-input" style="font-family: 'ITC Avant Garde Gothic', sans-serif;width: 98%;padding-top: 10px;" id="obs_generales" cols="30" rows="10" maxlength="255"></textarea>
+                        </div>
+                        <div class="block grid-resizable-demo" style="margin-bottom: 70px;padding-top: 35px;">
+                            <div class="row align-items-stretch" style="text-align: center;">
+                                <div class="col-100 medium-50" style="min-width: 50px; border-style: none;">
+                                    <span class="resize-handler"></span>
+                                    <a href="#" onclick="agregaComentariosInsEncierro(${id},${mul});" style="background-color: #FF0037;padding-left: 50px;padding-right: 50px;" class="boton-equipo">Guardar</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>`,
+        swipeToClose:false,
+        closeByOutsideClick:false,
+        closeByBackdropClick:false,
+        closeOnEscape:false,
+            on: {
+                open: function (popup) {
+                    $('#close_sheet').click(function () {
+                        if($('#pasa').val()!=0){
+                            app.sheet.close('#sheet-modal');
+                        }else{
+                            swal({
+                                title: "Aviso",
+                                text: "Aún no seleccionas o guardas una opción, ¿Estas seguro que deseas regresar?",
+                                icon: "warning",
+                                buttons: true,
+                                dangerMode: false,
+                            }).then((willGoBack) => {
+                                if (willGoBack){
+                                    var otherCheck = "radio"+ id + "-2";
+                                    document.getElementById(otherCheck).checked = false;
+                                    var Check = "radio"+ id + "-1";
+                                    document.getElementById(Check).checked = false;
+                                    var Checks = "radio"+ id + "-0";
+                                    document.getElementById(Checks).checked = true;
+                                    var labels0 = Checks.replace('radio','label');
+                                    var labels1 = Check.replace('radio','label');
+                                    var labels2 = otherCheck.replace('radio','label');
+                                    $("#"+labels0).addClass("checked");
+                                    $("#"+labels1).removeClass("checked");
+                                    $("#"+labels2).removeClass("checked");
+                                    actualizacheckInsEncierro(Checks);
+                                    app.sheet.close('#sheet-modal');
+                                } 
+                            });
+                        }
+                    })
+
+                    // $("#buscadorFallas").on("keyup paste", function(){
+                    //     let query = this.value
+                    //     app.request.get(cordova.file.dataDirectory + "jsons_InsEncierro/"+NomDescCli+".json", function (data) {
+                    //         var content2 = JSON.parse(data);
+                    //         let html = ''
+                    //         for(var x = 0; x < content2.length; x++) {
+                    //             if(content2[x].tipo_danio.toLowerCase().indexOf(query.toLowerCase()) >= 0){
+                    //                 html += `<label class="label_modal"><input class="cbox_modal obligatorio" type="checkbox" id="cbox${content2[x].id_danio}" value="${content2[x].tipo_danio}">${content2[x].tipo_danio}</label><br>`;
+                    //             }
+                    //         }
+                    //         $("#div_cboxs").html(html)
+                    //     });
+                    // })
+                },
+            }
+        });
+        popEvidencia.open();
+    });
+}
+
+function SeleccionarDanosInsEncierro(id, pregunta, multiple){
+    if(multiple == 1){
+        var text = pregunta;
+        let result = text.includes("(");
+        if(result){
+            var resultados = text.split("(");
+            var titulo_modal = resultados[0].trim();
+            var divididos = resultados[1].split(",");
+            var opciones = '<select class="FWM-input" id="opts_modal" multiple>';
+            var quitapar = '';
+            for(i=0; i<divididos.length; i++){
+                quitapar = divididos[i].replace("(","");
+                quitapar = quitapar.replace(")","");
+                quitapar = capitalizarPrimeraLetra(quitapar);
+                opciones = opciones +`<option value=`+quitapar.trim()+`>`+quitapar.trim()+`</option>`;
+            }
+            opciones = opciones+'</select>';
+            CreaModalOptionInsEncierro(id,opciones,1,titulo_modal);
+        }else{
+            var titulo_modal = "";
+            var divididos = text.split(",");
+            var opciones = '<select class="FWM-input" id="opts_modal" multiple>';
+            var quitapar = '';
+            for(i=0; i<divididos.length; i++){
+                quitapar = divididos[i].replace("(","");
+                quitapar = quitapar.replace(")","");
+                quitapar = capitalizarPrimeraLetra(quitapar);
+                opciones = opciones +`<option value=`+quitapar.trim()+`>`+quitapar.trim()+`</option>`;
+            }
+            opciones = opciones+'</select>';
+            var titulo_modal = "";    
+            CreaModalOptionInsEncierro(id,opciones,2,titulo_modal);
+        }
+        
+    }else{
+        var opciones = false;
+        var titulo_modal = "";
+        CreaModalOptionInsEncierro(id,opciones,3,titulo_modal);
+    }
+}
+
+function actualizacheckInsEncierro(id){
+    var id_cedula = localStorage.getItem("IdCedula");
+    var IdHeader = localStorage.getItem("IdHeader");
+    var ids = id.split("-");
+    var check = ids[1];
+    if(check.includes('1')){
+        var respuesta = 1;
+        var comentarios = '';
+        var id_pregunta = ids[0].replace('radio','');
+        $("#span-"+id_pregunta).html(comentarios);
+        $("#spanComentarios-"+id_pregunta).html(comentarios);
+        databaseHandler.db.transaction(
+            function(tx){
+                tx.executeSql("UPDATE IEN_Details SET respuesta = ?,comentarios = ?, falla = ? WHERE id_cedula = ? AND Fk_pregunta = ? AND FKHeader = ?",
+                    [respuesta,comentarios,comentarios,id_cedula,id_pregunta,IdHeader],
+                    function(tx, results){
+                    },
+                    function(tx, error){
+                        console.error("Error al guardar cierre: " + error.message);
+                    }
+                );
+            },
+            function(error){},
+            function(){}
+        );
+    } else if(check.includes('2')){
+        var respuesta = 2;
+        var id_pregunta = ids[0].replace('radio','');
+        databaseHandler.db.transaction(
+            function(tx){
+                tx.executeSql("UPDATE IEN_Details SET respuesta = ? WHERE id_cedula = ? AND Fk_pregunta = ? AND FKHeader = ?",
+                    [respuesta,id_cedula,id_pregunta,IdHeader],
+                    function(tx, results){
+                    },
+                    function(tx, error){
+                        console.error("Error al guardar cierre: " + error.message);
+                    }
+                );
+            },
+            function(error){},
+            function(){}
+        );
+    } else {
+        var respuesta = 0;
+        var comentarios = '';
+        var id_pregunta = ids[0].replace('radio','');
+        $("#span-"+id_pregunta).html(comentarios);
+        $("#spanComentarios-"+id_pregunta).html(comentarios);
+        databaseHandler.db.transaction(
+            function(tx){
+                tx.executeSql("UPDATE IEN_Details SET respuesta = ?,comentarios = ?, falla = ? WHERE id_cedula = ? AND Fk_pregunta = ? AND FKHeader = ?",
+                    [respuesta,comentarios,comentarios,id_cedula,id_pregunta,IdHeader],
+                    function(tx, results){
+                    },
+                    function(tx, error){
+                        console.error("Error al guardar cierre: " + error.message);
+                    }
+                );
+            },
+            function(error){},
+            function(){}
+        );
+    }
+}
+
+function agregaComentariosInsEncierro(id_pregunta,mul){
+    if(mul == 1 || mul == 2){
+        var seleccionados = $("#opts_modal").val();
+        if(seleccionados.length == 0){
+            swal("","Selecciona al menos una opción del desplegable.","warning");
+            return false;
+        }else{
+            var opts = '';
+            $("#opts_modal option").each(function(){
+                if(this.selected){
+                    opts = opts +", "+ capitalizarPrimeraLetra($(this).text());
+                }
+            });
+            opts = opts.slice(1);
+            opts = opts+":";
+        }
+    }else{
+        var opts = '';
+    }
+    var campos;
+    var comentarios = '';
+    var FKs = ''
+    
+    campos = document.querySelectorAll('#div_cboxs .obligatorio');
+    var valido = false, valido2 = false;
+
+    [].slice.call(campos).forEach(function(campo) {
+        if (campo.checked == true) {
+            valido = true
+            valido2 = true
+            comentarios = comentarios+", "+campo.value;
+            FKs = FKs+","+campo.id.replace("cbox", "");
+        }
+    });
+
+    if (valido) {
+        var str = comentarios;
+        var name = str.slice(1);
+        var name2 = FKs.slice(1)
+        name = opts+""+name;
+        name = name.trim();
+        name = capitalizarPrimeraLetra(name);
+        var id_cedula = localStorage.getItem("IdCedula");
+        var IdHeader = localStorage.getItem("IdHeader");
+        var obs_generales = $("#obs_generales").val();
+
+        databaseHandler.db.transaction(
+            function(tx){
+                tx.executeSql("UPDATE IEN_Details SET falla = ?, comentarios = ?, FKsFallas = ? WHERE id_cedula = ? AND Fk_pregunta = ? AND FKHeader = ?",
+                    [name,obs_generales,name2,id_cedula,id_pregunta, IdHeader],
+                    function(tx, results){
+                        $("#span-"+id_pregunta).html(name);
+                        $("#spanComentarios-"+id_pregunta).html(obs_generales ? `Comentarios:  ${obs_generales}` : ``);
+                        app.sheet.close('#sheet-modal');
+                        swal("","Comentario guardado correctamente","success");
+                    },
+                    function(tx, error){
+                        console.error("Error al guardar cierre: " + error.message);
+                    }
+                );
+            },
+            function(error){},
+            function(){}
+        );
+    } else {
+        swal("","Selecciona almenos un daño para poder guardar","warning");
+    }
+}
+
+function FinalizarInspeccionesEncierro(){
+    swal({
+        title: "Aviso",
+        text: "¿Estas seguro de querer finalizar la revisión?",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+    }).then((RESP) => {
+        if (RESP == true) {
+            var fecha_salida = getDateWhitZeros();
+            var id_cedula = localStorage.getItem("IdCedula");
+            var estatus = 1;
+            databaseHandler.db.transaction(
+                function(tx){
+                    tx.executeSql("UPDATE cedulas_general SET fecha_salida  = ?,estatus = ? WHERE id_cedula = ?",
+                        [fecha_salida,estatus,id_cedula],
+                        function(tx, results){
+                            window.location.href = "./menu.html";
+                        },
+                        function(tx, error){
+                            swal("Error al guardar",error.message,"error");
+                        }
+                    );
+                },
+                function(error){},
+                function(){}
+            );        
+        }
+    });
+}
+//?Fin Campanias
 //fin HMO

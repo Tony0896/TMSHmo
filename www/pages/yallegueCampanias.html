@@ -1,0 +1,110 @@
+<style>
+    input[type="radio"] {
+        transform: scale(1.3);
+    }
+</style>
+<template>
+    <div class="page">
+        <div class="navbar" style="background-color: #1E9FB4;height: 5px;">
+            <div class="left top-left" style="justify-content: space-between;">
+                <a href="javascript:location.reload()"
+                    style="margin-left: 10px; display: inline-flex;align-items: center;">
+                    <i class="icon material-icons md-only" style="font-weight: 900;font-size: 30px;">arrow_back</i>
+                </a>
+                <div class="title" style="font-size: 18px;">Campañas</div>
+                <a style="margin-right: 10px;">
+                    <i class="icon material-icons md-only" style="color: #1E9FB4; font-weight: 900;">arrow_back</i>
+                </a>
+            </div>
+        </div>
+
+        <div class="page-content" style="height: 98%;border-radius: 0px !important">
+            <div
+                style="text-align: center; justify-content:center; margin-right:auto; margin-left:auto; width: 99%;margin-top: 30px;">
+                <div style="text-align: left;">
+                    <div class="list FWM-fixing-form" style="width: 97%;margin-left: 10px;margin-right: 10px;">
+                        <div class="block">
+                            <div style="text-align: center; justify-content:center; margin-right:auto; margin-left:auto; width: 99%;">
+                                <table style="width: 100%;" id="tableData">
+                                                
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 100px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+<script>
+    return {
+        on: {
+            pageInit: function () {
+
+                let empresa = localStorage.getItem("empresa");
+                let self = this;
+                let app = self.$app;
+
+                app.preloader.show('red');
+                
+                app.preloader.hide();
+                
+                let id_usuario = localStorage.getItem("id_usuario");
+                let NomJson = 'campaniasvsusers_1';
+                let html = '';
+                let encontro = false
+                app.request({
+                    url: cordova.file.dataDirectory + "jsons_InsEncierro/"+NomJson+".json",
+                    method: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        let length = data.length;
+                        if(length == 0){
+                            $("#message-nr").css("display", "block");
+                        } else {
+                            $("#message-nr").css("display", "block");
+                            for (let j = 0; j < data.length; j++) {
+                                if(data[j].FKUsuarioAcceso == id_usuario){
+                                    let pasa = true
+                                    let datenow = moment().format('YYYY-MM-DD')
+                                    let dateJson = moment(data[j].fechaFin).add(1, 'days').format('YYYY-MM-DD')
+                                    if(datenow > dateJson){
+                                        pasa = false
+                                    } 
+                                    if (pasa){
+                                        let html = `<tr class="menu_InsEncierro menus">
+                                            <td>
+                                                <div>
+                                                    <a class="item-content item-link entrar principalButton" href="#" onclick="preCreaCampania(${data[j].FKCampania}, '${data[j].nombreCampania}', ${data[j].FK_formato})">
+                                                        <img src="img/iconsMenu/bus_tech.svg" height="60px">
+                                                        <p style="color: #000000;font-size: 19px;">${data[j].nombreCampania}</p><i class="material-icons md-light" style="color: #ff0000;margin-right: 10px;">chevron_right</i>
+                                                    </a>
+                                                </div>
+                                            </td>
+                                        </tr>`
+                                        encontro = true
+                                        $("#tableData").append(html)
+                                    }
+                                }
+                            }
+                            if(encontro){ } else {
+                                html = `<tr class="menu_InsEncierro menus">
+                                    <td>
+                                        <div>
+                                            <p style="color: #000000;font-size: 19px;margin: 20px 0 20px 0;">No tienes campañas asignadas</p>
+                                            <img src="img/iconsMenu/database_warn.svg" style="height: 20VW;margin: 40px 0px;">
+                                            <p style="color: #000000;font-size: 19px;margin: 20px 0 20px 0;">El usuario administrador es quién asigna las campañas </p>
+                                        </div>
+                                    </td>
+                                </tr>`
+                                $("#tableData").html(html)
+                            }
+                            app.preloader.hide();
+                        }
+                    }
+                });
+            }
+        }
+    }
+</script>

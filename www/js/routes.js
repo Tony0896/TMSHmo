@@ -142,6 +142,23 @@ var routes = [
     componentUrl: './pages/formRelevos1.html',
   },
   //?Fin relevos
+  //?Inicio Campanias
+  {
+    name: 'yallegueCampanias',
+    path: '/yallegueCampanias/',
+    componentUrl: './pages/yallegueCampanias.html',
+  },
+  {
+    name: 'formEncierro1',
+    path: '/formEncierro1/',
+    componentUrl: './pages/formEncierro1.html',
+  },
+  {
+    name: 'formEncierro2',
+    path: '/formEncierro2/',
+    componentUrl: './pages/formEncierro2.html',
+  },
+  //?Fin Campanias
   //************************************** fin HMO **************************************
   {
     name: 'visualizar',

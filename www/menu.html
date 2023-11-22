@@ -11,6 +11,8 @@
     <meta http-equiv="Content-Security-Policy"
         content="default-src * 'self' 'unsafe-inline' 'unsafe-eval' data: gap:" />
     <script type="text/javascript" src="js/raphael-min.js"></script>
+    <script type="text/javascript" src="js/moment.js"></script>
+    <script type="text/javascript" src="js/moment-with-locales.js"></script>
     <link rel="stylesheet" href="lib/framework7/css/framework7.bundle.min.css" />
     <link rel="stylesheet" type="text/css" href="css/morris.css">
     <link rel="stylesheet" href="css/app.css" />
@@ -212,6 +214,20 @@
                                                     </div>
                                                 </td>
                                             </tr>
+                                            <tr class="menu_InsEncierro menus" style="display: none;">
+                                                <td>
+                                                    <div>
+                                                        <a class="item-content item-link entrar principalButton" href="#" onclick="moveMenu(4);"><img src="img/iconsMenu/bus_plus.svg" height="60px"><p style="color: #000000;font-size: 19px;">Campañas</p><i class="material-icons md-light" style="color: #ff0000;margin-right: 10px;">chevron_right</i></a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr class="menu_InsEncierro menus" style="display: none;">
+                                                <td>
+                                                    <div>
+                                                        <a class="item-content item-link entrar principalButton" href="#" onclick="moveMenu(5);"><img src="img/iconsMenu/portapapeles2.svg" height="60px"><p style="color: #000000;font-size: 19px;">Evaluación Imagen</p><i class="material-icons md-light" style="color: #ff0000;margin-right: 10px;">chevron_right</i></a>
+                                                    </div>
+                                                </td>
+                                            </tr>
                                         </table>
                                     </div>
                                 </div>
@@ -370,9 +386,9 @@
             alert("Failed because: "+message);
         }
         function updateData() {
-            // var urlBase2 = "http://192.168.100.4/Desarrollo/CISAApp/HMOFiles/JSONS";
+            var urlBase2 = "http://192.168.100.6/Desarrollo/CISAApp/HMOFiles_dev/JSONS";
             // var urlBase2 = "http://172.16.0.143/Desarrollo/CISAApp/HMOFiles/JSONS";
-            var urlBase2 = "http://tmshmo.ci-sa.com.mx/www.CISAAPP.com/HMOFiles_dev/JSONS";
+            // var urlBase2 = "http://tmshmo.ci-sa.com.mx/www.CISAAPP.com/HMOFiles_dev/JSONS";
             if (localStorage.getItem("Modulos")) {
                 if (localStorage.getItem("Modulos") == 'Limpieza') {
                     var RutaJSONS = urlBase2 + "/Archivos/JSON_limp/";
@@ -571,6 +587,8 @@
                                     } else {
                                         $("#pendientes").append("<li id='conc" + item2.id_cedula + "'><div class='item-content'><div class='item-media'><i class='icon'><img src='img/circuloNaranja.png' width='20px' height='20px' /></i></div><div class='item-inner'><div class='item-title'> <div> " + item2.nombre_cliente + "| " + fechas[0] + "</div> <div style='color: #afafaf;font-size: 12px;margin-left: 10px;margin-top: 8px;font-weight: bold;'>"+item2.nombre_evalua+"</div> </div><div class='item-after'><a href='#' onclick='continuarCedCap(`" + item2.id_cedula + "`,`" +item2.geolocalizacion_salida+ "`);' style='border: none; outline:none;'><i class='material-icons md-light' style='font-size:35px;color:#00A7B5'>play_circle_outline</i></a>&nbsp;&nbsp;&nbsp;<a href='#' onclick='EliminarReg(" + item2.id_cedula + ",`" + item2.tipo_cedula + "`)' style='border: none; outline:none;'><i class='material-icons md-light' style='font-size:35px;color:red'>delete_forever</i></a></div></div></div></li>");
                                     }
+                                } else if (item2.tipo_cedula == 'InsEncierro') {
+                                    $("#pendientes").append("<li id='conc" + item2.id_cedula + "'><div class='item-content'><div class='item-media'><i class='icon'><img src='img/circuloNaranja.png' width='20px' height='20px' /></i></div><div class='item-inner'><div class='item-title'> <div> " + item2.nombre_cliente + "| " + fechas[0] + "</div> <div style='color: #afafaf;font-size: 12px;margin-left: 10px;margin-top: 8px;font-weight: bold;'>"+item2.nombre_evalua+"</div> </div><div class='item-after'><a href='#' onclick='continuarCedInsEncierro(`" + item2.id_cedula + "`,1);' style='border: none; outline:none;'><i class='material-icons md-light' style='font-size:35px;color:#00A7B5'>play_circle_outline</i></a>&nbsp;&nbsp;&nbsp;<a href='#' onclick='EliminarReg(" + item2.id_cedula + ",`" + item2.tipo_cedula + "`)' style='border: none; outline:none;'><i class='material-icons md-light' style='font-size:35px;color:red'>delete_forever</i></a></div></div></div></li>");
                                 } else {
                                     $("#pendientes").append(`<li id='conc${item2.id_cedula}'><div class='item-content'><div class='item-media'> <i class='icon'><img src='img/circuloNaranja.png' width='20px' height='20px' /></i> </div><div class='item-inner'><div class='item-title'> <div>${item2.nombre_cliente} | ${fechas[0]}</div>  <div style='color: #afafaf;font-size: 12px;margin-left: 10px;margin-top: 8px;font-weight: bold;'>${item2.nombre_cliente}</div>  </div><div class='item-after'> <a href='#' onclick="continuarCed2(${item2.id_cedula},'${item2.tipo_cedula}');" style='border: none; outline:none;'> <i class='material-icons md-light' style='font-size:35px;color:#00A7B5'>play_circle_outline</i></a>&nbsp;&nbsp;&nbsp; <a href='#' onclick="EliminarReg(${item2.id_cedula},'${item2.tipo_cedula}')" style='border: none; outline:none;'><i class='material-icons md-light' style='font-size:35px;color:red'>delete_forever</i></a></div></div></div></li>`);
                                 }
