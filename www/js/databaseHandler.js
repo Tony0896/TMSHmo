@@ -162,7 +162,7 @@ var databaseHandler = {
                         }
                     );
                     tx.executeSql(
-                        "create table if not exists IEN_Details(ID_Detail integer primary key, id_cedula integer, FKHeader integer, FK_formato integer, Fk_pregunta integer, pregunta text, multiple integer, respuesta int, Opcion_1 text, Opcion_2 text, falla text, FKsFallas text, comentarios text)",
+                        "create table if not exists IEN_Details(ID_Detail integer primary key, id_cedula integer, FKHeader integer, FK_formato integer, Fk_pregunta integer, pregunta text, multiple integer, respuesta int, Opcion_1 text, Opcion_2 text, Opcion_3 text, Opcion_4 text, Opcion_5 text, Opcion_6 text, falla text, FKsFallas text, comentarios text)",
                         [],
                         function(tx, results){
                             // console.log("Se creo Servicio tecnico DIPREC correctamente!");
@@ -172,6 +172,39 @@ var databaseHandler = {
                         }
                     );
                 //? Fin Campanias
+                //? Inicio Lavado
+                    // IEN_Header(id_cedula, FKCampaña, nombreCampania, FKFormato, FK_registro, fechaFin, fechaInicio, FK_Unidad, observaciones, unidad
+                    tx.executeSql(
+                        "create table if not exists IEN_HeaderLavado(ID_HeaderLavado integer primary key, id_cedula integer, FKFormato integer, FK_registro integer, fechaFin text, fechaInicio text, FK_Unidad integer, observaciones text, unidad text)",
+                        [],
+                        function(tx, results){
+                            // console.log("Se creo Servicio tecnico DIPREC correctamente!");
+                        },
+                        function(tx, error){
+                            console.error("Error al crear la tabla de detalle_recaudo: " + error.message);
+                        }
+                    );
+                    tx.executeSql(
+                        "create table if not exists IEN_ProgramacionLavado(ID_Detail integer primary key, id_cedula integer, FK_header integer, IDServidor integer, pregunta text, multiple int ,FK_formato int, Opcion1 text, Opcion2 text, Opcion3 text, Opcion4 text, Opcion5 text, Opcion6 text, programa text, proveedor text, respuesta int)",
+                        [],
+                        function(tx, results){
+                            // console.log("Se creo Servicio tecnico DIPREC correctamente!");
+                        },
+                        function(tx, error){
+                            console.error("Error al crear la tabla de detalle_recaudo: " + error.message);
+                        }
+                    );
+                    tx.executeSql(
+                        "create table if not exists IEN_EvidenciasLavado(id_evidencia integer primary key, id_cedula integer,FKHeader int, evidencia blob, fecha text)",
+                        [],
+                        function(tx, results){
+                            // console.log("Se creo Servicio tecnico DIPREC correctamente!");
+                        },
+                        function(tx, error){
+                            console.error("Error al crear la tabla de detalle_recaudo: " + error.message);
+                        }
+                    );
+                //? Fin Lavado
             },
             function(error){
                 console.error("Error al crear la base de datos: " + error.message);

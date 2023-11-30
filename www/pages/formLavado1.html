@@ -1,0 +1,185 @@
+<template>
+    <div class="page">
+        <!-- Navsbars -->
+        <nav class="left top-left" style="justify-content: space-between;">
+            <a onclick="TerminarInspeccionLavado()" style="margin-left: 10px; display: inline-flex;align-items: center;">
+                <i class="icon material-icons md-only" style="font-weight: 900;font-size: 30px;">arrow_back</i>
+            </a>
+            <div class="title" id="titleScreen"> Lavado de unidades </div>
+            <a style="margin-right: 10px;">
+                <i class="icon material-icons md-only" style="color: #1E9FB4; font-weight: 900;">arrow_back</i>
+            </a>
+        </nav>
+        <div class="toolbar tabbar toolbar-bottom" >
+            <div class="toolbar-inner" style="background-color: #1E9FB4;" id="toolbar_down">
+                <a href="#" onclick="TerminarInspeccionLavado();" style="margin: auto;color: #fff;font-weight: bold;font-size: 18px;width: 100%;text-align: center;">Guardar <i class="icon material-icons md-only" style="display: inline-block;">check</i></a>
+            </div>
+        </div>
+        <!-- Contenido Page -->
+        <div class="page-content" style="height: 98%;">
+            <div style="text-align: center; justify-content:center; margin-right:auto; margin-left:auto; width: 98%;margin-top: 30px;">
+                <h2 class="FWN-titulo-2" style="margin-bottom: 35px;margin-top: 10px;" id="fase_titulo">LAVADO DE UNIDADES 27-11-2023</h2>
+
+                <div style="text-align: left;">
+                    <div class="list FWM-fixing-form" id="datos_form">
+
+                    </div>
+                </div>
+
+                <div class="container_options" style="margin-inline: 10px;">
+                    <div class="container_options">
+                        <span class="span FWM-span-form">Observaciones Generales:</span>
+                        <textarea class="FWM-input" style="font-family: 'ITC Avant Garde Gothic', sans-serif; width: 100%;padding-top: 10px;" id="observaciones" cols="30" rows="10" onchange="actualizaObsLavado()"></textarea>
+                    </div>
+                </div>
+
+                <br>
+
+                <h2 style="text-align: center;">Evidencias</h2>
+
+                    <div class="card data-table" style="margin-bottom: 50px;">
+                        <div class="infinite-scroll-content">
+                            <table id="facturas2">
+                                <thead>
+                                    <tr>
+                                        <th class="numeric-cell" style="text-align: center;background-color: #063E7F;color: white;">Evidencia</th>
+                                        <th class="numeric-cell" style="text-align: center;background-color: #063E7F;color: white;">Borrar</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                            <div id="message-nr" class="message-nr" style="width: 100%;text-align: center;font-family: 'ITC Avant Garde Gothic', sans-serif;font-size: 16px;" style="display: none;">
+                                <p>Sin registros</p>
+                            </div>
+                        </div>
+                    </div>
+                <div class="block grid-resizable-demo" style="top: 25px;margin-bottom: 80px;"></div>
+
+            </div>
+        </div>
+    </div>
+</template>
+<script>
+return {
+    on: {      
+        pageInit: function () {
+            app.preloader.show('red');
+            $('.sentencia1').remove();   
+            var id_cedula = localStorage.getItem("IdCedula");
+            var IdHeader = localStorage.getItem("IdHeader");
+            databaseHandler.db.transaction(
+                function(tx5){
+                    tx5.executeSql("SELECT * FROM IEN_ProgramacionLavado WHERE id_cedula = ? AND FK_header = ?",
+                        [id_cedula, IdHeader],
+                        function(tx5, results){
+                            let length = results.rows.length;
+                            let comentarios = '', falla = '';
+                            let count = 0, typeLavado = ''
+                            let lavado = ''
+                            for(var i = 0; i< length; i++){
+                                let item = results.rows.item(i)
+                                if(typeLavado == item.programa){
+                                    
+                                } else {
+                                    typeLavado = item.programa
+                                    count = 0
+                                    $("#datos_form").append(`<div style="display: flex;margin-top: 5px;justify-content: center;">
+                                        <span class="span-pregunta span FWM-span-form" style="text-transform: uppercase;color: #005D99;">Revisión de lavado: ${item.programa}</span> 
+                                    </div> <hr>`)
+                                }
+                                
+                                count++
+                                
+                                console.log(item)
+                                var check0 = '', check1 = '', check2 = '', check3 = '', check4 = '', check5 = '', check6 = ''
+                                if(item.respuesta == 1){
+                                    check1 = 'checked'
+                                } else if(item.respuesta == 2){
+                                    check2 = 'checked'
+                                } else if(item.respuesta == 3){
+                                    check3 = 'checked'
+                                } else if(item.respuesta == 4){
+                                    check4 = 'checked'
+                                } else if(item.respuesta == 5){
+                                    check5 = 'checked'
+                                } else if(item.respuesta == 6){
+                                    check6 = 'checked'
+                                } else {
+                                    check0 = 'checked'
+                                }
+                                comentarios = '';
+
+                                $("#datos_form").append(`<div style="display: flex;margin-top: 5px;">
+                                    <span class="span-pregunta span FWM-span-form">${count}.</span>&emsp;<span class="span-pregunta span FWM-span-form">${item.pregunta}</span> 
+                                </div> 
+                                <div style="margin-bottom: 10px;margin-top: 5px;display: grid;row-gap: 12px;">
+                                    <label id="label-${item.ID_Detail}-1" class="radios radios-${item.ID_Detail} ${check1}"><input type="radio" class="inRadios-${item.ID_Detail}" id="radio-${item.ID_Detail}-1" onclick="validaradios(this.id, 6, '${item.pregunta}', ${item.ID_Detail});" ${check1}> ${item.Opcion1} </label>
+                                    <label id="label-${item.ID_Detail}-2" class="radios radios-${item.ID_Detail} ${check2}"><input type="radio" class="inRadios-${item.ID_Detail}" id="radio-${item.ID_Detail}-2" onclick="validaradios(this.id, 6, '${item.pregunta}', ${item.ID_Detail});" ${check2}> ${item.Opcion2} </label>
+                                    ${item.Opcion3 ? `<label id="label-${item.ID_Detail}-3" class="radios radios-${item.ID_Detail} ${check3}"><input type="radio" class="inRadios-${item.ID_Detail}" id="radio-${item.ID_Detail}-3" onclick="validaradios(this.id, 6, '${item.pregunta}', ${item.ID_Detail});" ${check3}> ${item.Opcion3} </label>` : ''}
+                                    ${item.Opcion4 ? `<label id="label-${item.ID_Detail}-4" class="radios radios-${item.ID_Detail} ${check4}"><input type="radio" class="inRadios-${item.ID_Detail}" id="radio-${item.ID_Detail}-4" onclick="validaradios(this.id, 6, '${item.pregunta}', ${item.ID_Detail});" ${check4}> ${item.Opcion4} </label>` : ''}
+                                    ${item.Opcion5 ? `<label id="label-${item.ID_Detail}-5" class="radios radios-${item.ID_Detail} ${check5}"><input type="radio" class="inRadios-${item.ID_Detail}" id="radio-${item.ID_Detail}-5" onclick="validaradios(this.id, 6, '${item.pregunta}', ${item.ID_Detail});" ${check5}> ${item.Opcion5} </label>` : ''}
+                                    ${item.Opcion6 ? `<label id="label-${item.ID_Detail}-6" class="radios radios-${item.ID_Detail} ${check6}"><input type="radio" class="inRadios-${item.ID_Detail}" id="radio-${item.ID_Detail}-6" onclick="validaradios(this.id, 6, '${item.pregunta}', ${item.ID_Detail});" ${check6}> ${item.Opcion6} </label>` : ''}
+                                </div>
+                                `);
+                                
+                                typeLavado = item.programa
+                            }
+                            // $("#datos_form").append(`<div class="block grid-resizable-demo" style="top: 25px;margin-bottom: 80px;"></div>`);
+                            app.preloader.hide();
+                        },
+                        function(tx5, error){
+                            console.error("Error al consultar bandeja de salida: " + error.message);
+                            app.preloader.hide();
+                        }
+                    );  
+                },
+                function(error){},
+                function(){}
+            );
+            
+            databaseHandler.db.transaction(
+                function(tx5){
+                    tx5.executeSql("SELECT * FROM IEN_HeaderLavado WHERE id_cedula = ? AND ID_HeaderLavado = ?",
+                        [localStorage.getItem("IdCedula"), localStorage.getItem("IdHeader")],
+                        function(tx5, results){
+                            let length = results.rows.length;
+                            let item2 = results.rows.item(0);
+                            $("#fase_titulo").html("Lavado de Unidad "+item2.unidad);
+                            $("#observaciones").val(item2.observaciones)
+                        },
+                        function(tx5, error){
+                            console.error("Error al consultar bandeja de salida: " + error.message);
+                        }
+                    );  
+                },
+                function(error){},
+                function(){}
+            );
+
+            databaseHandler.db.transaction(
+                function(tx5){
+                    tx5.executeSql("SELECT * FROM IEN_EvidenciasLavado WHERE id_cedula = ? AND FKHeader = ?",
+                        [localStorage.getItem("IdCedula"), localStorage.getItem("IdHeader")],
+                        function(tx5, results){
+                            let length = results.rows.length;
+                            if(length > 0){
+                                $(".message-nr").css("display", "none")
+                                for(var i = 0; i< length; i++){
+                                    let item = results.rows.item(i)
+                                    $("#facturas2").append("<tr id='fila" + item.id_evidencia + "'><td style='text-align: center;'><img src='" + item.evidencia + "' width='60px' style='margin-top: 4px;'/></td><td style='text-align: center;'><a href='#' onclick='eliminarFilaFotoLavado(" + item.id_evidencia + ",1);' style='border: none; outline:none;'><i class='icon material-icons md-only' style='display: inline-block;margin-left: 12px;color:#FF0037;font-size: 40px;'>delete_forever</i></a></td></tr>");
+                                }
+                            }
+                            
+                        },
+                        function(tx5, error){
+                            console.error("Error al consultar bandeja de salida: " + error.message);
+                        }
+                    );  
+                },
+                function(error){},
+                function(){}
+            );
+        }
+    }
+}
+</script>

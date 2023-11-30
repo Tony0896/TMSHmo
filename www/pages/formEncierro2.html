@@ -57,18 +57,21 @@ return {
                             for(var i = 0; i< length; i++){
                                 count++
                                 let item = results.rows.item(i)
+                                var check0 = '', check1 = '', check2 = '', check3 = '', check4 = '', check5 = '', check6 = ''
                                 if(item.respuesta == 1){
-                                    var check1 = 'checked';
-                                    var check2 = '';
-                                    var check0 = ''
-                                }else if(item.respuesta == 2){
-                                    var check1 = '';
-                                    var check2 = 'checked';
-                                    var check0 = ''
+                                    check1 = 'checked'
+                                } else if(item.respuesta == 2){
+                                    check2 = 'checked'
+                                } else if(item.respuesta == 3){
+                                    check3 = 'checked'
+                                } else if(item.respuesta == 4){
+                                    check4 = 'checked'
+                                } else if(item.respuesta == 5){
+                                    check5 = 'checked'
+                                } else if(item.respuesta == 6){
+                                    check6 = 'checked'
                                 } else {
-                                    var check1 = '';
-                                    var check2 = '';
-                                    var check0 = 'checked'
+                                    check0 = 'checked'
                                 }
                                 comentarios = '';
                                 falla = '';
@@ -82,15 +85,15 @@ return {
                                 $("#datos_form").append(`<div style="display: flex;margin-top: 5px;">
                                     <span class="span-pregunta span FWM-span-form">${count}.</span>&emsp;<span class="span-pregunta span FWM-span-form">${item.pregunta}</span> 
                                 </div> 
-                                <div style="display: flex;justify-content: space-around;margin-bottom: 10px;margin-top: 5px;"> 
-                                    <label id="label${item.Fk_pregunta}-1" class="radios ${check1}"><input type="radio" id="radio${item.Fk_pregunta}-1" onclick="validaradios(this.id, 5, '${item.pregunta}', ${item.multiple});" ${check1}> ${item.Opcion_1} </label>
-                                    <label id="label${item.Fk_pregunta}-2" class="radios ${check2}"><input type="radio" id="radio${item.Fk_pregunta}-2" onclick="validaradios(this.id, 5, '${item.pregunta}', ${item.multiple});" ${check2}> ${item.Opcion_2} </label>
-                                    <label id="label${item.Fk_pregunta}-0" class="radios ${check0}"><input type="radio" id="radio${item.Fk_pregunta}-0" onclick="validaradios(this.id, 5, '${item.pregunta}', ${item.multiple});" ${check0}> N/A </label>
+                                <div style="margin-bottom: 10px;margin-top: 5px;display: grid;row-gap: 12px;">
+                                    <label id="label-${item.Fk_pregunta}-1" class="radios radios-${item.Fk_pregunta} ${check1}"><input type="radio" class="inRadios-${item.Fk_pregunta}" id="radio-${item.Fk_pregunta}-1" onclick="validaradios(this.id, 5, '${item.pregunta}', 0);" ${check1}> ${item.Opcion_1} </label>
+                                    <label id="label-${item.Fk_pregunta}-2" class="radios radios-${item.Fk_pregunta} ${check2}"><input type="radio" class="inRadios-${item.Fk_pregunta}" id="radio-${item.Fk_pregunta}-2" onclick="validaradios(this.id, 5, '${item.pregunta}', 0);" ${check2}> ${item.Opcion_2} </label>
+                                    ${item.Opcion_3 ? `<label id="label-${item.Fk_pregunta}-3" class="radios radios-${item.Fk_pregunta} ${check3}"><input type="radio" class="inRadios-${item.Fk_pregunta}" id="radio-${item.Fk_pregunta}-3" onclick="validaradios(this.id, 5, '${item.pregunta}', 0);" ${check3}> ${item.Opcion_3} </label>` : ''}
+                                    ${item.Opcion_4 ? `<label id="label-${item.Fk_pregunta}-4" class="radios radios-${item.Fk_pregunta} ${check4}"><input type="radio" class="inRadios-${item.Fk_pregunta}" id="radio-${item.Fk_pregunta}-4" onclick="validaradios(this.id, 5, '${item.pregunta}', 0);" ${check4}> ${item.Opcion_4} </label>` : ''}
+                                    ${item.Opcion_5 ? `<label id="label-${item.Fk_pregunta}-5" class="radios radios-${item.Fk_pregunta} ${check5}"><input type="radio" class="inRadios-${item.Fk_pregunta}" id="radio-${item.Fk_pregunta}-5" onclick="validaradios(this.id, 5, '${item.pregunta}', 0);" ${check5}> ${item.Opcion_5} </label>` : ''}
+                                    ${item.Opcion_6 ? `<label id="label-${item.Fk_pregunta}-6" class="radios radios-${item.Fk_pregunta} ${check6}"><input type="radio" class="inRadios-${item.Fk_pregunta}" id="radio-${item.Fk_pregunta}-6" onclick="validaradios(this.id, 5, '${item.pregunta}', 0);" ${check6}> ${item.Opcion_6} </label>` : ''}
                                 </div>
-                                <div style="margin-bottom: 10px;display:flex;flex-direction: column;">
-                                    <span style="color: #ff0000;font-style: italic;" id="span-${item.Fk_pregunta}">${falla}</span>
-                                    <span style="color: #ff0000;font-style: italic;" id="spanComentarios-${item.Fk_pregunta}">${comentarios}</span>
-                                </div> <hr>`);
+                                <hr>`);
 
                             }
                             // $("#datos_form").append(`<div class="block grid-resizable-demo" style="top: 25px;margin-bottom: 80px;"></div>`);
@@ -115,7 +118,7 @@ return {
                             let item2 = results.rows.item(0);
                             $("#fase_titulo").html("Revisión Unidad "+item2.unidad);
                             $("#observaciones").val(item2.observaciones)
-                            $("#titleScreen").html(`Campaña: ${item2.nombreCampania}`)
+                            $("#titleScreen").html(`CAMPAÑA: ${item2.nombreCampania}`)
                         },
                         function(tx5, error){
                             console.error("Error al consultar bandeja de salida: " + error.message);

@@ -901,6 +901,112 @@ function llevarTodo(id_cedula,tipo_cedula){
                                 function(){}
                             );
                         }
+                    } else if (tipo == "InsLavado"){
+                        let IEN_HeaderLavado = new Array();
+                        let IEN_ProgramacionLavado = new Array();
+                        let IEN_EvidenciasLavado = new Array();
+                        databaseHandler.db.transaction(
+                            function(tx){
+                                tx.executeSql("SELECT *, REPLACE(fechaFin, ' ', 'T') as fechaFin2, REPLACE(fechaInicio, ' ', 'T') as fechaInicio2 FROM IEN_HeaderLavado WHERE id_cedula = ?",
+                                    [id_cedula],
+                                    function(tx, results){
+                                        var length = results.rows.length;
+                                        for(var i = 0; i< length; i++){
+                                            var item3 = results.rows.item(i);
+                                            IEN_HeaderLavado[i] = item3;
+                                        }
+                                        databaseHandler.db.transaction(
+                                            function(tx){
+                                                tx.executeSql("SELECT * FROM IEN_ProgramacionLavado WHERE id_cedula = ?",
+                                                    [id_cedula],
+                                                    function(tx, results){
+                                                        var length = results.rows.length;
+                                                        for(var i = 0; i< length; i++){
+                                                            var item2 = results.rows.item(i);
+                                                            IEN_ProgramacionLavado[i] = item2;
+                                                        }
+                                                        databaseHandler.db.transaction(
+                                                            function(tx){
+                                                                tx.executeSql("SELECT *, REPLACE(fecha, ' ', 'T') as fecha2 FROM IEN_EvidenciasLavado WHERE id_cedula = ?",
+                                                                    [id_cedula],
+                                                                    function(tx, results){
+                                                                        var length = results.rows.length;
+                                                                        for(var i = 0; i< length; i++){
+                                                                            var item4 = results.rows.item(i);
+                                                                            IEN_EvidenciasLavado[i] = item4;
+                                                                        }
+                                                                        console.log(datosCedulaGeneral)
+                                                                        console.log(IEN_HeaderLavado)
+                                                                        console.log(IEN_ProgramacionLavado)
+                                                                        console.log(IEN_EvidenciasLavado)
+                                                                        
+                                                                        $.ajax({
+                                                                            type: "POST",
+                                                                            async : true,
+                                                                            url: url + "/InsLavado/guardarInsLavado.php",
+                                                                            dataType: 'html',
+                                                                            data: {'datosCedulaGeneral': JSON.stringify(datosCedulaGeneral),
+                                                                            'IEN_HeaderLavado': JSON.stringify(IEN_HeaderLavado),
+                                                                            'IEN_ProgramacionLavado': JSON.stringify(IEN_ProgramacionLavado),
+                                                                            'IEN_EvidenciasLavado': JSON.stringify(IEN_EvidenciasLavado)},
+                                                                            success: function(respuesta){
+                                                                                var respu1 = respuesta.split("._.");
+                                                                                var dat1 = respu1[0];
+                                                                                var dat2 = respu1[1];
+                                                                                if(dat1 == "CEDULA"){
+                                                                                    if(dat2 > 0){
+                                                                                        databaseHandler.db.transaction(
+                                                                                            function(tx7){
+                                                                                                tx7.executeSql(
+                                                                                                    "UPDATE cedulas_general SET estatus = 3 WHERE id_cedula = ?",
+                                                                                                    [id_cedula],
+                                                                                                    function(tx7, results){
+                                                                                                        $(".send-ced").css("pointer-events", "all");
+                                                                                                        localStorage.setItem("sendFlag", 0);
+                                                                                                        $("#li-"+item.id_cedula).remove();
+                                                                                                        swal("Enviado!", "", "success");
+                                                                                                    }
+                                                                                                );
+                                                                                            }
+                                                                                        );
+                                                                                    }
+                                                                                } else {
+                                                                                    AlmacenarError(respuesta);
+                                                                                }
+                                                                            },
+                                                                            error: function(){
+                                                                                console.log("Error en la comunicacion");
+                                                                                swal("Fallo el envío, por conexión!", "", "error");
+                                                                                $(".send-ced").css("pointer-events", "all")
+                                                                            }
+                                                                        });
+                                                                    },
+                                                                    function(tx, error){
+                                                                        console.log("Error al consultar: " + error.message);
+                                                                    }
+                                                                );
+                                                            },
+                                                            function(error){},
+                                                            function(){}
+                                                        );
+                                                    },
+                                                    function(tx, error){
+                                                        console.log("Error al consultar: " + error.message);
+                                                    }
+                                                );
+                                            },
+                                            function(error){},
+                                            function(){}
+                                        );
+                                    },
+                                    function(tx, error){
+                                        console.log("Error al consultar: " + error.message);
+                                    }
+                                );
+                            },
+                            function(error){},
+                            function(){}
+                        );
                     }
                 },
                 function(tx, error){

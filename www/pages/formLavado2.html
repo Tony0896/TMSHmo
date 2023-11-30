@@ -15,7 +15,7 @@
 
         <div class="toolbar tabbar toolbar-bottom">
             <div class="toolbar-inner" style="background-color: #1E9FB4;">
-                <a href="#" onclick="FinalizarInspeccionesEncierro();" id="fin_recaudo" style="margin: auto;color: #fff;font-weight: bold;font-size: 18px;width: 100%;text-align: center;">Finalizar <i class="icon material-icons md-only" style="display: inline-block;">chevron_right</i></a>
+                <a href="#" onclick="//FinalizarInspeccionesEncierro();" id="fin_recaudo" style="margin: auto;color: #fff;font-weight: bold;font-size: 18px;width: 100%;text-align: center;">Finalizar <i class="icon material-icons md-only" style="display: inline-block;">chevron_right</i></a>
             </div>
         </div>
         
@@ -28,7 +28,7 @@
                             <div style="display: flex;">
                                 <input type="text" placeholder="Escribe el No. de la unidad" id="autocomplete-dropdown-ajax" class="FWM-input autocomplete-dropdown item-title" style="padding-right: 5px;">
                                 <span style="min-width: 20%;padding-left: 10px;">
-                                    <button class="col button button-small button-round button-outline" style="height: 100%;border-color: #FF0037;" onclick="preInspeccionEncierro();"><i class="material-icons md-light" style="color: #FF0037;vertical-align: middle;font-size: 30px;">play_circle_outline</i></button>
+                                    <button class="col button button-small button-round button-outline" style="height: 100%;border-color: #FF0037;" onclick="preInspeccionLavdo();"><i class="material-icons md-light" style="color: #FF0037;vertical-align: middle;font-size: 30px;">play_circle_outline</i></button>
                                 </span>
                             </div>
                             <input type="hidden" id="id_unidad">
@@ -75,23 +75,24 @@
 
                 let html = ``
 
-                databaseHandler.db.transaction(
-                    function(tx5){
-                        tx5.executeSql("SELECT * FROM cedulas_general WHERE id_cedula = ?",
-                            [id_cedula],
-                            function(tx5, results){
-                                let length = results.rows.length;
-                                let item2 = results.rows.item(0);
-                                $(".title").html(`CAMPAÑA: ${item2.nombre_evalua}`)
-                            },
-                            function(tx5, error){
-                                console.error("Error al consultar bandeja de salida: " + error.message);
-                            }
-                        );  
-                    },
-                    function(error){},
-                    function(){}
-                );
+                // databaseHandler.db.transaction(
+                //     function(tx5){
+                //         tx5.executeSql("SELECT * FROM cedulas_general WHERE id_cedula = ?",
+                //             [id_cedula],
+                //             function(tx5, results){
+                //                 let length = results.rows.length;
+                //                 let item2 = results.rows.item(0);
+                //                 $(".title").html(`CAMPAÑA: ${item2.nombre_evalua}`)
+                //             },
+                //             function(tx5, error){
+                //                 console.error("Error al consultar bandeja de salida: " + error.message);
+                //             }
+                //         );  
+                //     },
+                //     function(error){},
+                //     function(){}
+                // );
+                $(".title").html(`Resultado de limpieza`)
 
                 databaseHandler.db.transaction(
                     function(tx5){

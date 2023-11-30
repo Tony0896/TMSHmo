@@ -236,7 +236,9 @@ function moveMenu(val) {
         : val == 2 ? generarAsistencia()
         : val == 3 ? app.views.main.router.back('/formCapacita4/', { force: true, ignoreCache: true, reload: true })
         : val == 4 ? app.views.main.router.back('/yallegueCampanias/', { force: true, ignoreCache: true, reload: true })
-        : val == 5 ? console.log("gg5")
+        : val == 5 ? generaInsLavadoUnidades(1)
+        : val == 6 ? resultadoLimpieza(2)
+        : val == 7 ? evaluacionProveedor(3)
         : false;
     } else {
         var Modulos = localStorage.getItem("Modulos");
@@ -833,7 +835,7 @@ function validaradios(id, numero, pregunta, multiple, FK_equipo) {
             }
         }
         actualizacheck(id);
-    } else if(numero == 4 || numero == 5){
+    } else if(numero == 4 || numero == 5 || numero == 6 || numero == 7 || numero == 8){
         if(numero == 4){
             var ids = id.split("-");
             var check = ids[1];
@@ -864,66 +866,33 @@ function validaradios(id, numero, pregunta, multiple, FK_equipo) {
                     }
                 }
             }
-        } else if(numero == 5){
+        } else if(numero == 5 || numero == 6){
+            var labels = id.replace('radio','label');
             var ids = id.split("-");
-            var check = ids[1];
-            if(check.includes('1')){
-                var valCheck = document.getElementById(ids[0]+"-"+ids[1]).checked;
-                if(valCheck ==true){
-                    var otherCheck = ids[0] + "-2";
-                    var otherCheck1 = ids[0] + "-0";
-                    document.getElementById(otherCheck).checked = false;
-                    document.getElementById(otherCheck1).checked = false;
-                    var labels0 = ids[0].replace('radio','label') +"-0";
-                    var labels1 = ids[0].replace('radio','label') +"-1";
-                    var labels2 = ids[0].replace('radio','label') +"-2";
-                    $("#"+labels0).removeClass("checked");
-                    $("#"+labels1).addClass("checked");
-                    $("#"+labels2).removeClass("checked");
-                }
-            }else if(check.includes('2')){
-                var valCheck = document.getElementById(ids[0]+"-"+ids[1]).checked;
-                if(valCheck ==true){
-                    var otherCheck = ids[0] + "-1";
-                    var otherCheck1 = ids[0] + "-0";
-                    document.getElementById(otherCheck).checked = false;
-                    document.getElementById(otherCheck1).checked = false;
-                    var labels0 = ids[0].replace('radio','label') +"-0";
-                    var labels1 = ids[0].replace('radio','label') +"-1";
-                    var labels2 = ids[0].replace('radio','label') +"-2";
-                    $("#"+labels0).removeClass("checked");
-                    $("#"+labels2).addClass("checked");
-                    $("#"+labels1).removeClass("checked");
-                    var id_pregunta = ids[0].replace('radio','');
-                    if(numero == 4){
-                        SeleccionarDanosControlTec(id_pregunta, pregunta, multiple, FK_equipo)
-                    } else if(numero == 5){
-                        SeleccionarDanosInsEncierro(id_pregunta, pregunta, multiple)
-                    }
-                }
-            } else if(check.includes('0')){
-                if(numero == 5){
-                    var valCheck = document.getElementById(ids[0]+"-"+ids[1]).checked;
-                    if(valCheck ==true){
-                        var otherCheck = ids[0] + "-2";
-                        var otherCheck1 = ids[0] + "-1";
-                        document.getElementById(otherCheck).checked = false;
-                        document.getElementById(otherCheck1).checked = false;
-                        var labels0 = ids[0].replace('radio','label') +"-0";
-                        var labels1 = ids[0].replace('radio','label') +"-1";
-                        var labels2 = ids[0].replace('radio','label') +"-2";
-                        $("#"+labels0).addClass("checked");
-                        $("#"+labels1).removeClass("checked");
-                        $("#"+labels2).removeClass("checked");
-                    }
-                }
-            }
+            $(".radios-"+ids[1]).removeClass("checked");
+            $(".inRadios-"+ids[1]).prop('checked', false)
+            $("#"+id).prop('checked', true)
+            $("#"+labels).addClass("checked");
+        } else if(numero == 7 || numero == 8){
+            var labels = id.replace('radio','label');
+            var ids = id.split("-");
+            $(".radios1-"+ids[1]).removeClass("checked");
+            $(".inRadios1-"+ids[1]).prop('checked', false)
+            $("#"+id).prop('checked', true)
+            $("#"+labels).addClass("checked");
         }
         
         if(numero == 4){
             actualizacheckControlTec(id);
         } else if(numero == 5){
             actualizacheckInsEncierro(id);
+        } else if(numero == 6){
+            actualizaRespuestasLavado(id, multiple)
+        } else if(numero == 7){
+            var ids = id.split("-");
+            if(ids[2] == 3){
+                agregaEvidencias(id)
+            }
         }
     }
 }
@@ -3742,45 +3711,86 @@ function GuardarPhoto() {
     //CAP_Evidencias( id_cedula integer, evidencia blob, fecha text
     var id_cedula = localStorage.getItem("IdCedula");
     var foto = $("#imagenC").val();
+    let Modulos = localStorage.getItem("Modulos")
     if (foto) {
-        databaseHandler.db.transaction(
-            function (tx) {
-                tx.executeSql("INSERT INTO CAP_Evidencias(id_cedula,evidencia,fecha) VALUES (?,?,?)",
-                    [id_cedula, foto, getDateWhitZeros()],
-                    function (tx, results) {
-                        databaseHandler.db.transaction(
-                            function (tx1) {
-                                tx1.executeSql(
-                                    "Select * from CAP_Evidencias where id_cedula= ? ORDER BY id_evidencia DESC LIMIT 1",
-                                    [id_cedula],
-                                    function (tx, results) {
-                                        var item = results.rows.item(0);
-                                        $("#evidencias_div").css("display", "none")
-                                        $("#div_botones_camara").html(`<div style="min-width: 50px; border-style: none;">
-                                            <span class="resize-handler"></span>
-                                            <a href="#" onclick="ValidarCapturePhoto()" style="background-color: #fff;border: 3px solid #005D99;color:#005D99" class="boton-equipo">
-                                                Agregar Evidencia <i class="icon material-icons md-only" style="display: inline-block;margin-left: 12px;color:#005D99">photo_camera</i>
-                                            </a>
-                                        </div>`)
-                                        $("#imagenC").val('');
-                                        swal("", "Foto guardada correctamente", "success");
-                                        $("#facturas").append("<tr id='fila" + item.id_evidencia + "'><td style='text-align: center;'><img src='" + item.evidencia + "' width='60px' style='margin-top: 4px;'/></td><td style='text-align: center;'><a href='#' onclick='eliminarFilaFoto(" + item.id_evidencia + ",1);' style='border: none; outline:none;'><i class='icon material-icons md-only' style='display: inline-block;margin-left: 12px;color:#FF0037;font-size: 40px;'>delete_forever</i></a></td></tr>");
-                                        $("#message-nr").css("display", "none");
-                                    }
-                                );
-                            },
-                            function (error) { },
-                            function () { }
-                        );
-                    },
-                    function (tx, error) {
-                    }
-                );
-            }, function (error) { }, function () {
-            }
-        );
+        if(Modulos == 'InsLavado'){
+            databaseHandler.db.transaction(
+                function (tx) {
+                    tx.executeSql("INSERT INTO IEN_EvidenciasLavado(id_cedula,FKHeader,evidencia,fecha) VALUES (?,?,?,?)",
+                        [id_cedula, localStorage.getItem("IdHeader"), foto, getDateWhitZeros()],
+                        function (tx, results) {
+                            databaseHandler.db.transaction(
+                                function (tx1) {
+                                    tx1.executeSql(
+                                        "Select * from IEN_EvidenciasLavado where id_cedula= ? AND FKHeader = ? ORDER BY id_evidencia DESC LIMIT 1",
+                                        [id_cedula, localStorage.getItem("IdHeader")],
+                                        function (tx, results) {
+                                            var item = results.rows.item(0);
+                                            $("#evidencias_div").css("display", "none")
+                                            $("#div_botones_camara").html(`<div style="min-width: 50px; border-style: none;">
+                                                <span class="resize-handler"></span>
+                                                <a href="#" onclick="ValidarCapturePhotoLavado()" style="background-color: #fff;border: 3px solid #005D99;color:#005D99" class="boton-equipo">
+                                                    Agregar Evidencia <i class="icon material-icons md-only" style="display: inline-block;margin-left: 12px;color:#005D99">photo_camera</i>
+                                                </a>
+                                            </div>`)
+                                            $("#imagenC").val('');
+                                            swal("", "Foto guardada correctamente", "success");
+                                            $("#facturas").append("<tr id='fila" + item.id_evidencia + "'><td style='text-align: center;'><img src='" + item.evidencia + "' width='60px' style='margin-top: 4px;'/></td><td style='text-align: center;'><a href='#' onclick='eliminarFilaFotoLavado(" + item.id_evidencia + ",1);' style='border: none; outline:none;'><i class='icon material-icons md-only' style='display: inline-block;margin-left: 12px;color:#FF0037;font-size: 40px;'>delete_forever</i></a></td></tr>");
+                                            $("#facturas2").append("<tr id='fila" + item.id_evidencia + "'><td style='text-align: center;'><img src='" + item.evidencia + "' width='60px' style='margin-top: 4px;'/></td><td style='text-align: center;'><a href='#' onclick='eliminarFilaFotoLavado(" + item.id_evidencia + ",1);' style='border: none; outline:none;'><i class='icon material-icons md-only' style='display: inline-block;margin-left: 12px;color:#FF0037;font-size: 40px;'>delete_forever</i></a></td></tr>");
+                                            $(".message-nr").css("display", "none");
+                                        }
+                                    );
+                                },
+                                function (error) { },
+                                function () { }
+                            );
+                        },
+                        function (tx, error) {
+                        }
+                    );
+                }, function (error) { }, function () {
+                }
+            );
+        } else {
+            databaseHandler.db.transaction(
+                function (tx) {
+                    tx.executeSql("INSERT INTO CAP_Evidencias(id_cedula,evidencia,fecha) VALUES (?,?,?)",
+                        [id_cedula, foto, getDateWhitZeros()],
+                        function (tx, results) {
+                            databaseHandler.db.transaction(
+                                function (tx1) {
+                                    tx1.executeSql(
+                                        "Select * from CAP_Evidencias where id_cedula= ? ORDER BY id_evidencia DESC LIMIT 1",
+                                        [id_cedula],
+                                        function (tx, results) {
+                                            var item = results.rows.item(0);
+                                            $("#evidencias_div").css("display", "none")
+                                            $("#div_botones_camara").html(`<div style="min-width: 50px; border-style: none;">
+                                                <span class="resize-handler"></span>
+                                                <a href="#" onclick="ValidarCapturePhoto()" style="background-color: #fff;border: 3px solid #005D99;color:#005D99" class="boton-equipo">
+                                                    Agregar Evidencia <i class="icon material-icons md-only" style="display: inline-block;margin-left: 12px;color:#005D99">photo_camera</i>
+                                                </a>
+                                            </div>`)
+                                            $("#imagenC").val('');
+                                            swal("", "Foto guardada correctamente", "success");
+                                            $("#facturas").append("<tr id='fila" + item.id_evidencia + "'><td style='text-align: center;'><img src='" + item.evidencia + "' width='60px' style='margin-top: 4px;'/></td><td style='text-align: center;'><a href='#' onclick='eliminarFilaFoto(" + item.id_evidencia + ",1);' style='border: none; outline:none;'><i class='icon material-icons md-only' style='display: inline-block;margin-left: 12px;color:#FF0037;font-size: 40px;'>delete_forever</i></a></td></tr>");
+                                            $("#message-nr").css("display", "none");
+                                        }
+                                    );
+                                },
+                                function (error) { },
+                                function () { }
+                            );
+                        },
+                        function (tx, error) {
+                        }
+                    );
+                }, function (error) { }, function () {
+                }
+            );
+        }
     } else {
-        swal("", "Debes tomar una fotografía de la factura(s):", "warning");
+        swal("", "Debes tomar una fotografía:", "warning");
     }
 }
 
@@ -5333,43 +5343,61 @@ function inspeccionarUnidadEncierro(){
                             let observaciones = ''
                             let NomJson = 'revisones_1'
 
-                            productHandler.insertHeaderInsEncierro(id_cedula, IDCampania, nombreCampania, FK_formato, NombreFormato, fecha_captura, id_unidad, observaciones, unidad)
+                            // productHandler.insertHeaderInsEncierro(id_cedula, IDCampania, nombreCampania, FK_formato, NombreFormato, fecha_captura, id_unidad, observaciones, unidad)
 
                             databaseHandler.db.transaction(
                                 function (tx) {
                                     tx.executeSql(
-                                    "Select MAX(ID_Header) as IdHeader from IEN_Header",
-                                    [],
-                                    function (tx, results) {
-                                        var item = results.rows.item(0);
-                                        localStorage.setItem("IdHeader", item.IdHeader);
-                                        app.request({
-                                            url: cordova.file.dataDirectory + "jsons_InsEncierro/"+NomJson+".json",
-                                            method: 'GET',
-                                            dataType: 'json',
-                                            success: function (data) {
-                                                var aux = data.length;
-                                                var aux2=0;
-                                                if(aux == 0){
-                                                    app.dialog.close()
-                                                    swal("","Algo salió mal.","warning");
-                                                }else{
-                                                    dialog.setText('1 de ' + aux);
-                                                    for (var j = 0; j < data.length; j++) {
-                                                        aux2++;
-                                                        productHandler.insertPreguntasInsEncierro(id_cedula, item.IdHeader, data[j].ID, data[j].Pregunta, data[j].Multiple, data[j].FK_formato, data[j].Opcion_1, data[j].Opcion_2, 0, aux, aux2)
+                                        "insert into IEN_Header(id_cedula, FKCampaña, nombreCampania, FKFormato, fechaFin, fechaInicio, FK_Unidad, observaciones, unidad) values(?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                                        [id_cedula, IDCampania, nombreCampania, FK_formato, NombreFormato, fecha_captura, id_unidad, observaciones, unidad],
+                                        function (tx, results) {
+                                            databaseHandler.db.transaction(
+                                                function (tx) {
+                                                    tx.executeSql(
+                                                    "Select MAX(ID_Header) as IdHeader from IEN_Header",
+                                                    [],
+                                                    function (tx, results) {
+                                                        var item = results.rows.item(0);
+                                                        localStorage.setItem("IdHeader", item.IdHeader);
+                                                        app.request({
+                                                            url: cordova.file.dataDirectory + "jsons_InsEncierro/"+NomJson+".json",
+                                                            method: 'GET',
+                                                            dataType: 'json',
+                                                            success: function (data) {
+                                                                var aux = 0;
+                                                                for (var j = 0; j < data.length; j++) {
+                                                                    if(data[j].FK_formato == FK_formato){
+                                                                        aux++;
+                                                                    }
+                                                                }
+                                                                var aux2=0;
+                                                                if(aux == 0){
+                                                                    app.dialog.close()
+                                                                    swal("","Algo salió mal.","warning");
+                                                                }else{
+                                                                    dialog.setText('1 de ' + aux);
+                                                                    for (var j = 0; j < data.length; j++) {
+                                                                        if(data[j].FK_formato == FK_formato){
+                                                                            aux2++;
+                                                                            productHandler.insertPreguntasInsEncierro(id_cedula, item.IdHeader, data[j].ID, data[j].Pregunta, data[j].Multiple, data[j].FK_formato, data[j].Opcion_1, data[j].Opcion_2, data[j].Opcion_3, data[j].Opcion_4, data[j].Opcion_5, data[j].Opcion_6, 0, aux, aux2)
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        });
+                                                    },
+                                                    function (tx, error) {
+                                                        console.log("Error al guardar cedula: " + error.message);
                                                     }
-                                                }
-                                            }
-                                        });
-                                    },
-                                    function (tx, error) {
-                                        console.log("Error al guardar cedula: " + error.message);
-                                    }
+                                                    );
+                                                },
+                                                function (error) {},
+                                                function () {}
+                                            );
+                                        },
+                                        function (tx, error) { console.error("Error registrar:" + error.message); }
                                     );
-                                },
-                                function (error) {},
-                                function () {}
+                                }, function (error) { console.log(error) }, function () { }
                             );
         //                 } else {
         //                     $("#id_unidad").val("")
@@ -5585,65 +5613,22 @@ function actualizacheckInsEncierro(id){
     var id_cedula = localStorage.getItem("IdCedula");
     var IdHeader = localStorage.getItem("IdHeader");
     var ids = id.split("-");
-    var check = ids[1];
-    if(check.includes('1')){
-        var respuesta = 1;
-        var comentarios = '';
-        var id_pregunta = ids[0].replace('radio','');
-        $("#span-"+id_pregunta).html(comentarios);
-        $("#spanComentarios-"+id_pregunta).html(comentarios);
-        databaseHandler.db.transaction(
-            function(tx){
-                tx.executeSql("UPDATE IEN_Details SET respuesta = ?,comentarios = ?, falla = ? WHERE id_cedula = ? AND Fk_pregunta = ? AND FKHeader = ?",
-                    [respuesta,comentarios,comentarios,id_cedula,id_pregunta,IdHeader],
-                    function(tx, results){
-                    },
-                    function(tx, error){
-                        console.error("Error al guardar cierre: " + error.message);
-                    }
-                );
-            },
-            function(error){},
-            function(){}
-        );
-    } else if(check.includes('2')){
-        var respuesta = 2;
-        var id_pregunta = ids[0].replace('radio','');
-        databaseHandler.db.transaction(
-            function(tx){
-                tx.executeSql("UPDATE IEN_Details SET respuesta = ? WHERE id_cedula = ? AND Fk_pregunta = ? AND FKHeader = ?",
-                    [respuesta,id_cedula,id_pregunta,IdHeader],
-                    function(tx, results){
-                    },
-                    function(tx, error){
-                        console.error("Error al guardar cierre: " + error.message);
-                    }
-                );
-            },
-            function(error){},
-            function(){}
-        );
-    } else {
-        var respuesta = 0;
-        var comentarios = '';
-        var id_pregunta = ids[0].replace('radio','');
-        $("#span-"+id_pregunta).html(comentarios);
-        $("#spanComentarios-"+id_pregunta).html(comentarios);
-        databaseHandler.db.transaction(
-            function(tx){
-                tx.executeSql("UPDATE IEN_Details SET respuesta = ?,comentarios = ?, falla = ? WHERE id_cedula = ? AND Fk_pregunta = ? AND FKHeader = ?",
-                    [respuesta,comentarios,comentarios,id_cedula,id_pregunta,IdHeader],
-                    function(tx, results){
-                    },
-                    function(tx, error){
-                        console.error("Error al guardar cierre: " + error.message);
-                    }
-                );
-            },
-            function(error){},
-            function(){}
-        );
-    }
+    var id_pregunta = ids[1];
+    var respuesta = ids[2];
+    databaseHandler.db.transaction(
+        function(tx){
+            tx.executeSql("UPDATE IEN_Details SET respuesta = ? WHERE id_cedula = ? AND Fk_pregunta = ? AND FKHeader = ?",
+                [respuesta,id_cedula,id_pregunta,IdHeader],
+                function(tx, results){
+                },
+                function(tx, error){
+                    console.error("Error al guardar cierre: " + error.message);
+                }
+            );
+        },
+        function(error){},
+        function(){}
+    );
 }
 
 function agregaComentariosInsEncierro(id_pregunta,mul){
@@ -5745,5 +5730,828 @@ function FinalizarInspeccionesEncierro(){
         }
     });
 }
+
+function generaInsLavadoUnidades(paso){
+    swal({
+        title: "Aviso",
+        text: "¿Deseas crear una nueva Inspección de Lavado?",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+    }).then((RESP) => {
+        if (RESP == true) {
+            var id_usuario = localStorage.getItem("id_usuario")
+            var nombre_usuario = localStorage.getItem("Usuario")
+            var fecha_llegada = getDateWhitZeros()
+            var id_cliente = localStorage.getItem("empresa")
+            var horario_programado = fecha_llegada
+            var estatus = 0
+            var tipo_cedula = localStorage.getItem("Modulos")
+            var nombre_evalua = 'Lavado de unidades'
+            var IDCampania = 1
+            var nombreCampania = 'Lavado'
+            var FK_formato = 'N/A'
+
+            addCedulaind(id_usuario, nombre_usuario, fecha_llegada, IDCampania, id_cliente, nombre_evalua, horario_programado, estatus, tipo_cedula, nombreCampania, FK_formato, paso);
+        }
+    });
+}
+
+function addCedulaind (id_usuario, nombre_usuario, fecha_entrada, geolocalizacion_entrada, id_cliente, nombre_cliente, horario_programado, estatus, tipo_cedula, nombre_evalua, geolocation, paso) {
+    databaseHandler.db.transaction(
+        function (tx) {
+            tx.executeSql(
+                "insert into cedulas_general(id_usuario,nombre_usuario,fecha_entrada,geolocalizacion_entrada,id_cliente,nombre_cliente,horario_programado,estatus,tipo_cedula,nombre_evalua,geolocalizacion_salida) values(?,?,?,?,?,?,?,?,?,?,?)",
+                [id_usuario, nombre_usuario, fecha_entrada, geolocalizacion_entrada, id_cliente, nombre_cliente, horario_programado, estatus, tipo_cedula, nombre_evalua, geolocation],
+                function (tx, results) {
+                    databaseHandler.db.transaction(
+                        function (tx) {
+                            tx.executeSql(
+                                "Select MAX(id_cedula) as Id from cedulas_general",
+                                [],
+                                function (tx, results) {
+                                    var item = results.rows.item(0);
+                                    localStorage.setItem("IdCedula", item.Id);
+                                    if(paso == 1){
+                                        creaFormLavado(item.Id)
+                                    } else if(paso == 2){
+                                        creaFormResultLavado(item.Id)
+                                    }  else if(paso == 3){
+                                        creaFormEvaluacion(item.Id)
+                                    } 
+                                },
+                                function (tx, error) {
+                                    console.log("Error al guardar cedula: " + error.message);
+                                }
+                            );
+                        },
+                        function (error) { },
+                        function () { }
+                    );     
+                },
+                function (tx, error) {
+                    console.error("Error registrar cedula general:" + error.message);
+                }
+            );
+        },
+        function (error) { },
+        function () { }
+    );
+}
+
+function preInspeccionLavdo2(){
+    app.dialog.progress('Trabajando... ', 'red');
+    setTimeout(() => {
+        inspeccionarUnidadLavdo2()
+        app.dialog.close();
+    }, "250");
+}
+
+function inspeccionarUnidadLavdo2(){
+    if($("#id_unidad").val()){
+        let id_cedula = localStorage.getItem("IdCedula")
+        // databaseHandler.db.transaction(
+        //     function (tx) {
+        //         tx.executeSql(
+        //         "Select id_cedula from DesTechHeader WHERE id_cedula = ? AND id_unidad = ?",
+        //             [id_cedula, $("#id_unidad").val()],
+        //             function (tx, results) {
+        //                 let length = results.rows.length;
+        //                 if(length == 0){
+                            let unidad = $("#autocomplete-dropdown-ajax").val()
+                            let id_unidad = $("#id_unidad").val()
+                            let fecha_captura = getDateWhitZeros();
+                            let progress = 0;
+                            let dialog = app.dialog.progress('Trabajando... ', progress, 'red');
+                            let id_empresa = localStorage.getItem("empresa");
+                            let FK_formato = 0
+                            let fechaFin = ''
+                            let observaciones = ''
+                            let NomJson = 'Programacion'
+
+                            // productHandler.insertHeaderInsEncierro(id_cedula, IDCampania, nombreCampania, FK_formato, NombreFormato, fecha_captura, id_unidad, observaciones, unidad)
+
+                            databaseHandler.db.transaction(
+                                function (tx) {
+                                    tx.executeSql(
+                                        "insert into IEN_HeaderLavado(id_cedula, FKFormato, fechaFin, fechaInicio, FK_Unidad, observaciones, unidad) values(?, ?, ?, ?, ?, ?, ?)",
+                                        [id_cedula, FK_formato, fechaFin, fecha_captura, id_unidad, observaciones, unidad],
+                                        function (tx, results) {
+                                            databaseHandler.db.transaction(
+                                                function (tx) {
+                                                    tx.executeSql(
+                                                    "Select MAX(ID_HeaderLavado) as IdHeader from IEN_HeaderLavado",
+                                                    [],
+                                                    function (tx, results) {
+                                                        var item = results.rows.item(0);
+                                                        localStorage.setItem("IdHeader", item.IdHeader);
+                                                        app.request({
+                                                            url: cordova.file.dataDirectory + "jsons_InsLavado/"+NomJson+".json",
+                                                            method: 'GET',
+                                                            dataType: 'json',
+                                                            success: function (data) {
+                                                                var aux = 3;
+                                                                dialog.setText('1 de ' + aux);
+                                                                for (var j = 0; j < data.length; j++) {
+                                                                    if(data[j].FK_unidad == id_unidad){
+                                                                        if(data[j].TypePrograma == 'EXHAUSTIVA'){
+                                                                            productHandler.insertPreguntasLavado(id_cedula, item.IdHeader, data[j].ID, '¿Se lavó?', 0, 0, 'SI', 'NO', '', '', '', '', data[j].TypePrograma,1,data[j].FK_provedor, 1, 3)
+                                                                            productHandler.insertPreguntasLavado(id_cedula, item.IdHeader, data[j].ID, '¿La calificación del lavado es:?', 0, 0, 'BUENO', 'REGULAR', 'MALO', '', '', '', data[j].TypePrograma,1,data[j].FK_provedor, 2, 3)
+                                                                            productHandler.insertPreguntasLavado(id_cedula, item.IdHeader, data[j].ID, '¿Hubo cambio de proveedor?', 0, 0, 'SI', 'NO', '', '', '', '', data[j].TypePrograma,2,data[j].FK_provedor, 3, 3)
+                                                                        } else {
+                                                                            if(data[j].TypePrograma == 'INTERIOR'){
+                                                                                productHandler.insertPreguntasLavado(id_cedula, item.IdHeader, data[j].ID, '¿Se lavó?', 0, 0, 'SI', 'NO', '', '', '', '', data[j].TypePrograma,1,data[j].FK_provedor, 1, 3)
+                                                                                productHandler.insertPreguntasLavado(id_cedula, item.IdHeader, data[j].ID, '¿La calificación del lavado es:?', 0, 0, 'BUENO', 'REGULAR', 'MALO', '', '', '', data[j].TypePrograma,1,data[j].FK_provedor, 2, 3)
+                                                                                productHandler.insertPreguntasLavado(id_cedula, item.IdHeader, data[j].ID, '¿Hubo cambio de proveedor?', 0, 0, 'SI', 'NO', '', '', '', '', data[j].TypePrograma,2,data[j].FK_provedor, 3, 3)
+                                                                            } else if(data[j].TypePrograma == 'EXTERIOR'){
+                                                                                productHandler.insertPreguntasLavado(id_cedula, item.IdHeader, data[j].ID, '¿Se lavó?', 0, 0, 'SI', 'NO', '', '', '', '', data[j].TypePrograma,1,data[j].FK_provedor, 1, 3)
+                                                                                productHandler.insertPreguntasLavado(id_cedula, item.IdHeader, data[j].ID, '¿La calificación del lavado es:?', 0, 0, 'BUENO', 'REGULAR', 'MALO', '', '', '', data[j].TypePrograma,1,data[j].FK_provedor, 2, 3)
+                                                                                productHandler.insertPreguntasLavado(id_cedula, item.IdHeader, data[j].ID, '¿Hubo cambio de proveedor?', 0, 0, 'SI', 'NO', '', '', '', '', data[j].TypePrograma,2,data[j].FK_provedor, 3, 3)
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        });
+                                                    },
+                                                    function (tx, error) {
+                                                        console.log("Error al guardar cedula: " + error.message);
+                                                    }
+                                                    );
+                                                },
+                                                function (error) {},
+                                                function () {}
+                                            );
+                                        },
+                                        function (tx, error) { console.error("Error registrar:" + error.message); }
+                                    );
+                                }, function (error) { console.log(error) }, function () { }
+                            );
+        //                 } else {
+        //                     $("#id_unidad").val("")
+        //                     $("#id_operador").val("")
+        //                     $("#credencial").val("")
+        //                     $("#operador").val("")
+        //                     swal("","Esta unidad ya la tienes registrada.","warning");
+        //                 }
+        //             },
+        //             function (tx, error) {
+        //                 console.log("Error al guardar cedula: " + error.message);
+        //             }
+        //         );
+        //     },
+        //     function (error) {},
+        //     function () {}
+        // );
+    }else{
+        swal("","Selecciona una unidad para poder continuar.","warning");
+    }
+}
+
+function creaFormLavado(id_cedula){
+    app.views.main.router.navigate({ name: 'formLavado6' });
+    // let NomJson = 'Programacion'
+    // let progress = 0;
+    // let dialog = app.dialog.progress('Trabajando... ', progress, 'red');
+    // app.request({
+    //     url: cordova.file.dataDirectory + "jsons_InsLavado/"+NomJson+".json",
+    //     method: 'GET',
+    //     dataType: 'json',
+    //     success: function (data) {
+    //         var aux = 0;
+    //         // for (var j = 0; j < data.length; j++) {
+    //         //     if(data[j].FK_formato == FK_formato){
+    //         //         aux++;
+    //         //     }
+    //         // }
+    //         aux = data.length;
+    //         var aux2=0;
+    //         if(aux == 0){
+    //             app.dialog.close()
+    //             swal("","Algo salió mal.","warning");
+    //         }else{
+    //             dialog.setText('1 de ' + aux);
+    //             for (var j = 0; j < data.length; j++) {
+    //                 aux2++;
+    //                 productHandler.insertUnidadesLavodo(id_cedula, data[j].ID, data[j].FK_unidad, data[j].Unidad, data[j].FK_provedor, data[j].FK_header, 0, aux, aux2)
+    //             }
+    //         }
+    //     }
+    // });
+}
+
+function agregaEvidencias(id){
+
+    var popEvidencia = app.popup.create({
+        content: `
+        <div class="sheet-modal my-sheet" id="sheet-modal" name="sheet">
+            <div class="toolbar">
+                <div class="toolbar-inner">
+                    <div class="left"></div>
+                    <div class="right"><a class="link" id="close_sheet" href="#">Cerrar</a></div>
+                </div>
+            </div>
+            <div class="sheet-modal-inner" style="overflow-y: scroll;">
+                <div class="block">
+                    <h3 class="FWN-titulo-2">Agregar evidencias</h3><hr>
+                    
+                    <input type="hidden" id="inputEvidencia" value=${id}>
+                    <input type="hidden" id="pasa" value="0">
+                    <div id="evidencias_div" style="padding-left: 10px;padding-right: 10px;display: none;">
+                        <div class="FWM-photo-container">
+                            <div class="border-capture" style="text-align: center;">
+                                <img class="FWM-photo" src="" id="photoIcon" width="45px"/>
+                            </div>
+                            <img class="FWM-photo-hide" id="smallImage" src=""/>
+                            <input type="hidden" id="imagenC" name="imagenC"/>
+                        </div>
+                    </div>
+                
+                    <div class="row" style="text-align: center; margin: 65px 10px 65px 10px;justify-content: space-around;" id="div_botones_camara">
+                        <div style="min-width: 50px; border-style: none;">
+                            <span class="resize-handler"></span>
+                            <a href="#" onclick="ValidarCapturePhoto()" style="background-color: #fff;border: 3px solid #005D99;color:#005D99" class="boton-equipo">
+                                Agregar Evidencia <i class="icon material-icons md-only" style="display: inline-block;margin-left: 12px;color:#005D99">photo_camera</i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <h2 style="text-align: center;">Evidencias</h2>
+
+                    <div class="card data-table" style="margin-bottom: 50px;">
+                        <div class="infinite-scroll-content">
+                            <table id="facturas">
+                                <thead>
+                                    <tr>
+                                        <th class="numeric-cell" style="text-align: center;background-color: #063E7F;color: white;">Evidencia</th>
+                                        <th class="numeric-cell" style="text-align: center;background-color: #063E7F;color: white;">Borrar</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                            <div class="sentencia preloader color-grey infinite-scroll-preloader"></div>
+                            <div id="message-nr" class="message-nr" style="width: 100%;text-align: center;font-family: 'ITC Avant Garde Gothic', sans-serif;font-size: 16px;" style="display: none;">
+                                <p>Sin registros</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>`,
+    swipeToClose:false,
+    closeByOutsideClick:false,
+    closeByBackdropClick:false,
+    closeOnEscape:false,
+        on: {
+            open: function (popup) {
+                $('#close_sheet').click(function () {
+                    // if($('#pasa').val()!=0){
+                    //     app.sheet.close('#sheet-modal');
+                    // }else{
+                    //     swal({
+                    //         title: "Aviso",
+                    //         text: "Aún no agregar evidencias, ¿Estas seguro que deseas regresar?",
+                    //         icon: "warning",
+                    //         buttons: true,
+                    //         dangerMode: false,
+                    //     }).then((willGoBack) => {
+                    //         if (willGoBack){
+                                app.sheet.close('#sheet-modal');
+                    //         } 
+                    //     });
+                    // }
+                })
+            },
+        }
+    });
+    popEvidencia.open();
+}
+
+function resultadoLimpieza(paso){
+    swal({
+        title: "Aviso",
+        text: "¿Deseas crear una nueva Inspección de Lavado?",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+    }).then((RESP) => {
+        if (RESP == true) {
+            var id_usuario = localStorage.getItem("id_usuario")
+            var nombre_usuario = localStorage.getItem("Usuario")
+            var fecha_llegada = getDateWhitZeros()
+            var id_cliente = localStorage.getItem("empresa")
+            var horario_programado = fecha_llegada
+            var estatus = 0
+            var tipo_cedula = localStorage.getItem("Modulos")
+            var nombre_evalua = 'Resultado limpieza'
+            var IDCampania = 2
+            var nombreCampania = 'Lavado'
+            var FK_formato = 'n/A'
+
+            addCedulaind(id_usuario, nombre_usuario, fecha_llegada, IDCampania, id_cliente, nombre_evalua, horario_programado, estatus, tipo_cedula, nombreCampania, FK_formato, paso);
+        }
+    });
+}
+
+function creaFormResultLavado(id_cedula){
+    app.views.main.router.navigate({ name: 'formLavado2' });
+}
+
+function regresaLavado(){
+    app.views.main.router.navigate({ name: 'formLavado2' });
+}
+
+function editarLavado(IdHeader){
+    localStorage.setItem("IdHeader", IdHeader);
+    app.views.main.router.navigate({ name: 'formLavado1' });
+}
+
+function eliminarLavado(IdHeader){
+    let id_cedula = localStorage.getItem("IdCedula");
+    swal({
+        title: "Aviso",
+        text: "¿Estas seguro de querer eliminar el registro?",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+    }).then((RESP) => {
+        if (RESP == true) {
+            databaseHandler.db.transaction( function(tx){ tx.executeSql("DELETE FROM IEN_ProgramacionLavado WHERE id_cedula = ? AND FK_header = ?", [id_cedula, IdHeader], function(tx, results){
+                databaseHandler.db.transaction( function(tx){ tx.executeSql("DELETE FROM IEN_HeaderLavado WHERE id_cedula = ? AND ID_HeaderLavado = ?", [id_cedula, IdHeader], function(tx, results){
+                    $("#renglon_"+IdHeader).remove()
+                    swal("", "Eliminado correctamente", "success")
+                }, function(tx, error){ } ); }, function(error){}, function(){} );
+            }, function(tx, error){ } ); }, function(error){}, function(){} );
+        }
+    });
+}
+
+function preInspeccionLavdo(){
+    app.dialog.progress('Trabajando... ', 'red');
+    setTimeout(() => {
+        inspeccionarUnidadLavdo()
+        app.dialog.close();
+    }, "250");
+}
+
+function inspeccionarUnidadLavdo(){
+    app.dialog.close();
+    app.views.main.router.navigate({ name: 'formLavado3' });
+    // if($("#id_unidad").val()){
+    //     let id_cedula = localStorage.getItem("IdCedula")
+    //     databaseHandler.db.transaction(
+    //         function (tx) {
+    //             tx.executeSql(
+    //             "Select id_cedula from DesTechHeader WHERE id_cedula = ? AND id_unidad = ?",
+    //                 [id_cedula, $("#id_unidad").val()],
+    //                 function (tx, results) {
+    //                     let length = results.rows.length;
+    //                     if(length == 0){
+    //                         let unidad = $("#autocomplete-dropdown-ajax").val()
+    //                         let id_unidad = $("#id_unidad").val()
+    //                         let id_operador = $("#id_operador").val()
+    //                         let operador = $("#operador").val()
+    //                         let credencial = $("#credencial").val()
+    //                         let fecha_inicio = getDateWhitZeros();
+    //                         let progress = 0;
+    //                         let dialog = app.dialog.progress('Trabajando... ', progress, 'red');
+    //                         let id_empresa = localStorage.getItem("empresa");
+    //                         let NomJson = 'datos_check'+id_empresa;
+                    
+    //                         productHandler.addDesTechHmoHeader(id_cedula, unidad, id_unidad, id_operador, operador, credencial, fecha_inicio);
+    //                         databaseHandler.db.transaction(
+    //                             function (tx) {
+    //                                 tx.executeSql(
+    //                                 "Select MAX(IdHeader) as IdHeader from DesTechHeader",
+    //                                 [],
+    //                                 function (tx, results) {
+    //                                     var item = results.rows.item(0);
+    //                                     localStorage.setItem("IdHeader", item.IdHeader);
+    //                                     app.request({
+    //                                         url: cordova.file.dataDirectory + "jsons_tecnologiasHmo/"+NomJson+".json",
+    //                                         method: 'GET',
+    //                                         dataType: 'json',
+    //                                         success: function (data) {
+    //                                             var aux = data.length;
+    //                                             var aux2=0;
+    //                                             if(aux == 0){
+    //                                                 app.dialog.close();
+    //                                                 swal("","Algo salió mal.","warning");
+    //                                             }else{
+    //                                                 dialog.setText('1 de ' + aux);
+    //                                                 for (var j = 0; j < data.length; j++) {
+    //                                                     aux2++;
+    //                                                     productHandler.addDesTechHmoDetails(id_cedula,item.IdHeader, data[j].ID, data[j].Pregunta, data[j].Multiple, data[j].FK_formato, data[j].FK_equipo, aux, aux2);
+    //                                                 }
+    //                                             }
+    //                                         }
+    //                                     });
+    //                                 },
+    //                                 function (tx, error) {
+    //                                     console.log("Error al guardar cedula: " + error.message);
+    //                                 }
+    //                                 );
+    //                             },
+    //                             function (error) {},
+    //                             function () {}
+    //                         );
+    //                     } else {
+    //                         $("#id_unidad").val("")
+    //                         $("#id_operador").val("")
+    //                         $("#credencial").val("")
+    //                         $("#operador").val("")
+    //                         swal("","Esta unidad ya la tienes registrada.","warning");
+    //                     }
+    //                 },
+    //                 function (tx, error) {
+    //                     console.log("Error al guardar cedula: " + error.message);
+    //                 }
+    //             );
+    //         },
+    //         function (error) {},
+    //         function () {}
+    //     );
+    // }else{
+    //     swal("","Selecciona una unidad para poder continuar.","warning");
+    // }
+}
+
+function evaluacionProveedor(paso){
+    swal({
+        title: "Aviso",
+        text: "¿Deseas crear una nueva Inspección de Lavado?",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+    }).then((RESP) => {
+        if (RESP == true) {
+            var id_usuario = localStorage.getItem("id_usuario")
+            var nombre_usuario = localStorage.getItem("Usuario")
+            var fecha_llegada = getDateWhitZeros()
+            var id_cliente = localStorage.getItem("empresa")
+            var horario_programado = fecha_llegada
+            var estatus = 0
+            var tipo_cedula = localStorage.getItem("Modulos")
+            var nombre_evalua = 'Evaluación proveedores'
+            var IDCampania = 3
+            var nombreCampania = 'Lavado'
+            var FK_formato = 'n/A'
+
+            addCedulaind(id_usuario, nombre_usuario, fecha_llegada, IDCampania, id_cliente, nombre_evalua, horario_programado, estatus, tipo_cedula, nombreCampania, FK_formato, paso);
+        }
+    });
+}
+
+function creaFormEvaluacion(id_cedula){
+    app.views.main.router.navigate({ name: 'formLavado4' });
+}
+
+function preEvualuacionLavdo(){
+    app.dialog.progress('Trabajando... ', 'red');
+    setTimeout(() => {
+        EvualuacionLavdo()
+        app.dialog.close();
+    }, "250");
+}
+
+function EvualuacionLavdo(){
+    app.dialog.close();
+    app.views.main.router.navigate({ name: 'formLavado5' });
+}
+
+function regresaLavadoproveodor(){
+    app.views.main.router.navigate({ name: 'formLavado4' });
+}
+
+function TerminarInspeccionLavado(){
+    app.views.main.router.navigate({ name: 'formLavado6' });
+}
+
+function actualizaRespuestasLavado(id, multiple){
+    console.log(id, multiple)
+    var id_cedula = localStorage.getItem("IdCedula");
+    var IdHeader = localStorage.getItem("IdHeader");
+    var ids = id.split("-");
+    var id_pregunta = multiple
+    var respuesta = ids[2];
+    databaseHandler.db.transaction(
+        function(tx){
+            tx.executeSql("UPDATE IEN_ProgramacionLavado SET respuesta = ? WHERE id_cedula = ? AND ID_Detail = ? AND FK_header = ?",
+                [respuesta,id_cedula,id_pregunta,IdHeader],
+                function(tx, results){
+                },
+                function(tx, error){
+                    console.error("Error al guardar cierre: " + error.message);
+                }
+            );
+        },
+        function(error){},
+        function(){}
+    );
+    if(respuesta == 3){
+        agregaEvidenciasLavado(id)
+    }
+}
+
+function actualizaObsLavado(){
+    let observaciones = $("#observaciones").val()
+    databaseHandler.db.transaction(
+        function(tx){
+            tx.executeSql("UPDATE IEN_HeaderLavado SET observaciones = ? WHERE id_cedula = ? AND ID_HeaderLavado = ?",
+                [observaciones,localStorage.getItem("IdCedula"), localStorage.getItem("IdHeader")],
+                function(tx, results){
+                },
+                function(tx, error){
+                    console.error("Error al guardar cierre: " + error.message);
+                }
+            );
+        },
+        function(error){},
+        function(){}
+    );
+}
+
+function ValidarCapturePhotoLavado(){
+    databaseHandler.db.transaction(
+        function (tx1) {
+            tx1.executeSql(
+                "Select COUNT(id_cedula) as cuenta from IEN_EvidenciasLavado where id_cedula= ? AND FKHeader = ?",
+                [localStorage.getItem("IdCedula"), localStorage.getItem("IdHeader")],
+                function (tx, results) {
+                    var item = results.rows.item(0);
+                    if (item.cuenta <= 2) {
+                        capturePhotoLavado()
+                    } else {
+                        swal("", "Solo puedes agregar máx. 3 fotos", "warning")
+                    }
+                }
+            );
+        },
+        function (error) { },
+        function () { }
+    );
+}
+
+function capturePhotoLavado() {
+    var camera = localStorage.getItem("camera");
+    if (camera == 0) {
+        var camera = app.popup.create({
+            content: `
+                <div class="popup" id="camera" style="display: block;width: 100%;height: 100%;margin-top: 0px;margin-left: 0px;top: 0;left: 0;">
+                    <div class="app">
+                    <div id="deviceready camera-Field-frame">
+                        <div class="top"></div>
+                        <canvas id="camera-frame" style="display: none;"></canvas>
+                        <video id="camera-view" autoplay playsinline class="raster" style="display: none;"></video>
+                        <img src="" id="phototaked">
+                        <div>
+                            <div class="left-action">
+                                <div class="cancel popup-close" id="cancelCamera" onClick="onCancelCamera()"><img class="image-cancel" src="img/cerrar_camera.svg"></div>
+                                <div class="cancel " id="cancelPicure" onClick="onCancelPicture()"><img class="image-cancel" src="img/cerrar_camera.svg"></div>
+                            </div>
+                            <div class="camera">
+                                <div class="take" id="take" onclick="onTake()">
+                                    <div class="bubble-take"></div>
+                                </div>
+                                <div class="select" id="select" style="display: none;" onClick="onDone()"><img id="img-select" src="img/validar_camera.svg"></div>
+                            </div>
+                            <div class="right-action">
+                                <div class="switch" id="switch" onClick="onSwitch()"><img class="image-switch" src="img/flip.svg"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="actions">
+                            <div class="action torch" id="torch" onClick="onTorch()"><img id="flash" src="img/flash_off.svg" width="30px" style="display:none;"></div>
+                            <div class="action rotate-right" id="rotateRight" onClick="onRotateRight()" style="display:none"><img id="flash" src="img/rotate-right.svg" width="30px"></div>
+                            <div class="action rotate-left" id="rotateLeft" onClick="onRotateLeft()" style="display:none"><img id="flash" src="img/rotate-left.svg" width="30px"></div>
+                        </div>
+                        
+                        // <audio id="audio" controls style="display: none;">
+                        //     <source type="audio/mp3" src="img/camera.mp3">
+                        // </audio>
+                        <input type="hidden" id="deviceOrientation" name="deviceOrientation"/>
+                    </div>
+                    <fwm></fwm>
+                    </div>
+                </div>
+                `,
+            on: {
+                open: function (popup) {
+                    var permissions = cordova.plugins.permissions;
+                    permissions.checkPermission(permissions.CAMERA, function (status) {
+                        if (status.hasPermission) {
+                            cargarEmpresa(`./js/camera-field.js`, empresaCargada);
+                            function empresaCargada() {
+                                cameraStart(onPhotoDataSuccess)
+                            }
+                            function cargarEmpresa(url, callback) {
+                                var pie = document.getElementsByTagName('fwm')[0];
+                                var script = document.createElement('script');
+                                script.type = 'text/javascript';
+                                script.src = url;
+                                script.id = "cameraSource";
+                                script.onload = callback;
+                                pie.appendChild(script);
+                            }
+                        } else {
+                            permissions.requestPermission(permissions.CAMERA, success, error);
+                            function error() {
+                                app.sheet.close('.popup')
+                                swal("Se Requiere los permisos", "Para poder tomar las evidencias fotograficas necesitamos el permiso.", "warning");
+                            }
+                            function success(status) {
+                                if (!status.hasPermission) {
+                                    error();
+                                } else {
+                                    cargarEmpresa(`./js/camera-field.js`, empresaCargada);
+                                    function empresaCargada() {
+                                        cameraStart(onPhotoDataSuccess)
+                                    }
+                                    function cargarEmpresa(url, callback) {
+                                        var pie = document.getElementsByTagName('fwm')[0];
+                                        var script = document.createElement('script');
+                                        script.type = 'text/javascript';
+                                        script.src = url;
+                                        script.id = "cameraSource";
+                                        script.onload = callback;
+                                        pie.appendChild(script);
+                                    }
+                                }
+
+                            }
+                        }
+                    });
+                },
+                opened: function (popup) {
+                    localStorage.setItem("cameraField", "Active");
+                },
+                closed: function (popup) {
+                    window.localStorage.removeItem("cameraField");
+                },
+            }
+        });
+        camera.open();
+    } else {
+        navigator.camera.getPicture(onPhotoDataSuccess, onFail, {
+            quality: 100,
+            destinationType: destinationType.DATA_URL,
+            targetWidth: 1500,
+            targetHeight: 1500,
+            correctOrientation: true,
+        });
+    }
+}
+
+function eliminarFilaFotoLavado(index, val){
+    if (val == 1) {
+        databaseHandler.db.transaction(
+            function (tx) {
+                tx.executeSql(
+                    "DELETE FROM IEN_EvidenciasLavado WHERE id_evidencia = ?",
+                    [index],
+                    function (tx, results) {
+                        swal("", "El registro se elimino satisfactoriamente", "success");
+                        $("#fila" + index).remove();
+                    },
+                    function (tx, error) {
+                        swal("Error al eliminar registro", error.message, "error");
+                    }
+                );
+            },
+            function (error) { },
+            function () { }
+        );
+    }
+}
+
+function agregaEvidenciasLavado(id){
+    var popEvidencia = app.popup.create({
+        content: `
+        <div class="sheet-modal my-sheet" id="sheet-modal" name="sheet">
+            <div class="toolbar">
+                <div class="toolbar-inner">
+                    <div class="left"></div>
+                    <div class="right"><a class="link" id="close_sheet" href="#">Cerrar</a></div>
+                </div>
+            </div>
+            <div class="sheet-modal-inner" style="overflow-y: scroll;">
+                <div class="block">
+                    <h3 class="FWN-titulo-2">Agregar evidencias</h3><hr>
+                    
+                    <input type="hidden" id="inputEvidencia" value=${id}>
+                    <input type="hidden" id="pasa" value="0">
+                    <div id="evidencias_div" style="padding-left: 10px;padding-right: 10px;display: none;">
+                        <div class="FWM-photo-container">
+                            <div class="border-capture" style="text-align: center;">
+                                <img class="FWM-photo" src="" id="photoIcon" width="45px"/>
+                            </div>
+                            <img class="FWM-photo-hide" id="smallImage" src=""/>
+                            <input type="hidden" id="imagenC" name="imagenC"/>
+                        </div>
+                    </div>
+                
+                    <div class="row" style="text-align: center; margin: 65px 10px 65px 10px;justify-content: space-around;" id="div_botones_camara">
+                        <div style="min-width: 50px; border-style: none;">
+                            <span class="resize-handler"></span>
+                            <a href="#" onclick="ValidarCapturePhotoLavado()" style="background-color: #fff;border: 3px solid #005D99;color:#005D99" class="boton-equipo">
+                                Agregar Evidencia <i class="icon material-icons md-only" style="display: inline-block;margin-left: 12px;color:#005D99">photo_camera</i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <h2 style="text-align: center;">Evidencias</h2>
+
+                    <div class="card data-table" style="margin-bottom: 50px;">
+                        <div class="infinite-scroll-content">
+                            <table id="facturas">
+                                <thead>
+                                    <tr>
+                                        <th class="numeric-cell" style="text-align: center;background-color: #063E7F;color: white;">Evidencia</th>
+                                        <th class="numeric-cell" style="text-align: center;background-color: #063E7F;color: white;">Borrar</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                            <div class="sentencia preloader color-grey infinite-scroll-preloader"></div>
+                            <div id="message-nr" class="message-nr" style="width: 100%;text-align: center;font-family: 'ITC Avant Garde Gothic', sans-serif;font-size: 16px;" style="display: none;">
+                                <p>Sin registros</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>`,
+    swipeToClose:false,
+    closeByOutsideClick:false,
+    closeByBackdropClick:false,
+    closeOnEscape:false,
+        on: {
+            open: function (popup) {
+                $('#close_sheet').click(function () {
+                    // if($('#pasa').val()!=0){
+                    //     app.sheet.close('#sheet-modal');
+                    // }else{
+                    //     swal({
+                    //         title: "Aviso",
+                    //         text: "Aún no agregar evidencias, ¿Estas seguro que deseas regresar?",
+                    //         icon: "warning",
+                    //         buttons: true,
+                    //         dangerMode: false,
+                    //     }).then((willGoBack) => {
+                    //         if (willGoBack){
+                                app.sheet.close('#sheet-modal');
+                    //         } 
+                    //     });
+                    // }
+                })
+            },
+        }
+    });
+    popEvidencia.open();
+}
+
+function FinalizarInspeccionesLavado(){
+    swal({
+        title: "Aviso",
+        text: "¿Estas seguro de querer finalizar la revisión?",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+    }).then((RESP) => {
+        if (RESP == true) {
+            var fecha_salida = getDateWhitZeros();
+            var id_cedula = localStorage.getItem("IdCedula");
+            var estatus = 1;
+            databaseHandler.db.transaction(
+                function(tx){
+                    tx.executeSql("UPDATE cedulas_general SET fecha_salida  = ?,estatus = ? WHERE id_cedula = ?",
+                        [fecha_salida,estatus,id_cedula],
+                        function(tx, results){
+                            window.location.href = "./menu.html";
+                        },
+                        function(tx, error){
+                            swal("Error al guardar",error.message,"error");
+                        }
+                    );
+                },
+                function(error){},
+                function(){}
+            );        
+        }
+    });
+}
+
+function continuarCedInsLavado(id_cedula, tipo){
+    localStorage.setItem("IdCedula", id_cedula);
+
+    if (tipo == 1) {
+        app.views.main.router.navigate({ name: 'formLavado6' });
+    } else if (tipo == 2) {
+        app.views.main.router.navigate({ name: 'formLavado2' });
+    } else if (tipo == 3) {
+        app.views.main.router.navigate({ name: 'formLavado4' });
+    } 
+}
+
 //?Fin Campanias
 //fin HMO

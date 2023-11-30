@@ -1,0 +1,187 @@
+<template>
+    <div class="page">
+        <!-- Navsbars -->
+        <nav class="left top-left" style="justify-content: space-between;">
+            <a onclick="regresaLavado()" style="margin-left: 10px; display: inline-flex;align-items: center;">
+                <i class="icon material-icons md-only" style="font-weight: 900;font-size: 30px;">arrow_back</i>
+            </a>
+            <div class="title" id="titleScreen"> </div>
+            <a style="margin-right: 10px;">
+                <i class="icon material-icons md-only" style="color: #1E9FB4; font-weight: 900;">arrow_back</i>
+            </a>
+        </nav>
+        <div class="toolbar tabbar toolbar-bottom" >
+            <div class="toolbar-inner" style="background-color: #1E9FB4;" id="toolbar_down">
+                <a href="#" onclick="//TerminarInspeccionHMO();" style="margin: auto;color: #fff;font-weight: bold;font-size: 18px;width: 100%;text-align: center;">Guardar <i class="icon material-icons md-only" style="display: inline-block;">check</i></a>
+            </div>
+        </div>
+        <!-- Contenido Page -->
+        <div class="page-content" style="height: 98%;">
+            <div style="text-align: center; justify-content:center; margin-right:auto; margin-left:auto; width: 98%;margin-top: 30px;">
+                <h2 class="FWN-titulo-2" style="margin-bottom: 35px;margin-top: 10px;" id="fase_titulo">LAVADO DE UNIDADES 27-11-2023</h2>
+
+                <div style="text-align: left;">
+                    <div class="list FWM-fixing-form" id="datos_form" style="margin-top: 5px;">
+
+                    </div>
+                </div>
+
+                <div class="container_options" style="margin-inline: 10px;">
+                    <div class="container_options">
+                        <span class="span FWM-span-form">Observaciones Generales:</span>
+                        <textarea class="FWM-input" style="font-family: 'ITC Avant Garde Gothic', sans-serif; width: 100%;padding-top: 10px;" id="observaciones" cols="30" rows="10" onchange=""></textarea>
+                    </div>
+                </div>
+                
+                <div class="block grid-resizable-demo" style="top: 25px;margin-bottom: 80px;"></div>
+
+            </div>
+        </div>
+    </div>
+</template>
+<script>
+return {
+    on: {      
+        pageInit: function () {
+            app.preloader.show('red');
+            
+            // var id_cedula = localStorage.getItem("IdCedula");
+            // databaseHandler.db.transaction(
+            //     function(tx5){
+            //         tx5.executeSql("SELECT * FROM IEN_ProgramacionLavado WHERE id_cedula = ?",
+            //             [id_cedula],
+            //             function(tx5, results){
+            //                 let length = results.rows.length;
+            //                 let comentarios = '', falla = '';
+            //                 let count = 0
+            //                 for(var i = 0; i< length; i++){
+            //                     count++
+            //                     let item = results.rows.item(i)
+            //                     var check1 = '', check2 = ''
+            //                     var califica1 = '', califica2 = '', califica3 = ''
+            //                     if(item.respuesta == 1){
+            //                         check1 = 'checked'
+            //                     } else if(item.respuesta == 2){
+            //                         check2 = 'checked'
+            //                     }
+
+            //                     if(item.lavo == 1){
+            //                         califica1 = 'checked'
+            //                     } else if(item.lavo == 2){
+            //                         califica2 = 'checked'
+            //                     } else if(item.lavo == 3){
+            //                         califica3 = 'checked'
+            //                     }
+
+            //                     $("#datos_form").append(`<div style="display: flex;margin-top: 5px;">
+            //                         <span class="span-pregunta span FWM-span-form">${count}.</span>&emsp;<span class="span-pregunta span FWM-span-form">${item.Unidad}</span> 
+            //                     </div> 
+            //                     <div style="margin-bottom: 10px;margin-top: 5px;display: grid;row-gap: 12px;grid-auto-flow: column;">
+            //                         <label id="label-${item.IDServidor}-1" class="radios radios-${item.IDServidor} ${check1}"><input type="radio" class="inRadios-${item.IDServidor}" id="radio-${item.IDServidor}-1" onclick="validaradios(this.id, 6, '${item.pregunta}', 0);" ${check1}> Se Lavó </label>
+            //                         <label id="label-${item.IDServidor}-2" class="radios radios-${item.IDServidor} ${check2}"><input type="radio" class="inRadios-${item.IDServidor}" id="radio-${item.IDServidor}-2" onclick="validaradios(this.id, 6, '${item.pregunta}', 0);" ${check2}> No Se Lavó </label>
+            //                     </div>
+            //                     <div> <span> ¿La calificación del lavado es:? </span> </div>
+            //                     <div style="margin-bottom: 10px;margin-top: 5px;display: grid;row-gap: 12px;grid-auto-flow: column;">
+            //                         <label id="label1-${item.IDServidor}-1" class="radios radios1-${item.IDServidor} ${check1}"><input type="radio" class="inRadios1-${item.IDServidor}" id="radio1-${item.IDServidor}-1" onclick="validaradios(this.id, 7, '${item.pregunta}', 0);" ${califica1}> Bueno </label>
+            //                         <label id="label1-${item.IDServidor}-2" class="radios radios1-${item.IDServidor} ${check2}"><input type="radio" class="inRadios1-${item.IDServidor}" id="radio1-${item.IDServidor}-2" onclick="validaradios(this.id, 7, '${item.pregunta}', 0);" ${califica2}> Regular </label>
+            //                         <label id="label1-${item.IDServidor}-3" class="radios radios1-${item.IDServidor} ${check2}"><input type="radio" class="inRadios1-${item.IDServidor}" id="radio1-${item.IDServidor}-3" onclick="validaradios(this.id, 7, '${item.pregunta}', 0);" ${califica2}> Malo </label>
+            //                     </div>
+            //                     <hr>`);
+
+            //                 }
+            //                 // $("#datos_form").append(`<div class="block grid-resizable-demo" style="top: 25px;margin-bottom: 80px;"></div>`);
+            //                 app.preloader.hide();
+            //             },
+            //             function(tx5, error){
+            //                 console.error("Error al consultar bandeja de salida: " + error.message);
+            //                 app.preloader.hide();
+            //             }
+            //         );  
+            //     },
+            //     function(error){},
+            //     function(){}
+            // );
+            
+            $("#datos_form").append(`<div style="display: flex;margin-top: 5px;">
+                    <span class="span-pregunta span FWM-span-form">1.</span>&emsp;<span class="span-pregunta span FWM-span-form">Frente de la unidad</span> 
+                </div> 
+                <div style="margin-bottom: 10px;margin-top: 5px;display: grid;row-gap: 12px;grid-auto-flow: column;">
+                    <label id="label1-1-1" class="radios radios1-1"><input type="radio" class="inRadios1-1" id="radio1-1-1" onclick="validaradios(this.id, 8, '1', 0);"> Bueno </label>
+                    <label id="label1-1-2" class="radios radios1-1"><input type="radio" class="inRadios1-1" id="radio1-1-2" onclick="validaradios(this.id, 8, '1', 0);"> Regular </label>
+                    <label id="label1-1-3" class="radios radios1-1"><input type="radio" class="inRadios1-1" id="radio1-1-3" onclick="validaradios(this.id, 8, '1', 0);"> Malo </label>
+                </div>
+            <hr>`);
+
+            $("#datos_form").append(`<div style="display: flex;margin-top: 5px;">
+                    <span class="span-pregunta span FWM-span-form">2.</span>&emsp;<span class="span-pregunta span FWM-span-form">Costado izquiero</span> 
+                </div> 
+                <div style="margin-bottom: 10px;margin-top: 5px;display: grid;row-gap: 12px;grid-auto-flow: column;">
+                    <label id="label1-2-1" class="radios radios1-2"><input type="radio" class="inRadios1-2" id="radio1-2-1" onclick="validaradios(this.id, 8, '2', 0);"> Bueno </label>
+                    <label id="label1-2-2" class="radios radios1-2"><input type="radio" class="inRadios1-2" id="radio1-2-2" onclick="validaradios(this.id, 8, '2', 0);"> Regular </label>
+                    <label id="label1-2-3" class="radios radios1-2"><input type="radio" class="inRadios1-2" id="radio1-2-3" onclick="validaradios(this.id, 8, '2', 0);"> Malo </label>
+                </div>
+            <hr>`);
+
+            $("#datos_form").append(`<div style="display: flex;margin-top: 5px;">
+                    <span class="span-pregunta span FWM-span-form">3.</span>&emsp;<span class="span-pregunta span FWM-span-form">Costado derecho</span> 
+                </div> 
+                <div style="margin-bottom: 10px;margin-top: 5px;display: grid;row-gap: 12px;grid-auto-flow: column;">
+                    <label id="label1-3-1" class="radios radios1-3"><input type="radio" class="inRadios1-3" id="radio1-3-1" onclick="validaradios(this.id, 8, '3', 0);"> Bueno </label>
+                    <label id="label1-3-2" class="radios radios1-3"><input type="radio" class="inRadios1-3" id="radio1-3-2" onclick="validaradios(this.id, 8, '3', 0);"> Regular </label>
+                    <label id="label1-3-3" class="radios radios1-3"><input type="radio" class="inRadios1-3" id="radio1-3-3" onclick="validaradios(this.id, 8, '3', 0);"> Malo </label>
+                </div>
+            <hr>`);
+
+            $("#datos_form").append(`<div style="display: flex;margin-top: 5px;">
+                    <span class="span-pregunta span FWM-span-form">4.</span>&emsp;<span class="span-pregunta span FWM-span-form">Parte Derecha</span> 
+                </div> 
+                <div style="margin-bottom: 10px;margin-top: 5px;display: grid;row-gap: 12px;grid-auto-flow: column;">
+                    <label id="label1-4-1" class="radios radios1-4"><input type="radio" class="inRadios1-4" id="radio1-4-1" onclick="validaradios(this.id, 8, '4', 0);"> Bueno </label>
+                    <label id="label1-4-2" class="radios radios1-4"><input type="radio" class="inRadios1-4" id="radio1-4-2" onclick="validaradios(this.id, 8, '4', 0);"> Regular </label>
+                    <label id="label1-4-3" class="radios radios1-4"><input type="radio" class="inRadios1-4" id="radio1-4-3" onclick="validaradios(this.id, 8, '4', 0);"> Malo </label>
+                </div>
+            <hr>`);
+
+            $("#datos_form").append(`<div style="display: flex;margin-top: 5px;">
+                    <span class="span-pregunta span FWM-span-form">5.</span>&emsp;<span class="span-pregunta span FWM-span-form">Cabina operador</span> 
+                </div> 
+                <div style="margin-bottom: 10px;margin-top: 5px;display: grid;row-gap: 12px;grid-auto-flow: column;">
+                    <label id="label1-5-1" class="radios radios1-5"><input type="radio" class="inRadios1-5" id="radio1-5-1" onclick="validaradios(this.id, 8, '5', 0);"> Bueno </label>
+                    <label id="label1-5-2" class="radios radios1-5"><input type="radio" class="inRadios1-5" id="radio1-5-2" onclick="validaradios(this.id, 8, '5', 0);"> Regular </label>
+                    <label id="label1-5-3" class="radios radios1-5"><input type="radio" class="inRadios1-5" id="radio1-5-3" onclick="validaradios(this.id, 8, '5', 0);"> Malo </label>
+                </div>
+            <hr>`);
+
+            $("#datos_form").append(`<div style="display: flex;margin-top: 5px;">
+                    <span class="span-pregunta span FWM-span-form">6.</span>&emsp;<span class="span-pregunta span FWM-span-form">Cabina pax</span> 
+                </div> 
+                <div style="margin-bottom: 10px;margin-top: 5px;display: grid;row-gap: 12px;grid-auto-flow: column;">
+                    <label id="label1-6-1" class="radios radios1-6"><input type="radio" class="inRadios1-6" id="radio1-6-1" onclick="validaradios(this.id, 8, '6', 0);"> Bueno </label>
+                    <label id="label1-6-2" class="radios radios1-6"><input type="radio" class="inRadios1-6" id="radio1-6-2" onclick="validaradios(this.id, 8, '6', 0);"> Regular </label>
+                    <label id="label1-6-3" class="radios radios1-6"><input type="radio" class="inRadios1-6" id="radio1-6-3" onclick="validaradios(this.id, 8, '6', 0);"> Malo </label>
+                </div>
+            <hr>`);
+            app.preloader.hide();
+            // databaseHandler.db.transaction(
+            //     function(tx5){
+            //         tx5.executeSql("SELECT * FROM IEN_Header WHERE id_cedula = ? AND ID_Header = ?",
+            //             [id_cedula, localStorage.getItem("IdHeader")],
+            //             function(tx5, results){
+            //                 let length = results.rows.length;
+            //                 let item2 = results.rows.item(0);
+            //                 $("#fase_titulo").html("Revisión Unidad "+item2.unidad);
+            //                 $("#observaciones").val(item2.observaciones)
+            //                 $("#titleScreen").html(`CAMPAÑA: ${item2.nombreCampania}`)
+            //             },
+            //             function(tx5, error){
+            //                 console.error("Error al consultar bandeja de salida: " + error.message);
+            //             }
+            //         );  
+            //     },
+            //     function(error){},
+            //     function(){}
+            // );
+        }
+    }
+}
+</script>

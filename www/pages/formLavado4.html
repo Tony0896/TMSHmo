@@ -6,7 +6,7 @@
                 <a href="javascript:location.reload()" style="margin-left: 10px; display: inline-flex;align-items: center;">
                     <i class="icon material-icons md-only" style="font-weight: 900;font-size: 30px;">arrow_back</i>
                 </a>
-                <div class="title" style="font-size: 18px;">Inspección de Unidades </div>
+                <div class="title" style="font-size: 18px;">Evaluacion Proveedores </div>
                 <a style="margin-right: 10px;">
                     <i class="icon material-icons md-only" style="color: #1E9FB4; font-weight: 900;">arrow_back</i>
                 </a>
@@ -15,7 +15,7 @@
 
         <div class="toolbar tabbar toolbar-bottom">
             <div class="toolbar-inner" style="background-color: #1E9FB4;">
-                <a href="#" onclick="FinalizarInspeccionesEncierro();" id="fin_recaudo" style="margin: auto;color: #fff;font-weight: bold;font-size: 18px;width: 100%;text-align: center;">Finalizar <i class="icon material-icons md-only" style="display: inline-block;">chevron_right</i></a>
+                <a href="#" onclick="//FinalizarInspeccionesEncierro();" id="fin_recaudo" style="margin: auto;color: #fff;font-weight: bold;font-size: 18px;width: 100%;text-align: center;">Finalizar <i class="icon material-icons md-only" style="display: inline-block;">chevron_right</i></a>
             </div>
         </div>
         
@@ -24,11 +24,11 @@
                 <div class="list" id="demo-form">
                     <div class="list no-hairlines-md">
                         <div class="list FWM-fixing-form" style="margin-inline: 15px;width: 95%;">
-                            <span class="span FWM-span-form" name="">Buscador por Unidad</span>
+                            <span class="span FWM-span-form" name="">Buscador proveedor</span>
                             <div style="display: flex;">
-                                <input type="text" placeholder="Escribe el No. de la unidad" id="autocomplete-dropdown-ajax" class="FWM-input autocomplete-dropdown item-title" style="padding-right: 5px;">
+                                <input type="text" placeholder="Escribe el nombre del proveedor" id="autocomplete-dropdown-ajax" class="FWM-input autocomplete-dropdown item-title" style="padding-right: 5px;">
                                 <span style="min-width: 20%;padding-left: 10px;">
-                                    <button class="col button button-small button-round button-outline" style="height: 100%;border-color: #FF0037;" onclick="preInspeccionEncierro();"><i class="material-icons md-light" style="color: #FF0037;vertical-align: middle;font-size: 30px;">play_circle_outline</i></button>
+                                    <button class="col button button-small button-round button-outline" style="height: 100%;border-color: #FF0037;" onclick="preEvualuacionLavdo();"><i class="material-icons md-light" style="color: #FF0037;vertical-align: middle;font-size: 30px;">play_circle_outline</i></button>
                                 </span>
                             </div>
                             <input type="hidden" id="id_unidad">
@@ -69,29 +69,30 @@
                 var empresa = localStorage.getItem("empresa");
                 var self = this;
                 var app = self.$app;
-                var NomJson = 'Unidades_empresa_1';
+                var NomJson = 'Proveedores';
                 // app.preloader.show('red');
                 var id_cedula = localStorage.getItem("IdCedula")
 
                 let html = ``
 
-                databaseHandler.db.transaction(
-                    function(tx5){
-                        tx5.executeSql("SELECT * FROM cedulas_general WHERE id_cedula = ?",
-                            [id_cedula],
-                            function(tx5, results){
-                                let length = results.rows.length;
-                                let item2 = results.rows.item(0);
-                                $(".title").html(`CAMPAÑA: ${item2.nombre_evalua}`)
-                            },
-                            function(tx5, error){
-                                console.error("Error al consultar bandeja de salida: " + error.message);
-                            }
-                        );  
-                    },
-                    function(error){},
-                    function(){}
-                );
+                // databaseHandler.db.transaction(
+                //     function(tx5){
+                //         tx5.executeSql("SELECT * FROM cedulas_general WHERE id_cedula = ?",
+                //             [id_cedula],
+                //             function(tx5, results){
+                //                 let length = results.rows.length;
+                //                 let item2 = results.rows.item(0);
+                //                 $(".title").html(`CAMPAÑA: ${item2.nombre_evalua}`)
+                //             },
+                //             function(tx5, error){
+                //                 console.error("Error al consultar bandeja de salida: " + error.message);
+                //             }
+                //         );  
+                //     },
+                //     function(error){},
+                //     function(){}
+                // );
+                $(".title").html(`Evaluación a proveedores`)
 
                 databaseHandler.db.transaction(
                     function(tx5){
@@ -132,9 +133,9 @@
                     openIn: 'dropdown',
                     preloader: true, //enable preloader
                     valueProperty: 'ID', //object's "value" property name
-                    textProperty:  'Unidad', //object's "text" property name
+                    textProperty:  'NombreProveedor', //object's "text" property name
                     limit: 10, //limit to [number] results
-                    dropdownPlaceholderText: 'Selecciona una Unidad...',
+                    dropdownPlaceholderText: 'Selecciona un proveedor...',
                     source: function (query, render) {
                         var autocomplete = this;
                         var results = [];
@@ -144,14 +145,14 @@
                         }
                         autocomplete.preloaderShow();
                         app.request({
-                            url: cordova.file.dataDirectory + "jsons_InsEncierro/"+NomJson+".json", 
+                            url: cordova.file.dataDirectory + "jsons_InsLavado/"+NomJson+".json", 
                             method: 'GET',
                             dataType: 'json',
                             data: {
                                 query: query,
                             },success: function (data) {
                                 for (var i = 0; i < data.length; i++) {
-                                    if (data[i].Unidad.toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(data[i]);
+                                    if (data[i].NombreProveedor.toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(data[i]);
                                 }
                                 autocomplete.preloaderHide();
                                 render(results); 
@@ -164,11 +165,11 @@
                     var ID = $("#autocomplete-dropdown-ajax").val();
                     var encontro = false;
                     
-                    app.request.get(cordova.file.dataDirectory + "jsons_InsEncierro/"+NomJson+".json", function (data) {
+                    app.request.get(cordova.file.dataDirectory + "jsons_InsLavado/"+NomJson+".json", function (data) {
                         var content2 = JSON.parse(data);
                         for(var x = 0; x < content2.length; x++) {
                             if(content2[x].ID == ID){
-                                $("#autocomplete-dropdown-ajax").val(content2[x].Unidad);
+                                $("#autocomplete-dropdown-ajax").val(content2[x].NombreProveedor);
                                 $("#id_unidad").val(content2[x].ID);
                                 encontro = true;
                             }         
