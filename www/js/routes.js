@@ -141,7 +141,59 @@ var routes = [
     path: '/formRelevos1/',
     componentUrl: './pages/formRelevos1.html',
   },
+  {
+    name: 'formLavado1',
+    path: '/formLavado1/',
+    componentUrl: './pages/formLavado1.html',
+  },
+  {
+    name: 'formLavado2',
+    path: '/formLavado2/',
+    componentUrl: './pages/formLavado2.html',
+  },
+  {
+    name: 'formLavado3',
+    path: '/formLavado3/',
+    componentUrl: './pages/formLavado3.html',
+  },
+  {
+    name: 'formLavado4',
+    path: '/formLavado4/',
+    componentUrl: './pages/formLavado4.html',
+  },
+  {
+    name: 'formLavado5',
+    path: '/formLavado5/',
+    componentUrl: './pages/formLavado5.html',
+  },
+  {
+    name: 'formLavado6',
+    path: '/formLavado6/',
+    componentUrl: './pages/formLavado6.html',
+  },
+  {
+    name: 'formLavado7',
+    path: '/formLavado7/',
+    componentUrl: './pages/formLavado7.html',
+  },
   //?Fin relevos
+  //?Inicio Campanias
+  {
+    name: 'yallegueCampanias',
+    path: '/yallegueCampanias/',
+    componentUrl: './pages/yallegueCampanias.html',
+  },
+  {
+    name: 'formEncierro1',
+    path: '/formEncierro1/',
+    componentUrl: './pages/formEncierro1.html',
+  },
+  {
+    name: 'formEncierro2',
+    path: '/formEncierro2/',
+    componentUrl: './pages/formEncierro2.html',
+  },
+  //?Fin Campanias
   //************************************** fin HMO **************************************
   {
     name: 'visualizar',

@@ -760,6 +760,7 @@ background: transparent;
   color: #005D99;
   background-color: #c4e8ff;
   font-family: 'ITC Avant Garde Gothic', sans-serif;
+  width: fit-content;
 }
 .radios{
   padding: 10px;

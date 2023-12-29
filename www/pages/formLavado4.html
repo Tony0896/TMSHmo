@@ -1,0 +1,170 @@
+
+<template>
+    <div class="page">
+        <div class="navbar" style="background-color: #1E9FB4;height: 5px;">
+            <div class="left top-left" style="justify-content: space-between;">
+                <a href="javascript:location.reload()" style="margin-left: 10px; display: inline-flex;align-items: center;">
+                    <i class="icon material-icons md-only" style="font-weight: 900;font-size: 30px;">arrow_back</i>
+                </a>
+                <div class="title" style="font-size: 18px;">Evaluacion Proveedores </div>
+                <a style="margin-right: 10px;">
+                    <i class="icon material-icons md-only" style="color: #1E9FB4; font-weight: 900;">arrow_back</i>
+                </a>
+            </div>
+        </div>
+
+        <div class="toolbar tabbar toolbar-bottom">
+            <div class="toolbar-inner" style="background-color: #1E9FB4;">
+                <a href="#" onclick="FinalizarEvaluacionLavado();" id="fin_recaudo" style="margin: auto;color: #fff;font-weight: bold;font-size: 18px;width: 100%;text-align: center;">Finalizar <i class="icon material-icons md-only" style="display: inline-block;">chevron_right</i></a>
+            </div>
+        </div>
+        
+        <div class="page-content" style="border-radius: 0;">
+            <div style="text-align: center; justify-content:center; margin-right:auto; margin-left:auto; width: 99%;margin-top: 50px;">
+                <div class="list" id="demo-form">
+                    <div class="list no-hairlines-md">
+                        <div class="list FWM-fixing-form" style="margin-inline: 15px;width: 95%;">
+                            <span class="span FWM-span-form" name="">Buscador proveedor</span>
+                            <div style="display: flex;">
+                                <input type="text" placeholder="Escribe el nombre del proveedor" id="autocomplete-dropdown-ajax" class="FWM-input autocomplete-dropdown item-title" style="padding-right: 5px;">
+                                <span style="min-width: 20%;padding-left: 10px;">
+                                    <button class="col button button-small button-round button-outline" style="height: 100%;border-color: #FF0037;" onclick="preEvualuacionLavdo();"><i class="material-icons md-light" style="color: #FF0037;vertical-align: middle;font-size: 30px;">play_circle_outline</i></button>
+                                </span>
+                            </div>
+                            <input type="hidden" id="id_unidad">
+                            <input type="hidden" id="id_operador">
+                            <input type="hidden" id="operador">
+                            <input type="hidden" id="credencial">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="block-title FWM-subtitulo" style="color: #000;margin-top: -10px;">Unidades Inspeccionadas</div>
+                <div class="card data-table" style="margin-bottom: 50px;">
+                    <div class="infinite-scroll-content">
+                        <table style="text-align: center;">
+                            <thead>
+                                <tr>
+                                    <th class="numeric-cell" style="text-align: center;background-color: #005D99;color: white;width: 33%;" id="thtema">Unidad</th>
+                                    <th class="numeric-cell" style="text-align: center;background-color: #005D99;color: white;width: 33%;" id="thtema">Acciones</th>
+                                </tr>
+                            </thead>
+                                <tbody id="tb_detalle"></tbody>
+                        </table>
+                        <div id="message-nrs" style="width: 100%;text-align: center;font-family: 'ITC Avant Garde Gothic', sans-serif;font-size: 16px;" style="display: none;">
+                            <p>Sin registros</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="height: 100px;"></div>
+            </div>
+        </div>
+    </div>
+</template>
+<script>
+    return {
+        on: {      
+            pageInit: function () {
+                var empresa = localStorage.getItem("empresa");
+                var self = this;
+                var app = self.$app;
+                var NomJson = 'Proveedores';
+                // app.preloader.show('red');
+                var id_cedula = localStorage.getItem("IdCedula")
+
+                let html = ``
+
+                $(".title").html(`Evaluación a proveedores`)
+
+                databaseHandler.db.transaction(
+                    function(tx5){
+                        tx5.executeSql("SELECT * FROM IEN_HeaderResultadoLavado WHERE id_cedula = ?",
+                            [id_cedula],
+                            function(tx5, results){
+                                let length = results.rows.length;
+                                if(length > 0){
+                                    $("#message-nrs").css("display", "none")
+                                    for(let i = 0; i< length; i++){
+                                    let item = results.rows.item(i);
+                                    html += `
+                                        <tr id="renglon_${item.ID_HeaderLavado}">
+                                            <td>${item.unidad}</td>
+                                            <td style="padding: 10px 0px;">
+                                                <div style="display: flex;justify-content: space-evenly;">
+                                                    <span> <button class="col button button-small button-round button-outline" style="height: 100%;border-color: #FF0037;width: fit-content;margin: auto;" onclick="editarLavado(${item.ID_HeaderLavado}, 3);"> <i class="material-icons md-light" style="color: #FF0037;vertical-align: middle;font-size: 25px;margin: 5px 10px;">edit</i> </button> </span>
+                                                    <span> <button class="col button button-small button-round button-outline" style="height: 100%;border-color: #FF0037;width: fit-content;margin: auto;" onclick="eliminarLavado(${item.ID_HeaderLavado}, 3);"> <i class="material-icons md-light" style="color: #FF0037;vertical-align: middle;font-size: 25px;margin: 5px 10px;">delete_forever</i> </button> </span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    `
+                                }
+                                    $("#tb_detalle").html(html)
+                                }
+                            },
+                            function(tx5, error){
+                                console.error("Error al consultar bandeja de salida: " + error.message);
+                            }
+                        );  
+                    },
+                    function(error){},
+                    function(){}
+                );
+
+                self.autocompleteDropdownAjax = app.autocomplete.create({
+                    inputEl: '#autocomplete-dropdown-ajax',
+                    openIn: 'dropdown',
+                    preloader: true, //enable preloader
+                    valueProperty: 'ID', //object's "value" property name
+                    textProperty:  'NombreProveedor', //object's "text" property name
+                    limit: 10, //limit to [number] results
+                    dropdownPlaceholderText: 'Selecciona un proveedor...',
+                    source: function (query, render) {
+                        var autocomplete = this;
+                        var results = [];
+                        if (query.length === 0) {
+                            render(results);
+                            return;
+                        }
+                        autocomplete.preloaderShow();
+                        app.request({
+                            url: cordova.file.dataDirectory + "jsons_InsLavado/"+NomJson+".json", 
+                            method: 'GET',
+                            dataType: 'json',
+                            data: {
+                                query: query,
+                            },success: function (data) {
+                                for (var i = 0; i < data.length; i++) {
+                                    if (data[i].NombreProveedor.toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(data[i]);
+                                }
+                                autocomplete.preloaderHide();
+                                render(results); 
+                            }
+                        }); 
+                    }
+                });
+
+                $('#autocomplete-dropdown-ajax').change(function () {
+                    var ID = $("#autocomplete-dropdown-ajax").val();
+                    var encontro = false;
+                    
+                    app.request.get(cordova.file.dataDirectory + "jsons_InsLavado/"+NomJson+".json", function (data) {
+                        var content2 = JSON.parse(data);
+                        for(var x = 0; x < content2.length; x++) {
+                            if(content2[x].ID == ID){
+                                $("#autocomplete-dropdown-ajax").val(content2[x].NombreProveedor);
+                                $("#id_unidad").val(content2[x].ID);
+                                encontro = true;
+                            }         
+                        }
+                        
+                        if(!encontro){
+                            $("#autocomplete-dropdown-ajax").val("");
+                            $("#id_unidad").val("");
+                        }
+                    });
+                });
+            }
+        }
+    }
+</script>

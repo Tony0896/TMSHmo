@@ -1,0 +1,133 @@
+
+<template>
+    <div class="page">
+        <div class="navbar" style="background-color: #1E9FB4;height: 5px;">
+            <div class="left top-left" style="justify-content: space-between;">
+                <a href="javascript:location.reload()" style="margin-left: 10px; display: inline-flex;align-items: center;">
+                    <i class="icon material-icons md-only" style="font-weight: 900;font-size: 30px;">arrow_back</i>
+                </a>
+                <div class="title" style="font-size: 18px;"> Revisión Final </div>
+                <a style="margin-right: 10px;">
+                    <i class="icon material-icons md-only" style="color: #1E9FB4; font-weight: 900;">arrow_back</i>
+                </a>
+            </div>
+        </div>
+
+        <div class="toolbar tabbar toolbar-bottom">
+            <div class="toolbar-inner" style="background-color: #1E9FB4;">
+                <a href="#" onclick="FinLavado();" id="fin_recaudo" style="margin: auto;color: #fff;font-weight: bold;font-size: 18px;width: 100%;text-align: center;">Finalizar <i class="icon material-icons md-only" style="display: inline-block;">chevron_right</i></a>
+            </div>
+        </div>
+        
+        <div class="page-content" style="border-radius: 0;">
+            <div style="text-align: center; justify-content:center; margin-right:auto; margin-left:auto; width: 99%;margin-top: 50px;">
+                <div class="list FWM-fixing-form" style="margin-top: 5px;">
+                    <span class="span FWM-span-form">Nombre y firma de supervisor interno:</span>
+                        <span class="span FWM-span-form" style="font-family: 'ITC Avant Garde Gothic', sans-serif;color: #005D99;" id="nombre_colaborador"></span>
+                    <span class="span FWM-span-form">Firma:</span>
+                    <input type="hidden" name="signate" id="signate" placeholder="sfirmc">
+                    <center>
+                        <img id="ImagenFirmaView" src="" width="70%"><br>
+                        <span id="VolverFirmar" style="display: none;"></span>
+                        <input type="button" style="position:absolute;display:none;margin:0 !important;color:white;background-color: #019cdc;top:40px;margin-left:160px !important" value="Volver a Firmar">
+                    </center>
+                    <div class="row align-items-stretch" style="text-align: center;">
+                        <div class="col-100 medium-50" style="min-width: 50px; border-style: none;">
+                            <span class="resize-handler"></span>
+                            <a href="#" onclick="createFirma()" data-popup=".popup-services" style="background-color: #005D99;" class="link popup-open boton-equipo" id="VolverAFirmar">Agregar Firma <i class="icon material-icons md-only" style="display: inline-block;margin-left: 12px;">border_color</i></a>
+                        </div>
+                    </div>
+
+                    <p style="margin-top: 100px;"></p>
+
+                    <span class="span FWM-span-form">Nombre y firma de supervisor de proveedor de lavado:</span>
+                        <input type="text" placeholder="Escribe el Nombre de supervisor de proveedor de lavado" id="supervisorLavado" class="FWM-input" style="padding-right: 5px;">
+                    <span class="span FWM-span-form">Firma:</span>
+                    <input type="hidden" name="signate_2" id="signate_2" placeholder="sfirmc">
+                    <center>
+                        <img id="ImagenFirmaView_2" src="" width="70%"><br>
+                        <span id="VolverFirmar_2" style="display: none;"></span>
+                        <input type="button" style="position:absolute;display:none;margin:0 !important;color:white;background-color: #019cdc;top:40px;margin-left:160px !important" value="Volver a Firmar">
+                    </center>
+                    <div class="row align-items-stretch" style="text-align: center;">
+                        <div class="col-100 medium-50" style="min-width: 50px; border-style: none;">
+                            <span class="resize-handler"></span>
+                            <a href="#" onclick="createFirma(2)" data-popup=".popup-services_2" style="background-color: #005D99;" class="link popup-open boton-equipo" id="VolverAFirmar_2">Agregar Firma <i class="icon material-icons md-only" style="display: inline-block;margin-left: 12px;">border_color</i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="popup popup-services" style="background-color: #f0f8ff;">
+                    <br>
+                    <div class="popup-container" style="height: 300px;">
+                         <div class="headerPopupPhoto" style="width: 90%;display: flex;justify-content: space-between;padding-left: 20px;margin-bottom: 30px;">
+                            <a class="link popup-close" onclick="gfirma(1)" href="#">Guardar Firma</a>
+                            <a class="link" onclick="cleanFirma()" href="#">Limpiar</a>
+                            <a class="link popup-close" onclick="gClose()" href="#">Cerrar</a>
+                        </div>
+                        
+                        <div style="display: flex;flex-direction: column;justify-content: center;align-content: center;align-items: center;">
+                            <canvas id="signature-pad" class="signature-pad" width="600" height="250" style="background-color: #fff; touch-action: none; border: 2px solid #005D99; border-radius: 15px;"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="popup popup-services_2" style="background-color: #f0f8ff;">
+                    <br>
+                    <div class="popup-container" style="height: 300px;">
+                         <div class="headerPopupPhoto" style="width: 90%;display: flex;justify-content: space-between;padding-left: 20px;margin-bottom: 30px;">
+                            <a class="link popup-close" onclick="gfirma(2)" href="#">Guardar Firma</a>
+                            <a class="link" onclick="cleanFirma(2)" href="#">Limpiar</a>
+                            <a class="link popup-close" onclick="gClose(2)" href="#">Cerrar</a>
+                        </div>
+                        
+                        <div style="display: flex;flex-direction: column;justify-content: center;align-content: center;align-items: center;">
+                            <canvas id="signature-pad_2" class="signature-pad_2" width="600" height="250" style="background-color: #fff; touch-action: none; border: 2px solid #005D99; border-radius: 15px;"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="height: 100px;"></div>
+            </div>
+        </div>
+    </div>
+</template>
+<script>
+    return {
+        on: {      
+            pageInit: function () {
+                var id_cedula = localStorage.getItem("IdCedula")
+                let nameUsuario = localStorage.getItem("nombre")
+                $("#nombre_colaborador").text(nameUsuario)
+
+                databaseHandler.db.transaction(
+                    function(tx5){
+                        tx5.executeSql("SELECT horario_programado FROM cedulas_general WHERE id_cedula = ?",
+                            [localStorage.getItem("IdCedula")],
+                            function(tx5, results){
+                                let item = results.rows.item(0)
+                                console.log(item.horario_programado)
+                                $("#supervisorLavado").val(item.horario_programado)
+                            },
+                            function(tx5, error){ console.error("Error al consultar bandeja de salida: " + error.message); }
+                        );  
+                    }, function(error){}, function(){}
+                );
+                
+                databaseHandler.db.transaction(
+                    function(tx5){
+                        tx5.executeSql("SELECT * FROM IEN_EvidenciasLavado WHERE id_cedula = ? AND proceso IN (2,3)",
+                            [localStorage.getItem("IdCedula")],
+                            function(tx5, results){
+                                let item = results.rows.item(0)
+                                console.log(item.horario_programado)
+                                $("#supervisorLavado").val(item.horario_programado)
+                            },
+                            function(tx5, error){ console.error("Error al consultar bandeja de salida: " + error.message); }
+                        );  
+                    }, function(error){}, function(){}
+                );
+            }
+        }
+    }
+</script>

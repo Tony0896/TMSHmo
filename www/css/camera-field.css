@@ -86,7 +86,7 @@ div.torch {
 }
 /* Take action */
 div.take {
-  left: 0;
+  right: 165px;
   float: right;
   border-radius: 100%;
   width: 100px;
@@ -105,7 +105,7 @@ div.take {
 }
 /* Seleccionar */
 div.select {
-  left: 43%;
+  left: 25%;
   float: right;
   border-radius: 100%;
   background-color: #c2c2c242;
@@ -126,6 +126,7 @@ div.select {
   bottom: 0;
   width: 56%;
   height: 18%;
+  left: 170px;
   align-content: center;
 }
 .left-action{
@@ -159,7 +160,7 @@ div.switch{
 /* Cancelar */
 div.cancel{
   position: absolute;
-  left: 156px;
+  left: 50px;
   background-color: #c2c2c242;
   width: 58px;
   height: 58px;
