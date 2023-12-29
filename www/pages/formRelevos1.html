@@ -176,7 +176,7 @@
                     var ID = $("#EcoE").val();
                     var encontro = false;
                     
-                    app.request.get(cordova.file.dataDirectory + "jsons_tecnologiasHmo/"+NomJson+".json", function (data) {
+                    app.request.get(cordova.file.dataDirectory + "jsons_Relevos/"+NomJson+".json", function (data) {
                         var content2 = JSON.parse(data);
                         for(var x = 0; x < content2.length; x++) {
                             if(content2[x].ID == ID){

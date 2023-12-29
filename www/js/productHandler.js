@@ -445,8 +445,8 @@ var productHandler = {
 		databaseHandler.db.transaction(
 			function (tx) {
 				tx.executeSql(// FK_formato integer, Fk_pregunta integer, pregunta text, multiple integer, respuesta int, Opcion_1 text, Opcion_2 text
-					"insert into IEN_ProgramacionLavado(id_cedula,FK_header,IDServidor, pregunta, multiple,FK_formato,Opcion1,Opcion2,Opcion3,Opcion4,Opcion5,Opcion6,programa,respuesta,proveedor) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
-					[id_cedula, FK_header, IDServidor, pregunta, multiple,FK_formato,Opcion1,Opcion2,Opcion3,Opcion4,Opcion5,Opcion6,programa,respuesta,proveedor],
+					"insert into IEN_ProgramacionLavado(id_cedula,FK_header,IDServidor, pregunta, multiple,FK_formato,Opcion1,Opcion2,Opcion3,Opcion4,Opcion5,Opcion6,programa,respuesta,proveedor,IDPregunta) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+					[id_cedula, FK_header, IDServidor, pregunta, multiple,FK_formato,Opcion1,Opcion2,Opcion3,Opcion4,Opcion5,Opcion6,programa,respuesta,proveedor,aux],
 					function (tx, results) {
 						if (aux == aux2) {
 							app.dialog.close();
@@ -457,6 +457,47 @@ var productHandler = {
 						// 	dialog.setProgress((aux2 * 100) / aux);
 						// 	dialog.setText(aux2 + ' de ' + aux);
 						// }
+					}, function (tx, error) { console.error("Error registrar:" + error.message); }
+				);
+			}, function (error) { console.log(error) }, function () { }
+		);
+	},
+	//insertPreguntasLavado(id_cedula, item.IdHeader, data[j].ID, data[j].Pregunta, 0, data[j].FK_formato, data[j].Opcion_1, data[j].Opcion_2, data[j].Opcion_3, data[j].Opcion_4, data[j].Opcion_5, data[j].Opcion_6,1, aux, aux2)
+	insertPreguntasResultadoLavado: function(id_cedula, FK_header ,IDPregunta, pregunta, multiple,FK_formato,Opcion1,Opcion2,Opcion3,Opcion4,Opcion5,Opcion6,respuesta, aux, aux2) {
+		databaseHandler.db.transaction(
+			function (tx) {
+				tx.executeSql(// FK_formato integer, Fk_pregunta integer, pregunta text, multiple integer, respuesta int, Opcion_1 text, Opcion_2 text
+					"insert into IEN_ResultadoLavado(id_cedula,FK_header,IDPregunta, pregunta, multiple,FK_formato,Opcion1,Opcion2,Opcion3,Opcion4,Opcion5,Opcion6,respuesta) values(?,?,?, ?, ?,?,?,?,?,?,?,?,?)",
+					[id_cedula, FK_header, IDPregunta, pregunta, multiple,FK_formato,Opcion1,Opcion2,Opcion3,Opcion4,Opcion5,Opcion6,respuesta],
+					function (tx, results) {
+						if (aux == aux2) {
+							app.dialog.close();
+							app.views.main.router.navigate({ name: 'formLavado3' });
+						}  else {
+							var dialog = app.dialog.get();
+							dialog.setProgress((aux2 * 100) / aux);
+							dialog.setText(aux2 + ' de ' + aux);
+						}
+					}, function (tx, error) { console.error("Error registrar:" + error.message); }
+				);
+			}, function (error) { console.log(error) }, function () { }
+		);
+	},
+	insertPreguntasResultadoLavado2: function(id_cedula, FK_header ,IDPregunta, pregunta, multiple,FK_formato,Opcion1,Opcion2,Opcion3,Opcion4,Opcion5,Opcion6,respuesta, aux, aux2) {
+		databaseHandler.db.transaction(
+			function (tx) {
+				tx.executeSql(// FK_formato integer, Fk_pregunta integer, pregunta text, multiple integer, respuesta int, Opcion_1 text, Opcion_2 text
+					"insert into IEN_ResultadoLavado(id_cedula,FK_header,IDPregunta, pregunta, multiple,FK_formato,Opcion1,Opcion2,Opcion3,Opcion4,Opcion5,Opcion6,respuesta) values(?,?,?, ?, ?,?,?,?,?,?,?,?,?)",
+					[id_cedula, FK_header, IDPregunta, pregunta, multiple,FK_formato,Opcion1,Opcion2,Opcion3,Opcion4,Opcion5,Opcion6,respuesta],
+					function (tx, results) {
+						if (aux == aux2) {
+							app.dialog.close();
+							app.views.main.router.navigate({ name: 'formLavado5' });
+						}  else {
+							var dialog = app.dialog.get();
+							dialog.setProgress((aux2 * 100) / aux);
+							dialog.setText(aux2 + ' de ' + aux);
+						}
 					}, function (tx, error) { console.error("Error registrar:" + error.message); }
 				);
 			}, function (error) { console.log(error) }, function () { }

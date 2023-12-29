@@ -26,6 +26,31 @@ function deleteForm() {
     document.getElementById("demo-form").reset();
 }
 
+function eliminaTodo(){
+    var success = function (status) {
+        window.sqlitePlugin.deleteDatabase({name: "cisa.db", location:'default'});
+        location.reload();
+    };
+    var error = function (status) {
+        console.log('Error: ' + status);
+    };
+    window.CacheClear(success, error);
+}
+
+function preEliminaTodo(){
+    swal({
+        title: "Aviso",
+        text: "¿Estas seguro de querer borrar toda la información guardada en la app?",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+    }).then((RESP) => {
+        if (RESP == true) {
+            eliminaTodo()
+        }
+    });
+}
+
 function rotate() {
     if (localStorage.getItem("currentOrientation") == "portrait") {
         screen.orientation.lock('landscape');
@@ -206,8 +231,8 @@ function capturePhoto() {
         navigator.camera.getPicture(onPhotoDataSuccess, onFail, {
             quality: 100,
             destinationType: destinationType.DATA_URL,
-            targetWidth: 1500,
-            targetHeight: 1500,
+            targetWidth: 1000,
+            targetHeight: 1000,
             correctOrientation: true,
         });
     }
@@ -324,12 +349,19 @@ function gClose() {
 }
 var testFirma;
 
-function createFirma() {
+function createFirma(val) {
     screen.orientation.lock('landscape');
-    var signaturePad = new SignaturePad(document.getElementById('signature-pad'), {
-        backgroundColor: 'rgba(255, 255, 255, 0)',
-        penColor: 'rgb(6, 62, 127)'
-    });
+    if(val){
+        var signaturePad = new SignaturePad(document.getElementById('signature-pad_'+val), {
+            backgroundColor: 'rgba(255, 255, 255, 0)',
+            penColor: 'rgb(6, 62, 127)'
+        });
+    } else {
+        var signaturePad = new SignaturePad(document.getElementById('signature-pad'), {
+            backgroundColor: 'rgba(255, 255, 255, 0)',
+            penColor: 'rgb(6, 62, 127)'
+        });
+    }
     testFirma = signaturePad;
 }
 
@@ -352,22 +384,20 @@ function capturaFirma() {
                         <video id="camera-view" autoplay playsinline class="raster" style="display: none;"></video>
                         <img src="" id="phototaked">
                         <div class="camera">
-                            <div class="take" id="take" onclick="onTake()">
-                                <div class="bubble-take"></div>
+                            <div>
+                                <div class="take" id="take" onclick="onTake()">
+                                    <div class="bubble-take"></div>
+                                </div>
+                                <div class="select" id="select" style="display: none;" onClick="onDone()"><img id="img-select" src="img/validar_camera.svg"></div>
+                                <div class="cancel popup-close" id="cancelCamera" onClick="onCancelCamera()"><img class="image-cancel" src="img/cerrar_camera.svg"></div>
+                                <div class="cancel" id="cancelPicure" onClick="onCancelPicture()"><img class="image-cancel" src="img/cerrar_camera.svg"></div>
+                                <div class="switch" id="switch" onClick="onSwitch()"><img class="image-switch" src="img/flip.svg"></div>
                             </div>
-                            <div class="select" id="select" style="display: none;" onClick="onDone()"><img id="img-select" src="img/validar_camera.svg"></div>
-                        </div>
-                        <div class="left-action">
-                            <div class="cancel popup-close" id="cancelCamera" onClick="onCancelCamera()"><img class="image-cancel" src="img/cerrar_camera.svg"></div>
-                            <div class="cancel" id="cancelPicure" onClick="onCancelPicture()"><img class="image-cancel" src="img/cerrar_camera.svg"></div>
                         </div>
                         <div class="actions">
                             <div class="action torch" id="torch" onClick="onTorch()"><img id="flash" src="img/flash_off.svg" width="30px"></div>
                             <div class="action rotate-right" id="rotateRight" onClick="onRotateRight()" style="display:none"><img id="flash" src="img/rotate-right.svg" width="30px"></div>
                             <div class="action rotate-left" id="rotateLeft" onClick="onRotateLeft()" style="display:none"><img id="flash" src="img/rotate-left.svg" width="30px"></div>
-                        </div>
-                        <div class="right-action">
-                            <div class="switch" id="switch" onClick="onSwitch()"><img class="image-switch" src="img/flip.svg"></div>
                         </div>
                         // <audio id="audio" controls style="display: none;">
                         //     <source type="audio/mp3" src="img/camera.mp3">
@@ -438,8 +468,8 @@ function capturaFirma() {
         navigator.camera.getPicture(onPhotoSingSuccess, onFail, {
             quality: 100,
             destinationType: destinationType.DATA_URL,
-            targetWidth: 1500,
-            targetHeight: 1500,
+            targetWidth: 1000,
+            targetHeight: 1000,
             correctOrientation: true
         });
     }
@@ -537,6 +567,7 @@ function editar_fecha(fecha, intervalo, dma, separador) {
     mes = (mes.toString().length == 1) ? mes.toString() : mes;
     return anio + "-" + mes + "-" + dia;
 }
+
 function cambiaimgempresa(val) {
     if (val == 1) {
         $("#img_logo").attr("src", "img/ACHSA.png");
@@ -592,6 +623,7 @@ function cambiaimgempresa(val) {
         $("#img_logo").attr("src", "img/logo1.png");
     }
 }
+
 function recarga_history(mes_pdfs, year_pdfs) {
     var IdU = localStorage.getItem("Usuario");
     var id_empresa = localStorage.getItem("empresa");
@@ -807,7 +839,7 @@ function IniciaCheckList() {
     }
 }
 
-function validaradios(id, numero, pregunta, multiple, FK_equipo) {
+function validaradios(id, numero, pregunta, multiple, FK_equipo, typeLavado) {
     if (numero == 3) {
         var ids = id.split("-");
         var check = ids[1];
@@ -866,14 +898,14 @@ function validaradios(id, numero, pregunta, multiple, FK_equipo) {
                     }
                 }
             }
-        } else if(numero == 5 || numero == 6){
+        } else if(numero == 5 || numero == 6 || numero == 7){
             var labels = id.replace('radio','label');
             var ids = id.split("-");
             $(".radios-"+ids[1]).removeClass("checked");
             $(".inRadios-"+ids[1]).prop('checked', false)
             $("#"+id).prop('checked', true)
             $("#"+labels).addClass("checked");
-        } else if(numero == 7 || numero == 8){
+        } else if(numero == 8){
             var labels = id.replace('radio','label');
             var ids = id.split("-");
             $(".radios1-"+ids[1]).removeClass("checked");
@@ -888,10 +920,21 @@ function validaradios(id, numero, pregunta, multiple, FK_equipo) {
             actualizacheckInsEncierro(id);
         } else if(numero == 6){
             actualizaRespuestasLavado(id, multiple)
+            var ids = id.split("-");
+            if(FK_equipo == 2){
+                if(ids[2] == 3){
+                    agregaEvidenciasLavado(id, typeLavado)
+                }
+            } else if(FK_equipo == 3){
+                if(ids[2] == 1){
+                    cambioProveedor(id, multiple)
+                }
+            }
         } else if(numero == 7){
+            actualizaRespuestasLavadoRes(id, multiple)
             var ids = id.split("-");
             if(ids[2] == 3){
-                agregaEvidencias(id)
+                agregaEvidenciasLavado(id)
             }
         }
     }
@@ -2852,17 +2895,37 @@ function guardarCursoCiertoFalso() {
 }
 
 function gfirma(val) {
-    var signaturePad = testFirma;
-    var data = signaturePad.toDataURL('data:image/jpeg;base64,');
-    screen.orientation.lock('portrait');
-    // screen.orientation.unlock();
-    $("#signate").val(data);
-    $('#ImagenFirmaView').attr('src', data);
-    $('#VolverFirmar').html("Evidencia");
-    $("#VolverAFirmar").html("Volver a Firmar <i class='icon material-icons md-only' style='display: inline-block;margin-left: 12px;'>border_color</i>");
-    if (val) {
-        var element = document.querySelector(".page-content");
-        element.scrollTop = element.scrollHeight;
+    if(val){
+        if(val == 1){
+            var signaturePad = testFirma;
+            var data = signaturePad.toDataURL('data:image/jpeg;base64,');
+            screen.orientation.lock('portrait');
+            // screen.orientation.unlock();
+            $("#signate").val(data);
+            $('#ImagenFirmaView').attr('src', data);
+            $('#VolverFirmar').html("Evidencia");
+            $("#VolverAFirmar").html("Volver a Firmar <i class='icon material-icons md-only' style='display: inline-block;margin-left: 12px;'>border_color</i>");
+            var element = document.querySelector(".page-content");
+            element.scrollTop = element.scrollHeight;
+        } else {
+            var signaturePad = testFirma;
+            var data = signaturePad.toDataURL('data:image/jpeg;base64,');
+            screen.orientation.lock('portrait');
+            // screen.orientation.unlock();
+            $("#signate_"+val).val(data);
+            $('#ImagenFirmaView_'+val).attr('src', data);
+            $('#VolverFirmar_'+val).html("Evidencia");
+            $("#VolverAFirmar_"+val).html("Volver a Firmar <i class='icon material-icons md-only' style='display: inline-block;margin-left: 12px;'>border_color</i>");
+        }
+    } else {
+        var signaturePad = testFirma;
+        var data = signaturePad.toDataURL('data:image/jpeg;base64,');
+        screen.orientation.lock('portrait');
+        // screen.orientation.unlock();
+        $("#signate").val(data);
+        $('#ImagenFirmaView').attr('src', data);
+        $('#VolverFirmar').html("Evidencia");
+        $("#VolverAFirmar").html("Volver a Firmar <i class='icon material-icons md-only' style='display: inline-block;margin-left: 12px;'>border_color</i>");
     }
 }
 
@@ -3464,7 +3527,7 @@ function sincronizaDatosCapacitacion() {
     let paso = 1;
     // let urlBase2 = "http://192.168.100.4/Desarrollo/CISAApp/HMOFiles/Exec";
     // var urlBase2 = "http://172.16.0.143/Desarrollo/CISAApp/HMOFiles/Exec";
-    let urlBase2 = "http://tmshmo.ci-sa.com.mx/www.CISAAPP.com/HMOFiles_dev/Exec";
+    let urlBase2 = "http://tmshmo.ci-sa.com.mx/www.CISAAPP.com/HMOFiles/Exec";
     let url = urlBase2 + "/capacitacion/datos.php?empresa=" + EmpresaID + "&paso=" + paso;
 
     fetch(url)
@@ -3714,15 +3777,17 @@ function GuardarPhoto() {
     let Modulos = localStorage.getItem("Modulos")
     if (foto) {
         if(Modulos == 'InsLavado'){
+            let typeLavado = 'N/A'
+            $("#typeLavado").val() && (typeLavado = $("#typeLavado").val())
             databaseHandler.db.transaction(
                 function (tx) {
-                    tx.executeSql("INSERT INTO IEN_EvidenciasLavado(id_cedula,FKHeader,evidencia,fecha) VALUES (?,?,?,?)",
-                        [id_cedula, localStorage.getItem("IdHeader"), foto, getDateWhitZeros()],
+                    tx.executeSql("INSERT INTO IEN_EvidenciasLavado(id_cedula,FKHeader,evidencia,fecha,typeLavado,proceso) VALUES (?,?,?,?,?,1)",
+                        [id_cedula, localStorage.getItem("IdHeader"), foto, getDateWhitZeros(),typeLavado],
                         function (tx, results) {
                             databaseHandler.db.transaction(
                                 function (tx1) {
                                     tx1.executeSql(
-                                        "Select * from IEN_EvidenciasLavado where id_cedula= ? AND FKHeader = ? ORDER BY id_evidencia DESC LIMIT 1",
+                                        "Select * from IEN_EvidenciasLavado where id_cedula= ? AND FKHeader = ? AND proceso = 1 ORDER BY id_evidencia DESC LIMIT 1",
                                         [id_cedula, localStorage.getItem("IdHeader")],
                                         function (tx, results) {
                                             var item = results.rows.item(0);
@@ -4334,42 +4399,53 @@ function inspeccionarUnidad(){
                             let id_empresa = localStorage.getItem("empresa");
                             let NomJson = 'datos_check'+id_empresa;
                     
-                            productHandler.addDesTechHmoHeader(id_cedula, unidad, id_unidad, id_operador, operador, credencial, fecha_inicio);
+                            // productHandler.addDesTechHmoHeader(id_cedula, unidad, id_unidad, id_operador, operador, credencial, fecha_inicio);
                             databaseHandler.db.transaction(
                                 function (tx) {
                                     tx.executeSql(
-                                    "Select MAX(IdHeader) as IdHeader from DesTechHeader",
-                                    [],
-                                    function (tx, results) {
-                                        var item = results.rows.item(0);
-                                        localStorage.setItem("IdHeader", item.IdHeader);
-                                        app.request({
-                                            url: cordova.file.dataDirectory + "jsons_tecnologiasHmo/"+NomJson+".json",
-                                            method: 'GET',
-                                            dataType: 'json',
-                                            success: function (data) {
-                                                var aux = data.length;
-                                                var aux2=0;
-                                                if(aux == 0){
-                                                    app.dialog.close();
-                                                    swal("","Algo salió mal.","warning");
-                                                }else{
-                                                    dialog.setText('1 de ' + aux);
-                                                    for (var j = 0; j < data.length; j++) {
-                                                        aux2++;
-                                                        productHandler.addDesTechHmoDetails(id_cedula,item.IdHeader, data[j].ID, data[j].Pregunta, data[j].Multiple, data[j].FK_formato, data[j].FK_equipo, aux, aux2);
+                                        "insert into DesTechHeader(id_cedula, unidad, id_unidad, id_operador, operador, credencial, fecha_inicio) values(?, ?, ?, ?, ?, ?, ?)",
+                                        [id_cedula, unidad, id_unidad, id_operador, operador, credencial, fecha_inicio],
+                                        function (tx, results) { 
+                                            databaseHandler.db.transaction(
+                                                function (tx) {
+                                                    tx.executeSql(
+                                                    "Select MAX(IdHeader) as IdHeader from DesTechHeader",
+                                                    [],
+                                                    function (tx, results) {
+                                                        var item = results.rows.item(0);
+                                                        localStorage.setItem("IdHeader", item.IdHeader);
+                                                        app.request({
+                                                            url: cordova.file.dataDirectory + "jsons_tecnologiasHmo/"+NomJson+".json",
+                                                            method: 'GET',
+                                                            dataType: 'json',
+                                                            success: function (data) {
+                                                                var aux = data.length;
+                                                                var aux2=0;
+                                                                if(aux == 0){
+                                                                    app.dialog.close();
+                                                                    swal("","Algo salió mal.","warning");
+                                                                }else{
+                                                                    dialog.setText('1 de ' + aux);
+                                                                    for (var j = 0; j < data.length; j++) {
+                                                                        aux2++;
+                                                                        productHandler.addDesTechHmoDetails(id_cedula,item.IdHeader, data[j].ID, data[j].Pregunta, data[j].Multiple, data[j].FK_formato, data[j].FK_equipo, aux, aux2);
+                                                                    }
+                                                                }
+                                                            }
+                                                        });
+                                                    },
+                                                    function (tx, error) {
+                                                        console.log("Error al guardar cedula: " + error.message);
                                                     }
-                                                }
-                                            }
-                                        });
-                                    },
-                                    function (tx, error) {
-                                        console.log("Error al guardar cedula: " + error.message);
-                                    }
+                                                    );
+                                                },
+                                                function (error) {},
+                                                function () {}
+                                            );
+                                        },
+                                        function (tx, error) { console.error("Error registrar:" + error.message); }
                                     );
-                                },
-                                function (error) {},
-                                function () {}
+                                }, function (error) { console.log(error) }, function () { }
                             );
                         } else {
                             $("#id_unidad").val("")
@@ -4951,18 +5027,26 @@ function tercaraBusqeuda(Linea, Jornada, ID_personal){ //* buscar turno 2
                         swal("", "No existe un relevo en la asignación.", "warning")
                     } else {
                         if(ID_personal == data[j].FKPersonal){
-                            console.log("programa 2", data[j])
+                            console.log("programa 2 completo", data[j])
                             encontro = true
-                            $("#IDSale").val('')
-                            $("#claveEmpleado").val('')
-                            $("#fullName").val('')
-                            $("#ID_personal").val('')
-                            $("#Eco").val('')
-                            $("#FKUnidad").val('')
-                            $("#linea").val('')
-                            $("#jornada").val('')
-                            swal("", "El relevo no es necesario.", "warning")
+                            // $("#IDSale").val('')
+                            // $("#claveEmpleado").val('')
+                            // $("#fullName").val('')
+                            // $("#ID_personal").val('')
+                            // $("#Eco").val('')
+                            // $("#FKUnidad").val('')
+                            // $("#linea").val('')
+                            // $("#jornada").val('')
+                            // swal("", "El relevo no es necesario.", "warning")
+                            // app.dialog.close()
+                            $("#IDEntra").val(data[j].ID)
+                            $("#EcoE").val(data[j].Eco)
+                            $("#lineaE").val(data[j].Linea)
+                            $("#jornadaE").val(data[j].Jornada)
+                            $("#FKUnidadE").val(data[j].FKUnidad)
+                            $("#ID_personalE").val(data[j].FKPersonal)
                             app.dialog.close()
+                            guardaRelevo()
                         } else {
                             encontro = true
                             console.log("programa 2", data[j])
@@ -5006,14 +5090,14 @@ function revisaRelevos(valor){
                     if(data[j].ID_personal == $("#ID_personalE").val()){
                         if(data[j].EstatusOperador == 'Suspendido'){
                             app.dialog.close()
-                            $("#claveEmpleadoE").val('')
-                            $("#fullNameE").val('')
+                            // $("#claveEmpleadoE").val('')
+                            // $("#fullNameE").val('')
                             swal("", "Operador suspendido.", "warning")
                             return false
                         } else {
-                            if(data[j].dias <= 0){
-                                $("#claveEmpleadoE").val('')
-                                $("#fullNameE").val('')
+                            if(data[j].dias < 0){
+                                // $("#claveEmpleadoE").val('')
+                                // $("#fullNameE").val('')
                                 swal("", "Licencia Vencida.", "warning")
                             }
                             if(data[j].dias > 0 && data[j].dias <= 10){
@@ -5021,9 +5105,37 @@ function revisaRelevos(valor){
                             }
                         }
                     } else {
-                        $("#claveEmpleadoE").val('')
-                        $("#fullNameE").val('')
-                        swal("", "Código escaneado no existe.", "warning")
+                        app.dialog.close()
+                        swal({
+                            title: "Aviso",
+                            text: "El relevo no es el esperado o programado. ¿Deseas continuar?",
+                            icon: "warning",
+                            buttons: true,
+                            dangerMode: true,
+                        }).then((RESP) => {
+                            if (RESP == true) {
+                                if(data[j].EstatusOperador == 'Suspendido'){
+                                    // $("#claveEmpleadoE").val('')
+                                    // $("#fullNameE").val('')
+                                    swal("", "Operador suspendido.", "warning")
+                                    return false
+                                } else {
+                                    if(data[j].dias < 0){
+                                        // $("#claveEmpleadoE").val('')
+                                        // $("#fullNameE").val('')
+                                        swal("", "Licencia Vencida.", "warning")
+                                    }
+                                    if(data[j].dias > 0 && data[j].dias <= 10){
+                                        swal("", "Licencia esta a "+data[j].dias+" días de vencer.", "warning")
+                                    }
+                                }
+                                // swal("", "Licencia esta a "+data[j].dias+" días de vencer.", "warning")
+                            } else {
+                                $("#claveEmpleadoE").val('')
+                                $("#fullNameE").val('')
+                                swal("", "Cancelado.", "success")
+                            }
+                        })
                     }
                     app.dialog.close()
                     break
@@ -5201,6 +5313,21 @@ function busquedaEvaluacion2(IDCurso, FK_Becario){
     });
     $("#div_calificaciones").css("display", "block")
 }
+
+function sincronizaDatosRelevos() {
+    let EmpresaID = 1
+    let paso = 1;
+    // let urlBase2 = "http://192.168.100.4/Desarrollo/CISAApp/HMOFiles/Exec";
+    // var urlBase2 = "http://172.16.0.143/Desarrollo/CISAApp/HMOFiles/Exec";
+    let urlBase2 = "http://tmshmoqa.ci-sa.com.mx/www.CISAAPP.com/HMOFiles/Exec";
+    let url = urlBase2 + "/Relevos/datos.php?empresa=" + EmpresaID + "&paso=" + paso;
+
+    fetch(url)
+        .then((response) => {
+            console.log("Sincroniza datos OK!")
+            eliminaCache();
+        });
+}
 //Fin Relevos
 //?Inicio Campanias
 
@@ -5322,14 +5449,14 @@ function preInspeccionEncierro(){
 function inspeccionarUnidadEncierro(){
     if($("#id_unidad").val()){
         let id_cedula = localStorage.getItem("IdCedula")
-        // databaseHandler.db.transaction(
-        //     function (tx) {
-        //         tx.executeSql(
-        //         "Select id_cedula from DesTechHeader WHERE id_cedula = ? AND id_unidad = ?",
-        //             [id_cedula, $("#id_unidad").val()],
-        //             function (tx, results) {
-        //                 let length = results.rows.length;
-        //                 if(length == 0){
+        databaseHandler.db.transaction(
+            function (tx) {
+                tx.executeSql(
+                "Select id_cedula from IEN_Header WHERE id_cedula = ? AND FK_Unidad = ?",
+                    [id_cedula, $("#id_unidad").val()],
+                    function (tx, results) {
+                        let length = results.rows.length;
+                        if(length == 0){
                             let unidad = $("#autocomplete-dropdown-ajax").val()
                             let id_unidad = $("#id_unidad").val()
                             let fecha_captura = getDateWhitZeros();
@@ -5342,8 +5469,6 @@ function inspeccionarUnidadEncierro(){
                             let NombreFormato = ''
                             let observaciones = ''
                             let NomJson = 'revisones_1'
-
-                            // productHandler.insertHeaderInsEncierro(id_cedula, IDCampania, nombreCampania, FK_formato, NombreFormato, fecha_captura, id_unidad, observaciones, unidad)
 
                             databaseHandler.db.transaction(
                                 function (tx) {
@@ -5399,28 +5524,55 @@ function inspeccionarUnidadEncierro(){
                                     );
                                 }, function (error) { console.log(error) }, function () { }
                             );
-        //                 } else {
-        //                     $("#id_unidad").val("")
-        //                     $("#id_operador").val("")
-        //                     $("#credencial").val("")
-        //                     $("#operador").val("")
-        //                     swal("","Esta unidad ya la tienes registrada.","warning");
-        //                 }
-        //             },
-        //             function (tx, error) {
-        //                 console.log("Error al guardar cedula: " + error.message);
-        //             }
-        //         );
-        //     },
-        //     function (error) {},
-        //     function () {}
-        // );
+                        } else {
+                            $("#autocomplete-dropdown-ajax").val('')
+                            $("#id_unidad").val("")
+                            $("#id_operador").val("")
+                            $("#credencial").val("")
+                            $("#operador").val("")
+                            swal("","Esta unidad ya la tienes registrada.","warning");
+                        }
+                    },
+                    function (tx, error) {
+                        console.log("Error al guardar cedula: " + error.message);
+                    }
+                );
+            },
+            function (error) {},
+            function () {}
+        );
     }else{
         swal("","Selecciona una unidad para poder continuar.","warning");
     }
 }
 
 function TerminarInspeccionHMO(){
+    databaseHandler.db.transaction(
+        function(tx5){ tx5.executeSql("SELECT COUNT(id_cedula) as cuenta FROM IEN_Details WHERE id_cedula = ? AND FKHeader = ? AND respuesta is null",
+        [localStorage.getItem("IdCedula"), localStorage.getItem("IdHeader")],
+        function(tx5, results){
+            let item = results.rows.item(0)
+            if(item.cuenta > 0){
+                swal({
+                    title: "Aviso",
+                    text: "Aún no haz terminado coon la revisión, ¿Estas seguro que deseas dejarla así?",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: false,
+                }).then((willGoBack) => {
+                    if (willGoBack){
+                        TerminarInspeccionHMOUnidad()        
+                    } 
+                });
+            } else {
+                TerminarInspeccionHMOUnidad()
+            }
+        },
+        function(tx5, error){ });   }, function(error){}, function(){}
+    );
+}
+
+function TerminarInspeccionHMOUnidad(){
     let fechaFin = getDateWhitZeros()
     let observaciones = $("#observaciones").val()
     databaseHandler.db.transaction(
@@ -5438,7 +5590,6 @@ function TerminarInspeccionHMO(){
         function(error){},
         function(){}
     );
-    
 }
 
 function editarInspeccionEncierro(IdHeader){
@@ -5447,7 +5598,23 @@ function editarInspeccionEncierro(IdHeader){
 }
 
 function eliminarInspeccionEncierro(IdHeader){
-
+    let id_cedula = localStorage.getItem("IdCedula")
+    swal({
+        title: "Aviso",
+        text: "¿Estas seguro de querer eliminar el registro?",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+    }).then((RESP) => {
+        if (RESP == true) {
+            databaseHandler.db.transaction( function(tx){ tx.executeSql("DELETE FROM IEN_Header WHERE id_cedula = ? AND ID_Header = ?", [id_cedula, IdHeader], function(tx, results){
+                databaseHandler.db.transaction( function(tx){ tx.executeSql("DELETE FROM IEN_Details WHERE id_cedula = ? AND FKHeader = ?", [id_cedula, IdHeader], function(tx, results){
+                    $("#renglon_"+IdHeader).remove()
+                    swal("", "Eliminado correctamente", "success")
+                }, function(tx, error){ } ); }, function(error){}, function(){} );
+            }, function(tx, error){ } ); }, function(error){}, function(){} );
+        }
+    });
 }
 
 function CreaModalOptionInsEncierro(id, opciones, mul, titulo_modal){
@@ -5701,34 +5868,62 @@ function agregaComentariosInsEncierro(id_pregunta,mul){
 }
 
 function FinalizarInspeccionesEncierro(){
-    swal({
-        title: "Aviso",
-        text: "¿Estas seguro de querer finalizar la revisión?",
-        icon: "warning",
-        buttons: true,
-        dangerMode: true,
-    }).then((RESP) => {
-        if (RESP == true) {
-            var fecha_salida = getDateWhitZeros();
-            var id_cedula = localStorage.getItem("IdCedula");
-            var estatus = 1;
-            databaseHandler.db.transaction(
-                function(tx){
-                    tx.executeSql("UPDATE cedulas_general SET fecha_salida  = ?,estatus = ? WHERE id_cedula = ?",
-                        [fecha_salida,estatus,id_cedula],
-                        function(tx, results){
-                            window.location.href = "./menu.html";
-                        },
-                        function(tx, error){
-                            swal("Error al guardar",error.message,"error");
-                        }
-                    );
+    databaseHandler.db.transaction(
+        function(tx5){
+            tx5.executeSql("SELECT COUNT(id_cedula) as cuenta, FKHeader FROM IEN_Details WHERE id_cedula = ? AND respuesta is null",
+                [localStorage.getItem("IdCedula")],
+                function(tx5, results){
+                    let item = results.rows.item(0)
+                    if(item.cuenta > 0){
+                        let ID_Header = item.FKHeader
+                        databaseHandler.db.transaction(
+                            function(tx5){
+                                tx5.executeSql("SELECT unidad FROM IEN_Header WHERE id_cedula = ? AND ID_Header = ?",
+                                    [localStorage.getItem("IdCedula"), ID_Header],
+                                    function(tx5, results){
+                                        let item2 = results.rows.item(0)
+                                        swal("","La unidad: "+item2.unidad +", no se termino de inspeccionar. Finalizala para poder continuar.","warning");
+                                    },
+                                    function(tx5, error){console.error("Error al consultar bandeja de salida: " + error.message);}
+                                );  
+                            },
+                            function(error){},function(){}
+                        );
+                    } else {
+                        swal({
+                            title: "Aviso",
+                            text: "¿Estas seguro de querer finalizar la revisión?",
+                            icon: "warning",
+                            buttons: true,
+                            dangerMode: true,
+                        }).then((RESP) => {
+                            if (RESP == true) {
+                                var fecha_salida = getDateWhitZeros();
+                                var id_cedula = localStorage.getItem("IdCedula");
+                                var estatus = 1;
+                                databaseHandler.db.transaction(
+                                    function(tx){
+                                        tx.executeSql("UPDATE cedulas_general SET fecha_salida  = ?,estatus = ? WHERE id_cedula = ?",
+                                            [fecha_salida,estatus,id_cedula],
+                                            function(tx, results){
+                                                window.location.href = "./menu.html";
+                                            },
+                                            function(tx, error){
+                                                swal("Error al guardar",error.message,"error");
+                                            }
+                                        );
+                                    },
+                                    function(error){},
+                                    function(){}
+                                );        
+                            }
+                        });
+                    }
                 },
-                function(error){},
-                function(){}
-            );        
-        }
-    });
+                function(tx5, error){console.error("Error al consultar bandeja de salida: " + error.message);}
+            );  
+        }, function(error){}, function(){}
+    );
 }
 
 function generaInsLavadoUnidades(paso){
@@ -5744,7 +5939,7 @@ function generaInsLavadoUnidades(paso){
             var nombre_usuario = localStorage.getItem("Usuario")
             var fecha_llegada = getDateWhitZeros()
             var id_cliente = localStorage.getItem("empresa")
-            var horario_programado = fecha_llegada
+            var horario_programado = ''
             var estatus = 0
             var tipo_cedula = localStorage.getItem("Modulos")
             var nombre_evalua = 'Lavado de unidades'
@@ -5810,14 +6005,14 @@ function preInspeccionLavdo2(){
 function inspeccionarUnidadLavdo2(){
     if($("#id_unidad").val()){
         let id_cedula = localStorage.getItem("IdCedula")
-        // databaseHandler.db.transaction(
-        //     function (tx) {
-        //         tx.executeSql(
-        //         "Select id_cedula from DesTechHeader WHERE id_cedula = ? AND id_unidad = ?",
-        //             [id_cedula, $("#id_unidad").val()],
-        //             function (tx, results) {
-        //                 let length = results.rows.length;
-        //                 if(length == 0){
+        databaseHandler.db.transaction(
+            function (tx) {
+                tx.executeSql(
+                "Select id_cedula from IEN_HeaderLavado WHERE id_cedula = ? AND FK_Unidad = ?",
+                    [id_cedula, $("#id_unidad").val()],
+                    function (tx, results) {
+                        let length = results.rows.length;
+                        if(length == 0){
                             let unidad = $("#autocomplete-dropdown-ajax").val()
                             let id_unidad = $("#id_unidad").val()
                             let fecha_captura = getDateWhitZeros();
@@ -5851,9 +6046,11 @@ function inspeccionarUnidadLavdo2(){
                                                             dataType: 'json',
                                                             success: function (data) {
                                                                 var aux = 3;
+                                                                let encontro = false
                                                                 dialog.setText('1 de ' + aux);
                                                                 for (var j = 0; j < data.length; j++) {
                                                                     if(data[j].FK_unidad == id_unidad){
+                                                                        encontro = true
                                                                         if(data[j].TypePrograma == 'EXHAUSTIVA'){
                                                                             productHandler.insertPreguntasLavado(id_cedula, item.IdHeader, data[j].ID, '¿Se lavó?', 0, 0, 'SI', 'NO', '', '', '', '', data[j].TypePrograma,1,data[j].FK_provedor, 1, 3)
                                                                             productHandler.insertPreguntasLavado(id_cedula, item.IdHeader, data[j].ID, '¿La calificación del lavado es:?', 0, 0, 'BUENO', 'REGULAR', 'MALO', '', '', '', data[j].TypePrograma,1,data[j].FK_provedor, 2, 3)
@@ -5871,6 +6068,104 @@ function inspeccionarUnidadLavdo2(){
                                                                         }
                                                                     }
                                                                 }
+                                                                if(!encontro){
+                                                                    let IdHeader = item.IdHeader
+                                                                    app.dialog.close()
+                                                                    swal({
+                                                                        title: "Aviso",
+                                                                        text: "Esta unidad no tiene programación asignada. ¿Quieres agregar la con el lavado Interior?",
+                                                                        icon: "warning",
+                                                                        buttons: true,
+                                                                        dangerMode: false,
+                                                                    }).then((willGoBack) => {
+                                                                        if (willGoBack){
+                                                                            var NomJson = 'Proveedores';
+                                                                            var html = ''
+                                                                            app.request({
+                                                                                url: cordova.file.dataDirectory + "jsons_InsLavado/" + NomJson + ".json",
+                                                                                method: 'GET',
+                                                                                dataType: 'json',
+                                                                                success: function (data) {
+                                                                                    for (var j = 0; j < data.length; j++) {
+                                                                                        html += `<option value="${data[j].ID}">${data[j].NombreProveedor}</option>`
+                                                                                    }
+
+                                                                                    var popEvidencia = app.popup.create({
+                                                                                        content: `
+                                                                                        <div class="sheet-modal my-sheet" id="sheet-modal" name="sheet">
+                                                                                            <div class="toolbar">
+                                                                                                <div class="toolbar-inner">
+                                                                                                    <div class="left"></div>
+                                                                                                    <div class="right"><a class="link" id="close_sheet" href="#">Cerrar</a></div>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="sheet-modal-inner" style="overflow-y: scroll;">
+                                                                                                <div class="block">
+                                                                                                    <h3 class="FWN-titulo-2">Selecciona un proveedor</h3><hr>
+                                                                                                    
+                                                                                                    <input type="hidden" id="pasa" value="0">
+                                                                                                    <input type="hidden" id="id_unidad" value="0">
+                                                                                                    
+                                                                                                    <select class="FWM-input" style="padding-right: 5px;height: 40px;width: 100%;" id="proveedoresModal2">
+                                                                                                        ${html}
+                                                                                                    </select>
+                                                                                                    
+                                                                                                    <div class="block grid-resizable-demo" style="margin-bottom: 70px;margin-top: 62px;">
+                                                                                                        <div class="row align-items-stretch" style="text-align: center;">
+                                                                                                            <div class="col-100 medium-50" style="min-width: 50px; border-style: none;">
+                                                                                                                <span class="resize-handler"></span>
+                                                                                                                <a href="#" id="continuarSinPrograma" style="background-color: #FF0037;" class="boton-equipo">Guardar</a>
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>`,
+                                                                                    swipeToClose:false,
+                                                                                    closeByOutsideClick:false,
+                                                                                    closeByBackdropClick:false,
+                                                                                    closeOnEscape:false,
+                                                                                        on: {
+                                                                                            open: function (popup) {
+                                                                                                $('#close_sheet').click(function () {
+                                                                                                    if($('#pasa').val()!=0){
+                                                                                                        app.sheet.close('#sheet-modal');
+                                                                                                    }else{
+                                                                                                        swal({
+                                                                                                            title: "Aviso",
+                                                                                                            text: "Aún no agregas un proveedor, ¿Quieres cancelar el registro de la unidad?",
+                                                                                                            icon: "warning",
+                                                                                                            buttons: true,
+                                                                                                            dangerMode: false,
+                                                                                                        }).then((willGoBack) => {
+                                                                                                            if (willGoBack){
+                                                                                                                deleteRegistroProgrmacionLavado(IdHeader)
+                                                                                                            } 
+                                                                                                        });
+                                                                                                    }
+                                                                                                })
+                                                                                                $('#continuarSinPrograma').click(function () {
+                                                                                                    let dialog = app.dialog.progress('Trabajando... ', progress, 'red');
+                                                                                                    let aux = 3;
+                                                                                                    let FK_provedor = $("#proveedoresModal2").val()
+                                                                                                    dialog.setText('1 de ' + aux);
+                                                                                                    productHandler.insertPreguntasLavado(id_cedula, IdHeader, 0, '¿Se lavó?', 0, 0, 'SI', 'NO', '', '', '', '', 'INTERIOR',1,FK_provedor, 1, 3)
+                                                                                                    productHandler.insertPreguntasLavado(id_cedula, IdHeader, 0, '¿La calificación del lavado es:?', 0, 0, 'BUENO', 'REGULAR', 'MALO', '', '', '', 'INTERIOR',1,FK_provedor, 2, 3)
+                                                                                                    productHandler.insertPreguntasLavado(id_cedula, IdHeader, 0, '¿Hubo cambio de proveedor?', 0, 0, 'SI', 'NO', '', '', '', '', 'INTERIOR',2,FK_provedor, 3, 3)
+                                                                                                    app.sheet.close('#sheet-modal');
+                                                                                                })
+                                                                                            },
+                                                                                        }
+                                                                                    });
+                                                                                    popEvidencia.open();
+                                                                                }
+                                                                            });
+                                                                        } else {
+                                                                            deleteRegistroProgrmacionLavado(IdHeader)
+                                                                        }
+                                                                    });
+                                                                }
                                                             }
                                                         });
                                                     },
@@ -5887,22 +6182,23 @@ function inspeccionarUnidadLavdo2(){
                                     );
                                 }, function (error) { console.log(error) }, function () { }
                             );
-        //                 } else {
-        //                     $("#id_unidad").val("")
-        //                     $("#id_operador").val("")
-        //                     $("#credencial").val("")
-        //                     $("#operador").val("")
-        //                     swal("","Esta unidad ya la tienes registrada.","warning");
-        //                 }
-        //             },
-        //             function (tx, error) {
-        //                 console.log("Error al guardar cedula: " + error.message);
-        //             }
-        //         );
-        //     },
-        //     function (error) {},
-        //     function () {}
-        // );
+                        } else {
+                            $("#autocomplete-dropdown-ajax").val('')
+                            $("#id_unidad").val("")
+                            $("#id_operador").val("")
+                            $("#credencial").val("")
+                            $("#operador").val("")
+                            swal("","Esta unidad ya la tienes registrada.","warning");
+                        }
+                    },
+                    function (tx, error) {
+                        console.log("Error al guardar cedula: " + error.message);
+                    }
+                );
+            },
+            function (error) {},
+            function () {}
+        );
     }else{
         swal("","Selecciona una unidad para poder continuar.","warning");
     }
@@ -6030,7 +6326,7 @@ function agregaEvidencias(id){
 function resultadoLimpieza(paso){
     swal({
         title: "Aviso",
-        text: "¿Deseas crear una nueva Inspección de Lavado?",
+        text: "¿Deseas crear una nueva Inspección de Resultado Lavado?",
         icon: "warning",
         buttons: true,
         dangerMode: true,
@@ -6040,7 +6336,7 @@ function resultadoLimpieza(paso){
             var nombre_usuario = localStorage.getItem("Usuario")
             var fecha_llegada = getDateWhitZeros()
             var id_cliente = localStorage.getItem("empresa")
-            var horario_programado = fecha_llegada
+            var horario_programado = ''
             var estatus = 0
             var tipo_cedula = localStorage.getItem("Modulos")
             var nombre_evalua = 'Resultado limpieza'
@@ -6061,12 +6357,20 @@ function regresaLavado(){
     app.views.main.router.navigate({ name: 'formLavado2' });
 }
 
-function editarLavado(IdHeader){
-    localStorage.setItem("IdHeader", IdHeader);
-    app.views.main.router.navigate({ name: 'formLavado1' });
+function editarLavado(IdHeader, paso){
+    if(paso == 1){
+        localStorage.setItem("IdHeader", IdHeader);
+        app.views.main.router.navigate({ name: 'formLavado1' });
+    } else if(paso == 2){
+        localStorage.setItem("IdHeader", IdHeader);
+        app.views.main.router.navigate({ name: 'formLavado3' });
+    } else if(paso == 3){
+        localStorage.setItem("IdHeader", IdHeader);
+        app.views.main.router.navigate({ name: 'formLavado5' });
+    } 
 }
 
-function eliminarLavado(IdHeader){
+function eliminarLavado(IdHeader, paso){
     let id_cedula = localStorage.getItem("IdCedula");
     swal({
         title: "Aviso",
@@ -6076,12 +6380,28 @@ function eliminarLavado(IdHeader){
         dangerMode: true,
     }).then((RESP) => {
         if (RESP == true) {
-            databaseHandler.db.transaction( function(tx){ tx.executeSql("DELETE FROM IEN_ProgramacionLavado WHERE id_cedula = ? AND FK_header = ?", [id_cedula, IdHeader], function(tx, results){
-                databaseHandler.db.transaction( function(tx){ tx.executeSql("DELETE FROM IEN_HeaderLavado WHERE id_cedula = ? AND ID_HeaderLavado = ?", [id_cedula, IdHeader], function(tx, results){
-                    $("#renglon_"+IdHeader).remove()
-                    swal("", "Eliminado correctamente", "success")
+            if(paso == 1){
+                databaseHandler.db.transaction( function(tx){ tx.executeSql("DELETE FROM IEN_ProgramacionLavado WHERE id_cedula = ? AND FK_header = ?", [id_cedula, IdHeader], function(tx, results){
+                    databaseHandler.db.transaction( function(tx){ tx.executeSql("DELETE FROM IEN_HeaderLavado WHERE id_cedula = ? AND ID_HeaderLavado = ?", [id_cedula, IdHeader], function(tx, results){
+                        $("#renglon_"+IdHeader).remove()
+                        swal("", "Eliminado correctamente", "success")
+                    }, function(tx, error){ } ); }, function(error){}, function(){} );
                 }, function(tx, error){ } ); }, function(error){}, function(){} );
-            }, function(tx, error){ } ); }, function(error){}, function(){} );
+            } else if(paso == 2){
+                databaseHandler.db.transaction( function(tx){ tx.executeSql("DELETE FROM IEN_ResultadoLavado WHERE id_cedula = ? AND FK_header = ?", [id_cedula, IdHeader], function(tx, results){
+                    databaseHandler.db.transaction( function(tx){ tx.executeSql("DELETE FROM IEN_HeaderResultadoLavado WHERE id_cedula = ? AND ID_HeaderLavado = ?", [id_cedula, IdHeader], function(tx, results){
+                        $("#renglon_"+IdHeader).remove()
+                        swal("", "Eliminado correctamente", "success")
+                    }, function(tx, error){ } ); }, function(error){}, function(){} );
+                }, function(tx, error){ } ); }, function(error){}, function(){} );
+            } else if(paso == 3){
+                databaseHandler.db.transaction( function(tx){ tx.executeSql("DELETE FROM IEN_ResultadoLavado WHERE id_cedula = ? AND FK_header = ?", [id_cedula, IdHeader], function(tx, results){
+                    databaseHandler.db.transaction( function(tx){ tx.executeSql("DELETE FROM IEN_HeaderResultadoLavado WHERE id_cedula = ? AND ID_HeaderLavado = ?", [id_cedula, IdHeader], function(tx, results){
+                        $("#renglon_"+IdHeader).remove()
+                        swal("", "Eliminado correctamente", "success")
+                    }, function(tx, error){ } ); }, function(error){}, function(){} );
+                }, function(tx, error){ } ); }, function(error){}, function(){} );
+            }
         }
     });
 }
@@ -6095,91 +6415,111 @@ function preInspeccionLavdo(){
 }
 
 function inspeccionarUnidadLavdo(){
-    app.dialog.close();
-    app.views.main.router.navigate({ name: 'formLavado3' });
-    // if($("#id_unidad").val()){
-    //     let id_cedula = localStorage.getItem("IdCedula")
-    //     databaseHandler.db.transaction(
-    //         function (tx) {
-    //             tx.executeSql(
-    //             "Select id_cedula from DesTechHeader WHERE id_cedula = ? AND id_unidad = ?",
-    //                 [id_cedula, $("#id_unidad").val()],
-    //                 function (tx, results) {
-    //                     let length = results.rows.length;
-    //                     if(length == 0){
-    //                         let unidad = $("#autocomplete-dropdown-ajax").val()
-    //                         let id_unidad = $("#id_unidad").val()
-    //                         let id_operador = $("#id_operador").val()
-    //                         let operador = $("#operador").val()
-    //                         let credencial = $("#credencial").val()
-    //                         let fecha_inicio = getDateWhitZeros();
-    //                         let progress = 0;
-    //                         let dialog = app.dialog.progress('Trabajando... ', progress, 'red');
-    //                         let id_empresa = localStorage.getItem("empresa");
-    //                         let NomJson = 'datos_check'+id_empresa;
-                    
-    //                         productHandler.addDesTechHmoHeader(id_cedula, unidad, id_unidad, id_operador, operador, credencial, fecha_inicio);
-    //                         databaseHandler.db.transaction(
-    //                             function (tx) {
-    //                                 tx.executeSql(
-    //                                 "Select MAX(IdHeader) as IdHeader from DesTechHeader",
-    //                                 [],
-    //                                 function (tx, results) {
-    //                                     var item = results.rows.item(0);
-    //                                     localStorage.setItem("IdHeader", item.IdHeader);
-    //                                     app.request({
-    //                                         url: cordova.file.dataDirectory + "jsons_tecnologiasHmo/"+NomJson+".json",
-    //                                         method: 'GET',
-    //                                         dataType: 'json',
-    //                                         success: function (data) {
-    //                                             var aux = data.length;
-    //                                             var aux2=0;
-    //                                             if(aux == 0){
-    //                                                 app.dialog.close();
-    //                                                 swal("","Algo salió mal.","warning");
-    //                                             }else{
-    //                                                 dialog.setText('1 de ' + aux);
-    //                                                 for (var j = 0; j < data.length; j++) {
-    //                                                     aux2++;
-    //                                                     productHandler.addDesTechHmoDetails(id_cedula,item.IdHeader, data[j].ID, data[j].Pregunta, data[j].Multiple, data[j].FK_formato, data[j].FK_equipo, aux, aux2);
-    //                                                 }
-    //                                             }
-    //                                         }
-    //                                     });
-    //                                 },
-    //                                 function (tx, error) {
-    //                                     console.log("Error al guardar cedula: " + error.message);
-    //                                 }
-    //                                 );
-    //                             },
-    //                             function (error) {},
-    //                             function () {}
-    //                         );
-    //                     } else {
-    //                         $("#id_unidad").val("")
-    //                         $("#id_operador").val("")
-    //                         $("#credencial").val("")
-    //                         $("#operador").val("")
-    //                         swal("","Esta unidad ya la tienes registrada.","warning");
-    //                     }
-    //                 },
-    //                 function (tx, error) {
-    //                     console.log("Error al guardar cedula: " + error.message);
-    //                 }
-    //             );
-    //         },
-    //         function (error) {},
-    //         function () {}
-    //     );
-    // }else{
-    //     swal("","Selecciona una unidad para poder continuar.","warning");
-    // }
+    // app.dialog.close();
+    // app.views.main.router.navigate({ name: 'formLavado3' });
+    if($("#id_unidad").val()){
+        let id_cedula = localStorage.getItem("IdCedula")
+        databaseHandler.db.transaction(
+            function (tx) {
+                tx.executeSql(
+                "Select id_cedula from IEN_HeaderResultadoLavado WHERE id_cedula = ? AND FK_Unidad = ?",
+                    [id_cedula, $("#id_unidad").val()],
+                    function (tx, results) {
+                        let length = results.rows.length;
+                        if(length == 0){
+                            let unidad = $("#autocomplete-dropdown-ajax").val()
+                            let id_unidad = $("#id_unidad").val()
+                            let fecha_captura = getDateWhitZeros();
+                            let progress = 0;
+                            let dialog = app.dialog.progress('Trabajando... ', progress, 'red');
+                            let id_empresa = localStorage.getItem("empresa");
+                            let FK_formato = 0
+                            let fechaFin = ''
+                            let observaciones = ''
+                            let NomJson = 'revisones_1'
+
+                            // productHandler.insertHeaderInsEncierro(id_cedula, IDCampania, nombreCampania, FK_formato, NombreFormato, fecha_captura, id_unidad, observaciones, unidad)
+
+                            databaseHandler.db.transaction(
+                                function (tx) {
+                                    tx.executeSql(
+                                        "insert into IEN_HeaderResultadoLavado(id_cedula, FKFormato, fechaFin, fechaInicio, FK_Unidad, observaciones, unidad) values(?, ?, ?, ?, ?, ?, ?)",
+                                        [id_cedula, FK_formato, fechaFin, fecha_captura, id_unidad, observaciones, unidad],
+                                        function (tx, results) {
+                                            databaseHandler.db.transaction(
+                                                function (tx) {
+                                                    tx.executeSql(
+                                                    "Select MAX(ID_HeaderLavado) as IdHeader from IEN_HeaderResultadoLavado",
+                                                    [],
+                                                    function (tx, results) {
+                                                        var item = results.rows.item(0);
+                                                        localStorage.setItem("IdHeader", item.IdHeader);
+                                                        app.request({
+                                                            url: cordova.file.dataDirectory + "jsons_InsLavado/"+NomJson+".json",
+                                                            method: 'GET',
+                                                            dataType: 'json',
+                                                            success: function (data) {
+                                                                var aux = 0;
+                                                                var aux2 = 0;
+                                                                for (var j = 0; j < data.length; j++) {
+                                                                    if (data[j].formatoAplicable == 1) {
+                                                                        aux++;
+                                                                    }
+                                                                }
+                                                                if (aux == 0) {
+                                                                    app.dialog.close();
+                                                                    swal("", "Algo salió mal. Al parecer no hay un formato para esta evaluación.", "warning");
+                                                                } else {
+                                                                    dialog.setText('1 de ' + aux);
+                                                                    for (var j = 0; j < data.length; j++) {
+                                                                        if (data[j].formatoAplicable == 1) {
+                                                                            aux2++;
+                                                                            productHandler.insertPreguntasResultadoLavado(id_cedula, item.IdHeader, data[j].ID, data[j].Pregunta, 0, data[j].FK_formato, data[j].Opcion_1, data[j].Opcion_2, data[j].Opcion_3, data[j].Opcion_4, data[j].Opcion_5, data[j].Opcion_6,1, aux, aux2)
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        });
+                                                    },
+                                                    function (tx, error) {
+                                                        console.log("Error al guardar cedula: " + error.message);
+                                                    }
+                                                    );
+                                                },
+                                                function (error) {},
+                                                function () {}
+                                            );
+                                        },
+                                        function (tx, error) { console.error("Error registrar:" + error.message); }
+                                    );
+                                }, function (error) { console.log(error) }, function () { }
+                            );
+                        } else {
+                            $("#autocomplete-dropdown-ajax").val('')
+                            $("#id_unidad").val("")
+                            $("#id_operador").val("")
+                            $("#credencial").val("")
+                            $("#operador").val("")
+                            swal("","Esta unidad ya la tienes registrada.","warning");
+                        }
+                    },
+                    function (tx, error) {
+                        console.log("Error al guardar cedula: " + error.message);
+                    }
+                );
+            },
+            function (error) {},
+            function () {}
+        );
+    }else{
+        swal("","Selecciona una unidad para poder continuar.","warning");
+    }
 }
 
 function evaluacionProveedor(paso){
     swal({
         title: "Aviso",
-        text: "¿Deseas crear una nueva Inspección de Lavado?",
+        text: "¿Deseas crear una nueva Inspección de Evaluación a Proveedor?",
         icon: "warning",
         buttons: true,
         dangerMode: true,
@@ -6189,7 +6529,7 @@ function evaluacionProveedor(paso){
             var nombre_usuario = localStorage.getItem("Usuario")
             var fecha_llegada = getDateWhitZeros()
             var id_cliente = localStorage.getItem("empresa")
-            var horario_programado = fecha_llegada
+            var horario_programado = ''
             var estatus = 0
             var tipo_cedula = localStorage.getItem("Modulos")
             var nombre_evalua = 'Evaluación proveedores'
@@ -6215,8 +6555,105 @@ function preEvualuacionLavdo(){
 }
 
 function EvualuacionLavdo(){
-    app.dialog.close();
-    app.views.main.router.navigate({ name: 'formLavado5' });
+    // app.dialog.close();
+    // app.views.main.router.navigate({ name: 'formLavado5' })
+    if($("#id_unidad").val()){
+        let id_cedula = localStorage.getItem("IdCedula")
+        databaseHandler.db.transaction(
+            function (tx) {
+                tx.executeSql(
+                "Select id_cedula from IEN_HeaderResultadoLavado WHERE id_cedula = ? AND FK_Unidad = ?",
+                    [id_cedula, $("#id_unidad").val()],
+                    function (tx, results) {
+                        let length = results.rows.length;
+                        if(length == 0){
+                            let unidad = $("#autocomplete-dropdown-ajax").val()
+                            let id_unidad = $("#id_unidad").val()
+                            let fecha_captura = getDateWhitZeros();
+                            let progress = 0;
+                            let dialog = app.dialog.progress('Trabajando... ', progress, 'red');
+                            let id_empresa = localStorage.getItem("empresa");
+                            let FK_formato = 0
+                            let fechaFin = ''
+                            let observaciones = ''
+                            let NomJson = 'revisones_1'
+
+                            // productHandler.insertHeaderInsEncierro(id_cedula, IDCampania, nombreCampania, FK_formato, NombreFormato, fecha_captura, id_unidad, observaciones, unidad)
+
+                            databaseHandler.db.transaction(
+                                function (tx) {
+                                    tx.executeSql(
+                                        "insert into IEN_HeaderResultadoLavado(id_cedula, FKFormato, fechaFin, fechaInicio, FK_Unidad, observaciones, unidad) values(?, ?, ?, ?, ?, ?, ?)",
+                                        [id_cedula, FK_formato, fechaFin, fecha_captura, id_unidad, observaciones, unidad],
+                                        function (tx, results) {
+                                            databaseHandler.db.transaction(
+                                                function (tx) {
+                                                    tx.executeSql(
+                                                    "Select MAX(ID_HeaderLavado) as IdHeader from IEN_HeaderResultadoLavado",
+                                                    [],
+                                                    function (tx, results) {
+                                                        var item = results.rows.item(0);
+                                                        localStorage.setItem("IdHeader", item.IdHeader);
+                                                        app.request({
+                                                            url: cordova.file.dataDirectory + "jsons_InsLavado/"+NomJson+".json",
+                                                            method: 'GET',
+                                                            dataType: 'json',
+                                                            success: function (data) {
+                                                                var aux = 0;
+                                                                var aux2 = 0;
+                                                                for (var j = 0; j < data.length; j++) {
+                                                                    if (data[j].formatoAplicable == 2) {
+                                                                        aux++;
+                                                                    }
+                                                                }
+                                                                if (aux == 0) {
+                                                                    app.dialog.close();
+                                                                    swal("", "Algo salió mal. Al parecer no hay un formato para esta evaluación.", "warning");
+                                                                } else {
+                                                                    dialog.setText('1 de ' + aux);
+                                                                    for (var j = 0; j < data.length; j++) {
+                                                                        if (data[j].formatoAplicable == 2) {
+                                                                            aux2++;
+                                                                            productHandler.insertPreguntasResultadoLavado2(id_cedula, item.IdHeader, data[j].ID, data[j].Pregunta, 0, data[j].FK_formato, data[j].Opcion_1, data[j].Opcion_2, data[j].Opcion_3, data[j].Opcion_4, data[j].Opcion_5, data[j].Opcion_6,1, aux, aux2)
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        });
+                                                    },
+                                                    function (tx, error) {
+                                                        console.log("Error al guardar cedula: " + error.message);
+                                                    }
+                                                    );
+                                                },
+                                                function (error) {},
+                                                function () {}
+                                            );
+                                        },
+                                        function (tx, error) { console.error("Error registrar:" + error.message); }
+                                    );
+                                }, function (error) { console.log(error) }, function () { }
+                            );
+                        } else {
+                            $("#autocomplete-dropdown-ajax").val('')
+                            $("#id_unidad").val("")
+                            $("#id_operador").val("")
+                            $("#credencial").val("")
+                            $("#operador").val("")
+                            swal("","Este proveedor ya lo tienes registrado.","warning");
+                        }
+                    },
+                    function (tx, error) {
+                        console.log("Error al guardar cedula: " + error.message);
+                    }
+                );
+            },
+            function (error) {},
+            function () {}
+        );
+    }else{
+        swal("","Selecciona una unidad para poder continuar.","warning");
+    }
 }
 
 function regresaLavadoproveodor(){
@@ -6228,7 +6665,6 @@ function TerminarInspeccionLavado(){
 }
 
 function actualizaRespuestasLavado(id, multiple){
-    console.log(id, multiple)
     var id_cedula = localStorage.getItem("IdCedula");
     var IdHeader = localStorage.getItem("IdHeader");
     var ids = id.split("-");
@@ -6248,9 +6684,9 @@ function actualizaRespuestasLavado(id, multiple){
         function(error){},
         function(){}
     );
-    if(respuesta == 3){
-        agregaEvidenciasLavado(id)
-    }
+    // if(respuesta == 3){
+    //     agregaEvidenciasLavado(id)
+    // }
 }
 
 function actualizaObsLavado(){
@@ -6272,11 +6708,12 @@ function actualizaObsLavado(){
 }
 
 function ValidarCapturePhotoLavado(){
+    let typeLavado = $("#typeLavado").val()
     databaseHandler.db.transaction(
         function (tx1) {
             tx1.executeSql(
-                "Select COUNT(id_cedula) as cuenta from IEN_EvidenciasLavado where id_cedula= ? AND FKHeader = ?",
-                [localStorage.getItem("IdCedula"), localStorage.getItem("IdHeader")],
+                "Select COUNT(id_cedula) as cuenta from IEN_EvidenciasLavado where id_cedula= ? AND FKHeader = ? AND typeLavado = ? AND proceso = 1",
+                [localStorage.getItem("IdCedula"), localStorage.getItem("IdHeader"), typeLavado],
                 function (tx, results) {
                     var item = results.rows.item(0);
                     if (item.cuenta <= 2) {
@@ -6297,7 +6734,7 @@ function capturePhotoLavado() {
     if (camera == 0) {
         var camera = app.popup.create({
             content: `
-                <div class="popup" id="camera" style="display: block;width: 100%;height: 100%;margin-top: 0px;margin-left: 0px;top: 0;left: 0;">
+                <div class="popup" id="camera" style="display: block;width: 100%;height: 100%;margin-top: 0px;margin-left: 0px;top: 0;left: 0;z-index: 12501;">
                     <div class="app">
                     <div id="deviceready camera-Field-frame">
                         <div class="top"></div>
@@ -6313,7 +6750,7 @@ function capturePhotoLavado() {
                                 <div class="take" id="take" onclick="onTake()">
                                     <div class="bubble-take"></div>
                                 </div>
-                                <div class="select" id="select" style="display: none;" onClick="onDone()"><img id="img-select" src="img/validar_camera.svg"></div>
+                                <div class="select" id="select" style="display: none;left: -2%;" onClick="onDone()"><img id="img-select" src="img/validar_camera.svg"></div>
                             </div>
                             <div class="right-action">
                                 <div class="switch" id="switch" onClick="onSwitch()"><img class="image-switch" src="img/flip.svg"></div>
@@ -6321,7 +6758,7 @@ function capturePhotoLavado() {
                         </div>
                         
                         <div class="actions">
-                            <div class="action torch" id="torch" onClick="onTorch()"><img id="flash" src="img/flash_off.svg" width="30px" style="display:none;"></div>
+                            <div class="action torch" id="torch" onClick="onTorch()" style="display: none;"><img id="flash" src="img/flash_off.svg" width="30px" style="display:none;"></div>
                             <div class="action rotate-right" id="rotateRight" onClick="onRotateRight()" style="display:none"><img id="flash" src="img/rotate-right.svg" width="30px"></div>
                             <div class="action rotate-left" id="rotateLeft" onClick="onRotateLeft()" style="display:none"><img id="flash" src="img/rotate-left.svg" width="30px"></div>
                         </div>
@@ -6395,8 +6832,8 @@ function capturePhotoLavado() {
         navigator.camera.getPicture(onPhotoDataSuccess, onFail, {
             quality: 100,
             destinationType: destinationType.DATA_URL,
-            targetWidth: 1500,
-            targetHeight: 1500,
+            targetWidth: 1000,
+            targetHeight: 1000,
             correctOrientation: true,
         });
     }
@@ -6424,7 +6861,7 @@ function eliminarFilaFotoLavado(index, val){
     }
 }
 
-function agregaEvidenciasLavado(id){
+function agregaEvidenciasLavado(id, typeLavado){
     var popEvidencia = app.popup.create({
         content: `
         <div class="sheet-modal my-sheet" id="sheet-modal" name="sheet">
@@ -6439,6 +6876,7 @@ function agregaEvidenciasLavado(id){
                     <h3 class="FWN-titulo-2">Agregar evidencias</h3><hr>
                     
                     <input type="hidden" id="inputEvidencia" value=${id}>
+                    <input type="hidden" id="typeLavado" value=${typeLavado}>
                     <input type="hidden" id="pasa" value="0">
                     <div id="evidencias_div" style="padding-left: 10px;padding-right: 10px;display: none;">
                         <div class="FWM-photo-container">
@@ -6450,7 +6888,7 @@ function agregaEvidenciasLavado(id){
                         </div>
                     </div>
                 
-                    <div class="row" style="text-align: center; margin: 65px 10px 65px 10px;justify-content: space-around;" id="div_botones_camara">
+                    <div class="row" style="text-align: center; margin: 65px 10px 65px 10px;justify-content: space-around;display: grid;grid-template-columns: auto auto;justify-content: center;" id="div_botones_camara">
                         <div style="min-width: 50px; border-style: none;">
                             <span class="resize-handler"></span>
                             <a href="#" onclick="ValidarCapturePhotoLavado()" style="background-color: #fff;border: 3px solid #005D99;color:#005D99" class="boton-equipo">
@@ -6513,30 +6951,172 @@ function agregaEvidenciasLavado(id){
 function FinalizarInspeccionesLavado(){
     swal({
         title: "Aviso",
-        text: "¿Estas seguro de querer finalizar la revisión?",
+        text: "¿Estas seguro de querer pasar la pantalla de firmas?",
         icon: "warning",
         buttons: true,
         dangerMode: true,
     }).then((RESP) => {
         if (RESP == true) {
+            localStorage.setItem("PantallaLavado", 1)  
+            app.views.main.router.navigate({ name: 'formLavado7' })
+        }
+    });
+}
+
+function FinLavado(){
+    let supervisorLavado = $("#supervisorLavado").val()
+    let signate = $("#signate").val()
+    let signate_2 = $("#signate_2").val()
+    if(!String(supervisorLavado).trim()){
+        swal("", "Debes imgresar el nombre del supervisor de proveedor de lavado.", "warning")
+        return false
+    }
+    if(!signate){
+        swal("", "Debes firmar como supervisor interno.", "warning")
+        return false
+    }
+    if(!signate_2){
+        swal("", "Se debe agregar la firma del supervisor de proveedor de lavado.", "warning")
+        return false
+    }
+    swal({
+        title: "Aviso",
+        text: "¿Estas seguro de querer finalizar la inspección?",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+    }).then((RESP) => {
+        if (RESP == true) {
+            databaseHandler.db.transaction(
+                function(tx){
+                    tx.executeSql("SELECT id_cedula FROM IEN_EvidenciasLavado WHERE id_cedula = ? AND proceso = 2",
+                        [localStorage.getItem("IdCedula")],
+                        function(tx, results){
+                            let length = results.rows.length;
+                            if(length > 0){
+                                databaseHandler.db.transaction(
+                                    function(tx){
+                                        tx.executeSql("UPDATE IEN_EvidenciasLavado SET evidencia = ?, fecha = ? WHERE id_cedula = ?",
+                                            [signate, getDateWhitZeros(), localStorage.getItem("IdCedula")],
+                                            function(tx, results){
+                                                console.log('update 2')
+                                            },
+                                            function(tx, error){
+                                                console.error("Error al guardar cierre: " + error.message);
+                                            }
+                                        );
+                                    }, function(error){}, function(){}
+                                )
+                            } else {
+                                databaseHandler.db.transaction(
+                                    function(tx){
+                                        tx.executeSql("INSERT INTO IEN_EvidenciasLavado(id_cedula,FKHeader,evidencia,fecha,typeLavado,proceso) VALUES (?,?,?,?,?,2)",
+                                            [localStorage.getItem("IdCedula"), 0, signate, getDateWhitZeros(),'N/A'],
+                                            function(tx, results){
+                                                console.log('insert 2')
+                                            },
+                                            function(tx, error){
+                                                console.error("Error al guardar cierre: " + error.message);
+                                            }
+                                        );
+                                    }, function(error){}, function(){}
+                                )
+                            }
+                        },
+                        function(tx, error){
+                            console.error("Error al guardar cierre: " + error.message);
+                        }
+                    );
+                }, function(error){}, function(){}
+            )
+
+            databaseHandler.db.transaction(
+                function(tx){
+                    tx.executeSql("SELECT id_cedula FROM IEN_EvidenciasLavado WHERE id_cedula = ? AND proceso = 3",
+                        [localStorage.getItem("IdCedula")],
+                        function(tx, results){
+                            let length = results.rows.length;
+                            if(length > 0){
+                                databaseHandler.db.transaction(
+                                    function(tx){
+                                        tx.executeSql("UPDATE IEN_EvidenciasLavado SET evidencia = ?, fecha = ? WHERE id_cedula = ?",
+                                            [signate, getDateWhitZeros(), localStorage.getItem("IdCedula")],
+                                            function(tx, results){
+                                                console.log('update 3')
+                                            },
+                                            function(tx, error){
+                                                console.error("Error al guardar cierre: " + error.message);
+                                            }
+                                        );
+                                    }, function(error){}, function(){}
+                                )
+                            } else {
+                                databaseHandler.db.transaction(
+                                    function(tx){
+                                        tx.executeSql("INSERT INTO IEN_EvidenciasLavado(id_cedula,FKHeader,evidencia,fecha,typeLavado,proceso) VALUES (?,?,?,?,?,3)",
+                                            [localStorage.getItem("IdCedula"), 0, signate, getDateWhitZeros(),'N/A'],
+                                            function(tx, results){
+                                                console.log('insert 3')
+                                            },
+                                            function(tx, error){
+                                                console.error("Error al guardar cierre: " + error.message);
+                                            }
+                                        );
+                                    }, function(error){}, function(){}
+                                )
+                            }
+                        },
+                        function(tx, error){
+                            console.error("Error al guardar cierre: " + error.message);
+                        }
+                    );
+                }, function(error){}, function(){}
+            )
+            
             var fecha_salida = getDateWhitZeros();
             var id_cedula = localStorage.getItem("IdCedula");
             var estatus = 1;
+            var tipoLavado = localStorage.getItem("PantallaLavado")
+            var table = ''
+            if(tipoLavado == 1){
+                table = 'IEN_HeaderLavado'
+            } else if(tipoLavado == 2){
+                table = 'IEN_HeaderResultadoLavado'
+            } else if(tipoLavado == 3){
+                table = 'IEN_HeaderResultadoLavado'
+            }
+
             databaseHandler.db.transaction(
                 function(tx){
-                    tx.executeSql("UPDATE cedulas_general SET fecha_salida  = ?,estatus = ? WHERE id_cedula = ?",
-                        [fecha_salida,estatus,id_cedula],
+                    tx.executeSql("UPDATE "+table+" SET fechaFin = ? WHERE id_cedula = ?",
+                        [fecha_salida, id_cedula],
                         function(tx, results){
-                            window.location.href = "./menu.html";
+                            let nameSupervisorExt = $("#supervisorLavado").val()
+                            databaseHandler.db.transaction(
+                                function(tx){
+                                    tx.executeSql("UPDATE cedulas_general SET fecha_salida  = ?,estatus = ?, horario_programado = ? WHERE id_cedula = ?",
+                                        [fecha_salida,estatus,nameSupervisorExt,id_cedula],
+                                        function(tx, results){
+                                            console.log("gg")
+                                            window.location.href = "./menu.html";
+                                        },
+                                        function(tx, error){
+                                            swal("Error al guardar",error.message,"error");
+                                        }
+                                    );
+                                },
+                                function(error){},
+                                function(){}
+                            );  
                         },
                         function(tx, error){
-                            swal("Error al guardar",error.message,"error");
+                            console.error("Error al guardar cierre: " + error.message);
                         }
                     );
                 },
                 function(error){},
                 function(){}
-            );        
+            )
         }
     });
 }
@@ -6553,5 +7133,246 @@ function continuarCedInsLavado(id_cedula, tipo){
     } 
 }
 
+function cambioProveedor(id){
+    var NomJson = 'Proveedores';
+    var html = ''
+    app.request({
+        url: cordova.file.dataDirectory + "jsons_InsLavado/" + NomJson + ".json",
+        method: 'GET',
+        dataType: 'json',
+        success: function (data) {
+            for (var j = 0; j < data.length; j++) {
+                html += `<option value="${data[j].ID}">${data[j].NombreProveedor}</option>`
+            }
+
+            var popEvidencia = app.popup.create({
+                content: `
+                <div class="sheet-modal my-sheet" id="sheet-modal" name="sheet">
+                    <div class="toolbar">
+                        <div class="toolbar-inner">
+                            <div class="left"></div>
+                            <div class="right"><a class="link" id="close_sheet" href="#">Cerrar</a></div>
+                        </div>
+                    </div>
+                    <div class="sheet-modal-inner" style="overflow-y: scroll;">
+                        <div class="block">
+                            <h3 class="FWN-titulo-2">Selecciona al nuevo proveedor</h3><hr>
+                            
+                            <input type="hidden" id="pasa" value="0">
+                            <input type="hidden" id="id_unidad" value="0">
+                            
+                            <select class="FWM-input" style="padding-right: 5px;height: 40px;width: 100%;" id="proveedoresModal">
+                                ${html}
+                            </select>
+                            
+                            <div class="block grid-resizable-demo" style="margin-bottom: 70px;margin-top: 62px;">
+                                <div class="row align-items-stretch" style="text-align: center;">
+                                    <div class="col-100 medium-50" style="min-width: 50px; border-style: none;">
+                                        <span class="resize-handler"></span>
+                                        <a href="#" onclick="guardanuevoProveedor('${id}');" style="background-color: #FF0037;" class="boton-equipo">Guardar</a>
+                                    </div>
+                                </div>
+                            </div>
+        
+                        </div>
+                    </div>
+                </div>`,
+            swipeToClose:false,
+            closeByOutsideClick:false,
+            closeByBackdropClick:false,
+            closeOnEscape:false,
+                on: {
+                    open: function (popup) {
+                        $('#close_sheet').click(function () {
+                            // if($('#pasa').val()!=0){
+                            //     app.sheet.close('#sheet-modal');
+                            // }else{
+                            //     swal({
+                            //         title: "Aviso",
+                            //         text: "Aún no agregar evidencias, ¿Estas seguro que deseas regresar?",
+                            //         icon: "warning",
+                            //         buttons: true,
+                            //         dangerMode: false,
+                            //     }).then((willGoBack) => {
+                            //         if (willGoBack){
+                                        app.sheet.close('#sheet-modal');
+                            //         } 
+                            //     });
+                            // }
+                        })
+                    },
+                }
+            });
+            popEvidencia.open();
+        }
+    });
+}
+
+function guardanuevoProveedor(id){
+    var id_cedula = localStorage.getItem("IdCedula");
+    var IdHeader = localStorage.getItem("IdHeader");
+    let proveedoresModal = $("#proveedoresModal").val()
+    var ids = id.split("-");
+    var id_pregunta = ids[1]
+    
+    databaseHandler.db.transaction(
+        function(tx){
+            tx.executeSql("Select programa from IEN_ProgramacionLavado WHERE id_cedula = ? AND FK_header = ? AND ID_Detail = ?",
+                [id_cedula,IdHeader,id_pregunta],
+                function(tx, results){
+                    let item = results.rows.item(0)
+                    let programa = item.programa
+                    databaseHandler.db.transaction(
+                        function(tx){
+                            tx.executeSql("UPDATE IEN_ProgramacionLavado SET proveedor = ? WHERE id_cedula = ? AND FK_header = ? AND programa = ?",
+                                [proveedoresModal,id_cedula,IdHeader,programa],
+                                function(tx, results){
+                                    swal("", "Actualizado correctamente.", "success")
+                                    app.sheet.close('#sheet-modal')
+                                },
+                                function(tx, error){
+                                    console.error("Error al guardar cierre: " + error.message);
+                                }
+                            );
+                        },
+                        function(error){},
+                        function(){}
+                    );
+                },
+                function(tx, error){
+                    console.error("Error al guardar cierre: " + error.message);
+                }
+            );
+        },
+        function(error){},
+        function(){}
+    );    
+}
+
+function deleteRegistroProgrmacionLavado(IdHeader){
+    databaseHandler.db.transaction(
+        function(tx){
+            tx.executeSql("DELETE FROM IEN_HeaderLavado WHERE ID_HeaderLavado = ?",
+                [IdHeader],
+                function(tx, results){
+                    $("#autocomplete-dropdown-ajax").val('')
+                    $("#id_unidad").val('')
+                    swal("", "Cancelado correctamente.", "success")
+                    app.sheet.close('#sheet-modal')
+                },
+                function(tx, error){
+                    console.error("Error al guardar cierre: " + error.message);
+                }
+            );
+        },
+        function(error){},
+        function(){}
+    );
+}
+
+function actualizaObsResultado(){
+    let observaciones = $("#observaciones").val()
+    databaseHandler.db.transaction(
+        function(tx){
+            tx.executeSql("UPDATE IEN_HeaderResultadoLavado SET observaciones = ? WHERE id_cedula = ? AND ID_HeaderLavado = ?",
+                [observaciones,localStorage.getItem("IdCedula"), localStorage.getItem("IdHeader")],
+                function(tx, results){
+                },
+                function(tx, error){
+                    console.error("Error al guardar cierre: " + error.message);
+                }
+            );
+        },
+        function(error){},
+        function(){}
+    );
+}
+
+function actualizaRespuestasLavadoRes(id, multiple){
+    var id_cedula = localStorage.getItem("IdCedula")
+    var IdHeader = localStorage.getItem("IdHeader")
+    var ids = id.split("-");
+    var id_pregunta = multiple
+    var respuesta = ids[2]
+    databaseHandler.db.transaction(
+        function(tx){
+            tx.executeSql("UPDATE IEN_ResultadoLavado SET respuesta = ? WHERE id_cedula = ? AND ID_Detail = ? AND FK_header = ?",
+                [respuesta,id_cedula,id_pregunta,IdHeader],
+                function(tx, results){
+                },
+                function(tx, error){
+                    console.error("Error al guardar cierre: " + error.message);
+                }
+            );
+        },
+        function(error){},
+        function(){}
+    )
+}
+
+function FinalizarResultadoLavado(){
+    databaseHandler.db.transaction(
+        function(tx5){
+            tx5.executeSql("SELECT COUNT(id_cedula) as cuenta FROM IEN_HeaderResultadoLavado WHERE id_cedula = ?",
+                [localStorage.getItem("IdCedula")],
+                function(tx5, results){
+                    let item = results.rows.item(0)
+                    if(item.cuenta > 4){
+                        swal({
+                            title: "Aviso",
+                            text: "¿Estas seguro de querer pasar la pantalla de firmas?",
+                            icon: "warning",
+                            buttons: true,
+                            dangerMode: true,
+                        }).then((RESP) => {
+                            if (RESP == true) {
+                                localStorage.setItem("PantallaLavado", 2)
+                                app.views.main.router.navigate({ name: 'formLavado7' })
+                            }
+                        })
+                    } else {
+                        swal("", "Debes tener como minimo 5 unidades revisadas para poder continuar.", "warning")
+                    }
+                },
+                function(tx5, error){ console.error("Error al consultar bandeja de salida: " + error.message); }
+            );  
+        },
+        function(error){},
+        function(){}
+    );
+}
+
+function getNameProveedor(proveedor){
+    var NomJson = 'Proveedores';
+    let nameProveedor = ''
+    app.request({
+        url: cordova.file.dataDirectory + "jsons_InsLavado/"+NomJson+".json",
+        method: 'GET',
+        dataType: 'json',
+        success: function (data) {
+            for (var j = 0; j < data.length; j++) {
+                if (data[j].ID == proveedor) {
+                    nameProveedor = data[j].NombreProveedor
+                    $(".NameProveedor_"+proveedor).text(nameProveedor)
+                }
+            }
+        }
+    });
+}
+
+function FinalizarEvaluacionLavado(){
+    swal({
+        title: "Aviso",
+        text: "¿Estas seguro de querer pasar la pantalla de firmas?",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+    }).then((RESP) => {
+        if (RESP == true) {
+            localStorage.setItem("PantallaLavado", 3)
+            app.views.main.router.navigate({ name: 'formLavado7' })
+        }
+    })
+}
 //?Fin Campanias
 //fin HMO

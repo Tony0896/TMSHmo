@@ -171,6 +171,11 @@ var routes = [
     path: '/formLavado6/',
     componentUrl: './pages/formLavado6.html',
   },
+  {
+    name: 'formLavado7',
+    path: '/formLavado7/',
+    componentUrl: './pages/formLavado7.html',
+  },
   //?Fin relevos
   //?Inicio Campanias
   {

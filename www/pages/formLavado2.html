@@ -15,7 +15,7 @@
 
         <div class="toolbar tabbar toolbar-bottom">
             <div class="toolbar-inner" style="background-color: #1E9FB4;">
-                <a href="#" onclick="//FinalizarInspeccionesEncierro();" id="fin_recaudo" style="margin: auto;color: #fff;font-weight: bold;font-size: 18px;width: 100%;text-align: center;">Finalizar <i class="icon material-icons md-only" style="display: inline-block;">chevron_right</i></a>
+                <a href="#" onclick="FinalizarResultadoLavado();" id="fin_recaudo" style="margin: auto;color: #fff;font-weight: bold;font-size: 18px;width: 100%;text-align: center;">Finalizar <i class="icon material-icons md-only" style="display: inline-block;">chevron_right</i></a>
             </div>
         </div>
         
@@ -51,7 +51,7 @@
                             </thead>
                                 <tbody id="tb_detalle"></tbody>
                         </table>
-                        <div id="message-nr" style="width: 100%;text-align: center;font-family: 'ITC Avant Garde Gothic', sans-serif;font-size: 16px;" style="display: none;">
+                        <div id="message-nrs" style="width: 100%;text-align: center;font-family: 'ITC Avant Garde Gothic', sans-serif;font-size: 16px;" style="display: none;">
                             <p>Sin registros</p>
                         </div>
                     </div>
@@ -75,42 +75,25 @@
 
                 let html = ``
 
-                // databaseHandler.db.transaction(
-                //     function(tx5){
-                //         tx5.executeSql("SELECT * FROM cedulas_general WHERE id_cedula = ?",
-                //             [id_cedula],
-                //             function(tx5, results){
-                //                 let length = results.rows.length;
-                //                 let item2 = results.rows.item(0);
-                //                 $(".title").html(`CAMPAÑA: ${item2.nombre_evalua}`)
-                //             },
-                //             function(tx5, error){
-                //                 console.error("Error al consultar bandeja de salida: " + error.message);
-                //             }
-                //         );  
-                //     },
-                //     function(error){},
-                //     function(){}
-                // );
                 $(".title").html(`Resultado de limpieza`)
 
                 databaseHandler.db.transaction(
                     function(tx5){
-                        tx5.executeSql("SELECT * FROM IEN_Header WHERE id_cedula = ?",
+                        tx5.executeSql("SELECT * FROM IEN_HeaderResultadoLavado WHERE id_cedula = ?",
                             [id_cedula],
                             function(tx5, results){
                                 let length = results.rows.length;
                                 if(length > 0){
-                                    $("#message-nr").css("display", "none")
+                                    $("#message-nrs").css("display", "none")
                                     for(let i = 0; i< length; i++){
                                     let item = results.rows.item(i);
                                     html += `
-                                        <tr id="renglon_${item.ID_Header}">
+                                        <tr id="renglon_${item.ID_HeaderLavado}">
                                             <td>${item.unidad}</td>
                                             <td style="padding: 10px 0px;">
                                                 <div style="display: flex;justify-content: space-evenly;">
-                                                    <span> <button class="col button button-small button-round button-outline" style="height: 100%;border-color: #FF0037;width: fit-content;margin: auto;" onclick="editarInspeccionEncierro(${item.ID_Header});"> <i class="material-icons md-light" style="color: #FF0037;vertical-align: middle;font-size: 25px;margin: 5px 10px;">edit</i> </button> </span>
-                                                    <span> <button class="col button button-small button-round button-outline" style="height: 100%;border-color: #FF0037;width: fit-content;margin: auto;" onclick="eliminarInspeccionEncierro(${item.ID_Header});"> <i class="material-icons md-light" style="color: #FF0037;vertical-align: middle;font-size: 25px;margin: 5px 10px;">delete_forever</i> </button> </span>
+                                                    <span> <button class="col button button-small button-round button-outline" style="height: 100%;border-color: #FF0037;width: fit-content;margin: auto;" onclick="editarLavado(${item.ID_HeaderLavado}, 2);"> <i class="material-icons md-light" style="color: #FF0037;vertical-align: middle;font-size: 25px;margin: 5px 10px;">edit</i> </button> </span>
+                                                    <span> <button class="col button button-small button-round button-outline" style="height: 100%;border-color: #FF0037;width: fit-content;margin: auto;" onclick="eliminarLavado(${item.ID_HeaderLavado}, 2);"> <i class="material-icons md-light" style="color: #FF0037;vertical-align: middle;font-size: 25px;margin: 5px 10px;">delete_forever</i> </button> </span>
                                                 </div>
                                             </td>
                                         </tr>
@@ -145,7 +128,7 @@
                         }
                         autocomplete.preloaderShow();
                         app.request({
-                            url: cordova.file.dataDirectory + "jsons_InsEncierro/"+NomJson+".json", 
+                            url: cordova.file.dataDirectory + "jsons_InsLavado/"+NomJson+".json", 
                             method: 'GET',
                             dataType: 'json',
                             data: {
@@ -165,7 +148,7 @@
                     var ID = $("#autocomplete-dropdown-ajax").val();
                     var encontro = false;
                     
-                    app.request.get(cordova.file.dataDirectory + "jsons_InsEncierro/"+NomJson+".json", function (data) {
+                    app.request.get(cordova.file.dataDirectory + "jsons_InsLavado/"+NomJson+".json", function (data) {
                         var content2 = JSON.parse(data);
                         for(var x = 0; x < content2.length; x++) {
                             if(content2[x].ID == ID){
