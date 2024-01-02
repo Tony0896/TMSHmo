@@ -1,0 +1,369 @@
+<style>
+	.numeric-cell {
+		width: 14% !important;
+	}
+	.edit-btn{
+		margin-top: 12px;
+    	margin-bottom: 12px;
+	}
+</style>
+<template>
+	<div class="page">
+		<nav class="left top-left" style="justify-content: space-between;">
+			<a class="link back" onclick="regresaDiesel()" style="margin-left: 10px; display: inline-flex;align-items: center;">
+				<i class="icon material-icons md-only" style="font-weight: 900;font-size: 30px;">arrow_back</i>
+			</a>
+			<div class="title">Historial</div>
+			<a style="margin-right: 10px;">
+				<i class="icon material-icons md-only" style="color: #1E9FB4; font-weight: 900;">arrow_back</i>
+			</a>
+		</nav>
+
+		<div class="page-content" style="border-radius: 0;">
+			<div id="nointernet-page1"
+				style="display:none;text-align: center; justify-content:center; margin-right:auto; margin-left:auto; width: 99%;">
+				<img src="" width="60%" style="margin-top: 140px;">
+				<div style="text-align: left;">
+					<h2 style="margin: 50px 0 0 15px;text-align: left;"><b>¡VAYA!</b></h2>
+					<h2 style="margin: 0 0 0 15px;text-align: left;"><b>No tienes internet.</b></h2>
+					<h4 style="margin: 0 0 0 15px;text-align: left;">Para realizar esta consulta es necesario tener una
+						conexion.</h>
+				</div>
+			</div>
+
+			<div id="content-page1"
+				style="text-align: center; justify-content:center; margin-right:auto; margin-left:auto; width: 99%;">
+				<center>
+					<h2 style="color: #FF0037;" id="titulo_reporte"></h2>
+				</center>
+				<div class='sentencia1 preloader color-blue infinite-scroll-preloader'></div>
+				<div style="text-align: left; justify-content:left; margin-right:auto; margin-left:auto; width: 99%;">
+					<div class="card data-table">
+						<div class="infinite-scroll-content">
+							<div id="historyContainer"></div>
+						</div>
+					</div>
+					<div id="message-despues" style="width: 100%;text-align: center;font-family: 'ITC Avant Garde Gothic', sans-serif;font-size: 16px;margin-bottom: 100px;" style="display: none;">
+						<p>Sin registros</p>
+					</div>
+					<br>
+                    
+                    <div style="margin-bottom: 100px;"></div>
+                    
+				</div>
+
+				<!-- modal updates -->
+                <div class="sheet-modal my-sheet-u" id="sheet-modal-u" name="sheet" data-close-on-escape="false" data-swipe-to-close="false" data-close-by-outside-click="false" data-close-by-backdrop-click="false" data-sheet="my-sheet-u">
+                    <div class="toolbar">
+                        <div class="toolbar-inner">
+                            <div class="left"></div>
+                            <div class="right"><a class="link" id="close_sheet_u" href="#">Cerrar</a></div>
+                        </div>
+                    </div>
+                    <div class="sheet-modal-inner" style="overflow-y: scroll;">
+                        <div class="block">
+                            <div class="list FWM-fixing-form" id="div_cboxs" style="margin-top: 25px;">
+                                <input type="hidden" id="id_unidad_u">
+                                <input type="hidden" id="pasa_u" value="0">
+                                <input type="hidden" id="id_detalle_u">
+								<input type="hidden" id="eco">
+                                <input type="hidden" id="VIN_u">
+								<input type="hidden" id="carga_back">
+            
+                                <h3 class="FWN-titulo-2" id="title_unidad_u">Unidad: </h3>
+								<hr>
+
+								<span id="titulo_modal" class="span FWM-span-form">Unidad</span>
+                                <input type="text" id="unidad_u" class="FWM-input" style="padding-right: 5px;" maxlength="20">
+            
+                                <span id="titulo_modal" class="span FWM-span-form">Bomba de carga</span>
+                                <select class="FWM-input obligatorio" id="bomba_u">
+                                    <option value="0">Selecciona una opción</option>
+                                    <option value="Bomba 1">Bomba 1</option>
+                                    <option value="Bomba 2">Bomba 2</option>
+                                    <option value="Bomba 3">Bomba 3</option>
+                                    <option value="Bomba 4">Bomba 4</option>
+                                    <option value="Bomba 5">Bomba 5</option>
+                                </select>
+                                
+                                <span id="titulo_modal" class="span FWM-span-form">Almacen</span>
+                                <input type="text" id="almacen_u" class="FWM-input" style="padding-right: 5px;" maxlength="20">
+            
+                                <span id="titulo_modal" class="span FWM-span-form">Tipo de Carga</span>
+                                <select class="FWM-input obligatorio" id="tipo_carga_u">
+                                    <option value="Normal" selected>Normal</option>
+                                    <option value="Extra">Extra</option>
+                                    <option value="Extra2">Extra 2</option>
+                                </select>
+                                
+                                <span id="titulo_modal" class="span FWM-span-form">Cantidad de litros cargados</span>
+                                <input type="number" id="carga_u" class="FWM-input input-resalte" style="padding-right: 5px;" maxlength="20" min="1" step=".01">
+            
+                                <span id="titulo_modal" class="span FWM-span-form">Kilometraje</span>
+                                <input type="number" id="odometro_u" class="FWM-input input-resalte" style="padding-right: 5px;" maxlength="20" step=".01">
+            
+                                <span id="titulo_modal" class="span FWM-span-form">Operador</span>
+                                <input type="text" id="operador_u" class="FWM-input" style="padding-right: 5px;" maxlength="255">
+                                <input type="hidden" id="id_operador_u">
+                                <input type="hidden" id="operador2_u">
+            
+                                <span id="titulo_modal" class="span FWM-span-form">Jornada</span>
+                                <input type="text" id="jornada_u" class="FWM-input" style="padding-right: 5px;" maxlength="20">
+            
+                                <span id="titulo_modal" class="span FWM-span-form">Vueltas</span>
+                                <input type="number" id="vueltas_u" class="FWM-input" style="padding-right: 5px;" maxlength="20">
+            
+                                
+                                <span id="titulo_modal" class="span FWM-span-form">Hora Inicio</span>
+                                <input type="time" id="h_inicio_u" class="FWM-input" style="padding-right: 5px;" maxlength="20">
+                                
+                                <span id="titulo_modal" class="span FWM-span-form">Hora Fin</span>
+                                <input type="time" id="h_fin_u" class="FWM-input" style="padding-right: 5px;" maxlength="20" onchange="check_hours_menores('h_inicio_u','h_fin_u');">
+            
+                                <div class="block grid-resizable-demo" style="margin-bottom: 70px;">
+                                    <div class="row align-items-stretch" style="text-align: center;">
+                                        <div class="col-100 medium-50" style="min-width: 50px; border-style: none;">
+                                            <span class="resize-handler"></span>
+                                            <a href="#" onclick="actualizaCargaDiesel2();" style="background-color: #FF0037;" class="boton-equipo">Guardar</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- fin modals -->
+			</div>
+
+		</div>
+
+	</div>
+</template>
+<script>
+	return {
+		on: {
+			pageInit: function (e, page) {
+				var ID_consulta = localStorage.getItem("ID_consulta");
+				var typeConsulta = localStorage.getItem("typeConsulta");
+				var empresa = localStorage.getItem("empresa");
+                var self = this;
+
+				app.preloader.show('red');
+
+                function pintaMenu(carga_total, unidades_cargadas, html) {
+                    $('#historyContainer').append(`<table id = "imyal" cellpadding="10" >
+                        <input type="hidden" id="carga_total_diesel" value="${carga_total}">
+                        <tbody>
+                            <tr>
+                                <th style="text-align: center;background-color: #005D99;color: white;font-weight: bold;">Carga Total:</th>
+                                <td><span id="text_carga_Diesel">${numberWithCommas(carga_total)}</span></td>
+                            </tr>
+                            <tr>
+                                <th style="text-align: center;background-color: #005D99;color: white;font-weight: bold;">Unidades Cargadas:</th>
+                                <td><span>${unidades_cargadas}</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table cellpadding="10" >
+                        <tbody>
+                            <tr>
+                                <th colspan="6" style="background-color:#FFF"><h2 class="titulo" style="margin-top: 15px;">Detalle</h2></th>
+                            </tr>
+                            ${html}
+                        </tbody>
+                    </table>
+                        <br><br>
+                    `);
+                }
+
+				var url = localStorage.getItem("url");
+				//var url = "http://192.168.30.237/Desarrollo/CISAApp/Archivos/App_dev";
+
+				app.request.get(url + '/datageneralDiesel.php', { Id: ID_consulta, TipoCed: typeConsulta }, function (data) {
+					$('.sentencia1').remove();
+					if (data) {
+						var content = JSON.parse(data);
+						var datosHeadeer = new Array;
+						datosHeadeer = content[0];
+						var Detail = new Array;
+						Detail = content[1];
+						$("#titulo_reporte").html(`Carga de Diesel ${datosHeadeer[0].fecha_corta}`);
+						if (datosHeadeer == null) {
+							$("#message-despues").css("display", "block");
+							app.preloader.hide();
+						} else {
+							var carga_total = 0;
+							var unidades_cargadas = 0;
+							$("#message-despues").css("display", "none");
+							var html = `<tr>
+										<th class="numeric-cell" style="text-align: center;background-color: #005D99;color: white;font-weight: bold;" >Unidad</th>
+										<th class="numeric-cell" style="text-align: center;background-color: #005D99;color: white;font-weight: bold;" >Carga</th>
+										<th class="numeric-cell" style="text-align: center;background-color: #005D99;color: white;font-weight: bold;" >Kilometrjae</th>
+										<th class="numeric-cell" style="text-align: center;background-color: #005D99;color: white;font-weight: bold;" >Bomba</th>
+										<th class="numeric-cell" style="text-align: center;background-color: #005D99;color: white;font-weight: bold;" >Tipo de Carga</th>
+									</tr>`;
+							
+							if(datosHeadeer.length > 0){
+								for(j = 0; j < datosHeadeer.length; j++){
+									unidades_cargadas = Number(unidades_cargadas + datosHeadeer[j].unidades_cargadas);
+								}
+								
+								if(Detail.length > 0){
+									for(i = 0; i < Detail.length; i++){
+										var no_bomba = '';
+										carga_total = Number(carga_total + Detail[i].carga_total);
+										Detail[i].no_bomba ? no_bomba = Detail[i].no_bomba: no_bomba = 0;
+										html = html + `<tr id="trdiesel_${Detail[i].ID}"><td>${Detail[i].eco}</td><td>${numberWithCommas(Detail[i].carga_total)}</td><td>${numberWithCommas(Detail[i].odometro)}</td><td>${no_bomba}</td><td>${Detail[i].tipo_carga}</td></tr>`;
+									}
+									carga_total = carga_total.toFixed(2);
+                                    pintaMenu(carga_total, unidades_cargadas, html);
+								} else {
+                                    pintaMenu(carga_total, unidades_cargadas, html);
+                                }
+							} else {
+                                pintaMenu(carga_total, unidades_cargadas, html);
+                            }
+						}
+						app.preloader.hide();
+					} else {
+						$("#titulo_reporte").css("display", "none");
+						app.preloader.hide();
+						swal("", "Información no dsiponible.", "warning");
+					}
+				}, function (xhr) {
+					app.preloader.hide();
+					$('.sentencia1').remove();
+					$("#content-page1").css('display', 'none');
+					$("#nointernet-page1").css('display', 'block');
+				});
+
+				/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                /////////////////////////////////////////                   OPERADORES EDIT                    //////////////////////////////////////////////////////////////
+                /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                var carpeta2 = 'jsons_Diesel';
+                var NomJson3 = 'Operadores_'+empresa;
+                self.autocompleteDropdownAjax = app.autocomplete.create({
+                    inputEl: '#operador_u',
+                    openIn: 'dropdown',
+                    preloader: true, //enable preloader
+                    valueProperty: 'id_ope', //object's "value" property name
+                    textProperty:  'buscador', //object's "text" property name
+                    limit: 10, //limit to [number] results
+                    dropdownPlaceholderText: 'Selecciona una Operador...',
+                    source: function (query, render) {
+                        var autocomplete = this;
+                        var results = [];
+                        if (query.length === 0) {
+                            render(results);
+                            return;
+                        }
+                        autocomplete.preloaderShow();
+                        app.request({
+                            url: cordova.file.dataDirectory + carpeta2 + "/"+NomJson3+".json", 
+                            method: 'GET',
+                            dataType: 'json',
+                            data: {
+                                query: query,
+                            },success: function (data) {
+                                for (var i = 0; i < data.length; i++) {
+                                    if (data[i].buscador.toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(data[i]);
+                                }
+                                autocomplete.preloaderHide();
+                                render(results); 
+                            }
+                        }); 
+                    }
+                });
+
+                $('#operador_u').change(function () {
+                    var operador = $("#operador_u").val();
+                    var encontro = false;
+                    app.request.get(cordova.file.dataDirectory + "jsons_Diesel/"+NomJson3+".json", function (data) {
+                        var content5 = JSON.parse(data);
+                        for(var x = 0; x < content5.length; x++) {
+                            if(content5[x].id_ope == operador){
+                                $("#operador_u").val(content5[x].buscador);
+                                $("#id_operador_u").val(content5[x].id_ope);
+                                $("#operador2_u").val(content5[x].Operador2);
+                                encontro = true;
+                            }         
+                        }
+                        if(!encontro){
+                            $("#operador_u").val("");
+                            $("#id_operador_u").val("");
+                            $("#operador2_u").val("");
+                        }
+                    });
+                }); 
+                /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                /////////////////////////////////////////                   OPERADORES EDIT                    //////////////////////////////////////////////////////////////
+                /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+				/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                /////////////////////////////////////////                      UNIDADES EDIT                   //////////////////////////////////////////////////////////////
+                /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                var NomJson = 'Unidades_empresa'+empresa;
+                var NomDescCli = "Unidades_empresa"+empresa;
+
+                self.autocompleteDropdownAjax = app.autocomplete.create({
+                    inputEl: '#unidad_u',
+                    openIn: 'dropdown',
+                    preloader: true, //enable preloader
+                    valueProperty: 'id_unidad', //object's "value" property name
+                    textProperty:  'Unidad', //object's "text" property name
+                    limit: 10, //limit to [number] results
+                    dropdownPlaceholderText: 'Selecciona una Unidad...',
+                    source: function (query, render) {
+                        var autocomplete = this;
+                        var results = [];
+                        if (query.length === 0) {
+                            render(results);
+                            return;
+                        }
+                        autocomplete.preloaderShow();
+                        app.request({
+                            url: cordova.file.dataDirectory + "jsons_Diesel/"+NomDescCli+".json", 
+                            method: 'GET',
+                            dataType: 'json',
+                            data: {
+                                query: query,
+                            },success: function (data) {
+                                for (var i = 0; i < data.length; i++) {
+                                    if (data[i].Unidad.toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(data[i]);
+                                }
+                                autocomplete.preloaderHide();
+                                render(results); 
+                            }
+                        }); 
+                    }
+                });
+
+                $('#unidad_u').change(function () {
+                    var unidad = $("#unidad_u").val();
+                    var encontro = false;
+                    app.request.get(cordova.file.dataDirectory + "jsons_Diesel/"+NomDescCli+".json", function (data) {
+                        var content = JSON.parse(data);
+                        for(var x = 0; x < content.length; x++) {
+                            if(content[x].id_unidad == unidad){
+                                $("#unidad_u").val(content[x].Unidad);
+                                $("#id_unidad_u").val(content[x].id_unidad);
+								$("#VIN_u").val(content[x].VIN);
+                                encontro = true;
+                            }         
+                        }
+                        if(!encontro){
+                            $("#id_unidad_u").val("");
+                            $("#unidad_u").val("");
+							$("#VIN_u").val("");
+                        }
+                    });
+                }); 
+
+				/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                /////////////////////////////////////////                  FIN UNIDADES EDIT                   //////////////////////////////////////////////////////////////
+                /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                
+			}
+		}
+	}
+</script>

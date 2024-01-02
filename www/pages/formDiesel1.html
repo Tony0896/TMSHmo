@@ -1,0 +1,185 @@
+<style>
+    table{
+        width: 100%;
+    }
+    th{
+        background-color: #005D99;
+        color: white; 
+        font-weight: bold;
+        font-size: 14px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+    .tb_docs td{
+        border: 1px solid gray;
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+</style>
+<template>
+    <div class="page">
+         <!-- Navsbars -->
+        <nav class="left top-left" style="justify-content: space-between;">
+            <a href="javascript:location.reload()" style="margin-left: 10px; display: inline-flex;align-items: center;">
+                <i class="icon material-icons md-only" style="font-weight: 900;font-size: 30px;">arrow_back</i>
+            </a>
+            <div class="title">Historial</div>
+            <a style="margin-right: 10px;">
+                <i class="icon material-icons md-only" style="color: #1E9FB4; font-weight: 900;">arrow_back</i>
+            </a>
+        </nav>
+
+        <div class="page-content">
+            <div id="nointernet-page" style="display:none;text-align: center; justify-content:center; margin-right:auto; margin-left:auto; width: 99%;">
+                <img src="" width="60%" style="margin-top: 140px;">
+                <div style="text-align: left;">
+                    <h2 style="margin: 50px 0 0 15px;text-align: left;"><b>¡VAYA!</b></h2>
+                    <h2 style="margin: 0 0 0 15px;text-align: left;"><b>No tienes internet.</b></h2>
+                    <h4 style="margin: 0 0 0 15px;text-align: left;">Para realizar esta consulta es necesario tener una conexion.</h>
+                </div>
+            </div>
+            <div id="content-page" style="text-align: center; justify-content:center; margin-right:auto; margin-left:auto; width: 99%;">
+                <div style="text-align: center; justify-content:center; margin-right:auto; margin-left:auto; width: 99%;">
+                    <div id="visitsContainer">
+                        <table id="maac" align="center" style="width:92%;margin-top: 20px;">
+                            <tr>
+                            <td style="color: #FF0037; width:20%;">Mes:</td>
+                            <td style="width:40%;"><select name="month" id="month" class="mes_pdfs">
+                                    <option value="">Seleccione un mes...</option>
+                                </select></td>
+                            <td style="color: #FF0037; width:20%;">Año:</td>
+                            <td style="width:20%;"><select name="year" id="year">
+                                    <option value="">Seleccione un año...</option>
+                                </select></td>
+                            </tr>
+                        </table>
+
+                        <div class="page-content infinite-scroll-content infinite-scroll-top">
+                            <table style="margin-top:10px;margin-bottom: 10px;" class="tb_docs">
+                                <thead>
+                                    <tr>
+                                        <th class="td_input">&nbsp;</th>
+                                        <th>ID</th>
+                                        <th>Empresa</th>
+                                        <th>Fecha</th>
+                                        <th>Usuario</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="cedul">
+                                    
+                                </tbody>
+                            </table>
+
+                            <div class="div_button_diesel">
+                                <button class="col button button-large button-fill btn-calculadora"  onclick="guardarUnion()" style="width: 50%;margin: auto;margin-top: 40px;border: 2px solid #2ECC71; background-color: #FFF;">
+                                    <span>Terminar Union</span>
+                                    <i class="material-icons md-light" style="color: #2ECC71;vertical-align: middle;font-size: 30px;">check_circle</i>
+                                </button>
+                            </div>
+
+                            <div class="notas_container">
+                                <div class="notas_div">
+                                    <span class="notas_icon">
+                                        <a href='#' style='color: #FF0037;'><i class="material-icons md-light" style="font-size: 50px;">library_add</i></a>
+                                    </span>
+                                    <span class="notas_text">Precarga</span>
+                                </div>
+                                <div class="notas_div">
+                                    <span class="notas_icon">
+                                        <a href='#' style='color: #F1C40F;'><i class="material-icons md-light" style="font-size: 50px;">tap_and_play</i></a>
+                                    </span>
+                                    <span class="notas_text">Enviar hacia Intelisis</span>
+                                </div>
+                                <div class="notas_div">
+                                    <span class="notas_icon">
+                                        <a href='#' style='color: #2ECC71;'><i class="material-icons md-light" style="font-size: 50px;">backup</i></a>
+                                    </span>
+                                    <span class="notas_text">Reprocesar a Intelisis</span>
+                                </div>
+                            </div>
+
+                            <div class="notas_container">
+                                <div class="notas_div">
+                                    <span class="notas_icon">
+                                        <a href='#' style='color: #E67E22;'><i class="material-icons md-light" style="font-size: 50px;">backup</i></a>
+                                    </span>
+                                    <span class="notas_text">No se completo el envío a intelesis</span>
+                                </div>
+                            </div>
+
+                            <input type="hidden" id="diesel_IdCte">
+                            <input type="hidden" id="diesel_IdCedula">
+                            <input type="hidden" id="diesel_FechaCaptura">
+                        </div>
+                        <div style="margin-bottom: 100px;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+  </template>
+    <script>
+    return {
+        on: {
+            pageInit: function (e, page) {
+                localStorage.getItem("TipoAcceso") == 'admin' ?  $(".notas_container").css("display", "flex") : $(".notas_container").css("display", "none");
+
+                var IdU = localStorage.getItem("Usuario");
+                var id_empresa = localStorage.getItem("empresa");
+                var tipo = localStorage.getItem("Modulos");
+                var url = localStorage.getItem("url");
+                
+                cargarDiesel();
+                //consulta de los meses
+                var d = new Date();
+                var mactual = d.getMonth(); 
+                var monthArray = new Array();
+                monthArray[0] = "Enero";
+                monthArray[1] = "Febrero";
+                monthArray[2] = "Marzo";
+                monthArray[3] = "Abril";
+                monthArray[4] = "Mayo";
+                monthArray[5] = "Junio";
+                monthArray[6] = "Julio";
+                monthArray[7] = "Agosto";
+                monthArray[8] = "Septiembre";
+                monthArray[9] = "Octubre";
+                monthArray[10] = "Noviembre";
+                monthArray[11] = "Diciembre";
+                for(m = 0; m <= 11; m++) {
+                    var optn = document.createElement("OPTION");
+                    optn.text = monthArray[m];
+                    optn.value = (m+1);
+                    if ( m == mactual) {
+                        optn.selected = true;
+                    }
+                    document.getElementById('month').options.add(optn);
+                }
+                //consulta de los años
+                var yactual = new Date().getFullYear();
+                for(y = 2000; y <= 2040; y++) {
+                    var optn = document.createElement("OPTION");
+                    optn.text = y;
+                    optn.value = y;
+                    if (y == yactual) {
+                        optn.selected = true;
+                    }
+                    document.getElementById('year').options.add(optn);
+                }
+                //Consulta por mes
+                $('#month').on('change', function(){
+                    var mes_pdfs = $(".mes_pdfs").val();
+                    var year_pdfs = $("#year").val();
+                    recarga_Diesel(mes_pdfs,year_pdfs);
+                });
+                //Consulta por año
+                $('#year').on('change', function(){
+                    var mes_pdfs = $(".mes_pdfs").val();
+                    var year_pdfs = $("#year").val();
+                    recarga_Diesel(mes_pdfs,year_pdfs);
+                });
+            }
+        }
+    }
+</script>

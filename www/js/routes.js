@@ -176,8 +176,8 @@ var routes = [
     path: '/formLavado7/',
     componentUrl: './pages/formLavado7.html',
   },
-  //?Fin relevos
-  //?Inicio Campanias
+  //? Fin relevos
+  //? Inicio Campanias
   {
     name: 'yallegueCampanias',
     path: '/yallegueCampanias/',
@@ -193,7 +193,34 @@ var routes = [
     path: '/formEncierro2/',
     componentUrl: './pages/formEncierro2.html',
   },
-  //?Fin Campanias
+  //? Fin Campanias
+  //? inicio diesel
+  {
+    name: 'yallegueDiesel',
+    path: '/yallegueDiesel/',
+    componentUrl: './pages/yallegueDiesel.html',
+  },
+  {
+    name: 'formDiesel1',
+    path: '/formDiesel1/',
+    componentUrl: './pages/formDiesel1.html',
+  },
+  {
+    name: 'formDiesel2',
+    path: '/formDiesel2/',
+    componentUrl: './pages/formDiesel2.html',
+  },
+  {
+    name: 'formDiesel3',
+    path: '/formDiesel3/',
+    componentUrl: './pages/formDiesel3.html',
+  },
+  {
+    name: 'formDiesel4',
+    path: '/formDiesel4/',
+    componentUrl: './pages/formDiesel4.html',
+  },
+  //? fin diesel
   //************************************** fin HMO **************************************
   {
     name: 'visualizar',

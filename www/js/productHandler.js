@@ -504,4 +504,26 @@ var productHandler = {
 		);
 	},
 	//! Fin Relevos
+	//! Inicio Diesel
+	addDatosGenerales_Diesel: function (id_cedula, fecha, id_usuario, id_empresa, estatus, origen, nombre_usuario, bomba_def, carga_def){
+		databaseHandler.db.transaction(
+			function (tx) {
+			  tx.executeSql(
+				"insert into datos_generales_diesel(id_cedula, fecha, id_usuario, id_empresa,estatus, origen, nombre_usuario, bomba_def, carga_def) values(?, ?, ?, ?, ?, ?, ?, ?, ?)",
+				[id_cedula, fecha, id_usuario, id_empresa, estatus, origen, nombre_usuario, bomba_def, carga_def],
+				function (tx, results) {
+				  //console.log("Frio correcto");
+				},
+				function (tx, error) {
+				  console.error("Error registrar:" + error.message);
+				}
+			  );
+			},
+			function (error) {
+				console.log(error)
+			},
+			function () {}
+		);
+	},
+	//! Fin Diesel
 };
