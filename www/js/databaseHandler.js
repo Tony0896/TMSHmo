@@ -237,7 +237,7 @@ var databaseHandler = {
                         }
                     );
                     tx.executeSql(
-                        "create table if not exists detalle_diesel(id_detalle integer primary key, id_cedula integer, id_unidad integer, eco text, carga_total float, odometro float, fecha_carga text, no_bomba int, almacen text, id_operador int, operador text, operador2 text, jornada text, vueltas int, h_inicio text, h_fin text, tipo_carga text, VIN text)",
+                        "create table if not exists detalle_diesel(id_detalle integer primary key, id_cedula integer, id_unidad integer, eco text, carga_total float, odometro float, fecha_carga text, no_bomba int, almacen text, id_operador int, operador text, operador2 text, jornada text, vueltas int, h_inicio text, h_fin text, tipo_carga text, VIN text, eco2 text, comentarios text, Id_Empresa int)",
                         [],
                         function(tx, results){
                             // console.log("Se creo Servicio tecnico DIPREC correctamente!");

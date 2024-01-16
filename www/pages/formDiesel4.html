@@ -10,11 +10,6 @@
                 <i class="icon material-icons md-only" style="color: #1E9FB4; font-weight: 900;">arrow_back</i>
             </a>
         </nav>
-        <div class="toolbar tabbar toolbar-bottom" >
-            <div class="toolbar-inner" style="background-color: #1E9FB4;" id="toolbar_down">
-                <a href="#" onclick="FinalizarCargaDiesel();" style="margin: auto;color: #fff;font-weight: bold;font-size: 18px;">Finalizar Carga <i class="icon material-icons md-only" style="display: inline-block;">chevron_right</i></a>
-            </div>
-        </div>
         <!-- Contenido Page -->
         <div class="page-content" style="height: 98%;border-radius: 0px !important;">
             <div style="text-align: center; justify-content:center; margin-right:auto; margin-left:auto; width: 99%;margin-top: 0px;">
@@ -22,7 +17,7 @@
                     <div class="list FWM-fixing-form" id="datos_form" style="margin-left: 5px;margin-right: 5px;width: 99%;">
                         <h2 style="text-align:center">Datos de carga de Diesel</h2>
                         <div style="margin: 20px 10px;">
-                            <span id="titulo_modal" class="span FWM-span-form">Bomba de carga</span>
+                            <span class="span FWM-span-form">Bomba de carga</span>
                             <select class="FWM-input input-resalte" id="bomba_def" style="font-size: 30px !important;padding: 15px;">
                                 <option value="0" selected>Selecciona una opción</option>
                                 <option value="Bomba 1">Bomba 1</option>
@@ -32,8 +27,8 @@
                                 <option value="Bomba 5">Bomba 5</option>
                             </select>
                             
-                            <span id="titulo_modal" class="span FWM-span-form">Cantidad de litros en bomba</span>
-                            <input type="number" id="carga_def" class="FWM-input input-resalte" style="padding-right: 5px;font-size: 39px !important;margin-bottom: 50px;" maxlength="20" min="1" step=".01">
+                            <span class="span FWM-span-form">Cantidad de litros en bomba</span>
+                            <input type="text" inputmode="numeric" id="carga_def" class="FWM-input input-resalte" style="padding-right: 5px;font-size: 39px !important;margin-bottom: 50px;" maxlength="20" min="1" step=".01" oninput=revisaNumber(this.id)>
                             
                             <div class="block grid-resizable-demo" style="margin-bottom: 70px;">
                                 <div class="row align-items-stretch" style="text-align: center;">

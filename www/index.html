@@ -18,7 +18,7 @@
         $(document).ready(function () {
             // Validar si ya habia iniciado sesion
             var Usuario = localStorage.getItem("Usuario");
-            localStorage.setItem("version", "1.2.0");
+            localStorage.setItem("version", "1.2.1");
             // var url = "http://192.168.100.3/Desarrollo/CISAApp/HMOFiles/App";
             // var url = "http://192.168.1.79/Desarrollo/CISAApp/HMOFiles_dev/App";
             // var url = "http://172.16.0.143/Desarrollo/CISAApp/HMOFiles/App"; 
@@ -147,6 +147,7 @@
                                             for (i = 0; i < content.accesos.length; i++) {
                                                 modulo = modulo + content.accesos[i].nombre_n1_modu.trim() + ",";
                                             }
+                                            let accesos = JSON.stringify(content.accesos)
                                             var modulos = modulo.slice(0, -1);
                                             localStorage.setItem("sendFlag", 0);
                                             localStorage.setItem("Usuario", usuario_usua);
@@ -155,6 +156,7 @@
                                             localStorage.setItem("Modulo", modulos);
                                             localStorage.setItem("id_usuario", ID_usuario);
                                             localStorage.setItem("empresa", 1);
+                                            localStorage.setItem("accesos", accesos);
                                             window.location.href = "menu.html";
                                         } else if (content.code == 1) {
                                             swal("", "Algo salió mal.", "warning");

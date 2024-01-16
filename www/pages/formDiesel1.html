@@ -41,6 +41,31 @@
             <div id="content-page" style="text-align: center; justify-content:center; margin-right:auto; margin-left:auto; width: 99%;">
                 <div style="text-align: center; justify-content:center; margin-right:auto; margin-left:auto; width: 99%;">
                     <div id="visitsContainer">
+                        <!-- <div>
+                            <div>
+                                <div>
+                                    <span> Litros De tanque Definidos </span>
+                                    <input type="text" inputmode="numeric" id="litrosTanque" class="FWM-input input-resalte" style="padding-right: 5px;font-size: 35px !important;height: 50px !important;" maxlength="9" step=".01" oninput="checkLengtNumber(this.id)">
+                                </div>
+                                <div>
+                                    <span> Litros Despachados </span>
+                                    <input type="text" inputmode="numeric" id="litrosDespachados" class="FWM-input input-resalte" style="padding-right: 5px;font-size: 35px !important;height: 50px !important;" maxlength="9" step=".01" oninput="checkLengtNumber(this.id)">
+                                </div>
+                                <div>
+                                    <span> Litros Restantes </span>
+                                    <input type="text" inputmode="numeric" id="litrosRestantes" class="FWM-input input-resalte" style="padding-right: 5px;font-size: 35px !important;height: 50px !important;" maxlength="9" step=".01" oninput="checkLengtNumber(this.id)">
+                                </div>
+                                <div>
+                                    <span class="notas_icon">
+                                        <a href='#' style='color: #2ECC71;'><i class="material-icons md-light" style="font-size: 50px;">backup</i></a>
+                                    </span>
+                                </div>
+                            </div>
+                            <div>
+                                <span> Última Actualización: 13-01-2024 10:30</span>
+                            </div>
+                        </div> -->
+                        
                         <table id="maac" align="center" style="width:92%;margin-top: 20px;">
                             <tr>
                             <td style="color: #FF0037; width:20%;">Mes:</td>
@@ -104,7 +129,7 @@
                                     <span class="notas_icon">
                                         <a href='#' style='color: #E67E22;'><i class="material-icons md-light" style="font-size: 50px;">backup</i></a>
                                     </span>
-                                    <span class="notas_text">No se completo el envío a intelesis</span>
+                                    <span class="notas_text">No se completo el envío a intelisis</span>
                                 </div>
                             </div>
 
@@ -131,6 +156,7 @@
                 var url = localStorage.getItem("url");
                 
                 cargarDiesel();
+                traeLitrosDispensario()
                 //consulta de los meses
                 var d = new Date();
                 var mactual = d.getMonth(); 

@@ -250,14 +250,14 @@
                                                     </div>
                                                 </td>
                                             </tr>
-                                            <tr class="menu_Diesel menus" style="display: none;">
+                                            <tr class="menu_Diesel menus" style="display: none;" id="btn_cargaDiesel">
                                                 <td>
                                                     <div>
                                                         <a class="item-content item-link entrar principalButton" href="#" onclick="moveMenu();"><img src="img/iconsMenu/bomba_carga.svg" height="60px"><p style="color: #000000;font-size: 19px;">Nuevo Registro</p><i class="material-icons md-light" style="color: #ff0000;margin-right: 10px;">chevron_right</i></a>
                                                     </div>
                                                 </td>
                                             </tr>
-                                            <tr class="menu_Diesel menus" id="tdHistoralDiesel" style="display: none;">
+                                            <tr class="menu_Diesel menus" style="display: none;" id="btn_historiaDiesel">
                                                 <td>
                                                     <div>
                                                         <a class="item-content item-link entrar principalButton" href="/formDiesel1/" onclick="" ><img src="img/iconsMenu/history.svg" height="60px"><p style="color: #000000;">Historial</p><i class="material-icons md-light" style="color: #ff0000;margin-right: 10px;">chevron_right</i></a>
@@ -381,6 +381,29 @@
             $(".menu_imagen").css("display", "grid");
         } else if (localStorage.getItem("Modulos") == 'Capacitacion') {
             $(".menu_capacita").css("display", "grid");
+        } else if (localStorage.getItem("Modulos") == 'Diesel') {
+            let accesos = JSON.parse(localStorage.getItem("accesos"));
+            accesos.map((acceso) => {
+                if(acceso.FK_modulo_nivel1_usmo == 196){
+                    if(acceso.alcance_secc){
+                        if(acceso.alcance_secc == 'procesa_intelisis'){
+                            localStorage.setItem("TipoAcceso", 'admin')
+                            $("#btn_cargaDiesel").css("display", "grid")
+                            $("#btn_historiaDiesel").css("display", "grid")
+                        } else {
+                            localStorage.setItem("TipoAcceso", 'user')
+                            if(acceso.permite_secc == 'R'){
+                                $("#btn_historiaDiesel").css("display", "grid")
+                            } else if(acceso.permite_secc == 'C'){
+                                $("#btn_cargaDiesel").css("display", "grid")
+                                $("#btn_historiaDiesel").css("display", "grid")
+                            }
+                        }
+                    } else {
+                        swal("", "No cuentas con permisos para la app de diesel comunícate con el administrador.", "warning");
+                    }
+                }
+            })
         } else {
             $(".menu_"+localStorage.getItem("Modulos")).css("display", "grid");
         }
@@ -564,20 +587,47 @@
         }
         function cambiamenu() {
             var nuevomenu = $("#menu_activo").val();
+            let flagMessage = true
             //var nuevomenu = "Desincorporaciones";
             localStorage.setItem("Modulos", nuevomenu);
             app.smartSelect.close();
             $(".menus").css("display", "none");
-            if (localStorage.getItem("Modulos") == 'Imagen') {
+            if (localStorage.getItem("Modulos") == 'Imagen' || localStorage.getItem("Modulos") == 'Checklist') {
                 $(".menu_imagen").css("display", "grid");
             } else if (localStorage.getItem("Modulos") == 'Capacitacion') {
                 $(".menu_capacita").css("display", "grid");
+            } else if (localStorage.getItem("Modulos") == 'Diesel') {
+                let accesos = JSON.parse(localStorage.getItem("accesos"));
+                accesos.map((acceso) => {
+                    if(acceso.FK_modulo_nivel1_usmo == 196){                        
+                        if(acceso.alcance_secc){                            
+                            if(acceso.alcance_secc == 'procesa_intelisis'){
+                                localStorage.setItem("TipoAcceso", 'admin')
+                                $("#btn_cargaDiesel").css("display", "grid")
+                                $("#btn_historiaDiesel").css("display", "grid")
+                            } else if(acceso.alcance_secc == 'contralor'){
+                                localStorage.setItem("TipoAcceso", 'contralor')
+                                $("#btn_historiaDiesel").css("display", "grid")
+                            } else {                                
+                                localStorage.setItem("TipoAcceso", 'user')
+                                if(acceso.permite_secc == 'R'){                                    
+                                    $("#btn_historiaDiesel").css("display", "grid")
+                                } else if(acceso.permite_secc == 'C'){                                    
+                                    $("#btn_cargaDiesel").css("display", "grid")
+                                    $("#btn_historiaDiesel").css("display", "grid")
+                                }
+                            }
+                        } else {
+                            flagMessage = false
+                        }
+                    }
+                })
             } else {
                 $(".menu_"+localStorage.getItem("Modulos")).css("display", "grid");
             }
             updateData();
             recargacedulas();
-            swal("", "Cambio de menu realizado correctamente.", "success");
+            flagMessage ? swal("", "Cambio de menu realizado correctamente.", "success") : swal("", "No cuentas con permisos para la app de diesel comunícate con el administrador.", "warning");
         }
         // Evento de inicio de base de datos y consuLtas
         document.addEventListener("deviceready", function () {
