@@ -4,6 +4,15 @@
         font-size: 20px;
         text-align: center;
     }
+    .item-title{
+        font-size: 25px !important;
+    }
+    .autocomplete-dropdown-inner{
+        margin-top: 15px;
+    }
+    .item-inner {
+        margin-bottom: 12px;
+    }
 </style>
 <template>
     <div class="page">
@@ -23,6 +32,7 @@
             </div>
         </div>
         <input type="hidden" id="modelos">
+        <input type="hidden" id="totalizadorFlag">
         <!-- Contenido Page -->
         <div class="page-content" style="height: 98%;border-radius: 0px !important;">
             <div style="text-align: center; justify-content:center; margin-right:auto; margin-left:auto; width: 99%;margin-top: 0px;">
@@ -46,8 +56,30 @@
                             </div>
 
                             <div style="display: flex;">
-                                <div class="span FWM-span-form" style="color: #000;">Litros inciales</div>
+                                <div class="span FWM-span-form" style="color: #000;">Totalizador incial</div>
                                 <div class="span FWM-span-form" style="color: #FF0037;" id="carga_def_d"> </div>
+                            </div>
+
+                            <div style="display: flex;">
+                                <div class="span FWM-span-form" style="color: #000;">Despachador (Bombero)</div>
+                                <div class="span FWM-span-form" style="color: #FF0037;" id="personalM"> </div>
+                            </div>
+
+                            <hr>
+
+                            <div style="display: none;" id="div_bomba2">
+                                <div class="span FWM-span-form" style="color: #000;">Bomba de carga 2</div>
+                                <div class="span FWM-span-form" style="color: #FF0037;" id="bomba_def_d2"> </div>
+                            </div>
+
+                            <div style="display: none;" id="div_totalizador">
+                                <div class="span FWM-span-form" style="color: #000;">Totalizador incial 2</div>
+                                <div class="span FWM-span-form" style="color: #FF0037;" id="carga_def_d2"> </div>
+                            </div>
+
+                            <div style="display: none;" id="div_bombero">
+                                <div class="span FWM-span-form" style="color: #000;">Despachador (Bombero) 2</div>
+                                <div class="span FWM-span-form" style="color: #FF0037;" id="personalM2"> </div>
                             </div>
 
                             <div style="display: flex;">
@@ -55,14 +87,14 @@
                                 <div class="span FWM-span-form" style="color: #FF0037;" id="unidades_cargadas">0</div>
                             </div>
 
-                            <div style="display: flex;">
+                            <div style="display: none;">
                                 <div class="span FWM-span-form" style="color: #000;font-size: 30px;">Total de litros cargados</div>
                                 <div class="span FWM-span-form" style="color: #FF0037;font-size: 30px;" id="total_litros">0</div>
                             </div>
 
                             <div>&nbsp;</div>
 
-                            <div style="display: flex;">
+                            <div style="display: none;">
                                 <div class="span FWM-span-form" style="color: #000; font-size: 35px;">Litros restantes</div>
                                 <div class="span FWM-span-form" style="color: #FF0037; font-size: 35px;" id="carga_restantes"> </div>
                             </div>
@@ -72,7 +104,7 @@
                             <div>
                                 <span class="span FWM-span-form">Busca una Unidad</span>
                                 <div style="display: flex;">
-                                    <input type="text" placeholder="Escribe el eco de la unidad" id="autocomplete" class="FWM-input autocomplete-dropdown item-title" style="padding-right: 5px;font-size: 35px !important;height: 60px !important;background-color: #fdfeff !important;border: 2px solid #3498db !important;">
+                                    <input type="text" inputmode="numeric" placeholder="Escribe el eco de la unidad" id="autocomplete" class="FWM-input autocomplete-dropdown item-title" style="padding-right: 5px;font-size: 35px !important;height: 60px !important;background-color: #fdfeff !important;border: 2px solid #3498db !important;">
                                     <span style="min-width: 20%;padding-left: 10px;">
                                         <button class="col button button-small button-round button-outline" style="height: 100%;border-color: #FF0037;" id="btn_llamarUnidad" onclick="llamarUnidadDiesel();"><i class="material-icons md-light" style="color: #FF0037;vertical-align: middle;font-size: 45px;">play_circle_outline</i></button>
                                     </span>
@@ -128,7 +160,7 @@
                                 <h3 class="FWN-titulo-2" id="title_unidad">Unidad: </h3><hr>
             
                                 <span class="span FWM-span-form">Bomba de carga</span>
-                                <select class="FWM-input obligatorio" id="bomba_c" style="padding: 10px;font-size: 35px !important;height: 60px !important;background-color: #e7f0f8 !important;border: 2px solid #3498db !important;">
+                                <select class="FWM-input obligatorio" id="bomba_c" style="padding: 10px;font-size: 35px !important;height: 60px !important;background-color: #e7f0f8 !important;border: 2px solid #3498db !important;" onchange="reviewTotalizador(this.value)">
                                     <option value="0" selected>Selecciona una opción</option>
                                     <option value="Bomba 1">Bomba 1</option>
                                     <option value="Bomba 2">Bomba 2</option>
@@ -136,6 +168,7 @@
                                     <option value="Bomba 4">Bomba 4</option>
                                     <option value="Bomba 5">Bomba 5</option>
                                 </select>
+                                <span class="span FWM-span-form span_Flagtotalizador" style="color: #FF0037"></span>
                                 
                                 <span class="span FWM-span-form">Almacen</span>
                                 <input type="text" id="almacen" class="FWM-input" style="padding-right: 5px;" maxlength="255" value="DIESEL">
@@ -148,10 +181,13 @@
                                 </select>
                                 
                                 <span class="span FWM-span-form">Cantidad de litros cargados</span>
-                                <input type="number" id="carga" class="FWM-input input-resalte" style="padding-right: 5px;" maxlength="4" min="1" step=".01" onchange="validaLitros(this.value)">
+                                <input type="number" id="carga" class="FWM-input input-resalte" style="padding-right: 5px;" maxlength="4" min="1" step=".01" onchange="validaLitros(this.value)" oninput="lengthCargas(this.id)">
 
                                 <span class="span FWM-span-form">Kilometraje</span>
-                                <input type="text" inputmode="numeric" id="odometro" class="FWM-input input-resalte" style="padding-right: 5px;" maxlength="10" step=".01" oninput="checkLengtNumber(this.id)">
+                                <input type="text" inputmode="numeric" id="odometro" class="FWM-input input-resalte" style="padding-right: 5px;" maxlength="20" step=".01" oninput="checkLengtNumber(this.id)">
+
+                                <span class="span FWM-span-form">Totalizador</span>
+                                <input type="text" inputmode="numeric" id="totalizador" class="FWM-input input-resalte" style="padding-right: 5px;" maxlength="20" step=".01" oninput="checkLengtNumber(this.id)">
 
                                 <span class="span FWM-span-form">Operador</span>
                                 <input type="text" id="operador" class="FWM-input" style="padding-right: 5px;" maxlength="255">
@@ -210,7 +246,7 @@
                                 <input type="text" id="unidad_u" class="FWM-input" style="padding-right: 5px;" maxlength="255">
 
                                 <span class="span FWM-span-form">Bomba de carga</span>
-                                <select class="FWM-input obligatorio" id="bomba_u">
+                                <select class="FWM-input obligatorio" id="bomba_u" style="padding: 10px;font-size: 35px !important;height: 60px !important;background-color: #e7f0f8 !important;border: 2px solid #3498db !important;" onchange="reviewTotalizador(this.value)">
                                     <option value="0">Selecciona una opción</option>
                                     <option value="Bomba 1">Bomba 1</option>
                                     <option value="Bomba 2">Bomba 2</option>
@@ -218,7 +254,8 @@
                                     <option value="Bomba 4">Bomba 4</option>
                                     <option value="Bomba 5">Bomba 5</option>
                                 </select>
-                                
+                                <span class="span FWM-span-form span_Flagtotalizador" style="color: #FF0037"></span>
+
                                 <span class="span FWM-span-form">Almacen</span>
                                 <input type="text" id="almacen_u" class="FWM-input" style="padding-right: 5px;" maxlength="255">
             
@@ -230,10 +267,13 @@
                                 </select>
                                 
                                 <span class="span FWM-span-form">Cantidad de litros cargados</span>
-                                <input type="number" id="carga_u" class="FWM-input input-resalte" style="padding-right: 5px;" maxlength="4" min="1" step=".01" onchange="validaLitros(this.value)">
+                                <input type="number" id="carga_u" class="FWM-input input-resalte" style="padding-right: 5px;" maxlength="4" min="1" step=".01" onchange="validaLitros(this.value)" oninput="lengthCargas(this.id)">
             
                                 <span class="span FWM-span-form">Kilometraje</span>
-                                <input type="text" inputmode="numeric" id="odometro_u" class="FWM-input input-resalte" style="padding-right: 5px;" maxlength="10" step=".01" oninput="checkLengtNumber(this.id)">
+                                <input type="text" inputmode="numeric" id="odometro_u" class="FWM-input input-resalte" style="padding-right: 5px;" maxlength="20" step=".01" oninput="checkLengtNumber(this.id)">
+
+                                <span class="span FWM-span-form">Totalizador</span>
+                                <input type="text" inputmode="numeric" id="totalizador_u" class="FWM-input input-resalte" style="padding-right: 5px;" maxlength="20" step=".01" oninput="checkLengtNumber(this.id)">
             
                                 <span class="span FWM-span-form">Operador</span>
                                 <input type="text" id="operador_u" class="FWM-input" style="padding-right: 5px;" maxlength="255">
@@ -290,7 +330,7 @@
 
                 databaseHandler.db.transaction(
                     function(tx5){
-                        tx5.executeSql("SELECT fecha, id_empresa, bomba_def, carga_def FROM datos_generales_diesel WHERE id_cedula = ?",
+                        tx5.executeSql("SELECT fecha, id_empresa, bomba_def, carga_def, personal,bomba_def2, carga_def2, personal2 FROM datos_generales_diesel WHERE id_cedula = ?",
                             [localStorage.getItem("IdCedula")],
                             function(tx5, results){
                                 var item = results.rows.item(0);
@@ -299,6 +339,20 @@
                                 $("#bomba_def_d").html(item.bomba_def)
                                 $("#carga_def_d").html(numberWithCommas(Number(item.carga_def)))
                                 $("#fecha").html(fecha[0]);
+                                $("#personalM").html(item.personal);
+                                let option = `<option value="0">Selecciona una opción</option> <option value="${item.bomba_def}">${item.bomba_def}</option>`
+                                $("#bomba_c").html(option)
+                                $("#bomba_u").html(option)
+                                if(item.bomba_def2 != 0){
+                                    $("#bomba_c").append(`<option value="${item.bomba_def2}">${item.bomba_def2}</option>`)
+                                    $("#bomba_u").append(`<option value="${item.bomba_def2}">${item.bomba_def2}</option>`)
+                                    $("#div_bomba2").css("display", "flex")
+                                    $("#div_totalizador").css("display", "flex")
+                                    $("#div_bombero").css("display", "flex")
+                                    $("#bomba_def_d2").html(item.bomba_def2)
+                                    $("#carga_def_d2").html(numberWithCommas(Number(item.carga_def2)))
+                                    $("#personalM2").html(item.personal2)
+                                }
                             },
                             function(tx5, error){
                                 console.error("Error: " + error.message);
@@ -319,7 +373,7 @@
                                 if(length == 0){
                                     $("#message-nr").css("display", "block");
                                     $("#total_litros").html(`${numberWithCommas(0)}`);
-                                    $("#carga_restantes").html(`${numberWithCommas(Number($("#carga_def_d").html()).toFixed(2))}`);
+                                    $("#carga_restantes").html(`${numberWithCommas(Number(String($("#carga_def_d").html()).replaceAll(",", "")).toFixed(2))}`);
                                     app.preloader.hide();
                                 }else{
                                     $("#message-nr").css("display", "none");
@@ -327,7 +381,7 @@
                                         var item2 = results.rows.item(i);
                                         var no_bomba = '';
                                         item2.no_bomba ? no_bomba = item2.no_bomba: no_bomba = 0;
-                                        $("#tb_diesel").append(`<tr><td>${item2.eco2}</td><td>${ Number(item2.carga_total) > 0 ? numberWithCommas(item2.carga_total) : '<span style="color:#FF0037"> SIN CARGA </span>'}</td><td>${numberWithCommas(item2.odometro)}</td><td>${no_bomba}</td><td>${item2.tipo_carga}</td><td><button class='col button button-small button-round button-outline edit-btn' style='height: 100%;border-color: #FF0037;margin-top: 15px;margin-bottom: 15px;height: 60px !important;width: 60px;' onclick="editarCargaDiesel('${item2.id_detalle}','${item2.id_unidad}','${item2.eco}','${item2.carga_total}','${item2.odometro}','${item2.no_bomba}','${item2.almacen}','${item2.h_fin}','${item2.h_inicio}','${item2.jornada}','${item2.operador}','${item2.id_operador}','${item2.vueltas}','${item2.tipo_carga}','${item2.operador2}','${item2.VIN}','2','${item2.eco2}','${item2.comentarios}');"><i class='material-icons md-light' style='color: #FF0037;vertical-align: middle;font-size: 40px;'>edit</i></button></td></tr>`);
+                                        $("#tb_diesel").append(`<tr><td>${item2.eco2}</td><td>${ Number(item2.carga_total) > 0 ? numberWithCommas(item2.carga_total) : '<span style="color:#FF0037"> SIN CARGA </span>'}</td><td>${numberWithCommas(item2.odometro)}</td><td>${no_bomba}</td><td>${item2.tipo_carga}</td><td><button class='col button button-small button-round button-outline edit-btn' style='height: 100%;border-color: #FF0037;margin-top: 15px;margin-bottom: 15px;height: 60px !important;width: 60px;' onclick="editarCargaDiesel('${item2.id_detalle}','${item2.id_unidad}','${item2.eco}','${item2.carga_total}','${item2.odometro}','${item2.no_bomba}','${item2.almacen}','${item2.h_fin}','${item2.h_inicio}','${item2.jornada}','${item2.operador}','${item2.id_operador}','${item2.vueltas}','${item2.tipo_carga}','${item2.operador2}','${item2.VIN}','2','${item2.eco2}','${item2.comentarios}','${item2.Id_Empresa}','${item2.totalizador}');"><i class='material-icons md-light' style='color: #FF0037;vertical-align: middle;font-size: 40px;'>edit</i></button></td></tr>`);
                                     }
                                     databaseHandler.db.transaction(
                                         function(tx5){
@@ -336,7 +390,7 @@
                                                 function(tx5, results){
                                                     var item3 = results.rows.item(0);
                                                     $("#total_litros").html(`${numberWithCommas(Number(item3.carga_totales).toFixed(2))}`);
-                                                    $("#carga_restantes").html(`${numberWithCommas( Number($("#carga_def_d").html()).toFixed(2) - Number(item3.carga_totales).toFixed(2))}`);
+                                                    $("#carga_restantes").html(`${numberWithCommas( Number(String($("#carga_def_d").html()).replaceAll(",", "")).toFixed(2) - Number(item3.carga_totales).toFixed(2))}`);
                                                     $("#unidades_cargadas").html(`${item3.cuentas}`);
                                                     $("#tb_diesel").append(`<tr id="row_totales" style="text-align: center;background-color: #005D99;color: white;font-weight: bold;"><th>Totales</th><th>${numberWithCommas(Number(item3.carga_totales).toFixed(2))}</th><th>&nbsp;</th><th>&nbsp;</th><th>&nbsp;</th><th>&nbsp;</th></tr>`);
                                                     $("#autocomplete").val("");

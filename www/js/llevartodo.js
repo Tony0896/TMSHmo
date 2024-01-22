@@ -96,7 +96,7 @@ function llevarTodo(id_cedula,tipo_cedula){
                                                         $.ajax({
                                                             type: "POST",
                                                             async : true,
-                                                            url: url+"/guardarRevImgCheklist.php",
+                                                            url: url+"/Imagen/guardarRevImgCheklist.php",
                                                             dataType: 'html',
                                                             data: {'datosCedulaGeneral': JSON.stringify(datosCedulaGeneral),
                                                             'checklist': JSON.stringify(checklist),
@@ -1238,7 +1238,7 @@ function llevarTodo(id_cedula,tipo_cedula){
                                             let fecha_fin = item1.fecha_fin.replace(" ", "T");
                                             let fecha_envio = getDateWhitZeros();
                                             fecha_envio = fecha_envio.replace(" ", "T");
-                                            datos_generales_diesel[i] = {'Valor':i,'fecha':fecha,'fecha_corta':fecha_corta[0], 'id_usuario':item1.id_usuario, 'nombre_usuario':item1.nombre_usuario, 'id_empresa':item1.id_empresa, 'carga_total':item1.carga_total, 'total_unidades':item1.total_unidades, 'unidades_cargadas':item1.unidades_cargadas, 'promedio':item1.promedio, 'origen':item1.origen,'fecha_fin':fecha_fin, 'nombre_empresa': NombreEmpresa(item1.id_empresa), 'fecha_envio':fecha_envio};
+                                            datos_generales_diesel[i] = {'Valor':i,'fecha':fecha,'fecha_corta':fecha_corta[0], 'id_usuario':item1.id_usuario, 'nombre_usuario':item1.nombre_usuario, 'id_empresa':item1.id_empresa, 'carga_total':item1.carga_total, 'total_unidades':item1.total_unidades, 'unidades_cargadas':item1.unidades_cargadas, 'promedio':item1.promedio, 'origen':item1.origen,'fecha_fin':fecha_fin, 'nombre_empresa': NombreEmpresa(item1.id_empresa), 'fecha_envio':fecha_envio, 'personal' :item1.personal, 'ID_Personal' :item1.ID_Personal, 'personal2' :item1.personal2, 'ID_Personal2' :item1.ID_Personal2, 'carga_def' :item1.carga_def, 'carga_def2' :item1.carga_def2, 'bomba_def' :item1.bomba_def, 'bomba_def2' :item1.bomba_def2};
                                         }
                                         databaseHandler.db.transaction(
                                             function(tx){
@@ -1249,7 +1249,7 @@ function llevarTodo(id_cedula,tipo_cedula){
                                                         for(var i = 0; i< length; i++){
                                                             var item2 = results.rows.item(i);
                                                             let fecha_carga = item2.fecha_carga.replace(" ", "T");
-                                                            detalle_diesel[i] = {'Valor':i, 'id_unidad':item2.id_unidad, 'eco':item2.eco, 'eco':item2.eco, 'carga_total':item2.carga_total, 'odometro':item2.odometro, 'fecha_carga':fecha_carga, 'no_bomba':item2.no_bomba, 'almacen':item2.almacen, 'id_operador':item2.id_operador, 'operador':item2.operador, 'jornada':item2.jornada, 'vueltas':item2.vueltas, 'h_inicio':item2.h_inicio, 'h_fin':item2.h_fin, 'tipo_carga':item2.tipo_carga, 'operador2': item2.operador2, 'VIN': item2.VIN, 'comentarios': item2.comentarios, 'Id_Empresa': item2.Id_Empresa};
+                                                            detalle_diesel[i] = {'Valor':i, 'id_unidad':item2.id_unidad, 'totalizador':item2.totalizador,'eco':item2.eco, 'eco':item2.eco, 'carga_total':item2.carga_total, 'odometro':item2.odometro, 'fecha_carga':fecha_carga, 'no_bomba':item2.no_bomba, 'almacen':item2.almacen, 'id_operador':item2.id_operador, 'operador':item2.operador, 'jornada':item2.jornada, 'vueltas':item2.vueltas, 'h_inicio':item2.h_inicio, 'h_fin':item2.h_fin, 'tipo_carga':item2.tipo_carga, 'operador2': item2.operador2, 'VIN': item2.VIN, 'comentarios': item2.comentarios, 'Id_Empresa': item2.Id_Empresa};
                                                         }
                                                         $.ajax({
                                                             type: "POST",

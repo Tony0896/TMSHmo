@@ -17,6 +17,15 @@
         font-size: 20px;
         text-align: center;
     }
+    .item-title{
+        font-size: 25px !important;
+    }
+    .autocomplete-dropdown-inner{
+        margin-top: 15px;
+    }
+    .item-inner {
+        margin-bottom: 12px;
+    }
 </style>
 <template>
 	<div class="page">
@@ -108,10 +117,10 @@
                                 </select>
                                 
                                 <span class="span FWM-span-form">Cantidad de litros cargados</span>
-                                <input type="number" id="carga_u" class="FWM-input input-resalte" style="padding-right: 5px;" maxlength="4" min="1" step=".01" onchange="validaLitros(this.value)">
+                                <input type="number" id="carga_u" class="FWM-input input-resalte" style="padding-right: 5px;" maxlength="4" min="1" step=".01" onchange="validaLitros(this.value)" oninput="lengthCargas(this.id)">
             
                                 <span class="span FWM-span-form">Kilometraje</span>
-                                <input type="number" id="odometro_u" class="FWM-input input-resalte" style="padding-right: 5px;" maxlength="10" step=".01" oninput="checkLengtNumber(this.id)">
+                                <input type="number" id="odometro_u" class="FWM-input input-resalte" style="padding-right: 5px;" maxlength="20" step=".01" oninput="checkLengtNumber(this.id)">
             
                                 <span class="span FWM-span-form">Operador</span>
                                 <input type="text" id="operador_u" class="FWM-input" style="padding-right: 5px;" maxlength="255">
@@ -191,7 +200,6 @@
                 }
 
 				var url = localStorage.getItem("url");
-				//var url = "http://192.168.30.237/Desarrollo/CISAApp/Archivos/App_dev";
 
 				app.request.get(url + '/datageneralDiesel.php', { Id: ID_consulta, TipoCed: typeConsulta }, function (data) {
 					$('.sentencia1').remove();

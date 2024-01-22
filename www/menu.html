@@ -353,8 +353,8 @@
 
         var modulos = localStorage.getItem("Modulo").split(",");
         for (i = 0; i < modulos.length; i++) {
-            if (modulos[i] == "Imagen") {
-                $("#menu_activo").append(`<option value="Imagen">Revisión Imagen</option>`);
+            if (modulos[i] == "RevImagen") {
+                $("#menu_activo").append(`<option value="RevImagen">Revisión Imagen</option>`);
             } else if (modulos[i] == "tecnologiasHmo") {
                 $("#menu_activo").append(`<option value="tecnologiasHmo">Inspección Tecnologías</option>`);
             } else {
@@ -377,7 +377,7 @@
 
         $(".menus").css("display", "none");
 
-        if (localStorage.getItem("Modulos") == 'Imagen' || localStorage.getItem("Modulos") == 'Checklist') {
+        if (localStorage.getItem("Modulos") == 'RevImagen' || localStorage.getItem("Modulos") == 'Checklist') {
             $(".menu_imagen").css("display", "grid");
         } else if (localStorage.getItem("Modulos") == 'Capacitacion') {
             $(".menu_capacita").css("display", "grid");
@@ -447,11 +447,11 @@
             alert("Failed because: "+message);
         }
         function updateData() {
-            // var urlBase2 = "http://192.168.100.3/Desarrollo/CISAApp/HMOFiles_dev/JSONS";
+            // var urlBase2 = "http://192.168.100.8/Desarrollo/CISAApp/HMOFiles/JSONS";
             // var urlBase2 = "http://192.168.1.79/Desarrollo/CISAApp/HMOFiles_dev/JSONS";
             // var urlBase2 = "http://172.16.0.143/Desarrollo/CISAApp/HMOFiles/JSONS";
             // var urlBase2 = "http://tmshmo.ci-sa.com.mx/www.CISAAPP.com/HMOFiles_dev/JSONS";}
-            var urlBase2 = "http://tmshmo.ci-sa.com.mx/www.CISAAPP.com/HMOFiles_dev/JSONS";
+            var urlBase2 = "http://tmshmo.ci-sa.com.mx/www.CISAAPP.com/HMOFiles/JSONS";
 
             if (localStorage.getItem("Modulos")) {
                 if (localStorage.getItem("Modulos") == 'Limpieza') {
@@ -592,7 +592,7 @@
             localStorage.setItem("Modulos", nuevomenu);
             app.smartSelect.close();
             $(".menus").css("display", "none");
-            if (localStorage.getItem("Modulos") == 'Imagen' || localStorage.getItem("Modulos") == 'Checklist') {
+            if (localStorage.getItem("Modulos") == 'RevImagen' || localStorage.getItem("Modulos") == 'Checklist') {
                 $(".menu_imagen").css("display", "grid");
             } else if (localStorage.getItem("Modulos") == 'Capacitacion') {
                 $(".menu_capacita").css("display", "grid");
@@ -650,7 +650,7 @@
             });
 
             ///cedulas pendientes
-            if (localStorage.getItem("Modulos") == 'Imagen') {
+            if (localStorage.getItem("Modulos") == 'RevImagen') {
                 var tipo = "checklist";
             } else if (localStorage.getItem("Modulos") == 'Capacitacion') {
                 var tipo = "Capacitación";
@@ -730,7 +730,22 @@
                 function () { }
             );
             //fin envios pendientes y terminados
+            //*Cambio de campos en BD
+            databaseHandler.db.transaction(
+                function(tx5){tx5.executeSql("SELECT ID_Personal FROM datos_generales_diesel LIMIT 1",[],function(tx5, results){});},
+                function(error){
+                    databaseHandler.db.transaction( function(tx5){ tx5.executeSql( "ALTER TABLE datos_generales_diesel ADD COLUMN personal text", [], function(tx5, results){ } ); }, function(error){}, function(){} );
+                    databaseHandler.db.transaction( function(tx5){ tx5.executeSql( "ALTER TABLE datos_generales_diesel ADD COLUMN ID_Personal int", [], function(tx5, results){ } ); }, function(error){}, function(){} );
+                    databaseHandler.db.transaction( function(tx5){ tx5.executeSql( "ALTER TABLE datos_generales_diesel ADD COLUMN personal2 text", [], function(tx5, results){ } ); }, function(error){}, function(){} );
+                    databaseHandler.db.transaction( function(tx5){ tx5.executeSql( "ALTER TABLE datos_generales_diesel ADD COLUMN ID_Personal2 int", [], function(tx5, results){ } ); }, function(error){}, function(){} );
+                    databaseHandler.db.transaction( function(tx5){ tx5.executeSql( "ALTER TABLE datos_generales_diesel ADD COLUMN bomba_def2 integer", [], function(tx5, results){ } ); }, function(error){}, function(){} );
+                    databaseHandler.db.transaction( function(tx5){ tx5.executeSql( "ALTER TABLE datos_generales_diesel ADD COLUMN carga_def2 float", [], function(tx5, results){ } ); }, function(error){}, function(){} );
 
+                    databaseHandler.db.transaction( function(tx5){ tx5.executeSql( "ALTER TABLE detalle_diesel ADD COLUMN totalizador float", [], function(tx5, results){ } ); }, function(error){}, function(){} );
+                },
+                function(){}
+            );
+            //* FIN Cambio de campos en BD
             //Sin conexion
             var sinConexion = 0;
             document.addEventListener("offline", onOffline, false);

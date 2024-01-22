@@ -88,7 +88,7 @@
                         }
                         autocomplete.preloaderShow();
                         app.request({
-                            url: cordova.file.dataDirectory + "jsons/"+NomJson+".json", 
+                            url: cordova.file.dataDirectory + "jsons_RevImagen/"+NomJson+".json", 
                             method: 'GET',
                             dataType: 'json',
                             data: {
@@ -107,7 +107,7 @@
                 $('#autocomplete-dropdown-ajax').change(function () {
                     var unidad = $("#autocomplete-dropdown-ajax").val();
                     var encontro = false;
-                    app.request.get(cordova.file.dataDirectory + "jsons/"+NomDescCli+".json", function (data) {
+                    app.request.get(cordova.file.dataDirectory + "jsons_RevImagen/"+NomDescCli+".json", function (data) {
                         var content2 = JSON.parse(data);
                         for(var x = 0; x < content2.length; x++) {
                             if(content2[x].id_unidad == unidad){

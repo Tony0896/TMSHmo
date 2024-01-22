@@ -505,14 +505,14 @@ var productHandler = {
 	},
 	//! Fin Relevos
 	//! Inicio Diesel
-	addDatosGenerales_Diesel: function (id_cedula, fecha, id_usuario, id_empresa, estatus, origen, nombre_usuario, bomba_def, carga_def){
+	addDatosGenerales_Diesel: function (id_cedula, fecha, id_usuario, id_empresa, estatus, origen, nombre_usuario, bomba_def, carga_def, ID_Personal, personal, bomba_def2, carga_def2, ID_Personal2, personal2){
 		databaseHandler.db.transaction(
 			function (tx) {
 			  tx.executeSql(
-				"insert into datos_generales_diesel(id_cedula, fecha, id_usuario, id_empresa,estatus, origen, nombre_usuario, bomba_def, carga_def) values(?, ?, ?, ?, ?, ?, ?, ?, ?)",
-				[id_cedula, fecha, id_usuario, id_empresa, estatus, origen, nombre_usuario, bomba_def, carga_def],
+				"insert into datos_generales_diesel(id_cedula, fecha, id_usuario, id_empresa,estatus, origen, nombre_usuario, bomba_def, carga_def, ID_Personal, personal, bomba_def2, carga_def2, ID_Personal2, personal2) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+				[id_cedula, fecha, id_usuario, id_empresa, estatus, origen, nombre_usuario, bomba_def, carga_def, ID_Personal, personal, bomba_def2, carga_def2, ID_Personal2, personal2],
 				function (tx, results) {
-				  //console.log("Frio correcto");
+					app.views.main.router.navigate({ name: 'yallegueDiesel'});
 				},
 				function (tx, error) {
 				  console.error("Error registrar:" + error.message);

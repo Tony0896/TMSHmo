@@ -18,6 +18,15 @@
         font-size: 20px;
         text-align: center;
     }
+    .item-title{
+        font-size: 25px !important;
+    }
+    .autocomplete-dropdown-inner{
+        margin-top: 15px;
+    }
+    .item-inner {
+        margin-bottom: 12px;
+    }
 </style>
 <template>
 	<div class="page">
@@ -52,7 +61,7 @@
                     <div>
                         <span class="span FWM-span-form">Busca una Unidad</span>
                         <div style="display: flex;">
-                            <input type="text" placeholder="Escribe el eco de la unidad" id="autocomplete" class="FWM-input autocomplete-dropdown item-title" style="padding-right: 5px;">
+                            <input type="text" inputmode="numeric" placeholder="Escribe el eco de la unidad" id="autocomplete" class="FWM-input autocomplete-dropdown item-title" style="padding-right: 5px;">
                             <span style="min-width: 20%;padding-left: 10px;">
                                 <button class="col button button-small button-round button-outline" style="height: 100%;border-color: #FF0037;" id="btn_llamarUnidad" onclick="llamarUnidadDiesel();"><i class="material-icons md-light" style="color: #FF0037;vertical-align: middle;font-size: 30px;">play_circle_outline</i></button>
                             </span>
@@ -114,10 +123,10 @@
                                 </select>
                                 
                                 <span class="span FWM-span-form">Cantidad de litros cargados</span>
-                                <input type="number" id="carga" class="FWM-input input-resalte" style="padding-right: 5px;" maxlength="4" min="1" step=".01" onchange="validaLitros(this.value)">
+                                <input type="number" id="carga" class="FWM-input input-resalte" style="padding-right: 5px;" maxlength="4" min="1" step=".01" onchange="validaLitros(this.value)" oninput="lengthCargas(this.id)">
 
                                 <span class="span FWM-span-form">Kilometraje</span>
-                                <input type="number" id="odometro" class="FWM-input input-resalte" style="padding-right: 5px;" maxlength="10" step=".01" oninput="checkLengtNumber(this.id)">
+                                <input type="text" inputmode="numeric" id="odometro" class="FWM-input input-resalte" style="padding-right: 5px;" maxlength="20" step=".01" oninput="checkLengtNumber(this.id)">
 
                                 <span class="span FWM-span-form">Operador</span>
                                 <input type="text" id="operador" class="FWM-input" style="padding-right: 5px;" maxlength="255">
@@ -197,10 +206,10 @@
                                 </select>
                                 
                                 <span class="span FWM-span-form">Cantidad de litros cargados</span>
-                                <input type="number" id="carga_u" class="FWM-input input-resalte" style="padding-right: 5px;" maxlength="4" min="1" step=".01" onchange="validaLitros(this.value)">
+                                <input type="number" id="carga_u" class="FWM-input input-resalte" style="padding-right: 5px;" maxlength="4" min="1" step=".01" onchange="validaLitros(this.value)" oninput="lengthCargas(this.id)">
             
                                 <span class="span FWM-span-form">Kilometraje</span>
-                                <input type="number" id="odometro_u" class="FWM-input input-resalte" style="padding-right: 5px;" maxlength="10" step=".01" oninput="checkLengtNumber(this.id)">
+                                <input type="text" inputmode="numeric" id="odometro_u" class="FWM-input input-resalte" style="padding-right: 5px;" maxlength="20" step=".01" oninput="checkLengtNumber(this.id)">
             
                                 <span class="span FWM-span-form">Operador</span>
                                 <input type="text" id="operador_u" class="FWM-input" style="padding-right: 5px;" maxlength="255">

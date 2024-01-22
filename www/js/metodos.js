@@ -270,7 +270,7 @@ function moveMenu(val) {
         localStorage.setItem("Opcion", '1');
         if (Modulos == "Limpieza") {
             app.views.main.router.navigate({ name: 'yallegueLimp' });
-        } else if (Modulos == "Imagen") {
+        } else if (Modulos == "RevImagen") {
             app.views.main.router.navigate({ name: 'yallegue' });
         } else if (Modulos == "Desincorporaciones") {
             iniciarDesincorporaciones();
@@ -629,7 +629,7 @@ function cambiaimgempresa(val) {
 function recarga_history(mes_pdfs, year_pdfs) {
     var IdU = localStorage.getItem("Usuario");
     var id_empresa = localStorage.getItem("empresa");
-    if (localStorage.getItem("Modulos") == 'Imagen') {
+    if (localStorage.getItem("Modulos") == 'RevImagen') {
         var tipo = "checklist";
     } else if (localStorage.getItem("Modulos") == 'Limpieza') {
         var tipo = "Limpieza";
@@ -667,7 +667,7 @@ function recarga_history(mes_pdfs, year_pdfs) {
 }
 function recargacedulas() {
     $("#pendientes").html("");
-    if (localStorage.getItem("Modulos") == 'Imagen') {
+    if (localStorage.getItem("Modulos") == 'RevImagen') {
         var tipo = "checklist";
     } else if (localStorage.getItem("Modulos") == 'Limpieza') {
         var tipo = "Limpieza";
@@ -777,8 +777,7 @@ function IniciaCheckList() {
         var fecha_revision = $("#fecha_revision").val();
         var id_usuario = localStorage.getItem("Usuario");
         var nombre_usuario = localStorage.getItem("nombre");
-        var fecha = new Date();
-        var fecha_llegada = fecha.getFullYear() + "-" + (fecha.getMonth() + 1) + "-" + fecha.getDate() + " " + fecha.getHours() + ":" + fecha.getMinutes() + ":" + fecha.getSeconds();
+        var fecha_llegada = getDateWhitZeros()
         var horario_programado = fecha_llegada;
         var nombre_cliente = Unidad;
         var estatus = 0;
@@ -802,7 +801,7 @@ function IniciaCheckList() {
                         productHandler.addDatosGenerales(id_cedula, Unidad, Chasis, Familia, marca, Empresa, FK_id_unidad, id_unidad_vs, FK_id_empresa, id_modelo_check, fecha_revision);
                         var NomJson = 'datos_check_desc' + empresa;
                         app.request({
-                            url: cordova.file.dataDirectory + "jsons/" + NomJson + ".json",
+                            url: cordova.file.dataDirectory + "jsons_RevImagen/" + NomJson + ".json",
                             method: 'GET',
                             dataType: 'json',
                             success: function (data) {
@@ -1092,8 +1091,7 @@ function EnviarCheckList() {
     }).then((RESP) => {
         if (RESP == true) {
             var id_cedula = localStorage.getItem("IdCedula");
-            var fecha = new Date();
-            var fecha_salida = fecha.getFullYear() + "-" + (fecha.getMonth() + 1) + "-" + fecha.getDate() + " " + fecha.getHours() + ":" + fecha.getMinutes() + ":" + fecha.getSeconds();
+            var fecha_salida = getDateWhitZeros()
             var estatus = 1;
             databaseHandler.db.transaction(
                 function (tx) {
@@ -1181,7 +1179,7 @@ function CreaModalOption(id, opciones, mul, titulo_modal) {
     var NomDescCli = "danios";
     var html = '';
 
-    app.request.get(cordova.file.dataDirectory + "jsons/" + NomDescCli + ".json", function (data) {
+    app.request.get(cordova.file.dataDirectory + "jsons_RevImagen/" + NomDescCli + ".json", function (data) {
         var content2 = JSON.parse(data);
         for (var x = 0; x < content2.length; x++) {
             html = html + `<label class="label_modal"><input class="cbox_modal obligatorio" type="checkbox" id="cbox` + content2[x].id_danio + `" value="` + content2[x].tipo_danio + `">` + content2[x].tipo_danio + `</label><br>`;
@@ -1274,8 +1272,7 @@ function IniciaCheckListLimp() {
         var fecha_revision = $("#fecha_revision").val();
         var id_usuario = localStorage.getItem("Usuario");
         var nombre_usuario = localStorage.getItem("nombre");
-        var fecha = new Date();
-        var fecha_llegada = fecha.getFullYear() + "-" + (fecha.getMonth() + 1) + "-" + fecha.getDate() + " " + fecha.getHours() + ":" + fecha.getMinutes() + ":" + fecha.getSeconds();
+        var fecha_llegada = getDateWhitZeros()
         var horario_programado = fecha_llegada;
         var nombre_cliente = Unidad;
         var estatus = 0;
@@ -7399,6 +7396,13 @@ function preingresoDiesel(){
 function prepreIniciaCargaDiesel(){
     let bomba_def = $("#bomba_def").val()
     let carga_def = $("#carga_def").val()
+    let ID_Personal = $("#ID_Personal").val()
+    let personal = $("#personal").val()
+
+    let bomba_def2 = $("#bomba_def2").val()
+    let carga_def2 = $("#carga_def2").val()
+    let ID_Personal2 = $("#ID_Personal2").val()
+    let personal2 = $("#personal2").val()
 
     if(bomba_def == 0){
         swal("", "Debes seleccionar una bomba.", "warning")
@@ -7409,6 +7413,34 @@ function prepreIniciaCargaDiesel(){
         swal("", "Debes indicar la cantidad de litros inicial.", "warning")
         return false
     }
+
+    if(!ID_Personal){
+        swal("", "Debes indicar al despachador de la bomba.", "warning")
+        return false
+    }
+
+    if(bomba_def2 != 0 || carga_def2 || ID_Personal2 || personal2){
+        if(bomba_def2 == 0){
+            swal("", "Si vas a tener 2 bombas. Debes seleccionar una bomba.", "warning")
+            return false
+        }
+    
+        if(Number(carga_def2) <= 0){
+            swal("", "Si vas a tener 2 bombas. Debes indicar la cantidad de litros inicial.", "warning")
+            return false
+        }
+    
+        if(!ID_Personal2){
+            swal("", "Si vas a tener 2 bombas. Debes indicar al despachador de la bomba.", "warning")
+            return false
+        }
+
+        if(bomba_def == bomba_def2){
+            swal("", "La bomba 1 no puede ser igual a la bomba 2.", "warning")
+            return false
+        }
+    }
+
     swal({
         title: "Aviso",
         text: "¿Los datos son correctos?",
@@ -7417,12 +7449,12 @@ function prepreIniciaCargaDiesel(){
         dangerMode: true,
     }).then((RESP) => {
         if (RESP == true) {
-            iniciarCargasDiesel(bomba_def, carga_def);
+            iniciarCargasDiesel(bomba_def, carga_def, ID_Personal, personal, bomba_def2, carga_def2, ID_Personal2, personal2);
         }
     });
 }
 
-function iniciarCargasDiesel(bomba_def, carga_def){
+function iniciarCargasDiesel(bomba_def, carga_def, ID_Personal, personal, bomba_def2, carga_def2, ID_Personal2, personal2){
     var id_usuario = localStorage.getItem("Usuario");
     var nombre_usuario = localStorage.getItem("nombre");
     var fecha_llegada =  getDateWhitZeros();
@@ -7443,8 +7475,9 @@ function iniciarCargasDiesel(bomba_def, carga_def){
                 var item = results.rows.item(0);
                 localStorage.setItem("IdCedula", item.Id);
                 var id_cedula = item.Id;
-                productHandler.addDatosGenerales_Diesel(id_cedula, fecha_llegada, id_usuario, id_cliente, estatus, origen, nombre_usuario, bomba_def, carga_def);
-                app.views.main.router.navigate({ name: 'yallegueDiesel'});
+                carga_def = Number(String(carga_def).replaceAll(",", "")).toFixed(2);
+                carga_def2 = Number(String(carga_def2).replaceAll(",", "")).toFixed(2);
+                productHandler.addDatosGenerales_Diesel(id_cedula, fecha_llegada, id_usuario, id_cliente, estatus, origen, nombre_usuario, bomba_def, carga_def, ID_Personal, personal, bomba_def2, carga_def2, ID_Personal2, personal2);
             },
             function (tx, error) {
                 console.log("Error al guardar cedula: " + error.message);
@@ -7476,7 +7509,8 @@ function llamarUnidadDiesel(){
                             app.sheet.open('#sheet-modal');
                             $("#id_unidad").val("");
                             $("#eco").val("");
-                            let bomba = $("#bomba_def_d").html() ? $("#bomba_def_d").html() : 0
+                            let bomba = String($("#bomba_def_d2").html()).trim() ? 0 : $("#bomba_def_d").html()
+                            String($("#bomba_def_d2").html()).trim() ? null : reviewTotalizador($("#bomba_def_d").html())
                             $("#bomba_c").val(bomba);
                             $("#almacen").val("Diesel");
                             $("#id_operador").val("");
@@ -7528,7 +7562,8 @@ function llamarUnidadDiesel(){
                                 app.sheet.open('#sheet-modal');
                                 $("#id_unidad").val("");
                                 $("#eco").val("");
-                                let bomba = $("#bomba_def_d").html() ? $("#bomba_def_d").html() : 0
+                                let bomba = String($("#bomba_def_d2").html()).trim() ? 0 : $("#bomba_def_d").html()
+                                String($("#bomba_def_d2").html()).trim() ? null : reviewTotalizador($("#bomba_def_d").html())
                                 $("#bomba_c").val(bomba);
                                 $("#almacen").val("Diesel");
                                 $("#id_operador").val("");
@@ -7597,10 +7632,19 @@ function llamarUnidadDiesel(){
 }
 
 function agregaCarga(){
-    if($("#bomba_c").val() && $("#odometro").val()){
+    if($("#carga").val()){
+        if($("#totalizadorFlag").val() >= 9){
+            if(Number($("#totalizador").val()) < 1){
+                swal("", "Debes agregar el totalizador.", "warning")    
+                return false
+            }
+        }
+    }
+    
+    if($("#bomba_c").val() != 0 && $("#odometro").val()){
         var id_cedula = localStorage.getItem("IdCedula");
         var carga_total = Number($("#carga").val()).toFixed(2);
-        var odometro = Number(String($("#odometro").val()).replace(",", "")).toFixed(2);
+        var odometro = Number(String($("#odometro").val()).replaceAll(",", "")).toFixed(2);
         var fecha_carga = getDateWhitZeros();
         var no_bomba = $("#bomba_c").val();
         var tipo_carga = $("#tipo_carga").val();
@@ -7619,12 +7663,17 @@ function agregaCarga(){
         eco2 = eco2.replace("Unidad: ", '')
         let comentarios = $("#comentariosDiesel").val()
         let Id_Empresa = $("#Id_Empresa").val()
-
+        if($("#totalizador").val()){
+            var totalizador = Number(String($("#totalizador").val()).replaceAll(",", "")).toFixed(2);
+        } else {
+            var totalizador =  ''
+        }
+        
         databaseHandler.db.transaction(
             function (tx) {
               tx.executeSql(
-                "insert into detalle_diesel (id_cedula, id_unidad, eco, carga_total, odometro, fecha_carga, no_bomba, almacen, operador, id_operador, jornada, vueltas, h_inicio, h_fin, tipo_carga, operador2, VIN, eco2, comentarios, Id_Empresa) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                [id_cedula, id_unidad, eco, carga_total, odometro, fecha_carga, no_bomba, almacen, operador, id_operador, jornada, vueltas, h_inicio, h_fin, tipo_carga, operador2, VIN, eco2, comentarios, Id_Empresa],
+                "insert into detalle_diesel (id_cedula, id_unidad, eco, carga_total, odometro, fecha_carga, no_bomba, almacen, operador, id_operador, jornada, vueltas, h_inicio, h_fin, tipo_carga, operador2, VIN, eco2, comentarios, Id_Empresa, totalizador) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                [id_cedula, id_unidad, eco, carga_total, odometro, fecha_carga, no_bomba, almacen, operador, id_operador, jornada, vueltas, h_inicio, h_fin, tipo_carga, operador2, VIN, eco2, comentarios, Id_Empresa, totalizador],
                 function (tx, results) {
                     swal("","Guardado correctamente","success");
                     $("#row_totales").remove();
@@ -7637,7 +7686,7 @@ function agregaCarga(){
                                     $("#message-nr").css("display", "none");
                                     var no_bomba = '';
                                     item2.no_bomba ? no_bomba = item2.no_bomba: no_bomba = 0;
-                                    $("#tb_diesel").append(`<tr><td>${item2.eco2}</td><td>${ Number(item2.carga_total) > 0 ? numberWithCommas(item2.carga_total) : '<span style="color:#FF0037"> SIN CARGA </span>'}</td><td>${numberWithCommas(item2.odometro)}</td><td>${no_bomba}</td><td>${item2.tipo_carga}</td><td><button class='col button button-small button-round button-outline edit-btn' style='height: 100%;border-color: #FF0037;margin-top: 15px;margin-bottom: 15px;height: 60px !important;width: 60px;' onclick="editarCargaDiesel('${item2.id_detalle}','${item2.id_unidad}','${item2.eco}','${item2.carga_total}','${item2.odometro}','${item2.no_bomba}','${item2.almacen}','${item2.h_fin}','${item2.h_inicio}','${item2.jornada}','${item2.operador}','${item2.id_operador}','${item2.vueltas}','${item2.tipo_carga}','${item2.operador2}','${item2.VIN}','2','${item2.eco2}','${item2.comentarios}', '${item2.Id_Empresa}');"><i class='material-icons md-light' style='color: #FF0037;vertical-align: middle;font-size: 40px;'>edit</i></button></td></tr>`);
+                                    $("#tb_diesel").append(`<tr><td>${item2.eco2}</td><td>${ Number(item2.carga_total) > 0 ? numberWithCommas(item2.carga_total) : '<span style="color:#FF0037"> SIN CARGA </span>'}</td><td>${numberWithCommas(item2.odometro)}</td><td>${no_bomba}</td><td>${item2.tipo_carga}</td><td><button class='col button button-small button-round button-outline edit-btn' style='height: 100%;border-color: #FF0037;margin-top: 15px;margin-bottom: 15px;height: 60px !important;width: 60px;' onclick="editarCargaDiesel('${item2.id_detalle}','${item2.id_unidad}','${item2.eco}','${item2.carga_total}','${item2.odometro}','${item2.no_bomba}','${item2.almacen}','${item2.h_fin}','${item2.h_inicio}','${item2.jornada}','${item2.operador}','${item2.id_operador}','${item2.vueltas}','${item2.tipo_carga}','${item2.operador2}','${item2.VIN}','2','${item2.eco2}','${item2.comentarios}', '${item2.Id_Empresa}','${item2.totalizador}');"><i class='material-icons md-light' style='color: #FF0037;vertical-align: middle;font-size: 40px;'>edit</i></button></td></tr>`);
                                     databaseHandler.db.transaction(
                                         function(tx5){
                                             tx5.executeSql("SELECT SUM(carga_total) as carga_totales, COUNT(id_cedula) as cuentas FROM detalle_diesel WHERE id_cedula = ?",
@@ -7645,11 +7694,12 @@ function agregaCarga(){
                                                 function(tx5, results){
                                                     var item3 = results.rows.item(0);
                                                     $("#total_litros").html(`${numberWithCommas(Number(item3.carga_totales).toFixed(2))}`);
-                                                    $("#carga_restantes").html(`${numberWithCommas( Number($("#carga_def_d").html()).toFixed(2) - Number(item3.carga_totales).toFixed(2))}`);
+                                                    $("#carga_restantes").html(`${numberWithCommas( Number(String($("#carga_def_d").html()).replaceAll(",", "")).toFixed(2) - Number(item3.carga_totales).toFixed(2))}`);
                                                     $("#unidades_cargadas").html(`${item3.cuentas}`);
                                                     $("#tb_diesel").append(`<tr id="row_totales" style="text-align: center;background-color: #005D99;color: white;font-weight: bold;"><th>Totales</th><th>${numberWithCommas(Number(item3.carga_totales).toFixed(2))}</th><th>&nbsp;</th><th>&nbsp;</th><th>&nbsp;</th><th>&nbsp;</th></tr>`);
                                                     $("#autocomplete").val("");
                                                     $("#btn_llamarUnidad").removeData()
+                                                    $("#totalizador").val('')
                                                     $("#modelos").val('')
                                                     app.sheet.close('#sheet-modal');
                                                 },
@@ -7682,7 +7732,7 @@ function agregaCarga(){
     }
 }
 
-function editarCargaDiesel(id_detalle,id_unidad,eco,carga_total,odometro,no_bomba,almacen,h_fin,h_inicio,jornada,operador,id_operador,vueltas,tipo_carga,operador2,VIN,type,eco2,comentarios,Id_Empresa){
+function editarCargaDiesel(id_detalle,id_unidad,eco,carga_total,odometro,no_bomba,almacen,h_fin,h_inicio,jornada,operador,id_operador,vueltas,tipo_carga,operador2,VIN,type,eco2,comentarios,Id_Empresa,totalizador){
     if(type){
         app.sheet.open('#sheet-modal-u');
         $("#h_inicio_u").val(h_inicio);
@@ -7691,8 +7741,9 @@ function editarCargaDiesel(id_detalle,id_unidad,eco,carga_total,odometro,no_bomb
         $("#id_detalle_u").val(id_detalle);
         $("#title_unidad_u").html(`Unidad: ${eco2}`);
         $("#carga_u").val(carga_total);
-        $("#odometro_u").val(odometro);
+        $("#odometro_u").val(numberWithCommas(odometro));
         $("#bomba_u").val(no_bomba);
+        reviewTotalizador(no_bomba)
         $("#almacen_u").val(almacen);
         $("#jornada_u").val(jornada);
         $("#operador_u").val(operador);
@@ -7706,6 +7757,7 @@ function editarCargaDiesel(id_detalle,id_unidad,eco,carga_total,odometro,no_bomb
         $("#VIN_u").val(VIN);
         $("#comentariosDiesel_u").val(comentarios)
         $("#Id_Empresa_u").val(Id_Empresa)
+        $("#totalizador_u").val(totalizador)
 
         $('#close_sheet_u').click(function () {
             if($('#pasa_u').val()!=0){
@@ -7731,7 +7783,7 @@ function editarCargaDiesel(id_detalle,id_unidad,eco,carga_total,odometro,no_bomb
         $("#id_detalle_u").val(id_detalle);
         $("#title_unidad_u").html(`Unidad: ${eco}`);
         $("#carga_u").val(carga_total);
-        $("#odometro_u").val(odometro);
+        $("#odometro_u").val(numberWithCommas(odometro));
         $("#bomba_u").val(no_bomba);
         $("#almacen_u").val(almacen);
         $("#jornada_u").val(jornada);
@@ -7767,13 +7819,20 @@ function editarCargaDiesel(id_detalle,id_unidad,eco,carga_total,odometro,no_bomb
 }
 
 function actualizaCargaDiesel(){
-    if($("#id_unidad_u").val()){
+    if($("#totalizadorFlag").val() >= 9){
+        if(Number($("#totalizador_u").val()) < 1){
+            swal("", "Debes agregar el totalizador.", "warning")    
+            return false
+        }
+    }
+    
+    if($("#bomba_u").val() != 0 && $("#id_unidad_u").val()){
         var id_cedula = localStorage.getItem("IdCedula");
         var h_inicio = $("#h_inicio_u").val();
         var h_fin = $("#h_fin_u").val();
         var id_carga = $("#id_detalle_u").val();
         var carga = Number($("#carga_u").val()).toFixed(2);
-        var odometro = Number(String($("#odometro_u").val()).replace(",", "")).toFixed(2);
+        var odometro = Number(String($("#odometro_u").val()).replaceAll(",", "")).toFixed(2);
         var bomba = $("#bomba_u").val();
         var almacen = $("#almacen_u").val();
         var jornada = $("#jornada_u").val();
@@ -7789,12 +7848,17 @@ function actualizaCargaDiesel(){
         eco2 = eco2.replace("Unidad: ", '')
         let comentarios = $("#comentariosDiesel_u").val()
         let Id_Empresa = $("#Id_Empresa_u").val()
+        if($("#totalizador_u").val()){
+            var totalizador = Number(String($("#totalizador_u").val()).replaceAll(",", "")).toFixed(2);
+        } else {
+            var totalizador =  ''
+        }
     
         databaseHandler.db.transaction(
             function (tx) {
               tx.executeSql(
-                "Update detalle_diesel SET carga_total = ?, odometro = ?, no_bomba = ?, h_inicio = ?, h_fin = ?, almacen = ?, jornada = ?, operador = ?, id_operador = ?, vueltas = ?, tipo_carga = ?, operador2 = ?, id_unidad = ?, eco = ?, VIN = ?, eco2 = ?, Id_Empresa = ?, comentarios = ? WHERE id_cedula = ? AND id_detalle = ?",
-                [carga, odometro, bomba, h_inicio, h_fin, almacen, jornada, operador, id_operador, vueltas, tipo_carga, operador2, id_unidad, eco, VIN, eco2, Id_Empresa, comentarios, id_cedula, id_carga],
+                "Update detalle_diesel SET totalizador = ?, carga_total = ?, odometro = ?, no_bomba = ?, h_inicio = ?, h_fin = ?, almacen = ?, jornada = ?, operador = ?, id_operador = ?, vueltas = ?, tipo_carga = ?, operador2 = ?, id_unidad = ?, eco = ?, VIN = ?, eco2 = ?, Id_Empresa = ?, comentarios = ? WHERE id_cedula = ? AND id_detalle = ?",
+                [totalizador, carga, odometro, bomba, h_inicio, h_fin, almacen, jornada, operador, id_operador, vueltas, tipo_carga, operador2, id_unidad, eco, VIN, eco2, Id_Empresa, comentarios, id_cedula, id_carga],
                 function (tx, results) {
                     $("#tb_diesel").html(``);
                     swal("","Actualizado correctamente","success");
@@ -7807,14 +7871,14 @@ function actualizaCargaDiesel(){
                                     if(length == 0){
                                         $("#message-nr").css("display", "block");
                                         $("#total_litros").html(`${numberWithCommas(0)}`);
-                                        $("#carga_restantes").html(`${numberWithCommas( Number($("#carga_def_d").html()).toFixed(2) )}`);
+                                        $("#carga_restantes").html(`${numberWithCommas( Number(String($("#carga_def_d").html()).replaceAll(",", "")).toFixed(2) )}`);
                                     }else{
                                         $("#message-nr").css("display", "none");
                                         for(var i = 0; i< length; i++){
                                             var item2 = results.rows.item(i);
                                             var no_bomba = '';
                                             item2.no_bomba ? no_bomba = item2.no_bomba: no_bomba = 0;
-                                            $("#tb_diesel").append(`<tr><td>${item2.eco2}</td><td>${ Number(item2.carga_total) > 0 ? numberWithCommas(item2.carga_total) : '<span style="color:#FF0037"> SIN CARGA </span>' }</td><td>${numberWithCommas(item2.odometro)}</td><td>${no_bomba}</td><td>${item2.tipo_carga}</td><td><button class='col button button-small button-round button-outline edit-btn' style='height: 100%;border-color: #FF0037;margin-top: 15px;margin-bottom: 15px;height: 60px !important;width: 60px;' onclick="editarCargaDiesel('${item2.id_detalle}','${item2.id_unidad}','${item2.eco}','${item2.carga_total}','${item2.odometro}','${item2.no_bomba}','${item2.almacen}','${item2.h_fin}','${item2.h_inicio}','${item2.jornada}','${item2.operador}','${item2.id_operador}','${item2.vueltas}','${item2.tipo_carga}','${item2.operador2}','${item2.VIN}','2','${item2.eco2}','${item2.comentarios}','${item2.Id_Empresa}');"><i class='material-icons md-light' style='color: #FF0037;vertical-align: middle;font-size: 40px;'>edit</i></button></td></tr>`);
+                                            $("#tb_diesel").append(`<tr><td>${item2.eco2}</td><td>${ Number(item2.carga_total) > 0 ? numberWithCommas(item2.carga_total) : '<span style="color:#FF0037"> SIN CARGA </span>' }</td><td>${numberWithCommas(item2.odometro)}</td><td>${no_bomba}</td><td>${item2.tipo_carga}</td><td><button class='col button button-small button-round button-outline edit-btn' style='height: 100%;border-color: #FF0037;margin-top: 15px;margin-bottom: 15px;height: 60px !important;width: 60px;' onclick="editarCargaDiesel('${item2.id_detalle}','${item2.id_unidad}','${item2.eco}','${item2.carga_total}','${item2.odometro}','${item2.no_bomba}','${item2.almacen}','${item2.h_fin}','${item2.h_inicio}','${item2.jornada}','${item2.operador}','${item2.id_operador}','${item2.vueltas}','${item2.tipo_carga}','${item2.operador2}','${item2.VIN}','2','${item2.eco2}','${item2.comentarios}','${item2.Id_Empresa}','${item2.totalizador}');"><i class='material-icons md-light' style='color: #FF0037;vertical-align: middle;font-size: 40px;'>edit</i></button></td></tr>`);
                                         }
                                         databaseHandler.db.transaction(
                                             function(tx5){
@@ -7823,11 +7887,12 @@ function actualizaCargaDiesel(){
                                                     function(tx5, results){
                                                         var item3 = results.rows.item(0);
                                                         $("#total_litros").html(`${numberWithCommas(Number(item3.carga_totales).toFixed(2))}`);
-                                                        $("#carga_restantes").html(`${numberWithCommas( Number($("#carga_def_d").html()).toFixed(2) - Number(item3.carga_totales).toFixed(2))}`);
+                                                        $("#carga_restantes").html(`${numberWithCommas( Number(String($("#carga_def_d").html()).replaceAll(",", "")).toFixed(2) - Number(item3.carga_totales).toFixed(2))}`);
                                                         $("#unidades_cargadas").html(`${item3.cuentas}`);
                                                         $("#tb_diesel").append(`<tr id="row_totales" style="text-align: center;background-color: #005D99;color: white;font-weight: bold;"><th>Totales</th><th>${numberWithCommas(Number(item3.carga_totales).toFixed(2))}</th><th>&nbsp;</th><th>&nbsp;</th><th>&nbsp;</th><th>&nbsp;</th></tr>`);
                                                         $("#autocomplete").val("");
                                                         $("#modelos").val('')
+                                                        $("#totalizador").val('')
                                                         app.preloader.hide();
                                                         app.sheet.close('#sheet-modal-u');
                                                     },
@@ -7857,7 +7922,7 @@ function actualizaCargaDiesel(){
             function (error) {console.error("Error: " + error.message);}
         );
     } else {
-        swal("", "La unidad no puede estar vacía", "warning");
+        swal("", "La bomba y la unidad no puede estar vacía", "warning");
     }
 }
 
@@ -8388,7 +8453,7 @@ function actualizaCargaDiesel2(){
         var h_fin = $("#h_fin_u").val();
         var id_carga = $("#id_detalle_u").val();
         var carga = Number($("#carga_u").val()).toFixed(2);
-        var odometro = Number(String($("#odometro_u").val()).replace(",", "")).toFixed(2);
+        var odometro = Number(String($("#odometro_u").val()).replaceAll(",", "")).toFixed(2);
         var bomba = $("#bomba_u").val();
         var almacen = $("#almacen_u").val();
         var jornada = $("#jornada_u").val();
@@ -8844,10 +8909,10 @@ var add_minutes =  function (dt, minutes) {
 }
 
 function agregaCarga2(){
-    if($("#carga").val() && $("#odometro").val()){
+    if($("#carga").val() && $("#odometro").val() && $("#bomba_c").val() != 0){
         var id_cedula = localStorage.getItem("IdCte"); // ID_cabecero
         var carga_total = Number($("#carga").val()).toFixed(2); // carga_total
-        var odometro = Number(String($("#odometro").val()).replace(",", "")).toFixed(2); // odometro
+        var odometro = Number(String($("#odometro").val()).replaceAll(",", "")).toFixed(2); // odometro
         var fecha_carga = getDateWhitZeros().replace(" ", "T"); // fecha_carga
         var no_bomba = $("#bomba_c").val(); // no_bomba
         var tipo_carga = $("#tipo_carga").val(); // tipo_carga
@@ -8922,7 +8987,7 @@ function agregaCarga2(){
             }
         });
     } else {
-        swal("", "Debes llenar los campos de litros cargados y el odometro para poder guardar", "warning")
+        swal("", "Debes llenar los campos de la bomba, litros cargados y el odometro para poder guardar", "warning")
     }
 }
 function borrarCargaDiesel(id, id_unidad, eco, carga){
@@ -9009,9 +9074,21 @@ function validaLitros(valor){
 
 function checkLengtNumber(id){
     let valor = $("#"+id).val()
-    valor = String(valor).replaceAll(",","")
-    let newValor = numberWithCommas(valor)
-    $("#"+id).val(newValor)
+    if(String(valor).includes(".")){
+        let newValor = valor.split(".")
+        if (newValor[1].length > 2){
+            newValor[1] = newValor[1].slice(0,2)
+            $("#"+id).val(newValor[0]+'.'+newValor[1])
+        } else {
+            valor = String(newValor[0]).replaceAll(",","")
+            let newValor2 = numberWithCommas(valor)
+            $("#"+id).val(newValor2+'.'+newValor[1])
+        }
+    } else {
+        valor = String(valor).replaceAll(",","")
+        let newValor = numberWithCommas(valor)
+        $("#"+id).val(newValor)
+    }
 }
 
 function traeLitrosDispensario(){
@@ -9035,11 +9112,65 @@ function traeLitrosDispensario(){
     // },function (xhr) { });
 }
 
-function revisaNumber(id){
+function reviewTotalizador(value){
+    $(".span_Flagtotalizador").css("display", "none")
+    let span_Flagtotalizador = 0
+    if(value){
+        let unidades = 0
+        databaseHandler.db.transaction(
+            function(tx5){
+                tx5.executeSql("SELECT * FROM detalle_diesel WHERE id_cedula = ? AND no_bomba = ? AND carga_total > 0",
+                    [localStorage.getItem("IdCedula"), value],
+                    function(tx5, results){
+                        var length = results.rows.length;
+                        if(length > 0){
+                            for(var i = 0; i< length; i++){
+                                var item2 = results.rows.item(i);
+                                unidades++
+                                if(item2.totalizador){
+                                    unidades = 0
+                                }
+                                $("#totalizadorFlag").val(unidades)
+                            }
+                            span_Flagtotalizador = 10 - (Number($("#totalizadorFlag").val())+1)
+                            $(".span_Flagtotalizador").html(span_Flagtotalizador+" UNIDADES PARA EL TOTALIZADOR")
+                            $(".span_Flagtotalizador").css("display", "block")
+                        } else {
+                            $("#totalizadorFlag").val(0)
+                            span_Flagtotalizador = 10 - (Number($("#totalizadorFlag").val())+1)
+                            $(".span_Flagtotalizador").html(span_Flagtotalizador+" UNIDADES PARA EL TOTALIZADOR")
+                            $(".span_Flagtotalizador").css("display", "block")
+                        }
+                    },
+                    function(tx5, error){
+                        console.error("Error: " + error.message);
+                    }
+                );  
+            },
+            function(error){console.error("Error: " + error.message);},
+            function(error){console.error("Error: " + error.message);}
+        );
+    }
+}
+
+function lengthCargas(id){
     let valor = $("#"+id).val()
-    valor.includes(',') && (valor = String(valor).replaceAll(",",""))
-    const formattedNumber = Number(valor).toLocaleString("en-US")
-    $("#"+id).val(formattedNumber)
+    if(String(valor).includes(".")){
+        let newValor = valor.split(".")
+        if (newValor[0].length > 3){
+            newValor[0] = newValor[0].slice(0,3)
+            $("#"+id).val(newValor[0]+'.'+newValor[1])    
+        }
+        if (newValor[1].length > 2){
+            newValor[1] = newValor[1].slice(0,2)
+            $("#"+id).val(newValor[0]+'.'+newValor[1])    
+        }
+    } else {
+        if (valor.length > 3) {
+            valor = valor.slice(0,3)
+            $("#"+id).val(valor)
+        }
+    }
 }
 //? Fin Diesel
 //fin HMO
