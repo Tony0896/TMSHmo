@@ -18,7 +18,7 @@
         $(document).ready(function () {
             // Validar si ya habia iniciado sesion
             var Usuario = localStorage.getItem("Usuario");
-            localStorage.setItem("version", "1.2.1");
+            localStorage.setItem("version", "1.2.3");
             // var url = "http://192.168.100.8/Desarrollo/CISAApp/HMOFiles/App";
             // var url = "http://192.168.1.79/Desarrollo/CISAApp/HMOFiles_dev/App";
             // var url = "http://172.16.0.143/Desarrollo/CISAApp/HMOFiles/App"; 
@@ -78,32 +78,34 @@
                                         swal("", "Usuario no encontrado.", "warning");
                                     } else {
                                         $("#id_user").val(datares);
-                                        $.ajax({
-                                            type: "POST",
-                                            url: url + "/loginDatos.php",
-                                            data: { metodo: 2, user: datares },
-                                            success: function (data) {
-                                                let termino = "</html>";
-                                                let posicion = data.toLowerCase().indexOf(termino.toLowerCase());
-                                                if (posicion !== -1) {
-                                                    swal("", "No cuentas con internet!", "error");
-                                                    $("#empresa").html(`<option value="">Selecciona una empresa</option>`);
-                                                } else {
-                                                    if (data) {
-                                                        if (data == 0) {
-                                                            $("#empresa").html(`<option value="">Selecciona una empresa</option>`);
-                                                            swal("", "Usuario no encontrado.", "warning");
-                                                        } else {
-                                                            data ='<option value="1" selected>ACHSA</option>';
-                                                            $("#empresa").html(data);
-                                                            // cambiaimgempresa($("#empresa").val());
-                                                        }
-                                                    } else {
-                                                        $("#empresa").html(`<option value="">Selecciona una empresa</option>`);
-                                                    }
-                                                }
-                                            }
-                                        });
+                                        data ='<option value="1" selected>ACHSA</option>';
+                                        $("#empresa").html(data);
+                                        // $.ajax({
+                                        //     type: "POST",
+                                        //     url: url + "/loginDatos.php",
+                                        //     data: { metodo: 2, user: datares },
+                                        //     success: function (data) {
+                                        //         let termino = "</html>";
+                                        //         let posicion = data.toLowerCase().indexOf(termino.toLowerCase());
+                                        //         if (posicion !== -1) {
+                                        //             swal("", "No cuentas con internet!", "error");
+                                        //             $("#empresa").html(`<option value="">Selecciona una empresa</option>`);
+                                        //         } else {
+                                        //             if (data) {
+                                        //                 if (data == 0) {
+                                        //                     $("#empresa").html(`<option value="">Selecciona una empresa</option>`);
+                                        //                     swal("", "Usuario no encontrado.", "warning");
+                                        //                 } else {
+                                        //                     data ='<option value="1" selected>ACHSA</option>';
+                                        //                     $("#empresa").html(data);
+                                        //                     // cambiaimgempresa($("#empresa").val());
+                                        //                 }
+                                        //             } else {
+                                        //                 $("#empresa").html(`<option value="">Selecciona una empresa</option>`);
+                                        //             }
+                                        //         }
+                                        //     }
+                                        // });
                                     }
                                 } else {
                                     $("#empresa").html(`<option value="">Selecciona una empresa</option>`);
