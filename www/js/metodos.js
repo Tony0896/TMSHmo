@@ -116,8 +116,7 @@ function preeliminaCache() {
     let paso = 1;
     // let urlBase2 = "http://192.168.100.4/Desarrollo/CISAApp/HMOFiles/Exec";
     // let urlBase2 = "http://tmshmo.ci-sa.com.mx/www.CISAAPP.com/HMOFiles/Exec";
-    let urlBase2 =
-        "http://tmshmo.ci-sa.com.mx/www.CISAAPP.com/HMOFiles_dev/Exec";
+    let urlBase2 = "http://tmshmo.ci-sa.com.mx/www.CISAAPP.com/HMOFiles/Exec";
     let url = "";
 
     // Capacitacion,Diesel,tecnologiasHmo,InsEncierro,InsLavado,Relevos
@@ -7018,46 +7017,38 @@ function tercaraBusqeuda(Linea, Jornada, ID_personal) {
                     data[j].Jornada == Jornada &&
                     data[j].Turno == 2
                 ) {
-                    if (data[j].FKPersonal == 0 || data[j].FKPersonal == "") {
-                        swal(
-                            "",
-                            "No existe un relevo en la asignación.",
-                            "warning"
-                        );
+                    if (ID_personal == data[j].FKPersonal) {
+                        console.log("programa 2 completo", data[j]);
+                        encontro = true;
+                        // $("#IDSale").val('')
+                        // $("#claveEmpleado").val('')
+                        // $("#fullName").val('')
+                        // $("#ID_personal").val('')
+                        // $("#Eco").val('')
+                        // $("#FKUnidad").val('')
+                        // $("#linea").val('')
+                        // $("#jornada").val('')
+                        // swal("", "El relevo no es necesario.", "warning")
+                        // app.dialog.close()
+                        $("#IDEntra").val(data[j].ID);
+                        $("#EcoE").val(data[j].Eco);
+                        $("#lineaE").val(data[j].Linea);
+                        $("#jornadaE").val(data[j].Jornada);
+                        $("#FKUnidadE").val(data[j].FKUnidad);
+                        $("#ID_personalE").val(data[j].FKPersonal);
+                        app.dialog.close();
+                        guardaRelevo();
                     } else {
-                        if (ID_personal == data[j].FKPersonal) {
-                            console.log("programa 2 completo", data[j]);
-                            encontro = true;
-                            // $("#IDSale").val('')
-                            // $("#claveEmpleado").val('')
-                            // $("#fullName").val('')
-                            // $("#ID_personal").val('')
-                            // $("#Eco").val('')
-                            // $("#FKUnidad").val('')
-                            // $("#linea").val('')
-                            // $("#jornada").val('')
-                            // swal("", "El relevo no es necesario.", "warning")
-                            // app.dialog.close()
-                            $("#IDEntra").val(data[j].ID);
-                            $("#EcoE").val(data[j].Eco);
-                            $("#lineaE").val(data[j].Linea);
-                            $("#jornadaE").val(data[j].Jornada);
-                            $("#FKUnidadE").val(data[j].FKUnidad);
-                            $("#ID_personalE").val(data[j].FKPersonal);
-                            app.dialog.close();
-                            guardaRelevo();
-                        } else {
-                            encontro = true;
-                            console.log("programa 2", data[j]);
-                            $("#IDEntra").val(data[j].ID);
-                            $("#EcoE").val(data[j].Eco);
-                            $("#lineaE").val(data[j].Linea);
-                            $("#jornadaE").val(data[j].Jornada);
-                            $("#FKUnidadE").val(data[j].FKUnidad);
-                            $("#ID_personalE").val(data[j].FKPersonal);
-                            app.dialog.close();
-                            guardaRelevo();
-                        }
+                        encontro = true;
+                        console.log("programa 2", data[j]);
+                        $("#IDEntra").val(data[j].ID);
+                        $("#EcoE").val(data[j].Eco);
+                        $("#lineaE").val(data[j].Linea);
+                        $("#jornadaE").val(data[j].Jornada);
+                        $("#FKUnidadE").val(data[j].FKUnidad);
+                        $("#ID_personalE").val(data[j].FKPersonal);
+                        app.dialog.close();
+                        guardaRelevo();
                     }
                     break;
                 }
@@ -7434,7 +7425,7 @@ function sincronizaDatosRelevos() {
     let paso = 1;
     // let urlBase2 = "http://192.168.100.4/Desarrollo/CISAApp/HMOFiles/Exec";
     // var urlBase2 = "http://172.16.0.143/Desarrollo/CISAApp/HMOFiles/Exec";
-    let urlBase2 = "http://tmshmoqa.ci-sa.com.mx/www.CISAAPP.com/HMOFiles/Exec";
+    let urlBase2 = "http://tmshmo.ci-sa.com.mx/www.CISAAPP.com/HMOFiles/Exec";
     let url =
         urlBase2 + "/Relevos/datos.php?empresa=" + EmpresaID + "&paso=" + paso;
 

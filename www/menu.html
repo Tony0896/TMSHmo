@@ -1,298 +1,855 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>Menu</title>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-        content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="theme-color" content="#2196f3" />
-    <meta http-equiv="Content-Security-Policy"
-        content="default-src * 'self' 'unsafe-inline' 'unsafe-eval' data: gap:" />
-    <script type="text/javascript" src="js/raphael-min.js"></script>
-    <script type="text/javascript" src="js/moment.js"></script>
-    <script type="text/javascript" src="js/moment-with-locales.js"></script>
-    <link rel="stylesheet" href="lib/framework7/css/framework7.bundle.min.css" />
-    <link rel="stylesheet" type="text/css" href="css/morris.css">
-    <link rel="stylesheet" href="css/app.css" />
-    <link rel="stylesheet" href="css/form.css" />
-    <link rel="stylesheet" href="css/SimpleStarRating.css" />
-    <script src="js/jquery-1.11.3.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="fonts/AvantGarde.css">
-    <link rel="stylesheet" href="css/fwm.css" />
-    <link rel="stylesheet" href="css/Hmo.css" />
-    <link rel="stylesheet" href="css/camera-field.css" />
-</head>
+    <head>
+        <title>Menu</title>
+        <meta charset="UTF-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover"
+        />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta
+            name="apple-mobile-web-app-status-bar-style"
+            content="black-translucent"
+        />
+        <meta name="theme-color" content="#2196f3" />
+        <meta
+            http-equiv="Content-Security-Policy"
+            content="default-src * 'self' 'unsafe-inline' 'unsafe-eval' data: gap:"
+        />
+        <script type="text/javascript" src="js/raphael-min.js"></script>
+        <script type="text/javascript" src="js/moment.js"></script>
+        <script type="text/javascript" src="js/moment-with-locales.js"></script>
+        <link
+            rel="stylesheet"
+            href="lib/framework7/css/framework7.bundle.min.css"
+        />
+        <link rel="stylesheet" type="text/css" href="css/morris.css" />
+        <link rel="stylesheet" href="css/app.css" />
+        <link rel="stylesheet" href="css/form.css" />
+        <link rel="stylesheet" href="css/SimpleStarRating.css" />
+        <script src="js/jquery-1.11.3.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="fonts/AvantGarde.css" />
+        <link rel="stylesheet" href="css/fwm.css" />
+        <link rel="stylesheet" href="css/Hmo.css" />
+        <link rel="stylesheet" href="css/camera-field.css" />
+    </head>
 
-<body>
-    <div id="app">
-        <div class="statusbar" style="color: #ffffff;"></div>
+    <body>
+        <div id="app">
+            <div class="statusbar" style="color: #ffffff"></div>
 
-        <div class="view view-main view-init safe-areas" data-master-detail-breakpoint="800" data-url="/">
-            <div class="page">
-                <nav class="left top-left" style="justify-content: center;">
-                    <div class="title">Bienvenido</div>
-                </nav>
-                <div class="toolbar tabbar tabbar-labels toolbar-bottom">
-                    <div class="toolbar-inner" style="background-color: #1E9FB4;">
-                        <a href="#tab-1" class="tab-link tab-link-active">
-                            <i class="icon material-icons md-only">account_circle</i>
-                            <span class="tabbar-label">Usuario</span>
-                        </a>
-                        <a href="#tab-2" class="tab-link">
-                            <i class="icon material-icons md-only">home</i>
-                            <span class="tabbar-label">Inicio</span>
-                        </a>
-                        <a href="#tab-3" class="tab-link">
-                            <i class="icon material-icons md-only">file_upload</i>
-                            <span class="tabbar-label">Bandeja</span>
-                        </a>
+            <div
+                class="view view-main view-init safe-areas"
+                data-master-detail-breakpoint="800"
+                data-url="/"
+            >
+                <div class="page">
+                    <nav class="left top-left" style="justify-content: center">
+                        <div class="title">Bienvenido</div>
+                    </nav>
+                    <div class="toolbar tabbar tabbar-labels toolbar-bottom">
+                        <div
+                            class="toolbar-inner"
+                            style="background-color: #1e9fb4"
+                        >
+                            <a href="#tab-1" class="tab-link tab-link-active">
+                                <i class="icon material-icons md-only"
+                                    >account_circle</i
+                                >
+                                <span class="tabbar-label">Usuario</span>
+                            </a>
+                            <a href="#tab-2" class="tab-link">
+                                <i class="icon material-icons md-only">home</i>
+                                <span class="tabbar-label">Inicio</span>
+                            </a>
+                            <a href="#tab-3" class="tab-link">
+                                <i class="icon material-icons md-only"
+                                    >file_upload</i
+                                >
+                                <span class="tabbar-label">Bandeja</span>
+                            </a>
+                        </div>
                     </div>
-                </div>
 
-                <div class="page-content">
-                    <div class="tabs-animated-wrap">
-                        <div class="tabs">
-
-                            <div id="tab-1" class="page-content tab tab-active bg-color-white"
-                                style="background-color: rgb(245, 245, 245);">
-                                <div class="block" style="padding-left: 15px;padding-top: 0;padding-right: 15px;">
-                                    <div class="container_empresa">
-                                        <img class="loader-image" src="img/screen/TMS_HERMOSILLO_GP.png" style="width: 50vw;">
-                                    </div>
-                                    <div>
-                                        <div id="visitsContainer">
-                                            <div class="list">
-                                                <ul>
-                                                    <li class="container_info">
-                                                        <div class="item-content">
-                                                            <i class="material-icons md-light panel-cerrar"
-                                                                style="color: #005D99;">person</i>
-                                                            <div class="item-title"><a class="panel-text"
-                                                                    id="nombre_usuario"></a></div>
-                                                        </div>
-                                                    </li>
-
-                                                    <li class="container_info">
-                                                        <div class="item-content" id="processclick"
-                                                            onclick="preeliminaCache()">
-                                                            <i class="material-icons md-light panel-cerrar"
-                                                                style="color: #005D99;margin-right: 22.84px;">cloud_done</i>
-                                                            <div class="item-title"><a class="panel-text">Sincronizar
-                                                                    datos</a></div>
-                                                        </div>
-                                                    </li>
-
-                                                    <li class="container_info" style="display: block;">
-                                                        <div class="item-content">
-                                                            <i class="material-icons md-light panel-cerrar"
-                                                                style="color: #005D99;">extension</i>
-                                                            <div class="item-title" style="width: 100%;">
-                                                                <select name="menu_activo" id="menu_activo"
-                                                                    onchange="cambiamenu();"
-                                                                    style="border-bottom: 0px;margin: auto;">
-                                                                </select>
+                    <div class="page-content">
+                        <div class="tabs-animated-wrap">
+                            <div class="tabs">
+                                <div
+                                    id="tab-1"
+                                    class="page-content tab tab-active bg-color-white"
+                                    style="background-color: rgb(245, 245, 245)"
+                                >
+                                    <div
+                                        class="block"
+                                        style="
+                                            padding-left: 15px;
+                                            padding-top: 0;
+                                            padding-right: 15px;
+                                        "
+                                    >
+                                        <div class="container_empresa">
+                                            <img
+                                                class="loader-image"
+                                                src="img/screen/TMS_HERMOSILLO_GP.png"
+                                                style="width: 50vw"
+                                            />
+                                        </div>
+                                        <div>
+                                            <div id="visitsContainer">
+                                                <div class="list">
+                                                    <ul>
+                                                        <li
+                                                            class="container_info"
+                                                        >
+                                                            <div
+                                                                class="item-content"
+                                                            >
+                                                                <i
+                                                                    class="material-icons md-light panel-cerrar"
+                                                                    style="
+                                                                        color: #005d99;
+                                                                    "
+                                                                    >person</i
+                                                                >
+                                                                <div
+                                                                    class="item-title"
+                                                                >
+                                                                    <a
+                                                                        class="panel-text"
+                                                                        id="nombre_usuario"
+                                                                    ></a>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    </li>
+                                                        </li>
 
-                                                    <li class="container_info" style="display: block;">
-                                                        <div class="item-content">
-                                                            <i class="material-icons md-light panel-cerrar"
-                                                                style="color: #005D99;">photo_camera</i>
-                                                            <div class="item-title" style="width: 100%;">
-                                                                <select name="camara_activa" id="camara_activa"
-                                                                    onchange="cambiaCamara();"
-                                                                    style="border-bottom: 0px;margin: auto;">
-                                                                    <option value="1">Cámara Principal</option>
-                                                                    <option value="0">Cámara Secundaria</option>
-                                                                </select>
+                                                        <li
+                                                            class="container_info"
+                                                        >
+                                                            <div
+                                                                class="item-content"
+                                                                id="processclick"
+                                                                onclick="preeliminaCache()"
+                                                            >
+                                                                <i
+                                                                    class="material-icons md-light panel-cerrar"
+                                                                    style="
+                                                                        color: #005d99;
+                                                                        margin-right: 22.84px;
+                                                                    "
+                                                                    >cloud_done</i
+                                                                >
+                                                                <div
+                                                                    class="item-title"
+                                                                >
+                                                                    <a
+                                                                        class="panel-text"
+                                                                        >Sincronizar
+                                                                        datos</a
+                                                                    >
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    </li>
+                                                        </li>
 
-                                                    <li class="container_info">
-                                                        <div class="item-content">
-                                                            <i class="material-icons md-light panel-cerrar"
-                                                                style="color: #005D99;">share</i>
-                                                            <div class="item-title"><a class="panel-text"
-                                                                    id="version_app"></a></div>
-                                                        </div>
-                                                    </li>
-                                                    <li class="container_info" onclick="logaout();">
-                                                        <div class="item-content">
-                                                            <i class="material-icons md-light panel-cerrar"
-                                                                style="color: #FF0037;">exit_to_app</i>
-                                                            <div class="item-title"><a class="panel-text">Cerrar
-                                                                    sesión</a></div>
-                                                        </div>
-                                                    </li>
+                                                        <li
+                                                            class="container_info"
+                                                            style="
+                                                                display: block;
+                                                            "
+                                                        >
+                                                            <div
+                                                                class="item-content"
+                                                            >
+                                                                <i
+                                                                    class="material-icons md-light panel-cerrar"
+                                                                    style="
+                                                                        color: #005d99;
+                                                                    "
+                                                                    >extension</i
+                                                                >
+                                                                <div
+                                                                    class="item-title"
+                                                                    style="
+                                                                        width: 100%;
+                                                                    "
+                                                                >
+                                                                    <select
+                                                                        name="menu_activo"
+                                                                        id="menu_activo"
+                                                                        onchange="cambiamenu();"
+                                                                        style="
+                                                                            border-bottom: 0px;
+                                                                            margin: auto;
+                                                                        "
+                                                                    ></select>
+                                                                </div>
+                                                            </div>
+                                                        </li>
 
-                                                    <li class="container_info" onclick="preEliminaTodo();" style="margin-top: 100px;border: 1px solid #e0e0e0;">
-                                                        <div class="item-content">
-                                                            <i class="material-icons md-light panel-cerrar"
-                                                                style="color: #FF0037;">delete_forever</i>
-                                                            <div class="item-title"><a class="panel-text">Eliminar datos de la aplicación</a></div>
-                                                        </div>
-                                                    </li>
-                                                </ul>
+                                                        <li
+                                                            class="container_info"
+                                                            style="
+                                                                display: block;
+                                                            "
+                                                        >
+                                                            <div
+                                                                class="item-content"
+                                                            >
+                                                                <i
+                                                                    class="material-icons md-light panel-cerrar"
+                                                                    style="
+                                                                        color: #005d99;
+                                                                    "
+                                                                    >photo_camera</i
+                                                                >
+                                                                <div
+                                                                    class="item-title"
+                                                                    style="
+                                                                        width: 100%;
+                                                                    "
+                                                                >
+                                                                    <select
+                                                                        name="camara_activa"
+                                                                        id="camara_activa"
+                                                                        onchange="cambiaCamara();"
+                                                                        style="
+                                                                            border-bottom: 0px;
+                                                                            margin: auto;
+                                                                        "
+                                                                    >
+                                                                        <option
+                                                                            value="1"
+                                                                        >
+                                                                            Cámara
+                                                                            Principal
+                                                                        </option>
+                                                                        <option
+                                                                            value="0"
+                                                                        >
+                                                                            Cámara
+                                                                            Secundaria
+                                                                        </option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+
+                                                        <li
+                                                            class="container_info"
+                                                        >
+                                                            <div
+                                                                class="item-content"
+                                                            >
+                                                                <i
+                                                                    class="material-icons md-light panel-cerrar"
+                                                                    style="
+                                                                        color: #005d99;
+                                                                    "
+                                                                    >share</i
+                                                                >
+                                                                <div
+                                                                    class="item-title"
+                                                                >
+                                                                    <a
+                                                                        class="panel-text"
+                                                                        id="version_app"
+                                                                    ></a>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                        <li
+                                                            class="container_info"
+                                                            onclick="logaout();"
+                                                        >
+                                                            <div
+                                                                class="item-content"
+                                                            >
+                                                                <i
+                                                                    class="material-icons md-light panel-cerrar"
+                                                                    style="
+                                                                        color: #ff0037;
+                                                                    "
+                                                                    >exit_to_app</i
+                                                                >
+                                                                <div
+                                                                    class="item-title"
+                                                                >
+                                                                    <a
+                                                                        class="panel-text"
+                                                                        >Cerrar
+                                                                        sesión</a
+                                                                    >
+                                                                </div>
+                                                            </div>
+                                                        </li>
+
+                                                        <li
+                                                            class="container_info"
+                                                            onclick="preEliminaTodo();"
+                                                            style="
+                                                                margin-top: 100px;
+                                                                border: 1px
+                                                                    solid
+                                                                    #e0e0e0;
+                                                            "
+                                                        >
+                                                            <div
+                                                                class="item-content"
+                                                            >
+                                                                <i
+                                                                    class="material-icons md-light panel-cerrar"
+                                                                    style="
+                                                                        color: #ff0037;
+                                                                    "
+                                                                    >delete_forever</i
+                                                                >
+                                                                <div
+                                                                    class="item-title"
+                                                                >
+                                                                    <a
+                                                                        class="panel-text"
+                                                                        >Eliminar
+                                                                        datos de
+                                                                        la
+                                                                        aplicación</a
+                                                                    >
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <div id="tab-2" class="page-content tab bg-color-white"
-                                style="background-color: rgb(245, 245, 245);">
-                                <div class="block">
-                                    <div
-                                        style="text-align: center; justify-content:center; margin-right:auto; margin-left:auto; width: 99%;">
-                                        <table style="width: 100%;">
-                                            <tr class="menu_imagen menus" style="display: none;">
-                                                <td>
-                                                    <div>
-                                                        <a class="item-content item-link entrar principalButton"
-                                                            href="#" onclick="moveMenu();"><img
-                                                                src="img/iconsMenu/portapapeles2.svg" height="60px">
-                                                            <p style="color: #000000;font-size: 19px;">Nuevo Checklist
-                                                            </p><i class="material-icons md-light"
-                                                                style="color: #ff0000;margin-right: 10px;">chevron_right</i>
+                                <div
+                                    id="tab-2"
+                                    class="page-content tab bg-color-white"
+                                    style="background-color: rgb(245, 245, 245)"
+                                >
+                                    <div class="block">
+                                        <div
+                                            style="
+                                                text-align: center;
+                                                justify-content: center;
+                                                margin-right: auto;
+                                                margin-left: auto;
+                                                width: 99%;
+                                            "
+                                        >
+                                            <table style="width: 100%">
+                                                <tr
+                                                    class="menu_imagen menus"
+                                                    style="display: none"
+                                                >
+                                                    <td>
+                                                        <div>
+                                                            <a
+                                                                class="item-content item-link entrar principalButton"
+                                                                href="#"
+                                                                onclick="moveMenu();"
+                                                                ><img
+                                                                    src="img/iconsMenu/portapapeles2.svg"
+                                                                    height="60px"
+                                                                />
+                                                                <p
+                                                                    style="
+                                                                        color: #000000;
+                                                                        font-size: 19px;
+                                                                    "
+                                                                >
+                                                                    Nuevo
+                                                                    Checklist
+                                                                </p>
+                                                                <i
+                                                                    class="material-icons md-light"
+                                                                    style="
+                                                                        color: #ff0000;
+                                                                        margin-right: 10px;
+                                                                    "
+                                                                    >chevron_right</i
+                                                                >
+                                                            </a>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr
+                                                    class="menu_imagen menus"
+                                                    style="display: none"
+                                                >
+                                                    <td>
+                                                        <a
+                                                            class="item-content item-link entrar principalButton"
+                                                            href="/history/"
+                                                            onclick=""
+                                                            ><img
+                                                                src="img/iconsMenu/history.svg"
+                                                                height="60px"
+                                                            />
+                                                            <p
+                                                                style="
+                                                                    color: #000000;
+                                                                "
+                                                            >
+                                                                Historial
+                                                            </p>
+                                                            <i
+                                                                class="material-icons md-light"
+                                                                style="
+                                                                    color: #ff0000;
+                                                                    margin-right: 10px;
+                                                                "
+                                                                >chevron_right</i
+                                                            >
                                                         </a>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr class="menu_imagen menus" style="display: none;">
-                                                <td>
-                                                    <a class="item-content item-link entrar principalButton"
-                                                        href="/history/" onclick=""><img src="img/iconsMenu/history.svg"
-                                                            height="60px">
-                                                        <p style="color: #000000;">Historial</p><i
-                                                            class="material-icons md-light"
-                                                            style="color: #ff0000;margin-right: 10px;">chevron_right</i>
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                            <tr class="menu_capacita menus">
-                                                <td>
-                                                    <div>
-                                                        <a class="item-content item-link entrar principalButton"
-                                                            href="#" onclick="moveMenu(1);"><img
-                                                                src="img/iconsMenu/bus_manejo.svg" height="60px">
-                                                            <p style="color: #000000;font-size: 19px;">Prueba técnica</p>
-                                                            <i class="material-icons md-light"
-                                                                style="color: #ff0000;margin-right: 10px;">chevron_right</i>
+                                                    </td>
+                                                </tr>
+                                                <tr class="menu_capacita menus">
+                                                    <td>
+                                                        <div>
+                                                            <a
+                                                                class="item-content item-link entrar principalButton"
+                                                                href="#"
+                                                                onclick="moveMenu(1);"
+                                                                ><img
+                                                                    src="img/iconsMenu/bus_manejo.svg"
+                                                                    height="60px"
+                                                                />
+                                                                <p
+                                                                    style="
+                                                                        color: #000000;
+                                                                        font-size: 19px;
+                                                                    "
+                                                                >
+                                                                    Prueba
+                                                                    técnica
+                                                                </p>
+                                                                <i
+                                                                    class="material-icons md-light"
+                                                                    style="
+                                                                        color: #ff0000;
+                                                                        margin-right: 10px;
+                                                                    "
+                                                                    >chevron_right</i
+                                                                >
+                                                            </a>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr class="menu_capacita menus">
+                                                    <td>
+                                                        <a
+                                                            class="item-content item-link entrar principalButton"
+                                                            href="#"
+                                                            onclick="moveMenu(2);"
+                                                            ><img
+                                                                src="img/iconsMenu/portapapeles2.svg"
+                                                                height="60px"
+                                                            />
+                                                            <p
+                                                                style="
+                                                                    color: #000000;
+                                                                "
+                                                            >
+                                                                Asistencia
+                                                                becarios
+                                                            </p>
+                                                            <i
+                                                                class="material-icons md-light"
+                                                                style="
+                                                                    color: #ff0000;
+                                                                    margin-right: 10px;
+                                                                "
+                                                                >chevron_right</i
+                                                            >
                                                         </a>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr class="menu_capacita menus">
-                                                <td>
-                                                    <a class="item-content item-link entrar principalButton"
-                                                        href="#" onclick="moveMenu(2);"><img
-                                                            src="img/iconsMenu/portapapeles2.svg" height="60px">
-                                                        <p style="color: #000000;">Asistencia becarios</p><i
-                                                            class="material-icons md-light"
-                                                            style="color: #ff0000;margin-right: 10px;">chevron_right</i>
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                            <tr class="menu_capacita menus">
-                                                <td>
-                                                    <a class="item-content item-link entrar principalButton"
-                                                        href="#" onclick="moveMenu(3);"><img
-                                                            src="img/iconsMenu/becario.svg" height="60px">
-                                                        <p style="color: #000000;">Tablero becarios</p><i
-                                                            class="material-icons md-light"
-                                                            style="color: #ff0000;margin-right: 10px;">chevron_right</i>
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                            <tr class="menu_tecnologiasHmo menus" style="display: none;">
-                                                <td>
-                                                    <div>
-                                                        <a class="item-content item-link entrar principalButton" href="#" onclick="moveMenu();"><img src="img/iconsMenu/bus_tech.svg" height="60px"><p style="color: #000000;font-size: 19px;">Nueva Revisión</p><i class="material-icons md-light" style="color: #ff0000;margin-right: 10px;">chevron_right</i></a>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr class="menu_Relevos menus" style="display: none;">
-                                                <td>
-                                                    <div>
-                                                        <a class="item-content item-link entrar principalButton" href="#" onclick="moveMenu();"><img src="img/iconsMenu/bus_tech.svg" height="60px"><p style="color: #000000;font-size: 19px;">Relevo</p><i class="material-icons md-light" style="color: #ff0000;margin-right: 10px;">chevron_right</i></a>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr class="menu_InsEncierro menus" style="display: none;">
-                                                <td>
-                                                    <div>
-                                                        <a class="item-content item-link entrar principalButton" href="#" onclick="moveMenu(4);"><img src="img/iconsMenu/bus_plus.svg" height="60px"><p style="color: #000000;font-size: 19px;">Campañas</p><i class="material-icons md-light" style="color: #ff0000;margin-right: 10px;">chevron_right</i></a>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr class="menu_InsLavado menus" style="display: none;">
-                                                <td>
-                                                    <div>
-                                                        <a class="item-content item-link entrar principalButton" href="#" onclick="moveMenu(5);"><img src="img/iconsMenu/bus.svg" height="60px"><p style="color: #000000;font-size: 19px;">Lavado de Unidades</p><i class="material-icons md-light" style="color: #ff0000;margin-right: 10px;">chevron_right</i></a>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr class="menu_InsLavado menus" style="display: none;">
-                                                <td>
-                                                    <div>
-                                                        <a class="item-content item-link entrar principalButton" href="#" onclick="moveMenu(6);"><img src="img/iconsMenu/bus.svg" height="60px"><p style="color: #000000;font-size: 19px;">Resultado Limpieza</p><i class="material-icons md-light" style="color: #ff0000;margin-right: 10px;">chevron_right</i></a>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr class="menu_InsLavado menus" style="display: none;">
-                                                <td>
-                                                    <div>
-                                                        <a class="item-content item-link entrar principalButton" href="#" onclick="moveMenu(7);"><img src="img/iconsMenu/bus.svg" height="60px"><p style="color: #000000;font-size: 19px;">Evaluación Proveedor</p><i class="material-icons md-light" style="color: #ff0000;margin-right: 10px;">chevron_right</i></a>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr class="menu_Diesel menus" style="display: none;" id="btn_cargaDiesel">
-                                                <td>
-                                                    <div>
-                                                        <a class="item-content item-link entrar principalButton" href="#" onclick="moveMenu();"><img src="img/iconsMenu/bomba_carga.svg" height="60px"><p style="color: #000000;font-size: 19px;">Nuevo Registro</p><i class="material-icons md-light" style="color: #ff0000;margin-right: 10px;">chevron_right</i></a>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr class="menu_Diesel menus" style="display: none;" id="btn_historiaDiesel">
-                                                <td>
-                                                    <div>
-                                                        <a class="item-content item-link entrar principalButton" href="/formDiesel1/" onclick="" ><img src="img/iconsMenu/history.svg" height="60px"><p style="color: #000000;">Historial</p><i class="material-icons md-light" style="color: #ff0000;margin-right: 10px;">chevron_right</i></a>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        </table>
+                                                    </td>
+                                                </tr>
+                                                <tr class="menu_capacita menus">
+                                                    <td>
+                                                        <a
+                                                            class="item-content item-link entrar principalButton"
+                                                            href="#"
+                                                            onclick="moveMenu(3);"
+                                                            ><img
+                                                                src="img/iconsMenu/becario.svg"
+                                                                height="60px"
+                                                            />
+                                                            <p
+                                                                style="
+                                                                    color: #000000;
+                                                                "
+                                                            >
+                                                                Tablero becarios
+                                                            </p>
+                                                            <i
+                                                                class="material-icons md-light"
+                                                                style="
+                                                                    color: #ff0000;
+                                                                    margin-right: 10px;
+                                                                "
+                                                                >chevron_right</i
+                                                            >
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                                <tr
+                                                    class="menu_tecnologiasHmo menus"
+                                                    style="display: none"
+                                                >
+                                                    <td>
+                                                        <div>
+                                                            <a
+                                                                class="item-content item-link entrar principalButton"
+                                                                href="#"
+                                                                onclick="moveMenu();"
+                                                                ><img
+                                                                    src="img/iconsMenu/bus_tech.svg"
+                                                                    height="60px"
+                                                                />
+                                                                <p
+                                                                    style="
+                                                                        color: #000000;
+                                                                        font-size: 19px;
+                                                                    "
+                                                                >
+                                                                    Nueva
+                                                                    Revisión
+                                                                </p>
+                                                                <i
+                                                                    class="material-icons md-light"
+                                                                    style="
+                                                                        color: #ff0000;
+                                                                        margin-right: 10px;
+                                                                    "
+                                                                    >chevron_right</i
+                                                                ></a
+                                                            >
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr
+                                                    class="menu_Relevos menus"
+                                                    style="display: none"
+                                                >
+                                                    <td>
+                                                        <div>
+                                                            <a
+                                                                class="item-content item-link entrar principalButton"
+                                                                href="#"
+                                                                onclick="moveMenu();"
+                                                                ><img
+                                                                    src="img/iconsMenu/bus_tech.svg"
+                                                                    height="60px"
+                                                                />
+                                                                <p
+                                                                    style="
+                                                                        color: #000000;
+                                                                        font-size: 19px;
+                                                                    "
+                                                                >
+                                                                    Relevo
+                                                                </p>
+                                                                <i
+                                                                    class="material-icons md-light"
+                                                                    style="
+                                                                        color: #ff0000;
+                                                                        margin-right: 10px;
+                                                                    "
+                                                                    >chevron_right</i
+                                                                ></a
+                                                            >
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr
+                                                    class="menu_InsEncierro menus"
+                                                    style="display: none"
+                                                >
+                                                    <td>
+                                                        <div>
+                                                            <a
+                                                                class="item-content item-link entrar principalButton"
+                                                                href="#"
+                                                                onclick="moveMenu(4);"
+                                                                ><img
+                                                                    src="img/iconsMenu/bus_plus.svg"
+                                                                    height="60px"
+                                                                />
+                                                                <p
+                                                                    style="
+                                                                        color: #000000;
+                                                                        font-size: 19px;
+                                                                    "
+                                                                >
+                                                                    Campañas
+                                                                </p>
+                                                                <i
+                                                                    class="material-icons md-light"
+                                                                    style="
+                                                                        color: #ff0000;
+                                                                        margin-right: 10px;
+                                                                    "
+                                                                    >chevron_right</i
+                                                                ></a
+                                                            >
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr
+                                                    class="menu_InsLavado menus"
+                                                    style="display: none"
+                                                >
+                                                    <td>
+                                                        <div>
+                                                            <a
+                                                                class="item-content item-link entrar principalButton"
+                                                                href="#"
+                                                                onclick="moveMenu(5);"
+                                                                ><img
+                                                                    src="img/iconsMenu/bus.svg"
+                                                                    height="60px"
+                                                                />
+                                                                <p
+                                                                    style="
+                                                                        color: #000000;
+                                                                        font-size: 19px;
+                                                                    "
+                                                                >
+                                                                    Lavado de
+                                                                    Unidades
+                                                                </p>
+                                                                <i
+                                                                    class="material-icons md-light"
+                                                                    style="
+                                                                        color: #ff0000;
+                                                                        margin-right: 10px;
+                                                                    "
+                                                                    >chevron_right</i
+                                                                ></a
+                                                            >
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr
+                                                    class="menu_InsLavado menus"
+                                                    style="display: none"
+                                                >
+                                                    <td>
+                                                        <div>
+                                                            <a
+                                                                class="item-content item-link entrar principalButton"
+                                                                href="#"
+                                                                onclick="moveMenu(6);"
+                                                                ><img
+                                                                    src="img/iconsMenu/bus.svg"
+                                                                    height="60px"
+                                                                />
+                                                                <p
+                                                                    style="
+                                                                        color: #000000;
+                                                                        font-size: 19px;
+                                                                    "
+                                                                >
+                                                                    Resultado
+                                                                    Limpieza
+                                                                </p>
+                                                                <i
+                                                                    class="material-icons md-light"
+                                                                    style="
+                                                                        color: #ff0000;
+                                                                        margin-right: 10px;
+                                                                    "
+                                                                    >chevron_right</i
+                                                                ></a
+                                                            >
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr
+                                                    class="menu_InsLavado menus"
+                                                    style="display: none"
+                                                >
+                                                    <td>
+                                                        <div>
+                                                            <a
+                                                                class="item-content item-link entrar principalButton"
+                                                                href="#"
+                                                                onclick="moveMenu(7);"
+                                                                ><img
+                                                                    src="img/iconsMenu/bus.svg"
+                                                                    height="60px"
+                                                                />
+                                                                <p
+                                                                    style="
+                                                                        color: #000000;
+                                                                        font-size: 19px;
+                                                                    "
+                                                                >
+                                                                    Evaluación
+                                                                    Proveedor
+                                                                </p>
+                                                                <i
+                                                                    class="material-icons md-light"
+                                                                    style="
+                                                                        color: #ff0000;
+                                                                        margin-right: 10px;
+                                                                    "
+                                                                    >chevron_right</i
+                                                                ></a
+                                                            >
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr
+                                                    class="menu_Diesel menus"
+                                                    style="display: none"
+                                                    id="btn_cargaDiesel"
+                                                >
+                                                    <td>
+                                                        <div>
+                                                            <a
+                                                                class="item-content item-link entrar principalButton"
+                                                                href="#"
+                                                                onclick="moveMenu();"
+                                                                ><img
+                                                                    src="img/iconsMenu/bomba_carga.svg"
+                                                                    height="60px"
+                                                                />
+                                                                <p
+                                                                    style="
+                                                                        color: #000000;
+                                                                        font-size: 19px;
+                                                                    "
+                                                                >
+                                                                    Nuevo
+                                                                    Registro
+                                                                </p>
+                                                                <i
+                                                                    class="material-icons md-light"
+                                                                    style="
+                                                                        color: #ff0000;
+                                                                        margin-right: 10px;
+                                                                    "
+                                                                    >chevron_right</i
+                                                                ></a
+                                                            >
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr
+                                                    class="menu_Diesel menus"
+                                                    style="display: none"
+                                                    id="btn_historiaDiesel"
+                                                >
+                                                    <td>
+                                                        <div>
+                                                            <a
+                                                                class="item-content item-link entrar principalButton"
+                                                                href="/formDiesel1/"
+                                                                onclick=""
+                                                                ><img
+                                                                    src="img/iconsMenu/history.svg"
+                                                                    height="60px"
+                                                                />
+                                                                <p
+                                                                    style="
+                                                                        color: #000000;
+                                                                    "
+                                                                >
+                                                                    Historial
+                                                                </p>
+                                                                <i
+                                                                    class="material-icons md-light"
+                                                                    style="
+                                                                        color: #ff0000;
+                                                                        margin-right: 10px;
+                                                                    "
+                                                                    >chevron_right</i
+                                                                ></a
+                                                            >
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <div id="tab-3" class="page-content tab bg-color-white"
-                                style="background-color: rgb(245, 245, 245);">
-                                <div class="block">
-                                    <div
-                                        style="text-align: center; justify-content:center; margin-right:auto; margin-left:auto; width: 99%;">
-                                        <div class="list sortable" id="cedpendientes"
-                                            style="background-color:white;margin-top: 0;margin-bottom: 0;">
-                                            <p style="margin-bottom: 15px;font-size: 1.2em;">
-                                                <label
-                                                    style="color:#1E9FB4;font-family: 'ITC Avant Garde Gothic', sans-serif;font-weight: 600;">Sin
-                                                    Terminar</label>
-                                            </p>
-                                            <ul id="pendientes" style="background-color: white;">
-                                            </ul>
-                                            <hr>
-                                            <p style="margin-bottom: 15px;font-size: 1.2em;">
-                                                <label
-                                                    style="color:#1E9FB4;font-family: 'ITC Avant Garde Gothic', sans-serif;font-weight: 600;">Por
-                                                    enviar</label>
-                                            </p>
-                                            <ul id="bandeja" style="background-color: white;">
-                                                <!-- <li><div class='item-content' style="padding-left: 5px !important;margin-bottom: 10px;"><div class='item-media'><i class='icon'><img src='img/circuloVerde.png' width='20px' height='20px' /></i></div> <div class='item-inner'><div class='item-title'>1 Check 19-oct</div> <div class='item-after'></div></div></div></li> -->
-                                            </ul>
-                                            <hr>
+                                <div
+                                    id="tab-3"
+                                    class="page-content tab bg-color-white"
+                                    style="background-color: rgb(245, 245, 245)"
+                                >
+                                    <div class="block">
+                                        <div
+                                            style="
+                                                text-align: center;
+                                                justify-content: center;
+                                                margin-right: auto;
+                                                margin-left: auto;
+                                                width: 99%;
+                                            "
+                                        >
+                                            <div
+                                                class="list sortable"
+                                                id="cedpendientes"
+                                                style="
+                                                    background-color: white;
+                                                    margin-top: 0;
+                                                    margin-bottom: 0;
+                                                "
+                                            >
+                                                <p
+                                                    style="
+                                                        margin-bottom: 15px;
+                                                        font-size: 1.2em;
+                                                    "
+                                                >
+                                                    <label
+                                                        style="
+                                                            color: #1e9fb4;
+                                                            font-family: 'ITC Avant Garde Gothic',
+                                                                sans-serif;
+                                                            font-weight: 600;
+                                                        "
+                                                        >Sin Terminar</label
+                                                    >
+                                                </p>
+                                                <ul
+                                                    id="pendientes"
+                                                    style="
+                                                        background-color: white;
+                                                    "
+                                                ></ul>
+                                                <hr />
+                                                <p
+                                                    style="
+                                                        margin-bottom: 15px;
+                                                        font-size: 1.2em;
+                                                    "
+                                                >
+                                                    <label
+                                                        style="
+                                                            color: #1e9fb4;
+                                                            font-family: 'ITC Avant Garde Gothic',
+                                                                sans-serif;
+                                                            font-weight: 600;
+                                                        "
+                                                        >Por enviar</label
+                                                    >
+                                                </p>
+                                                <ul
+                                                    id="bandeja"
+                                                    style="
+                                                        background-color: white;
+                                                    "
+                                                >
+                                                    <!-- <li><div class='item-content' style="padding-left: 5px !important;margin-bottom: 10px;"><div class='item-media'><i class='icon'><img src='img/circuloVerde.png' width='20px' height='20px' /></i></div> <div class='item-inner'><div class='item-title'>1 Check 19-oct</div> <div class='item-after'></div></div></div></li> -->
+                                                </ul>
+                                                <hr />
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -302,567 +859,974 @@
                 </div>
             </div>
         </div>
-    </div>
-    <script type="text/javascript" src="cordova.js"></script>
-    <script src="js/llevartodo.js"></script>
-    <script src="lib/framework7/js/framework7.bundle.min.js"></script>
-    <script src="js/routes.js"></script>
-    <!-- <script src="js/signature/modernizr.js"></script> -->
-    <script src="js/signature_pad.min.js"></script>
-    <script src="js/app.js"></script>
-    <!-- <script src="js/field-notifications.js"></script> -->
-    <script type="text/javascript" src="js/databaseHandler.js"></script>
-    <script type="text/javascript" src="js/in.js"></script>
-    <script type="text/javascript" src="js/productHandler.js"></script>
-    <script type="text/javascript" src="js/morris.min.js"></script>
-    <script src="js/metodos.js"></script>
-    <script src="js/jquery-3.6.2.js"></script>
-    <script src="js/qrcode.js"></script>
-    <script src="js/sweetalert.min.js"></script>
-    <!-- Data table Inicio -->
-    <link rel="stylesheet" href="css/jquery.dataTables.min.css">
-    <link rel="stylesheet" href="css/responsive.dataTables.min.css">
-    <script src="js/jquery.dataTables.min.js"></script>
-    <script src="js/dataTables.responsive.min.js"></script>
-    <!--<script src="js/signature/jSignature.min.noconflict.js"></script> -->
-    <script src="js/SimpleStarRating.js"></script>
-    <script type="text/javascript" charset="utf-8">
-        vertical();
-        app.tab.show('#tab-2');
-        if (localStorage.getItem("nombre") == null || localStorage.getItem("Usuario") == null) {
-            window.localStorage.removeItem("id_usuario");
-        }
-
-        window.localStorage.removeItem("IdCedula");
-        window.localStorage.removeItem("page");
-        window.localStorage.removeItem("fase");
-        window.localStorage.removeItem("IdCed");
-        window.localStorage.removeItem("TipoC");
-        window.localStorage.removeItem("empresaID");
-        //Capacitacion
-        window.localStorage.removeItem("IDMov");
-        window.localStorage.removeItem("FK_Becario");
-        window.localStorage.removeItem("IDCurso");
-        window.localStorage.removeItem("IDTipoCurso");
-        window.localStorage.removeItem("OpDiario");
-        window.localStorage.removeItem("NombreCurso");
-        window.localStorage.removeItem("nameBecario");
-        window.localStorage.removeItem("Costo")
-        window.localStorage.removeItem("cameraField")
-        window.localStorage.removeItem("IdHeader")
-
-        var modulos = localStorage.getItem("Modulo").split(",");
-        for (i = 0; i < modulos.length; i++) {
-            if (modulos[i] == "RevImagen") {
-                $("#menu_activo").append(`<option value="RevImagen">Revisión Imagen</option>`);
-            } else if (modulos[i] == "tecnologiasHmo") {
-                $("#menu_activo").append(`<option value="tecnologiasHmo">Inspección Tecnologías</option>`);
-            } else {
-                $("#menu_activo").append(`<option value="${modulos[i]}">${modulos[i]}</option>`);
+        <script type="text/javascript" src="cordova.js"></script>
+        <script src="js/llevartodo.js"></script>
+        <script src="lib/framework7/js/framework7.bundle.min.js"></script>
+        <script src="js/routes.js"></script>
+        <!-- <script src="js/signature/modernizr.js"></script> -->
+        <script src="js/signature_pad.min.js"></script>
+        <script src="js/app.js"></script>
+        <!-- <script src="js/field-notifications.js"></script> -->
+        <script type="text/javascript" src="js/databaseHandler.js"></script>
+        <script type="text/javascript" src="js/in.js"></script>
+        <script type="text/javascript" src="js/productHandler.js"></script>
+        <script type="text/javascript" src="js/morris.min.js"></script>
+        <script src="js/metodos.js"></script>
+        <script src="js/jquery-3.6.2.js"></script>
+        <script src="js/qrcode.js"></script>
+        <script src="js/sweetalert.min.js"></script>
+        <!-- Data table Inicio -->
+        <link rel="stylesheet" href="css/jquery.dataTables.min.css" />
+        <link rel="stylesheet" href="css/responsive.dataTables.min.css" />
+        <script src="js/jquery.dataTables.min.js"></script>
+        <script src="js/dataTables.responsive.min.js"></script>
+        <!--<script src="js/signature/jSignature.min.noconflict.js"></script> -->
+        <script src="js/SimpleStarRating.js"></script>
+        <script type="text/javascript" charset="utf-8">
+            vertical();
+            app.tab.show("#tab-2");
+            if (
+                localStorage.getItem("nombre") == null ||
+                localStorage.getItem("Usuario") == null
+            ) {
+                window.localStorage.removeItem("id_usuario");
             }
-        }
 
-        if (!localStorage.getItem("Modulos")) {
+            window.localStorage.removeItem("IdCedula");
+            window.localStorage.removeItem("page");
+            window.localStorage.removeItem("fase");
+            window.localStorage.removeItem("IdCed");
+            window.localStorage.removeItem("TipoC");
+            window.localStorage.removeItem("empresaID");
+            //Capacitacion
+            window.localStorage.removeItem("IDMov");
+            window.localStorage.removeItem("FK_Becario");
+            window.localStorage.removeItem("IDCurso");
+            window.localStorage.removeItem("IDTipoCurso");
+            window.localStorage.removeItem("OpDiario");
+            window.localStorage.removeItem("NombreCurso");
+            window.localStorage.removeItem("nameBecario");
+            window.localStorage.removeItem("Costo");
+            window.localStorage.removeItem("cameraField");
+            window.localStorage.removeItem("IdHeader");
+
             var modulos = localStorage.getItem("Modulo").split(",");
-            if (modulos.length < 0) {
-                localStorage.setItem("Modulos", modulos[0]);
-                $("#menu_activo").val(modulos[0])
-            } else {
-                for (i = 0; i < modulos.length; i++) {
-                    localStorage.setItem("Modulos", modulos[i]);
-                    $("#menu_activo").val(modulos[i])
+            for (i = 0; i < modulos.length; i++) {
+                if (modulos[i] == "RevImagen") {
+                    $("#menu_activo").append(
+                        `<option value="RevImagen">Revisión Imagen</option>`
+                    );
+                } else if (modulos[i] == "tecnologiasHmo") {
+                    $("#menu_activo").append(
+                        `<option value="tecnologiasHmo">Inspección Tecnologías</option>`
+                    );
+                } else {
+                    $("#menu_activo").append(
+                        `<option value="${modulos[i]}">${modulos[i]}</option>`
+                    );
                 }
             }
-        }
 
-        $(".menus").css("display", "none");
-
-        if (localStorage.getItem("Modulos") == 'RevImagen' || localStorage.getItem("Modulos") == 'Checklist') {
-            $(".menu_imagen").css("display", "grid");
-        } else if (localStorage.getItem("Modulos") == 'Capacitacion') {
-            $(".menu_capacita").css("display", "grid");
-        } else if (localStorage.getItem("Modulos") == 'Diesel') {
-            let accesos = JSON.parse(localStorage.getItem("accesos"));
-            accesos.map((acceso) => {
-                if(acceso.FK_modulo_nivel1_usmo == 196){
-                    if(acceso.alcance_secc){
-                        if(acceso.alcance_secc == 'procesa_intelisis'){
-                            localStorage.setItem("TipoAcceso", 'admin')
-                            $("#btn_cargaDiesel").css("display", "grid")
-                            $("#btn_historiaDiesel").css("display", "grid")
-                        } else {
-                            localStorage.setItem("TipoAcceso", 'user')
-                            if(acceso.permite_secc == 'R'){
-                                $("#btn_historiaDiesel").css("display", "grid")
-                            } else if(acceso.permite_secc == 'C'){
-                                $("#btn_cargaDiesel").css("display", "grid")
-                                $("#btn_historiaDiesel").css("display", "grid")
-                            }
-                        }
-                    } else {
-                        swal("", "No cuentas con permisos para la app de diesel comunícate con el administrador.", "warning");
+            if (!localStorage.getItem("Modulos")) {
+                var modulos = localStorage.getItem("Modulo").split(",");
+                if (modulos.length < 0) {
+                    localStorage.setItem("Modulos", modulos[0]);
+                    $("#menu_activo").val(modulos[0]);
+                } else {
+                    for (i = 0; i < modulos.length; i++) {
+                        localStorage.setItem("Modulos", modulos[i]);
+                        $("#menu_activo").val(modulos[i]);
                     }
                 }
-            })
-        } else {
-            $(".menu_"+localStorage.getItem("Modulos")).css("display", "grid");
-        }
-
-        $("#menu_activo").val(localStorage.getItem("Modulos"));
-
-        $("#version_app").text("Versión " + localStorage.getItem("version"));
-
-        $("#nombre_usuario").html(localStorage.getItem("nombre"));
-
-         // Called when a photo is successfully retrieved
-        function onPhotoDataSuccess(imageData) {
-            var camera = localStorage.getItem("camera");
-            if(camera == 0){
-                var smallImage = document.getElementById('smallImage');
-                smallImage.style.display = 'flex';
-                smallImage.src = imageData;
-                $("#imagenC").val(imageData);
-                console.log(imageData);
-            }else{
-                var smallImage = document.getElementById('smallImage');
-                smallImage.style.display = 'flex';
-                var nameima = "data:image/jpeg;base64," + imageData;
-                smallImage.src = "data:image/jpeg;base64," + imageData;
-                $("#imagenC").val(nameima);
-                console.log(imageData);
             }
-            let capturePhoto = ''
-            localStorage.getItem('Modulos') == 'InsLavado' ? capturePhoto = 'capturePhotoLavado' : capturePhoto = 'capturePhoto'
-            $("#evidencias_div").css("display", "block")
-            $("#div_botones_camara").html(`<div style="min-width: 50px; border-style: none;">
+
+            $(".menus").css("display", "none");
+
+            if (
+                localStorage.getItem("Modulos") == "RevImagen" ||
+                localStorage.getItem("Modulos") == "Checklist"
+            ) {
+                $(".menu_imagen").css("display", "grid");
+            } else if (localStorage.getItem("Modulos") == "Capacitacion") {
+                $(".menu_capacita").css("display", "grid");
+            } else if (localStorage.getItem("Modulos") == "Diesel") {
+                let accesos = JSON.parse(localStorage.getItem("accesos"));
+                accesos.map((acceso) => {
+                    if (acceso.FK_modulo_nivel1_usmo == 196) {
+                        if (acceso.alcance_secc) {
+                            if (acceso.alcance_secc == "procesa_intelisis") {
+                                localStorage.setItem("TipoAcceso", "admin");
+                                $("#btn_cargaDiesel").css("display", "grid");
+                                $("#btn_historiaDiesel").css("display", "grid");
+                            } else {
+                                localStorage.setItem("TipoAcceso", "user");
+                                if (acceso.permite_secc == "R") {
+                                    $("#btn_historiaDiesel").css(
+                                        "display",
+                                        "grid"
+                                    );
+                                } else if (acceso.permite_secc == "C") {
+                                    $("#btn_cargaDiesel").css(
+                                        "display",
+                                        "grid"
+                                    );
+                                    $("#btn_historiaDiesel").css(
+                                        "display",
+                                        "grid"
+                                    );
+                                }
+                            }
+                        } else {
+                            swal(
+                                "",
+                                "No cuentas con permisos para la app de diesel comunícate con el administrador.",
+                                "warning"
+                            );
+                        }
+                    }
+                });
+            } else {
+                $(".menu_" + localStorage.getItem("Modulos")).css(
+                    "display",
+                    "grid"
+                );
+            }
+
+            $("#menu_activo").val(localStorage.getItem("Modulos"));
+
+            $("#version_app").text(
+                "Versión " + localStorage.getItem("version")
+            );
+
+            $("#nombre_usuario").html(localStorage.getItem("nombre"));
+
+            // Called when a photo is successfully retrieved
+            function onPhotoDataSuccess(imageData) {
+                var camera = localStorage.getItem("camera");
+                if (camera == 0) {
+                    var smallImage = document.getElementById("smallImage");
+                    smallImage.style.display = "flex";
+                    smallImage.src = imageData;
+                    $("#imagenC").val(imageData);
+                    console.log(imageData);
+                } else {
+                    var smallImage = document.getElementById("smallImage");
+                    smallImage.style.display = "flex";
+                    var nameima = "data:image/jpeg;base64," + imageData;
+                    smallImage.src = "data:image/jpeg;base64," + imageData;
+                    $("#imagenC").val(nameima);
+                    console.log(imageData);
+                }
+                let capturePhoto = "";
+                localStorage.getItem("Modulos") == "InsLavado"
+                    ? (capturePhoto = "capturePhotoLavado")
+                    : (capturePhoto = "capturePhoto");
+                $("#evidencias_div").css("display", "block");
+                $("#div_botones_camara")
+                    .html(`<div style="min-width: 50px; border-style: none;">
                 <span class="resize-handler"></span>
                 <a href="#" onclick="${capturePhoto}()" style="background-color: #005D99;" class="boton-equipo">Volver a tomar Evidencia <i class="icon material-icons md-only" style="display: inline-block;margin-left: 12px;">photo_camera</i></a>
             </div><div style="min-width: 50px; border-style: none; margin-left: 53px;">
                 <span class="resize-handler"></span>
                 <a href="#" onclick="GuardarPhoto()" style="background-color: #2ECC71;" class="boton-equipo">Guardar Evidencia <i class="icon material-icons md-only" style="display: inline-block;margin-left: 12px;">save</i></a>
-            </div>`)
-        }
-        // Called if something bad happens.
-        function onFail(message) {
-            alert("Failed because: "+message);
-        }
-        function updateData() {
-            // var urlBase2 = "http://192.168.100.8/Desarrollo/CISAApp/HMOFiles/JSONS";
-            // var urlBase2 = "http://192.168.1.79/Desarrollo/CISAApp/HMOFiles_dev/JSONS";
-            // var urlBase2 = "http://172.16.0.143/Desarrollo/CISAApp/HMOFiles/JSONS";
-            var urlBase2 = "http://tmshmo.ci-sa.com.mx/www.CISAAPP.com/HMOFiles_dev/JSONS";
-            // var urlBase2 = "http://tmshmo.ci-sa.com.mx/www.CISAAPP.com/HMOFiles/JSONS";
+            </div>`);
+            }
+            // Called if something bad happens.
+            function onFail(message) {
+                alert("Failed because: " + message);
+            }
+            function updateData() {
+                // var urlBase2 = "http://192.168.100.8/Desarrollo/CISAApp/HMOFiles/JSONS";
+                // var urlBase2 = "http://192.168.1.79/Desarrollo/CISAApp/HMOFiles_dev/JSONS";
+                // var urlBase2 = "http://172.16.0.143/Desarrollo/CISAApp/HMOFiles/JSONS";
+                var urlBase2 =
+                    "http://tmshmo.ci-sa.com.mx/www.CISAAPP.com/HMOFiles/JSONS";
+                // var urlBase2 = "http://tmshmo.ci-sa.com.mx/www.CISAAPP.com/HMOFiles/JSONS";
 
-            if (localStorage.getItem("Modulos")) {
-                if (localStorage.getItem("Modulos") == 'Limpieza') {
-                    var RutaJSONS = urlBase2 + "/Archivos/JSON_limp/";
-                    var carpeta = "jsons_limp";
-                } else if (localStorage.getItem("Modulos") == 'Capacitacion') {
-                    var RutaJSONS = urlBase2 + "/capacitacion/";
-                    var carpeta = "jsons_capacitacion";
-                } else {
-                    var RutaJSONS = urlBase2 + "/"+localStorage.getItem("Modulos")+"/";
-                    var carpeta = "jsons_"+localStorage.getItem("Modulos");
-                }
+                if (localStorage.getItem("Modulos")) {
+                    if (localStorage.getItem("Modulos") == "Limpieza") {
+                        var RutaJSONS = urlBase2 + "/Archivos/JSON_limp/";
+                        var carpeta = "jsons_limp";
+                    } else if (
+                        localStorage.getItem("Modulos") == "Capacitacion"
+                    ) {
+                        var RutaJSONS = urlBase2 + "/capacitacion/";
+                        var carpeta = "jsons_capacitacion";
+                    } else {
+                        var RutaJSONS =
+                            urlBase2 +
+                            "/" +
+                            localStorage.getItem("Modulos") +
+                            "/";
+                        var carpeta =
+                            "jsons_" + localStorage.getItem("Modulos");
+                    }
 
-                $("#processclick").show();
-                $("#processclick").removeClass('99badge99');
-                $("#processclick").addClass('badge');
-                $("#processclick").addClass('fixBadgeMenu');
-                $("#processclick").html('<i class="material-icons md-light spin" style="color: #1D4F91;margin-right: 22.84px;">rotate_right</i><div class="item-title"><a class="panel-text">Sincronizar datos</a></div>');
-                var jsonPadre = new download();
-                jsonPadre.Initialize({
-                    fileSystem: cordova.file.dataDirectory,
-                    folder: carpeta,
-                    remove: false,
-                    timeout: 0,
-                    success: DownloaderSuccess,
-                    error: DownloaderError,
-                    headers: [
-                        {
-                            key: "Cache-Control",
-                            Value: "no-store"
-                        }
-                    ]
-                });
-                var empresa = localStorage.getItem("empresa");
-                jsonPadre.Get(RutaJSONS + "/jsonName" + empresa + ".json");
-                var directory = carpeta + "/jsonName" + empresa + ".json";
-                function DownloaderError(err) {
-                    console.error("Error al descargar: " + err);
-                    $("#processclick").html('<i class="material-icons md-light panel-cerrar" style="color: #005D99;margin-right: 22.84px;">error_outline</i><div class="item-title"><a class="panel-text">Sincronizar datos</a></div>');
-                    app.dialog.alert('Error al actualizar datos', 'Error');
-                }
-                function DownloaderSuccess() {
-                    app.request.get(cordova.file.dataDirectory + directory, function (data) {
-                        let termino = "</html>";
-                        let posicion = data.toLowerCase().indexOf(termino.toLowerCase());
-                        if (posicion !== -1) {
-                            swal("", "No cuentas con internet!", "error");
-                            app.ptr.done();
-                            $("#process").hide();
-                            $("#processclick").html('<i class="material-icons md-light" style="color: #1D4F91;margin-right: 22.84px;">close</i><div class="item-title"><a class="panel-text">Sincronizar datos</a></div>');
-                        } else {
-                            const nameJson = JSON.parse(data);
-                            var count = 0;
-                            var progress = 0;
-                            var dialog = app.dialog.progress('Sincronizando Datos', progress);
-                            dialog.setText('Archivo 1 de ' + nameJson.length);
-                            nameJson.forEach((valor, indice, array) => {
-                                window.resolveLocalFileSystemURL(cordova.file.dataDirectory, function (oEntry) {
-                                    var jsonHijos = new download();
-                                    jsonHijos.Initialize({
-                                        fileSystem: cordova.file.dataDirectory,
-                                        folder: carpeta,
-                                        remove: false,
-                                        timeout: 0,
-                                        success: DownloaderSuccess,
-                                        error: DownloaderError,
-                                        headers: [
-                                            {
-                                                key: "Cache-Control",
-                                                Value: "no-store"
-                                            }
-                                        ]
-                                    });
-                                    jsonHijos.Get(RutaJSONS + valor.jsonName);
-                                    function DownloaderError(err) {
-                                        $("#processclick").html('<i class="material-icons md-light panel-cerrar" style="color: #005D99;margin-right: 22.84px;">error_outline</i><div class="item-title"><a class="panel-text">Sincronizar datos</a></div>');
-                                        app.dialog.alert('Error al actualizar datos', 'Error');
-                                        console.error("Error al descargar: " + valor.jsonName + " " + err);
-                                    }
-                                    function DownloaderSuccess() {
-                                        count++;
-                                        progress += 1;
-                                        var interval = setInterval(function () {
-                                            try {
-                                                dialog.setProgress((progress * 100) / nameJson.length);
-                                                dialog.setText('Archivo ' + progress + ' de ' + nameJson.length);
-                                                if (progress === nameJson.length) {
-                                                    dialog.close();
-                                                    clearInterval(interval);
-                                                }
-                                            } catch (e) {
-                                                clearInterval(interval);
-                                                dialog.close();
-                                            }
-                                        }, 300)
-                                        if (count == nameJson.length) {
-                                            app.ptr.done();
-                                            $("#process").hide();
-                                            var fecha = new Date();
-                                            var fFinal = fecha.getFullYear() + "-" + (fecha.getMonth() + 1) + "-" + fecha.getDate() + " " + fecha.getHours() + ":" + fecha.getMinutes() + ":" + fecha.getSeconds();
-                                            databaseHandler.db.transaction(
-                                                function (tx5) {
-                                                    tx5.executeSql(
-                                                        "INSERT INTO Actualizaciones (IdUsuario, Fecha) VALUES (?,?)",
-                                                        [IdUsuario, fFinal,],
-                                                        function (tx5, results) {
-                                                            databaseHandler.db.transaction(
-                                                                function (tx5) {
-                                                                    tx5.executeSql(
-                                                                        "SELECT * FROM Actualizaciones ORDER BY idActualizacion DESC LIMIT 1",
-                                                                        [],
-                                                                        function (tx5, results) { }
-                                                                    );
-                                                                },
-                                                                function (error) { },
-                                                                function () { }
-                                                            );
-                                                        }
+                    $("#processclick").show();
+                    $("#processclick").removeClass("99badge99");
+                    $("#processclick").addClass("badge");
+                    $("#processclick").addClass("fixBadgeMenu");
+                    $("#processclick").html(
+                        '<i class="material-icons md-light spin" style="color: #1D4F91;margin-right: 22.84px;">rotate_right</i><div class="item-title"><a class="panel-text">Sincronizar datos</a></div>'
+                    );
+                    var jsonPadre = new download();
+                    jsonPadre.Initialize({
+                        fileSystem: cordova.file.dataDirectory,
+                        folder: carpeta,
+                        remove: false,
+                        timeout: 0,
+                        success: DownloaderSuccess,
+                        error: DownloaderError,
+                        headers: [
+                            {
+                                key: "Cache-Control",
+                                Value: "no-store",
+                            },
+                        ],
+                    });
+                    var empresa = localStorage.getItem("empresa");
+                    jsonPadre.Get(RutaJSONS + "/jsonName" + empresa + ".json");
+                    var directory = carpeta + "/jsonName" + empresa + ".json";
+                    function DownloaderError(err) {
+                        console.error("Error al descargar: " + err);
+                        $("#processclick").html(
+                            '<i class="material-icons md-light panel-cerrar" style="color: #005D99;margin-right: 22.84px;">error_outline</i><div class="item-title"><a class="panel-text">Sincronizar datos</a></div>'
+                        );
+                        app.dialog.alert("Error al actualizar datos", "Error");
+                    }
+                    function DownloaderSuccess() {
+                        app.request.get(
+                            cordova.file.dataDirectory + directory,
+                            function (data) {
+                                let termino = "</html>";
+                                let posicion = data
+                                    .toLowerCase()
+                                    .indexOf(termino.toLowerCase());
+                                if (posicion !== -1) {
+                                    swal(
+                                        "",
+                                        "No cuentas con internet!",
+                                        "error"
+                                    );
+                                    app.ptr.done();
+                                    $("#process").hide();
+                                    $("#processclick").html(
+                                        '<i class="material-icons md-light" style="color: #1D4F91;margin-right: 22.84px;">close</i><div class="item-title"><a class="panel-text">Sincronizar datos</a></div>'
+                                    );
+                                } else {
+                                    const nameJson = JSON.parse(data);
+                                    var count = 0;
+                                    var progress = 0;
+                                    var dialog = app.dialog.progress(
+                                        "Sincronizando Datos",
+                                        progress
+                                    );
+                                    dialog.setText(
+                                        "Archivo 1 de " + nameJson.length
+                                    );
+                                    nameJson.forEach((valor, indice, array) => {
+                                        window.resolveLocalFileSystemURL(
+                                            cordova.file.dataDirectory,
+                                            function (oEntry) {
+                                                var jsonHijos = new download();
+                                                jsonHijos.Initialize({
+                                                    fileSystem:
+                                                        cordova.file
+                                                            .dataDirectory,
+                                                    folder: carpeta,
+                                                    remove: false,
+                                                    timeout: 0,
+                                                    success: DownloaderSuccess,
+                                                    error: DownloaderError,
+                                                    headers: [
+                                                        {
+                                                            key: "Cache-Control",
+                                                            Value: "no-store",
+                                                        },
+                                                    ],
+                                                });
+                                                jsonHijos.Get(
+                                                    RutaJSONS + valor.jsonName
+                                                );
+                                                function DownloaderError(err) {
+                                                    $("#processclick").html(
+                                                        '<i class="material-icons md-light panel-cerrar" style="color: #005D99;margin-right: 22.84px;">error_outline</i><div class="item-title"><a class="panel-text">Sincronizar datos</a></div>'
                                                     );
-                                                },
-                                                function (error) { },
-                                                function () { }
-                                            );
-                                            $("#processclick").html('<i class="material-icons md-light" style="color: #1D4F91;margin-right: 22.84px;">cloud_done</i><div class="item-title"><a class="panel-text">Sincronizar datos</a></div>');
-                                        }
+                                                    app.dialog.alert(
+                                                        "Error al actualizar datos",
+                                                        "Error"
+                                                    );
+                                                    console.error(
+                                                        "Error al descargar: " +
+                                                            valor.jsonName +
+                                                            " " +
+                                                            err
+                                                    );
+                                                }
+                                                function DownloaderSuccess() {
+                                                    count++;
+                                                    progress += 1;
+                                                    var interval = setInterval(
+                                                        function () {
+                                                            try {
+                                                                dialog.setProgress(
+                                                                    (progress *
+                                                                        100) /
+                                                                        nameJson.length
+                                                                );
+                                                                dialog.setText(
+                                                                    "Archivo " +
+                                                                        progress +
+                                                                        " de " +
+                                                                        nameJson.length
+                                                                );
+                                                                if (
+                                                                    progress ===
+                                                                    nameJson.length
+                                                                ) {
+                                                                    dialog.close();
+                                                                    clearInterval(
+                                                                        interval
+                                                                    );
+                                                                }
+                                                            } catch (e) {
+                                                                clearInterval(
+                                                                    interval
+                                                                );
+                                                                dialog.close();
+                                                            }
+                                                        },
+                                                        300
+                                                    );
+                                                    if (
+                                                        count == nameJson.length
+                                                    ) {
+                                                        app.ptr.done();
+                                                        $("#process").hide();
+                                                        var fecha = new Date();
+                                                        var fFinal =
+                                                            fecha.getFullYear() +
+                                                            "-" +
+                                                            (fecha.getMonth() +
+                                                                1) +
+                                                            "-" +
+                                                            fecha.getDate() +
+                                                            " " +
+                                                            fecha.getHours() +
+                                                            ":" +
+                                                            fecha.getMinutes() +
+                                                            ":" +
+                                                            fecha.getSeconds();
+                                                        databaseHandler.db.transaction(
+                                                            function (tx5) {
+                                                                tx5.executeSql(
+                                                                    "INSERT INTO Actualizaciones (IdUsuario, Fecha) VALUES (?,?)",
+                                                                    [
+                                                                        IdUsuario,
+                                                                        fFinal,
+                                                                    ],
+                                                                    function (
+                                                                        tx5,
+                                                                        results
+                                                                    ) {
+                                                                        databaseHandler.db.transaction(
+                                                                            function (
+                                                                                tx5
+                                                                            ) {
+                                                                                tx5.executeSql(
+                                                                                    "SELECT * FROM Actualizaciones ORDER BY idActualizacion DESC LIMIT 1",
+                                                                                    [],
+                                                                                    function (
+                                                                                        tx5,
+                                                                                        results
+                                                                                    ) {}
+                                                                                );
+                                                                            },
+                                                                            function (
+                                                                                error
+                                                                            ) {},
+                                                                            function () {}
+                                                                        );
+                                                                    }
+                                                                );
+                                                            },
+                                                            function (error) {},
+                                                            function () {}
+                                                        );
+                                                        $("#processclick").html(
+                                                            '<i class="material-icons md-light" style="color: #1D4F91;margin-right: 22.84px;">cloud_done</i><div class="item-title"><a class="panel-text">Sincronizar datos</a></div>'
+                                                        );
+                                                    }
+                                                }
+                                            }
+                                        );
+                                    });
+                                }
+                            }
+                        );
+                    }
+                }
+            }
+            function cambiamenu() {
+                var nuevomenu = $("#menu_activo").val();
+                let flagMessage = true;
+                //var nuevomenu = "Desincorporaciones";
+                localStorage.setItem("Modulos", nuevomenu);
+                app.smartSelect.close();
+                $(".menus").css("display", "none");
+                if (
+                    localStorage.getItem("Modulos") == "RevImagen" ||
+                    localStorage.getItem("Modulos") == "Checklist"
+                ) {
+                    $(".menu_imagen").css("display", "grid");
+                } else if (localStorage.getItem("Modulos") == "Capacitacion") {
+                    $(".menu_capacita").css("display", "grid");
+                } else if (localStorage.getItem("Modulos") == "Diesel") {
+                    let accesos = JSON.parse(localStorage.getItem("accesos"));
+                    accesos.map((acceso) => {
+                        if (acceso.FK_modulo_nivel1_usmo == 196) {
+                            if (acceso.alcance_secc) {
+                                if (
+                                    acceso.alcance_secc == "procesa_intelisis"
+                                ) {
+                                    localStorage.setItem("TipoAcceso", "admin");
+                                    $("#btn_cargaDiesel").css(
+                                        "display",
+                                        "grid"
+                                    );
+                                    $("#btn_historiaDiesel").css(
+                                        "display",
+                                        "grid"
+                                    );
+                                } else if (acceso.alcance_secc == "contralor") {
+                                    localStorage.setItem(
+                                        "TipoAcceso",
+                                        "contralor"
+                                    );
+                                    $("#btn_historiaDiesel").css(
+                                        "display",
+                                        "grid"
+                                    );
+                                } else {
+                                    localStorage.setItem("TipoAcceso", "user");
+                                    if (acceso.permite_secc == "R") {
+                                        $("#btn_historiaDiesel").css(
+                                            "display",
+                                            "grid"
+                                        );
+                                    } else if (acceso.permite_secc == "C") {
+                                        $("#btn_cargaDiesel").css(
+                                            "display",
+                                            "grid"
+                                        );
+                                        $("#btn_historiaDiesel").css(
+                                            "display",
+                                            "grid"
+                                        );
                                     }
-                                });
-                            });
+                                }
+                            } else {
+                                flagMessage = false;
+                            }
                         }
                     });
+                } else {
+                    $(".menu_" + localStorage.getItem("Modulos")).css(
+                        "display",
+                        "grid"
+                    );
                 }
+                updateData();
+                recargacedulas();
+                flagMessage
+                    ? swal(
+                          "",
+                          "Cambio de menu realizado correctamente.",
+                          "success"
+                      )
+                    : swal(
+                          "",
+                          "No cuentas con permisos para la app de diesel comunícate con el administrador.",
+                          "warning"
+                      );
             }
-        }
-        function cambiamenu() {
-            var nuevomenu = $("#menu_activo").val();
-            let flagMessage = true
-            //var nuevomenu = "Desincorporaciones";
-            localStorage.setItem("Modulos", nuevomenu);
-            app.smartSelect.close();
-            $(".menus").css("display", "none");
-            if (localStorage.getItem("Modulos") == 'RevImagen' || localStorage.getItem("Modulos") == 'Checklist') {
-                $(".menu_imagen").css("display", "grid");
-            } else if (localStorage.getItem("Modulos") == 'Capacitacion') {
-                $(".menu_capacita").css("display", "grid");
-            } else if (localStorage.getItem("Modulos") == 'Diesel') {
-                let accesos = JSON.parse(localStorage.getItem("accesos"));
-                accesos.map((acceso) => {
-                    if(acceso.FK_modulo_nivel1_usmo == 196){                        
-                        if(acceso.alcance_secc){                            
-                            if(acceso.alcance_secc == 'procesa_intelisis'){
-                                localStorage.setItem("TipoAcceso", 'admin')
-                                $("#btn_cargaDiesel").css("display", "grid")
-                                $("#btn_historiaDiesel").css("display", "grid")
-                            } else if(acceso.alcance_secc == 'contralor'){
-                                localStorage.setItem("TipoAcceso", 'contralor')
-                                $("#btn_historiaDiesel").css("display", "grid")
-                            } else {                                
-                                localStorage.setItem("TipoAcceso", 'user')
-                                if(acceso.permite_secc == 'R'){                                    
-                                    $("#btn_historiaDiesel").css("display", "grid")
-                                } else if(acceso.permite_secc == 'C'){                                    
-                                    $("#btn_cargaDiesel").css("display", "grid")
-                                    $("#btn_historiaDiesel").css("display", "grid")
-                                }
+            // Evento de inicio de base de datos y consuLtas
+            document.addEventListener(
+                "deviceready",
+                function () {
+                    StatusBar.backgroundColorByHexString("#1E9FB4");
+                    StatusBar.styleLightContent();
+                    //cambio de picture()
+                    var empresa = localStorage.getItem("empresa");
+                    cambiaimgempresa(empresa);
+                    // Inicializando camara
+                    pictureSource = navigator.camera.PictureSourceType;
+                    destinationType = navigator.camera.DestinationType;
+                    //Verificar g
+                    cordova.plugins.diagnostic.isGpsLocationEnabled(
+                        function (enabled) {
+                            if (enabled == true) {
+                            } else {
+                                //swal("GPS Apagado","Por favor activa tu ubicacion!","error");
                             }
-                        } else {
-                            flagMessage = false
+                        },
+                        function (error) {
+                            console.error(
+                                "The following error occurred: " + error
+                            );
                         }
+                    );
+
+                    ///cedulas pendientes
+                    if (localStorage.getItem("Modulos") == "RevImagen") {
+                        var tipo = "checklist";
+                    } else if (
+                        localStorage.getItem("Modulos") == "Capacitacion"
+                    ) {
+                        var tipo = "Capacitación";
+                    } else {
+                        var tipo = localStorage.getItem("Modulos");
                     }
-                })
-            } else {
-                $(".menu_"+localStorage.getItem("Modulos")).css("display", "grid");
-            }
-            updateData();
-            recargacedulas();
-            flagMessage ? swal("", "Cambio de menu realizado correctamente.", "success") : swal("", "No cuentas con permisos para la app de diesel comunícate con el administrador.", "warning");
-        }
-        // Evento de inicio de base de datos y consuLtas
-        document.addEventListener("deviceready", function () {
-            StatusBar.backgroundColorByHexString("#1E9FB4");
-            StatusBar.styleLightContent();
-            //cambio de picture()
-            var empresa = localStorage.getItem("empresa");
-            cambiaimgempresa(empresa);
-            // Inicializando camara
-            pictureSource = navigator.camera.PictureSourceType;
-            destinationType = navigator.camera.DestinationType;
-            //Verificar g
-            cordova.plugins.diagnostic.isGpsLocationEnabled(function (enabled) {
-                if (enabled == true) {
-                } else {
-                    //swal("GPS Apagado","Por favor activa tu ubicacion!","error");
-                }
-            }, function (error) {
-                console.error("The following error occurred: " + error);
-            });
 
-            ///cedulas pendientes
-            if (localStorage.getItem("Modulos") == 'RevImagen') {
-                var tipo = "checklist";
-            } else if (localStorage.getItem("Modulos") == 'Capacitacion') {
-                var tipo = "Capacitación";
-            } else {
-                var tipo = localStorage.getItem("Modulos");
-            }
+                    localStorage.getItem("camera")
+                        ? $("#camara_activa").val(
+                              localStorage.getItem("camera")
+                          )
+                        : (localStorage.setItem("camera", 1),
+                          $("#camara_activa").val(1));
 
-            localStorage.getItem("camera") ? $("#camara_activa").val(localStorage.getItem("camera")) : (localStorage.setItem("camera",1), $("#camara_activa").val(1))
-
-            var estatus = 0;
-            databaseHandler.db.transaction(
-                function (tx5) {
-                    tx5.executeSql("SELECT * FROM cedulas_general WHERE estatus = ? AND tipo_cedula = ? AND id_cliente = ?",
-                        [estatus, tipo, empresa],
-                        function (tx5, results) {
-                            var length = results.rows.length;
-                            for (var i = 0; i < length; i++) {
-                                var item2 = results.rows.item(i);
-                                var fechas = item2.fecha_entrada.split(" ");
-                                if (item2.tipo_cedula == 'checklist') {
-                                    $("#pendientes").append("<li id='conc" + item2.id_cedula + "'><div class='item-content'><div class='item-media'><i class='icon'><img src='img/circuloNaranja.png' width='20px' height='20px' /></i></div><div class='item-inner'><div class='item-title'> <div> " + item2.nombre_cliente + "| " + fechas[0] + "</div> <div style='color: #afafaf;font-size: 12px;margin-left: 10px;margin-top: 8px;font-weight: bold;'>Rev. Imagen</div> </div><div class='item-after'><a href='#' onclick='continuarCed(`" + item2.id_cedula + "`,1);' style='border: none; outline:none;'><i class='material-icons md-light' style='font-size:35px;color:#00A7B5'>play_circle_outline</i></a>&nbsp;&nbsp;&nbsp;<a href='#' onclick='EliminarReg(" + item2.id_cedula + ",`" + item2.tipo_cedula + "`)' style='border: none; outline:none;'><i class='material-icons md-light' style='font-size:35px;color:red'>delete_forever</i></a></div></div></div></li>");
-                                } else if (item2.tipo_cedula == 'Capacitación') {
-                                    if(item2.nombre_evalua == 'Prueba Manejo'){
-                                        $("#pendientes").append("<li id='conc" + item2.id_cedula + "'><div class='item-content'><div class='item-media'><i class='icon'><img src='img/circuloNaranja.png' width='20px' height='20px' /></i></div><div class='item-inner'><div class='item-title'> <div> " + item2.nombre_cliente + "| " + fechas[0] + "</div> <div style='color: #afafaf;font-size: 12px;margin-left: 10px;margin-top: 8px;font-weight: bold;'>Prueba Manejo</div> </div><div class='item-after'><a href='#' onclick='continuarCed(`" + item2.id_cedula + "`,5);' style='border: none; outline:none;'><i class='material-icons md-light' style='font-size:35px;color:#00A7B5'>play_circle_outline</i></a>&nbsp;&nbsp;&nbsp;<a href='#' onclick='EliminarReg(" + item2.id_cedula + ",`" + item2.tipo_cedula + "`)' style='border: none; outline:none;'><i class='material-icons md-light' style='font-size:35px;color:red'>delete_forever</i></a></div></div></div></li>");
-                                    } else {
-                                        $("#pendientes").append("<li id='conc" + item2.id_cedula + "'><div class='item-content'><div class='item-media'><i class='icon'><img src='img/circuloNaranja.png' width='20px' height='20px' /></i></div><div class='item-inner'><div class='item-title'> <div> " + item2.nombre_cliente + "| " + fechas[0] + "</div> <div style='color: #afafaf;font-size: 12px;margin-left: 10px;margin-top: 8px;font-weight: bold;'>"+item2.nombre_evalua+"</div> </div><div class='item-after'><a href='#' onclick='continuarCedCap(`" + item2.id_cedula + "`,`" +item2.geolocalizacion_salida+ "`);' style='border: none; outline:none;'><i class='material-icons md-light' style='font-size:35px;color:#00A7B5'>play_circle_outline</i></a>&nbsp;&nbsp;&nbsp;<a href='#' onclick='EliminarReg(" + item2.id_cedula + ",`" + item2.tipo_cedula + "`)' style='border: none; outline:none;'><i class='material-icons md-light' style='font-size:35px;color:red'>delete_forever</i></a></div></div></div></li>");
-                                    }
-                                } else if (item2.tipo_cedula == 'InsEncierro') {
-                                    $("#pendientes").append("<li id='conc" + item2.id_cedula + "'><div class='item-content'><div class='item-media'><i class='icon'><img src='img/circuloNaranja.png' width='20px' height='20px' /></i></div><div class='item-inner'><div class='item-title'> <div> " + item2.nombre_cliente + "| " + fechas[0] + "</div> <div style='color: #afafaf;font-size: 12px;margin-left: 10px;margin-top: 8px;font-weight: bold;'>"+item2.nombre_evalua+"</div> </div><div class='item-after'><a href='#' onclick='continuarCedInsEncierro(`" + item2.id_cedula + "`,1);' style='border: none; outline:none;'><i class='material-icons md-light' style='font-size:35px;color:#00A7B5'>play_circle_outline</i></a>&nbsp;&nbsp;&nbsp;<a href='#' onclick='EliminarReg(" + item2.id_cedula + ",`" + item2.tipo_cedula + "`)' style='border: none; outline:none;'><i class='material-icons md-light' style='font-size:35px;color:red'>delete_forever</i></a></div></div></div></li>");
-                                } else if (item2.tipo_cedula == 'InsLavado'){
-                                    $("#pendientes").append(`<li id='conc${item2.id_cedula}'><div class='item-content'><div class='item-media'> <i class='icon'><img src='img/circuloNaranja.png' width='20px' height='20px' /></i> </div><div class='item-inner'><div class='item-title'> <div>${item2.nombre_cliente} | ${fechas[0]}</div>  <div style='color: #afafaf;font-size: 12px;margin-left: 10px;margin-top: 8px;font-weight: bold;'>${item2.nombre_cliente}</div>  </div><div class='item-after'> <a href='#' onclick="continuarCedInsLavado(${item2.id_cedula},'${item2.geolocalizacion_entrada}');" style='border: none; outline:none;'> <i class='material-icons md-light' style='font-size:35px;color:#00A7B5'>play_circle_outline</i></a>&nbsp;&nbsp;&nbsp; <a href='#' onclick="EliminarReg(${item2.id_cedula},'${item2.tipo_cedula}')" style='border: none; outline:none;'><i class='material-icons md-light' style='font-size:35px;color:red'>delete_forever</i></a></div></div></div></li>`);
-                                } else {
-                                    $("#pendientes").append(`<li id='conc${item2.id_cedula}'><div class='item-content'><div class='item-media'> <i class='icon'><img src='img/circuloNaranja.png' width='20px' height='20px' /></i> </div><div class='item-inner'><div class='item-title'> <div>${item2.nombre_cliente} | ${fechas[0]}</div>  <div style='color: #afafaf;font-size: 12px;margin-left: 10px;margin-top: 8px;font-weight: bold;'>${item2.nombre_cliente}</div>  </div><div class='item-after'> <a href='#' onclick="continuarCed2(${item2.id_cedula},'${item2.tipo_cedula}');" style='border: none; outline:none;'> <i class='material-icons md-light' style='font-size:35px;color:#00A7B5'>play_circle_outline</i></a>&nbsp;&nbsp;&nbsp; <a href='#' onclick="EliminarReg(${item2.id_cedula},'${item2.tipo_cedula}')" style='border: none; outline:none;'><i class='material-icons md-light' style='font-size:35px;color:red'>delete_forever</i></a></div></div></div></li>`);
-                                }
-                            }
-                        },
-                        function (tx5, error) {
-                            console.error("Error al consultar bandeja de salida: " + error.message);
-                        }
-                    );
-                },
-                function (error) { },
-                function () { }
-            );
-            //fin cedulas pendiente
-            //envios pendientes y terminados
-            databaseHandler.db.transaction(
-                function (tx5) {
-                    tx5.executeSql("SELECT id_cedula,nombre_evalua, nombre_cliente, fecha_entrada,estatus,tipo_cedula FROM cedulas_general WHERE (estatus = 1 OR estatus = 2) AND tipo_cedula = ? AND id_cliente = ?",
-                        [tipo, empresa],
-                        function (tx5, results) {
-                            var length = results.rows.length;
-                            for (var i = 0; i < length; i++) {
-                                var item = results.rows.item(i);
-                                var fechas = item.fecha_entrada.split(" ");
-                                if(tipo == 'Capacitación') {
-                                    if (item.estatus == 1) {
-                                        $("#bandeja").append(`<li id=li-` + item.id_cedula + `><div class='item-content' style="padding-left: 5px !important;margin-bottom: 10px;"><div class='item-media'><i class='icon'><img src='img/circuloNaranja.png' width='20px' height='20px' /></i></div> <div class='item-inner'><div class='item-title'> <div>` + item.nombre_cliente + ` | ` + fechas[0] + `</div> <div style='color: #afafaf;font-size: 12px;margin-left: 10px;margin-top: 8px;font-weight: bold;'>${item.nombre_evalua}</div> </div> <div class='item-after'><a href='#' class='send-ced' onclick='llevarTodo(` + item.id_cedula + `,\"` + item.tipo_cedula + `\");' style='border: none; outline:none;'><img src='img/send.svg'  width='30px' height='30px'/></a></div></div></div></li>`);
-                                    } else if (item.estatus == 2) {
-                                        $("#bandeja").append(`<li id=li-` + item.id_cedula + `><div class='item-content' style="padding-left: 5px !important;margin-bottom: 10px;"><div class='item-media'><i class='icon'><img src='img/circuloRojo.png' width='20px' height='20px' /></i></div> <div class='item-inner'><div class='item-title'> <div>` + item.nombre_cliente + ` | ` + fechas[0] + ` </div> <div style='color: #afafaf;font-size: 12px;margin-left: 10px;margin-top: 8px;font-weight: bold;'>${item.nombre_evalua}</div> </div> <div class='item-after'><a href='#' class='send-ced' onclick='llevarTodo(` + item.id_cedula + `,\"` + item.tipo_cedula + `\");' style='border: none; outline:none;'><img src='img/send.svg'  width='30px' height='30px' /></a></div></div></div><div class='sortable-handler'></div></li>`);
-                                    }
-                                } else {
-                                    if (item.estatus == 1) {
-                                        $("#bandeja").append(`<li id=li-` + item.id_cedula + `><div class='item-content' style="padding-left: 5px !important;margin-bottom: 10px;"><div class='item-media'><i class='icon'><img src='img/circuloNaranja.png' width='20px' height='20px' /></i></div> <div class='item-inner'><div class='item-title'>` + item.nombre_cliente + ` | ` + fechas[0] + `</div> <div class='item-after'><a href='#' class='send-ced' onclick='llevarTodo(` + item.id_cedula + `,\"` + item.tipo_cedula + `\");' style='border: none; outline:none;'><img src='img/send.svg'  width='30px' height='30px'/></a></div></div></div></li>`);
-                                    } else if (item.estatus == 2) {
-                                        $("#bandeja").append(`<li id=li-` + item.id_cedula + `><div class='item-content' style="padding-left: 5px !important;margin-bottom: 10px;"><div class='item-media'><i class='icon'><img src='img/circuloRojo.png' width='20px' height='20px' /></i></div> <div class='item-inner'><div class='item-title'>` + item.nombre_cliente + ` | ` + fechas[0] + `</div> <div class='item-after'><a href='#' class='send-ced' onclick='llevarTodo(` + item.id_cedula + `,\"` + item.tipo_cedula + `\");' style='border: none; outline:none;'><img src='img/send.svg'  width='30px' height='30px' /></a></div></div></div><div class='sortable-handler'></div></li>`);
-                                    }
-                                }
-                            }
-                        },
-                        function (tx5, error) {
-                            console.error("Error al consultar bandeja de salida: " + error.message);
-                        }
-                    );
-                },
-                function (error) { },
-                function () { }
-            );
-            //fin envios pendientes y terminados
-            //*Cambio de campos en BD
-            databaseHandler.db.transaction(
-                function(tx5){tx5.executeSql("SELECT ID_Personal FROM datos_generales_diesel LIMIT 1",[],function(tx5, results){});},
-                function(error){
-                    databaseHandler.db.transaction( function(tx5){ tx5.executeSql( "ALTER TABLE datos_generales_diesel ADD COLUMN personal text", [], function(tx5, results){ } ); }, function(error){}, function(){} );
-                    databaseHandler.db.transaction( function(tx5){ tx5.executeSql( "ALTER TABLE datos_generales_diesel ADD COLUMN ID_Personal int", [], function(tx5, results){ } ); }, function(error){}, function(){} );
-                    databaseHandler.db.transaction( function(tx5){ tx5.executeSql( "ALTER TABLE datos_generales_diesel ADD COLUMN personal2 text", [], function(tx5, results){ } ); }, function(error){}, function(){} );
-                    databaseHandler.db.transaction( function(tx5){ tx5.executeSql( "ALTER TABLE datos_generales_diesel ADD COLUMN ID_Personal2 int", [], function(tx5, results){ } ); }, function(error){}, function(){} );
-                    databaseHandler.db.transaction( function(tx5){ tx5.executeSql( "ALTER TABLE datos_generales_diesel ADD COLUMN bomba_def2 integer", [], function(tx5, results){ } ); }, function(error){}, function(){} );
-                    databaseHandler.db.transaction( function(tx5){ tx5.executeSql( "ALTER TABLE datos_generales_diesel ADD COLUMN carga_def2 float", [], function(tx5, results){ } ); }, function(error){}, function(){} );
-
-                    databaseHandler.db.transaction( function(tx5){ tx5.executeSql( "ALTER TABLE detalle_diesel ADD COLUMN totalizador float", [], function(tx5, results){ } ); }, function(error){}, function(){} );
-                },
-                function(){}
-            );
-            //* FIN Cambio de campos en BD
-            //Sin conexion
-            var sinConexion = 0;
-            document.addEventListener("offline", onOffline, false);
-            function networkInfo() {
-                var networkState = navigator.connection.type;
-                var states = {};
-                states[Connection.UNKNOWN] = 'Unknown connection';
-                states[Connection.ETHERNET] = 'Ethernet connection';
-                states[Connection.WIFI] = 'WiFi connection';
-                states[Connection.CELL_2G] = 'Cell 2G connection';
-                states[Connection.CELL_3G] = 'Cell 3G connection';
-                states[Connection.CELL_4G] = 'Cell 4G connection';
-                states[Connection.CELL] = 'Cell generic connection';
-                states[Connection.NONE] = 'No network connection';
-                alert("Connection type: " + states[networkState]);
-            }
-            var alerted = 0;
-            function onOffline() {
-                if (alerted == 0) {
-                    //app.dialog.alert('Vaya! No tienes internet. Cuando te conectes se enviaran o descargaran los datos.', 'Aviso');
-                    alerted++;
-                    sinConexion = 1;
-                } else { }
-            }
-
-            //Verificar si existen actualizaciones y si no existen, acutalizar datos
-            setTimeout(function () {
-                if (sinConexion == 1) {
-                } else {
+                    var estatus = 0;
                     databaseHandler.db.transaction(
                         function (tx5) {
-                            tx5.executeSql("SELECT * FROM Actualizaciones ORDER BY idActualizacion DESC LIMIT 1", [],
+                            tx5.executeSql(
+                                "SELECT * FROM cedulas_general WHERE estatus = ? AND tipo_cedula = ? AND id_cliente = ?",
+                                [estatus, tipo, empresa],
                                 function (tx5, results) {
                                     var length = results.rows.length;
-                                    if (length == 0) {
-                                        updateData();
-                                    } else {
-                                        var item1 = results.rows.item(0);
-                                        var tu = item1.Fecha;
-                                        var sep = tu.split(' ');
-                                        var sep2 = sep[0];
-                                        var tu2 = sep2.split('-')
-                                        var sy = tu2[0];
-                                        var sm = tu2[1];
-                                        var sd = tu2[2];
-                                        n = new Date();
-                                        y = n.getFullYear();
-                                        m = n.getMonth() + 1;
-                                        d = n.getDate();
-                                        if (y == sy && m == sm && d == sd) { }
-                                        else {
-                                            updateData();
+                                    for (var i = 0; i < length; i++) {
+                                        var item2 = results.rows.item(i);
+                                        var fechas =
+                                            item2.fecha_entrada.split(" ");
+                                        if (item2.tipo_cedula == "checklist") {
+                                            $("#pendientes").append(
+                                                "<li id='conc" +
+                                                    item2.id_cedula +
+                                                    "'><div class='item-content'><div class='item-media'><i class='icon'><img src='img/circuloNaranja.png' width='20px' height='20px' /></i></div><div class='item-inner'><div class='item-title'> <div> " +
+                                                    item2.nombre_cliente +
+                                                    "| " +
+                                                    fechas[0] +
+                                                    "</div> <div style='color: #afafaf;font-size: 12px;margin-left: 10px;margin-top: 8px;font-weight: bold;'>Rev. Imagen</div> </div><div class='item-after'><a href='#' onclick='continuarCed(`" +
+                                                    item2.id_cedula +
+                                                    "`,1);' style='border: none; outline:none;'><i class='material-icons md-light' style='font-size:35px;color:#00A7B5'>play_circle_outline</i></a>&nbsp;&nbsp;&nbsp;<a href='#' onclick='EliminarReg(" +
+                                                    item2.id_cedula +
+                                                    ",`" +
+                                                    item2.tipo_cedula +
+                                                    "`)' style='border: none; outline:none;'><i class='material-icons md-light' style='font-size:35px;color:red'>delete_forever</i></a></div></div></div></li>"
+                                            );
+                                        } else if (
+                                            item2.tipo_cedula == "Capacitación"
+                                        ) {
+                                            if (
+                                                item2.nombre_evalua ==
+                                                "Prueba Manejo"
+                                            ) {
+                                                $("#pendientes").append(
+                                                    "<li id='conc" +
+                                                        item2.id_cedula +
+                                                        "'><div class='item-content'><div class='item-media'><i class='icon'><img src='img/circuloNaranja.png' width='20px' height='20px' /></i></div><div class='item-inner'><div class='item-title'> <div> " +
+                                                        item2.nombre_cliente +
+                                                        "| " +
+                                                        fechas[0] +
+                                                        "</div> <div style='color: #afafaf;font-size: 12px;margin-left: 10px;margin-top: 8px;font-weight: bold;'>Prueba Manejo</div> </div><div class='item-after'><a href='#' onclick='continuarCed(`" +
+                                                        item2.id_cedula +
+                                                        "`,5);' style='border: none; outline:none;'><i class='material-icons md-light' style='font-size:35px;color:#00A7B5'>play_circle_outline</i></a>&nbsp;&nbsp;&nbsp;<a href='#' onclick='EliminarReg(" +
+                                                        item2.id_cedula +
+                                                        ",`" +
+                                                        item2.tipo_cedula +
+                                                        "`)' style='border: none; outline:none;'><i class='material-icons md-light' style='font-size:35px;color:red'>delete_forever</i></a></div></div></div></li>"
+                                                );
+                                            } else {
+                                                $("#pendientes").append(
+                                                    "<li id='conc" +
+                                                        item2.id_cedula +
+                                                        "'><div class='item-content'><div class='item-media'><i class='icon'><img src='img/circuloNaranja.png' width='20px' height='20px' /></i></div><div class='item-inner'><div class='item-title'> <div> " +
+                                                        item2.nombre_cliente +
+                                                        "| " +
+                                                        fechas[0] +
+                                                        "</div> <div style='color: #afafaf;font-size: 12px;margin-left: 10px;margin-top: 8px;font-weight: bold;'>" +
+                                                        item2.nombre_evalua +
+                                                        "</div> </div><div class='item-after'><a href='#' onclick='continuarCedCap(`" +
+                                                        item2.id_cedula +
+                                                        "`,`" +
+                                                        item2.geolocalizacion_salida +
+                                                        "`);' style='border: none; outline:none;'><i class='material-icons md-light' style='font-size:35px;color:#00A7B5'>play_circle_outline</i></a>&nbsp;&nbsp;&nbsp;<a href='#' onclick='EliminarReg(" +
+                                                        item2.id_cedula +
+                                                        ",`" +
+                                                        item2.tipo_cedula +
+                                                        "`)' style='border: none; outline:none;'><i class='material-icons md-light' style='font-size:35px;color:red'>delete_forever</i></a></div></div></div></li>"
+                                                );
+                                            }
+                                        } else if (
+                                            item2.tipo_cedula == "InsEncierro"
+                                        ) {
+                                            $("#pendientes").append(
+                                                "<li id='conc" +
+                                                    item2.id_cedula +
+                                                    "'><div class='item-content'><div class='item-media'><i class='icon'><img src='img/circuloNaranja.png' width='20px' height='20px' /></i></div><div class='item-inner'><div class='item-title'> <div> " +
+                                                    item2.nombre_cliente +
+                                                    "| " +
+                                                    fechas[0] +
+                                                    "</div> <div style='color: #afafaf;font-size: 12px;margin-left: 10px;margin-top: 8px;font-weight: bold;'>" +
+                                                    item2.nombre_evalua +
+                                                    "</div> </div><div class='item-after'><a href='#' onclick='continuarCedInsEncierro(`" +
+                                                    item2.id_cedula +
+                                                    "`,1);' style='border: none; outline:none;'><i class='material-icons md-light' style='font-size:35px;color:#00A7B5'>play_circle_outline</i></a>&nbsp;&nbsp;&nbsp;<a href='#' onclick='EliminarReg(" +
+                                                    item2.id_cedula +
+                                                    ",`" +
+                                                    item2.tipo_cedula +
+                                                    "`)' style='border: none; outline:none;'><i class='material-icons md-light' style='font-size:35px;color:red'>delete_forever</i></a></div></div></div></li>"
+                                            );
+                                        } else if (
+                                            item2.tipo_cedula == "InsLavado"
+                                        ) {
+                                            $("#pendientes").append(
+                                                `<li id='conc${item2.id_cedula}'><div class='item-content'><div class='item-media'> <i class='icon'><img src='img/circuloNaranja.png' width='20px' height='20px' /></i> </div><div class='item-inner'><div class='item-title'> <div>${item2.nombre_cliente} | ${fechas[0]}</div>  <div style='color: #afafaf;font-size: 12px;margin-left: 10px;margin-top: 8px;font-weight: bold;'>${item2.nombre_cliente}</div>  </div><div class='item-after'> <a href='#' onclick="continuarCedInsLavado(${item2.id_cedula},'${item2.geolocalizacion_entrada}');" style='border: none; outline:none;'> <i class='material-icons md-light' style='font-size:35px;color:#00A7B5'>play_circle_outline</i></a>&nbsp;&nbsp;&nbsp; <a href='#' onclick="EliminarReg(${item2.id_cedula},'${item2.tipo_cedula}')" style='border: none; outline:none;'><i class='material-icons md-light' style='font-size:35px;color:red'>delete_forever</i></a></div></div></div></li>`
+                                            );
+                                        } else {
+                                            $("#pendientes").append(
+                                                `<li id='conc${item2.id_cedula}'><div class='item-content'><div class='item-media'> <i class='icon'><img src='img/circuloNaranja.png' width='20px' height='20px' /></i> </div><div class='item-inner'><div class='item-title'> <div>${item2.nombre_cliente} | ${fechas[0]}</div>  <div style='color: #afafaf;font-size: 12px;margin-left: 10px;margin-top: 8px;font-weight: bold;'>${item2.nombre_cliente}</div>  </div><div class='item-after'> <a href='#' onclick="continuarCed2(${item2.id_cedula},'${item2.tipo_cedula}');" style='border: none; outline:none;'> <i class='material-icons md-light' style='font-size:35px;color:#00A7B5'>play_circle_outline</i></a>&nbsp;&nbsp;&nbsp; <a href='#' onclick="EliminarReg(${item2.id_cedula},'${item2.tipo_cedula}')" style='border: none; outline:none;'><i class='material-icons md-light' style='font-size:35px;color:red'>delete_forever</i></a></div></div></div></li>`
+                                            );
                                         }
                                     }
+                                },
+                                function (tx5, error) {
+                                    console.error(
+                                        "Error al consultar bandeja de salida: " +
+                                            error.message
+                                    );
                                 }
                             );
                         },
-                        function (error) { },
-                        function () { }
+                        function (error) {},
+                        function () {}
                     );
-                }
-            }, 500)
+                    //fin cedulas pendiente
+                    //envios pendientes y terminados
+                    databaseHandler.db.transaction(
+                        function (tx5) {
+                            tx5.executeSql(
+                                "SELECT id_cedula,nombre_evalua, nombre_cliente, fecha_entrada,estatus,tipo_cedula FROM cedulas_general WHERE (estatus = 1 OR estatus = 2) AND tipo_cedula = ? AND id_cliente = ?",
+                                [tipo, empresa],
+                                function (tx5, results) {
+                                    var length = results.rows.length;
+                                    for (var i = 0; i < length; i++) {
+                                        var item = results.rows.item(i);
+                                        var fechas =
+                                            item.fecha_entrada.split(" ");
+                                        if (tipo == "Capacitación") {
+                                            if (item.estatus == 1) {
+                                                $("#bandeja").append(
+                                                    `<li id=li-` +
+                                                        item.id_cedula +
+                                                        `><div class='item-content' style="padding-left: 5px !important;margin-bottom: 10px;"><div class='item-media'><i class='icon'><img src='img/circuloNaranja.png' width='20px' height='20px' /></i></div> <div class='item-inner'><div class='item-title'> <div>` +
+                                                        item.nombre_cliente +
+                                                        ` | ` +
+                                                        fechas[0] +
+                                                        `</div> <div style='color: #afafaf;font-size: 12px;margin-left: 10px;margin-top: 8px;font-weight: bold;'>${item.nombre_evalua}</div> </div> <div class='item-after'><a href='#' class='send-ced' onclick='llevarTodo(` +
+                                                        item.id_cedula +
+                                                        `,\"` +
+                                                        item.tipo_cedula +
+                                                        `\");' style='border: none; outline:none;'><img src='img/send.svg'  width='30px' height='30px'/></a></div></div></div></li>`
+                                                );
+                                            } else if (item.estatus == 2) {
+                                                $("#bandeja").append(
+                                                    `<li id=li-` +
+                                                        item.id_cedula +
+                                                        `><div class='item-content' style="padding-left: 5px !important;margin-bottom: 10px;"><div class='item-media'><i class='icon'><img src='img/circuloRojo.png' width='20px' height='20px' /></i></div> <div class='item-inner'><div class='item-title'> <div>` +
+                                                        item.nombre_cliente +
+                                                        ` | ` +
+                                                        fechas[0] +
+                                                        ` </div> <div style='color: #afafaf;font-size: 12px;margin-left: 10px;margin-top: 8px;font-weight: bold;'>${item.nombre_evalua}</div> </div> <div class='item-after'><a href='#' class='send-ced' onclick='llevarTodo(` +
+                                                        item.id_cedula +
+                                                        `,\"` +
+                                                        item.tipo_cedula +
+                                                        `\");' style='border: none; outline:none;'><img src='img/send.svg'  width='30px' height='30px' /></a></div></div></div><div class='sortable-handler'></div></li>`
+                                                );
+                                            }
+                                        } else {
+                                            if (item.estatus == 1) {
+                                                $("#bandeja").append(
+                                                    `<li id=li-` +
+                                                        item.id_cedula +
+                                                        `><div class='item-content' style="padding-left: 5px !important;margin-bottom: 10px;"><div class='item-media'><i class='icon'><img src='img/circuloNaranja.png' width='20px' height='20px' /></i></div> <div class='item-inner'><div class='item-title'>` +
+                                                        item.nombre_cliente +
+                                                        ` | ` +
+                                                        fechas[0] +
+                                                        `</div> <div class='item-after'><a href='#' class='send-ced' onclick='llevarTodo(` +
+                                                        item.id_cedula +
+                                                        `,\"` +
+                                                        item.tipo_cedula +
+                                                        `\");' style='border: none; outline:none;'><img src='img/send.svg'  width='30px' height='30px'/></a></div></div></div></li>`
+                                                );
+                                            } else if (item.estatus == 2) {
+                                                $("#bandeja").append(
+                                                    `<li id=li-` +
+                                                        item.id_cedula +
+                                                        `><div class='item-content' style="padding-left: 5px !important;margin-bottom: 10px;"><div class='item-media'><i class='icon'><img src='img/circuloRojo.png' width='20px' height='20px' /></i></div> <div class='item-inner'><div class='item-title'>` +
+                                                        item.nombre_cliente +
+                                                        ` | ` +
+                                                        fechas[0] +
+                                                        `</div> <div class='item-after'><a href='#' class='send-ced' onclick='llevarTodo(` +
+                                                        item.id_cedula +
+                                                        `,\"` +
+                                                        item.tipo_cedula +
+                                                        `\");' style='border: none; outline:none;'><img src='img/send.svg'  width='30px' height='30px' /></a></div></div></div><div class='sortable-handler'></div></li>`
+                                                );
+                                            }
+                                        }
+                                    }
+                                },
+                                function (tx5, error) {
+                                    console.error(
+                                        "Error al consultar bandeja de salida: " +
+                                            error.message
+                                    );
+                                }
+                            );
+                        },
+                        function (error) {},
+                        function () {}
+                    );
+                    //fin envios pendientes y terminados
+                    //*Cambio de campos en BD
+                    databaseHandler.db.transaction(
+                        function (tx5) {
+                            tx5.executeSql(
+                                "SELECT ID_Personal FROM datos_generales_diesel LIMIT 1",
+                                [],
+                                function (tx5, results) {}
+                            );
+                        },
+                        function (error) {
+                            databaseHandler.db.transaction(
+                                function (tx5) {
+                                    tx5.executeSql(
+                                        "ALTER TABLE datos_generales_diesel ADD COLUMN personal text",
+                                        [],
+                                        function (tx5, results) {}
+                                    );
+                                },
+                                function (error) {},
+                                function () {}
+                            );
+                            databaseHandler.db.transaction(
+                                function (tx5) {
+                                    tx5.executeSql(
+                                        "ALTER TABLE datos_generales_diesel ADD COLUMN ID_Personal int",
+                                        [],
+                                        function (tx5, results) {}
+                                    );
+                                },
+                                function (error) {},
+                                function () {}
+                            );
+                            databaseHandler.db.transaction(
+                                function (tx5) {
+                                    tx5.executeSql(
+                                        "ALTER TABLE datos_generales_diesel ADD COLUMN personal2 text",
+                                        [],
+                                        function (tx5, results) {}
+                                    );
+                                },
+                                function (error) {},
+                                function () {}
+                            );
+                            databaseHandler.db.transaction(
+                                function (tx5) {
+                                    tx5.executeSql(
+                                        "ALTER TABLE datos_generales_diesel ADD COLUMN ID_Personal2 int",
+                                        [],
+                                        function (tx5, results) {}
+                                    );
+                                },
+                                function (error) {},
+                                function () {}
+                            );
+                            databaseHandler.db.transaction(
+                                function (tx5) {
+                                    tx5.executeSql(
+                                        "ALTER TABLE datos_generales_diesel ADD COLUMN bomba_def2 integer",
+                                        [],
+                                        function (tx5, results) {}
+                                    );
+                                },
+                                function (error) {},
+                                function () {}
+                            );
+                            databaseHandler.db.transaction(
+                                function (tx5) {
+                                    tx5.executeSql(
+                                        "ALTER TABLE datos_generales_diesel ADD COLUMN carga_def2 float",
+                                        [],
+                                        function (tx5, results) {}
+                                    );
+                                },
+                                function (error) {},
+                                function () {}
+                            );
 
-            // Envio automatico de cedulas cada 30s
-            document.addEventListener("online", onOnline, false);
-            function onOnline() {
-                if (localStorage.getItem('sendFlag') == 0) {
-                    EnviarCedulas();
-                } else { }
-            }
-            // Ejecuta el envio cada 30s
-            setInterval(function () {
-                onOnline();
-            }, 15000);
-            // Funcion para enviar cedulas
-            function EnviarCedulas() {
-                var id_usuario = localStorage.getItem("id_usuario");
-                var empresa = localStorage.getItem("empresa");
-                databaseHandler.db.transaction(
-                    function (tx4) {
-                        tx4.executeSql("SELECT id_cedula, tipo_cedula FROM cedulas_general WHERE (estatus = 1 OR estatus = 2) AND id_cliente = ? LIMIT 1",
-                            [empresa],
-                            function (tx4, results) {
-                                var length = results.rows.length;
-                                for (var i = 0; i < length; i++) {
-                                    localStorage.setItem("sendFlag", 1);
-                                    var item2 = results.rows.item(i);
-                                    databaseHandler.db.transaction(
-                                        function (tx7) {
-                                            tx7.executeSql(
-                                                "UPDATE cedulas_general SET estatus = 2 WHERE id_cedula = ?",
-                                                [item2.id_cedula],
-                                                function (tx7, results) {
-                                                    llevarTodo(item2.id_cedula, item2.tipo_cedula);
+                            databaseHandler.db.transaction(
+                                function (tx5) {
+                                    tx5.executeSql(
+                                        "ALTER TABLE detalle_diesel ADD COLUMN totalizador float",
+                                        [],
+                                        function (tx5, results) {}
+                                    );
+                                },
+                                function (error) {},
+                                function () {}
+                            );
+                        },
+                        function () {}
+                    );
+                    //* FIN Cambio de campos en BD
+                    //Sin conexion
+                    var sinConexion = 0;
+                    document.addEventListener("offline", onOffline, false);
+                    function networkInfo() {
+                        var networkState = navigator.connection.type;
+                        var states = {};
+                        states[Connection.UNKNOWN] = "Unknown connection";
+                        states[Connection.ETHERNET] = "Ethernet connection";
+                        states[Connection.WIFI] = "WiFi connection";
+                        states[Connection.CELL_2G] = "Cell 2G connection";
+                        states[Connection.CELL_3G] = "Cell 3G connection";
+                        states[Connection.CELL_4G] = "Cell 4G connection";
+                        states[Connection.CELL] = "Cell generic connection";
+                        states[Connection.NONE] = "No network connection";
+                        alert("Connection type: " + states[networkState]);
+                    }
+                    var alerted = 0;
+                    function onOffline() {
+                        if (alerted == 0) {
+                            //app.dialog.alert('Vaya! No tienes internet. Cuando te conectes se enviaran o descargaran los datos.', 'Aviso');
+                            alerted++;
+                            sinConexion = 1;
+                        } else {
+                        }
+                    }
+
+                    //Verificar si existen actualizaciones y si no existen, acutalizar datos
+                    setTimeout(function () {
+                        if (sinConexion == 1) {
+                        } else {
+                            databaseHandler.db.transaction(
+                                function (tx5) {
+                                    tx5.executeSql(
+                                        "SELECT * FROM Actualizaciones ORDER BY idActualizacion DESC LIMIT 1",
+                                        [],
+                                        function (tx5, results) {
+                                            var length = results.rows.length;
+                                            if (length == 0) {
+                                                updateData();
+                                            } else {
+                                                var item1 =
+                                                    results.rows.item(0);
+                                                var tu = item1.Fecha;
+                                                var sep = tu.split(" ");
+                                                var sep2 = sep[0];
+                                                var tu2 = sep2.split("-");
+                                                var sy = tu2[0];
+                                                var sm = tu2[1];
+                                                var sd = tu2[2];
+                                                n = new Date();
+                                                y = n.getFullYear();
+                                                m = n.getMonth() + 1;
+                                                d = n.getDate();
+                                                if (
+                                                    y == sy &&
+                                                    m == sm &&
+                                                    d == sd
+                                                ) {
+                                                } else {
+                                                    updateData();
+                                                }
+                                            }
+                                        }
+                                    );
+                                },
+                                function (error) {},
+                                function () {}
+                            );
+                        }
+                    }, 500);
+
+                    // Envio automatico de cedulas cada 30s
+                    document.addEventListener("online", onOnline, false);
+                    function onOnline() {
+                        if (localStorage.getItem("sendFlag") == 0) {
+                            EnviarCedulas();
+                        } else {
+                        }
+                    }
+                    // Ejecuta el envio cada 30s
+                    setInterval(function () {
+                        onOnline();
+                    }, 15000);
+                    // Funcion para enviar cedulas
+                    function EnviarCedulas() {
+                        var id_usuario = localStorage.getItem("id_usuario");
+                        var empresa = localStorage.getItem("empresa");
+                        databaseHandler.db.transaction(
+                            function (tx4) {
+                                tx4.executeSql(
+                                    "SELECT id_cedula, tipo_cedula FROM cedulas_general WHERE (estatus = 1 OR estatus = 2) AND id_cliente = ? LIMIT 1",
+                                    [empresa],
+                                    function (tx4, results) {
+                                        var length = results.rows.length;
+                                        for (var i = 0; i < length; i++) {
+                                            localStorage.setItem("sendFlag", 1);
+                                            var item2 = results.rows.item(i);
+                                            databaseHandler.db.transaction(
+                                                function (tx7) {
+                                                    tx7.executeSql(
+                                                        "UPDATE cedulas_general SET estatus = 2 WHERE id_cedula = ?",
+                                                        [item2.id_cedula],
+                                                        function (
+                                                            tx7,
+                                                            results
+                                                        ) {
+                                                            llevarTodo(
+                                                                item2.id_cedula,
+                                                                item2.tipo_cedula
+                                                            );
+                                                        }
+                                                    );
                                                 }
                                             );
                                         }
-                                    );
-                                }
+                                    },
+                                    function (tx4, error) {
+                                        console.error(
+                                            "Error al guardar registro: " +
+                                                error.message
+                                        );
+                                    }
+                                );
                             },
-                            function (tx4, error) {
-                                console.error("Error al guardar registro: " + error.message);
-                            }
+                            function (error) {},
+                            function () {}
                         );
-                    },
-                    function (error) { },
-                    function () { }
-                );
-            }
-            //Boton para regresar en en recorridos
-            document.addEventListener('backbutton', function (e) {
-                app.views.main.router.back();
-            });
-            //Eliminar historial de Actualizaciones de menores a 9 dias
-            EliminarActualizacionesAntiguas();
-        }, false);
-    </script>
-</body>
-
+                    }
+                    //Boton para regresar en en recorridos
+                    document.addEventListener("backbutton", function (e) {
+                        app.views.main.router.back();
+                    });
+                    //Eliminar historial de Actualizaciones de menores a 9 dias
+                    EliminarActualizacionesAntiguas();
+                },
+                false
+            );
+        </script>
+    </body>
 </html>
