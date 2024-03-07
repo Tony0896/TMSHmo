@@ -131,6 +131,7 @@ function preeliminaCache() {
     } else {
         url =
             urlBase2 +
+            "/" +
             localStorage.getItem("Modulos") +
             "/datos.php?empresa=" +
             EmpresaID;
@@ -6897,61 +6898,72 @@ function scanRelevos(val) {
 
 function buscadorRelevos(valor) {
     //* buscar de licencias y operadores
-    console.log(valor);
-    app.dialog.progress("Buscando...", "red");
-    $("#divPersonaEntra").css("display", "none");
-    $("#IDSale").val("");
-    $("#claveEmpleado").val("");
-    $("#fullName").val("");
-    $("#ID_personal").val("");
-    $("#Eco").val("");
-    $("#FKUnidad").val("");
-    $("#linea").val("");
-    $("#jornada").val("");
-    $("#IDEntra").val("");
-    $("#claveEmpleadoE").val("");
-    $("#fullNameE").val("");
-    $("#ID_personalE").val("");
-    $("#EcoE").val("");
-    $("#FKUnidadE").val("");
-    $("#lineaE").val("");
-    $("#jornadaE").val("");
+    if (valor) {
+        app.dialog.progress("Buscando...", "red");
+        $("#divPersonaEntra").css("display", "none");
+        $("#IDSale").val("");
+        $("#claveEmpleado").val("");
+        $("#fullName").val("");
+        $("#ID_personal").val("");
+        $("#Eco").val("");
+        $("#FKUnidad").val("");
+        $("#linea").val("");
+        $("#jornada").val("");
+        $("#IDEntra").val("");
+        $("#claveEmpleadoE").val("");
+        $("#fullNameE").val("");
+        $("#ID_personalE").val("");
+        $("#EcoE").val("");
+        $("#FKUnidadE").val("");
+        $("#lineaE").val("");
+        $("#jornadaE").val("");
 
-    empresa = localStorage.getItem("empresa");
-    var NomJson = "personal_" + empresa;
-    app.request({
-        url: cordova.file.dataDirectory + "jsons_Relevos/" + NomJson + ".json",
-        method: "GET",
-        dataType: "json",
-        success: function (data) {
-            let encontro = false;
-            for (var j = 0; j < data.length; j++) {
-                if (data[j].QR == valor || data[j].QR2 == valor) {
-                    encontro = true;
-                    console.log("personal1", data[j]);
-                    $("#claveEmpleado").val(data[j].claveEmpleado);
-                    $("#fullName").val(data[j].fullName);
-                    $("#ID_personal").val(data[j].ID_personal);
+        empresa = localStorage.getItem("empresa");
+        var NomJson = "personal_" + empresa;
+        app.request({
+            url:
+                cordova.file.dataDirectory +
+                "jsons_Relevos/" +
+                NomJson +
+                ".json",
+            method: "GET",
+            dataType: "json",
+            success: function (data) {
+                let encontro = false;
+                for (var j = 0; j < data.length; j++) {
+                    if (data[j].QR == valor || data[j].QR2 == valor) {
+                        encontro = true;
+                        console.log("personal1", data[j]);
+                        $("#claveEmpleado").val(data[j].claveEmpleado);
+                        $("#fullName").val(data[j].fullName);
+                        $("#ID_personal").val(data[j].ID_personal);
 
-                    segundaBusqueda(data[j].ID_personal);
-                    break;
+                        segundaBusqueda(data[j].ID_personal);
+                        break;
+                    }
                 }
-            }
 
-            if (!encontro) {
-                $("#IDSale").val("");
-                $("#claveEmpleado").val("");
-                $("#fullName").val("");
-                $("#ID_personal").val("");
-                $("#Eco").val("");
-                $("#FKUnidad").val("");
-                $("#linea").val("");
-                $("#jornada").val("");
-                swal("", "Código escaneado no existe", "warning");
-                app.dialog.close();
-            }
-        },
-    });
+                if (!encontro) {
+                    $("#IDSale").val("");
+                    $("#claveEmpleado").val("");
+                    $("#fullName").val("");
+                    $("#ID_personal").val("");
+                    $("#Eco").val("");
+                    $("#FKUnidad").val("");
+                    $("#linea").val("");
+                    $("#jornada").val("");
+                    swal("", "Código escaneado no existe", "warning");
+                    app.dialog.close();
+                }
+            },
+        });
+    } else {
+        swal(
+            "",
+            "No se ha escaneado nada, intenta de nuevo por favor.",
+            "warning"
+        );
+    }
 }
 
 function segundaBusqueda(ID_personal) {
@@ -7063,101 +7075,121 @@ function tercaraBusqeuda(Linea, Jornada, ID_personal) {
 }
 
 function revisaRelevos(valor) {
-    app.dialog.progress("Buscando...", "red");
-    empresa = localStorage.getItem("empresa");
-    var NomJson = "personal_" + empresa;
-    app.request({
-        url: cordova.file.dataDirectory + "jsons_Relevos/" + NomJson + ".json",
-        method: "GET",
-        dataType: "json",
-        success: function (data) {
-            let encontro = false;
-            for (var j = 0; j < data.length; j++) {
-                if (data[j].QR == valor || data[j].QR2 == valor) {
-                    encontro = true;
-                    $("#claveEmpleadoE").val(data[j].claveEmpleado);
-                    $("#fullNameE").val(data[j].fullName);
-                    if (data[j].ID_personal == $("#ID_personalE").val()) {
-                        if (data[j].EstatusOperador == "Suspendido") {
-                            app.dialog.close();
-                            // $("#claveEmpleadoE").val('')
-                            // $("#fullNameE").val('')
-                            swal("", "Operador suspendido.", "warning");
-                            return false;
-                        } else {
-                            if (data[j].dias < 0) {
-                                // $("#claveEmpleadoE").val('')
-                                // $("#fullNameE").val('')
-                                swal("", "Licencia Vencida.", "warning");
-                            }
-                            if (data[j].dias > 0 && data[j].dias <= 10) {
-                                swal(
-                                    "",
-                                    "Licencia esta a " +
-                                        data[j].dias +
-                                        " días de vencer.",
-                                    "warning"
-                                );
-                            }
-                        }
-                    } else {
-                        app.dialog.close();
-                        swal({
-                            title: "Aviso",
-                            text: "El relevo no es el esperado o programado. ¿Deseas continuar?",
-                            icon: "warning",
-                            buttons: true,
-                            dangerMode: true,
-                        }).then((RESP) => {
-                            if (RESP == true) {
-                                if (data[j].EstatusOperador == "Suspendido") {
-                                    // $("#claveEmpleadoE").val('')
-                                    // $("#fullNameE").val('')
-                                    swal("", "Operador suspendido.", "warning");
-                                    return false;
-                                } else {
-                                    if (data[j].dias < 0) {
-                                        // $("#claveEmpleadoE").val('')
-                                        // $("#fullNameE").val('')
-                                        swal(
-                                            "",
-                                            "Licencia Vencida.",
-                                            "warning"
-                                        );
-                                    }
-                                    if (
-                                        data[j].dias > 0 &&
-                                        data[j].dias <= 10
-                                    ) {
-                                        swal(
-                                            "",
-                                            "Licencia esta a " +
-                                                data[j].dias +
-                                                " días de vencer.",
-                                            "warning"
-                                        );
-                                    }
-                                    $("#ID_personalE").val(data[j].ID_personal);
-                                }
-                                // swal("", "Licencia esta a "+data[j].dias+" días de vencer.", "warning")
-                            } else {
+    if (valor) {
+        app.dialog.progress("Buscando...", "red");
+        empresa = localStorage.getItem("empresa");
+        var NomJson = "personal_" + empresa;
+        app.request({
+            url:
+                cordova.file.dataDirectory +
+                "jsons_Relevos/" +
+                NomJson +
+                ".json",
+            method: "GET",
+            dataType: "json",
+            success: function (data) {
+                let encontro = false;
+                for (var j = 0; j < data.length; j++) {
+                    if (data[j].QR == valor || data[j].QR2 == valor) {
+                        encontro = true;
+                        $("#claveEmpleadoE").val(data[j].claveEmpleado);
+                        $("#fullNameE").val(data[j].fullName);
+                        if (data[j].ID_personal == $("#ID_personalE").val()) {
+                            if (data[j].EstatusOperador == "Suspendido") {
+                                app.dialog.close();
                                 $("#claveEmpleadoE").val("");
                                 $("#fullNameE").val("");
-                                swal("", "Cancelado.", "success");
+                                swal("", "Operador suspendido.", "warning");
+                                return false;
+                            } else {
+                                if (data[j].dias < 0) {
+                                    $("#claveEmpleadoE").val("");
+                                    $("#fullNameE").val("");
+                                    swal("", "Licencia Vencida.", "warning");
+                                }
+                                if (data[j].dias > 0 && data[j].dias <= 10) {
+                                    swal(
+                                        "",
+                                        "Licencia esta a " +
+                                            data[j].dias +
+                                            " días de vencer.",
+                                        "warning"
+                                    );
+                                }
                             }
-                        });
+                        } else {
+                            app.dialog.close();
+                            swal({
+                                title: "Aviso",
+                                text: "El relevo no es el esperado o programado. ¿Deseas continuar?",
+                                icon: "warning",
+                                buttons: true,
+                                dangerMode: true,
+                            }).then((RESP) => {
+                                if (RESP == true) {
+                                    if (
+                                        data[j].EstatusOperador == "Suspendido"
+                                    ) {
+                                        $("#claveEmpleadoE").val("");
+                                        $("#fullNameE").val("");
+                                        swal(
+                                            "",
+                                            "Operador suspendido.",
+                                            "warning"
+                                        );
+                                        return false;
+                                    } else {
+                                        if (data[j].dias < 0) {
+                                            $("#claveEmpleadoE").val("");
+                                            $("#fullNameE").val("");
+                                            swal(
+                                                "",
+                                                "Licencia Vencida.",
+                                                "warning"
+                                            );
+                                        }
+                                        if (
+                                            data[j].dias > 0 &&
+                                            data[j].dias <= 10
+                                        ) {
+                                            swal(
+                                                "",
+                                                "Licencia esta a " +
+                                                    data[j].dias +
+                                                    " días de vencer.",
+                                                "warning"
+                                            );
+                                        }
+                                        $("#ID_personalE").val(
+                                            data[j].ID_personal
+                                        );
+                                    }
+                                    // swal("", "Licencia esta a "+data[j].dias+" días de vencer.", "warning")
+                                } else {
+                                    $("#claveEmpleadoE").val("");
+                                    $("#fullNameE").val("");
+                                    swal("", "Cancelado.", "success");
+                                }
+                            });
+                        }
+                        app.dialog.close();
+                        break;
                     }
-                    app.dialog.close();
-                    break;
                 }
-            }
 
-            if (!encontro) {
-                swal("", "No se encontro al operador.", "warning");
-                app.dialog.close();
-            }
-        },
-    });
+                if (!encontro) {
+                    swal("", "No se encontro al operador.", "warning");
+                    app.dialog.close();
+                }
+            },
+        });
+    } else {
+        swal(
+            "",
+            "No se ha escaneado nada, intenta de nuevo por favor.",
+            "warning"
+        );
+    }
 }
 
 function guardaRelevo() {
@@ -7282,86 +7314,94 @@ function guardarRelevos() {
     // IDEntra int, claveEmpleadoE Text, fullNameE Text ID_personalE int, EcoE Text, FKUnidadE int, lineaE int, jornadaE int, fechaEntrada Text, UsuarioMovE Text, FkUsuarioMovE Text
 
     if ($("#claveEmpleadoE").val() && $("#fullNameE").val()) {
-        let id_cedula = localStorage.getItem("IdCedula");
-        let IDEntra = $("#IDEntra").val();
-        let claveEmpleadoE = $("#claveEmpleadoE").val();
-        let fullNameE = $("#fullNameE").val();
-        let ID_personalE = $("#ID_personalE").val();
-        let EcoE = $("#EcoE").val();
-        let FKUnidadE = $("#FKUnidadE").val();
-        let lineaE = $("#lineaE").val();
-        let jornadaE = $("#jornadaE").val();
-        let fechaEntrada = getDateWhitZeros();
-        let UsuarioMovE = localStorage.getItem("Usuario");
-        let FkUsuarioMovE = localStorage.getItem("id_usuario");
+        if ($("#FKUnidadE").val() && $("#FKUnidadE").val() != 0) {
+            let id_cedula = localStorage.getItem("IdCedula");
+            let IDEntra = $("#IDEntra").val();
+            let claveEmpleadoE = $("#claveEmpleadoE").val();
+            let fullNameE = $("#fullNameE").val();
+            let ID_personalE = $("#ID_personalE").val();
+            let EcoE = $("#EcoE").val();
+            let FKUnidadE = $("#FKUnidadE").val();
+            let lineaE = $("#lineaE").val();
+            let jornadaE = $("#jornadaE").val();
+            let fechaEntrada = getDateWhitZeros();
+            let UsuarioMovE = localStorage.getItem("Usuario");
+            let FkUsuarioMovE = localStorage.getItem("id_usuario");
 
-        databaseHandler.db.transaction(
-            function (tx) {
-                tx.executeSql(
-                    "UPDATE Relevos SET IDEntra = ? , claveEmpleadoE = ?, fullNameE = ?, ID_personalE = ?, EcoE = ?, FKUnidadE = ?, lineaE = ?, jornadaE = ?, fechaEntrada = ?, UsuarioMovE = ?, FkUsuarioMovE = ? WHERE id_cedula = ?",
-                    [
-                        IDEntra,
-                        claveEmpleadoE,
-                        fullNameE,
-                        ID_personalE,
-                        EcoE,
-                        FKUnidadE,
-                        lineaE,
-                        jornadaE,
-                        fechaEntrada,
-                        UsuarioMovE,
-                        FkUsuarioMovE,
-                        id_cedula,
-                    ],
-                    function (tx, results) {
-                        swal({
-                            title: "Aviso",
-                            text: "¿Estas seguro de querer finalizar el relevo?",
-                            icon: "warning",
-                            buttons: true,
-                            dangerMode: true,
-                        }).then((RESP) => {
-                            if (RESP == true) {
-                                var fecha_salida = getDateWhitZeros();
-                                var id_cedula =
-                                    localStorage.getItem("IdCedula");
-                                var estatus = 1;
-                                databaseHandler.db.transaction(
-                                    function (tx) {
-                                        tx.executeSql(
-                                            "UPDATE cedulas_general SET fecha_salida  = ?,estatus = ? WHERE id_cedula = ?",
-                                            [fecha_salida, estatus, id_cedula],
-                                            function (tx, results) {
-                                                window.location.href =
-                                                    "./menu.html";
-                                            },
-                                            function (tx, error) {
-                                                swal(
-                                                    "Error al guardar",
-                                                    error.message,
-                                                    "error"
-                                                );
-                                            }
-                                        );
-                                    },
-                                    function (error) {},
-                                    function () {}
-                                );
-                            }
-                        });
-                    },
-                    function (tx, error) {
-                        swal("Error al guardar", error.message, "error");
-                    }
-                );
-            },
-            function (error) {},
-            function () {}
-        );
+            databaseHandler.db.transaction(
+                function (tx) {
+                    tx.executeSql(
+                        "UPDATE Relevos SET IDEntra = ? , claveEmpleadoE = ?, fullNameE = ?, ID_personalE = ?, EcoE = ?, FKUnidadE = ?, lineaE = ?, jornadaE = ?, fechaEntrada = ?, UsuarioMovE = ?, FkUsuarioMovE = ? WHERE id_cedula = ?",
+                        [
+                            IDEntra,
+                            claveEmpleadoE,
+                            fullNameE,
+                            ID_personalE,
+                            EcoE,
+                            FKUnidadE,
+                            lineaE,
+                            jornadaE,
+                            fechaEntrada,
+                            UsuarioMovE,
+                            FkUsuarioMovE,
+                            id_cedula,
+                        ],
+                        function (tx, results) {
+                            swal({
+                                title: "Aviso",
+                                text: "¿Estas seguro de querer finalizar el relevo?",
+                                icon: "warning",
+                                buttons: true,
+                                dangerMode: true,
+                            }).then((RESP) => {
+                                if (RESP == true) {
+                                    var fecha_salida = getDateWhitZeros();
+                                    var id_cedula =
+                                        localStorage.getItem("IdCedula");
+                                    var estatus = 1;
+                                    databaseHandler.db.transaction(
+                                        function (tx) {
+                                            tx.executeSql(
+                                                "UPDATE cedulas_general SET fecha_salida  = ?,estatus = ? WHERE id_cedula = ?",
+                                                [
+                                                    fecha_salida,
+                                                    estatus,
+                                                    id_cedula,
+                                                ],
+                                                function (tx, results) {
+                                                    window.location.href =
+                                                        "./menu.html";
+                                                },
+                                                function (tx, error) {
+                                                    swal(
+                                                        "Error al guardar",
+                                                        error.message,
+                                                        "error"
+                                                    );
+                                                }
+                                            );
+                                        },
+                                        function (error) {},
+                                        function () {}
+                                    );
+                                }
+                            });
+                        },
+                        function (tx, error) {
+                            swal("Error al guardar", error.message, "error");
+                        }
+                    );
+                },
+                function (error) {},
+                function () {}
+            );
+        } else {
+            swal("", "Debes seleccionar una unidad.", "warning");
+        }
     } else {
         swal(
             "",
-            "Debes escanear la licencia del relevo para poder continuar.",
+            "Debes escanear la credencial del relevo para poder continuar.",
             "warning"
         );
     }
@@ -10807,6 +10847,50 @@ function FinalizarEvaluacionLavado() {
             app.views.main.router.navigate({ name: "formLavado7" });
         }
     });
+}
+
+function SortEncierro() {
+    swal("Trabajando...", "", "");
+    let id_cedula = localStorage.getItem("IdCedula");
+    $("#tb_detalle").html("");
+    let html = "";
+    databaseHandler.db.transaction(
+        function (tx5) {
+            tx5.executeSql(
+                "SELECT * FROM IEN_Header WHERE id_cedula = ? ORDER BY unidad",
+                [id_cedula],
+                function (tx5, results) {
+                    let length = results.rows.length;
+                    if (length > 0) {
+                        $("#message-nr").css("display", "none");
+                        for (let i = 0; i < length; i++) {
+                            let item = results.rows.item(i);
+                            html += `
+                            <tr id="renglon_${item.ID_Header}">
+                                <td>${item.unidad}</td>
+                                <td style="padding: 10px 0px;">
+                                    <div style="display: flex;justify-content: space-evenly;">
+                                        <span> <button class="col button button-small button-round button-outline" style="height: 100%;border-color: #FF0037;width: fit-content;margin: auto;" onclick="editarInspeccionEncierro(${item.ID_Header});"> <i class="material-icons md-light" style="color: #FF0037;vertical-align: middle;font-size: 25px;margin: 5px 10px;">edit</i> </button> </span>
+                                        <span> <button class="col button button-small button-round button-outline" style="height: 100%;border-color: #FF0037;width: fit-content;margin: auto;" onclick="eliminarInspeccionEncierro(${item.ID_Header});"> <i class="material-icons md-light" style="color: #FF0037;vertical-align: middle;font-size: 25px;margin: 5px 10px;">delete_forever</i> </button> </span>
+                                    </div>
+                                </td>
+                            </tr>
+                        `;
+                        }
+                        $("#tb_detalle").html(html);
+                        swal("", "Completado.", "success");
+                    }
+                },
+                function (tx5, error) {
+                    console.error(
+                        "Error al consultar bandeja de salida: " + error.message
+                    );
+                }
+            );
+        },
+        function (error) {},
+        function () {}
+    );
 }
 //?Fin Campanias
 
