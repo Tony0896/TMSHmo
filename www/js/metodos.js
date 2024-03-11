@@ -11295,8 +11295,41 @@ function llamarUnidadDiesel() {
 function agregaCarga() {
     if ($("#carga").val()) {
         if ($("#totalizadorFlag").val() >= 9) {
-            if (Number($("#totalizador").val()) < 1) {
+            if (
+                Number(String($("#totalizador").val()).replaceAll(",", "")) < 1
+            ) {
                 swal("", "Debes agregar el totalizador.", "warning");
+                return false;
+            }
+        }
+    }
+
+    if (Number(String($("#totalizador").val()).replaceAll(",", "")) > 1) {
+        if (
+            Number(String($("#totalizador").val()).replaceAll(",", "")) <
+            Number($("#totalizadorReal").val())
+        ) {
+            swal(
+                "",
+                "EL totalizador agregado es menor al esperado.",
+                "warning"
+            );
+            return false;
+        }
+
+        if (
+            Number(String($("#totalizador").val()).replaceAll(",", "")) >
+            Number($("#totalizadorReal").val())
+        ) {
+            if (
+                Number(String($("#totalizador").val()).replaceAll(",", "")) >
+                Number($("#totalizadorReal").val()) + 2000
+            ) {
+                swal(
+                    "",
+                    "EL totalizador agregado es mayor al esperado.",
+                    "warning"
+                );
                 return false;
             }
         }
@@ -13717,6 +13750,65 @@ function reviewTotalizador(value) {
                                     " UNIDADES PARA EL TOTALIZADOR"
                             );
                             $(".span_Flagtotalizador").css("display", "block");
+                        }
+                    },
+                    function (tx5, error) {
+                        console.error("Error: " + error.message);
+                    }
+                );
+            },
+            function (error) {
+                console.error("Error: " + error.message);
+            },
+            function (error) {
+                console.error("Error: " + error.message);
+            }
+        );
+
+        databaseHandler.db.transaction(
+            function (tx5) {
+                tx5.executeSql(
+                    "SELECT MAX(CAST(totalizador AS decimal)) as MaxTotal FROM detalle_diesel WHERE id_cedula = ? AND no_bomba = ? AND carga_total > 0",
+                    [localStorage.getItem("IdCedula"), value],
+                    function (tx5, results) {
+                        var item2 = results.rows.item(0);
+                        console.log("max =>", Number(item2.MaxTotal));
+                        if (Number(item2.MaxTotal) == 0) {
+                            databaseHandler.db.transaction(
+                                function (tx5) {
+                                    tx5.executeSql(
+                                        "SELECT * FROM datos_generales_diesel WHERE id_cedula = ?",
+                                        [localStorage.getItem("IdCedula")],
+                                        function (tx5, results) {
+                                            var item1 = results.rows.item(0);
+                                            console.log("item1 =>", item1);
+                                            console.log("value =>", value);
+                                            if (value == item1.bomba_def) {
+                                                $("#totalizadorReal").val(
+                                                    Number(item1.carga_def)
+                                                );
+                                                console.log("Carga def 1");
+                                            } else if (
+                                                value == item1.bomba_def2
+                                            ) {
+                                                $("#totalizadorReal").val(
+                                                    Number(item1.carga_def2)
+                                                );
+                                                console.log("Carga def 2");
+                                            }
+                                        },
+                                        function (tx5, error) {
+                                            console.error(
+                                                "Error: " + error.message
+                                            );
+                                        }
+                                    );
+                                },
+                                function (error) {},
+                                function (error) {}
+                            );
+                        } else {
+                            $("#totalizadorReal").val(Number(item2.MaxTotal));
                         }
                     },
                     function (tx5, error) {
