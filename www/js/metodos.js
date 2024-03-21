@@ -7312,99 +7312,104 @@ function guardaRelevo() {
 
 function guardarRelevos() {
     // IDEntra int, claveEmpleadoE Text, fullNameE Text ID_personalE int, EcoE Text, FKUnidadE int, lineaE int, jornadaE int, fechaEntrada Text, UsuarioMovE Text, FkUsuarioMovE Text
+    setTimeout(() => {
+        if ($("#claveEmpleadoE").val() && $("#fullNameE").val()) {
+            if ($("#FKUnidadE").val() && $("#FKUnidadE").val() != 0) {
+                let id_cedula = localStorage.getItem("IdCedula");
+                let IDEntra = $("#IDEntra").val();
+                let claveEmpleadoE = $("#claveEmpleadoE").val();
+                let fullNameE = $("#fullNameE").val();
+                let ID_personalE = $("#ID_personalE").val();
+                let EcoE = $("#EcoE").val();
+                let FKUnidadE = $("#FKUnidadE").val();
+                let lineaE = $("#lineaE").val();
+                let jornadaE = $("#jornadaE").val();
+                let fechaEntrada = getDateWhitZeros();
+                let UsuarioMovE = localStorage.getItem("Usuario");
+                let FkUsuarioMovE = localStorage.getItem("id_usuario");
 
-    if ($("#claveEmpleadoE").val() && $("#fullNameE").val()) {
-        if ($("#FKUnidadE").val() && $("#FKUnidadE").val() != 0) {
-            let id_cedula = localStorage.getItem("IdCedula");
-            let IDEntra = $("#IDEntra").val();
-            let claveEmpleadoE = $("#claveEmpleadoE").val();
-            let fullNameE = $("#fullNameE").val();
-            let ID_personalE = $("#ID_personalE").val();
-            let EcoE = $("#EcoE").val();
-            let FKUnidadE = $("#FKUnidadE").val();
-            let lineaE = $("#lineaE").val();
-            let jornadaE = $("#jornadaE").val();
-            let fechaEntrada = getDateWhitZeros();
-            let UsuarioMovE = localStorage.getItem("Usuario");
-            let FkUsuarioMovE = localStorage.getItem("id_usuario");
-
-            databaseHandler.db.transaction(
-                function (tx) {
-                    tx.executeSql(
-                        "UPDATE Relevos SET IDEntra = ? , claveEmpleadoE = ?, fullNameE = ?, ID_personalE = ?, EcoE = ?, FKUnidadE = ?, lineaE = ?, jornadaE = ?, fechaEntrada = ?, UsuarioMovE = ?, FkUsuarioMovE = ? WHERE id_cedula = ?",
-                        [
-                            IDEntra,
-                            claveEmpleadoE,
-                            fullNameE,
-                            ID_personalE,
-                            EcoE,
-                            FKUnidadE,
-                            lineaE,
-                            jornadaE,
-                            fechaEntrada,
-                            UsuarioMovE,
-                            FkUsuarioMovE,
-                            id_cedula,
-                        ],
-                        function (tx, results) {
-                            swal({
-                                title: "Aviso",
-                                text: "¿Estas seguro de querer finalizar el relevo?",
-                                icon: "warning",
-                                buttons: true,
-                                dangerMode: true,
-                            }).then((RESP) => {
-                                if (RESP == true) {
-                                    var fecha_salida = getDateWhitZeros();
-                                    var id_cedula =
-                                        localStorage.getItem("IdCedula");
-                                    var estatus = 1;
-                                    databaseHandler.db.transaction(
-                                        function (tx) {
-                                            tx.executeSql(
-                                                "UPDATE cedulas_general SET fecha_salida  = ?,estatus = ? WHERE id_cedula = ?",
-                                                [
-                                                    fecha_salida,
-                                                    estatus,
-                                                    id_cedula,
-                                                ],
-                                                function (tx, results) {
-                                                    window.location.href =
-                                                        "./menu.html";
-                                                },
-                                                function (tx, error) {
-                                                    swal(
-                                                        "Error al guardar",
-                                                        error.message,
-                                                        "error"
-                                                    );
-                                                }
-                                            );
-                                        },
-                                        function (error) {},
-                                        function () {}
-                                    );
-                                }
-                            });
-                        },
-                        function (tx, error) {
-                            swal("Error al guardar", error.message, "error");
-                        }
-                    );
-                },
-                function (error) {},
-                function () {}
-            );
+                databaseHandler.db.transaction(
+                    function (tx) {
+                        tx.executeSql(
+                            "UPDATE Relevos SET IDEntra = ? , claveEmpleadoE = ?, fullNameE = ?, ID_personalE = ?, EcoE = ?, FKUnidadE = ?, lineaE = ?, jornadaE = ?, fechaEntrada = ?, UsuarioMovE = ?, FkUsuarioMovE = ? WHERE id_cedula = ?",
+                            [
+                                IDEntra,
+                                claveEmpleadoE,
+                                fullNameE,
+                                ID_personalE,
+                                EcoE,
+                                FKUnidadE,
+                                lineaE,
+                                jornadaE,
+                                fechaEntrada,
+                                UsuarioMovE,
+                                FkUsuarioMovE,
+                                id_cedula,
+                            ],
+                            function (tx, results) {
+                                swal({
+                                    title: "Aviso",
+                                    text: "¿Estas seguro de querer finalizar el relevo?",
+                                    icon: "warning",
+                                    buttons: true,
+                                    dangerMode: true,
+                                }).then((RESP) => {
+                                    if (RESP == true) {
+                                        var fecha_salida = getDateWhitZeros();
+                                        var id_cedula =
+                                            localStorage.getItem("IdCedula");
+                                        var estatus = 1;
+                                        databaseHandler.db.transaction(
+                                            function (tx) {
+                                                tx.executeSql(
+                                                    "UPDATE cedulas_general SET fecha_salida  = ?,estatus = ? WHERE id_cedula = ?",
+                                                    [
+                                                        fecha_salida,
+                                                        estatus,
+                                                        id_cedula,
+                                                    ],
+                                                    function (tx, results) {
+                                                        window.location.href =
+                                                            "./menu.html";
+                                                    },
+                                                    function (tx, error) {
+                                                        swal(
+                                                            "Error al guardar",
+                                                            error.message,
+                                                            "error"
+                                                        );
+                                                    }
+                                                );
+                                            },
+                                            function (error) {},
+                                            function () {}
+                                        );
+                                    }
+                                });
+                            },
+                            function (tx, error) {
+                                swal(
+                                    "Error al guardar",
+                                    error.message,
+                                    "error"
+                                );
+                            }
+                        );
+                    },
+                    function (error) {},
+                    function () {}
+                );
+            } else {
+                swal("", "Debes seleccionar una unidad.", "warning");
+            }
         } else {
-            swal("", "Debes seleccionar una unidad.", "warning");
+            swal(
+                "",
+                "Debes escanear la credencial del relevo para poder continuar.",
+                "warning"
+            );
         }
-    } else {
-        swal(
-            "",
-            "Debes escanear la credencial del relevo para poder continuar.",
-            "warning"
-        );
-    }
+    }, 800);
 }
 
 function busquedaEvaluacion2(IDCurso, FK_Becario) {
@@ -10921,6 +10926,13 @@ function prepreIniciaCargaDiesel() {
     let ID_Personal2 = $("#ID_Personal2").val();
     let personal2 = $("#personal2").val();
 
+    let fecha_def = $("#fecha_def").val();
+
+    if (!fecha_def) {
+        swal("", "Debes indicar la fecha del registro.", "warning");
+        return false;
+    }
+
     if (bomba_def == 0) {
         swal("", "Debes seleccionar una bomba.", "warning");
         return false;
@@ -10986,7 +10998,8 @@ function prepreIniciaCargaDiesel() {
                 bomba_def2,
                 carga_def2,
                 ID_Personal2,
-                personal2
+                personal2,
+                fecha_def
             );
         }
     });
@@ -11000,7 +11013,8 @@ function iniciarCargasDiesel(
     bomba_def2,
     carga_def2,
     ID_Personal2,
-    personal2
+    personal2,
+    fecha_def
 ) {
     var id_usuario = localStorage.getItem("Usuario");
     var nombre_usuario = localStorage.getItem("nombre");
@@ -11053,7 +11067,8 @@ function iniciarCargasDiesel(
                         bomba_def2,
                         carga_def2,
                         ID_Personal2,
-                        personal2
+                        personal2,
+                        fecha_def
                     );
                 },
                 function (tx, error) {

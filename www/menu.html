@@ -1689,6 +1689,29 @@
                         },
                         function () {}
                     );
+                    databaseHandler.db.transaction(
+                        function (tx5) {
+                            tx5.executeSql(
+                                "SELECT fecha_corta FROM datos_generales_diesel LIMIT 1",
+                                [],
+                                function (tx5, results) {}
+                            );
+                        },
+                        function (error) {
+                            databaseHandler.db.transaction(
+                                function (tx5) {
+                                    tx5.executeSql(
+                                        "ALTER TABLE datos_generales_diesel ADD COLUMN fecha_corta text",
+                                        [],
+                                        function (tx5, results) {}
+                                    );
+                                },
+                                function (error) {},
+                                function () {}
+                            );
+                        },
+                        function () {}
+                    );
                     //* FIN Cambio de campos en BD
                     //Sin conexion
                     var sinConexion = 0;

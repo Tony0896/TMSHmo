@@ -2823,8 +2823,7 @@ function llevarTodo(id_cedula, tipo_cedula) {
                                         var length = results.rows.length;
                                         for (var i = 0; i < length; i++) {
                                             var item1 = results.rows.item(i);
-                                            let fecha_corta =
-                                                item1.fecha.split(" ");
+                                            let fecha_corta = item1.fecha_corta;
                                             let fecha = item1.fecha.replace(
                                                 " ",
                                                 "T"
@@ -2843,7 +2842,7 @@ function llevarTodo(id_cedula, tipo_cedula) {
                                             datos_generales_diesel[i] = {
                                                 Valor: i,
                                                 fecha: fecha,
-                                                fecha_corta: fecha_corta[0],
+                                                fecha_corta: fecha_corta,
                                                 id_usuario: item1.id_usuario,
                                                 nombre_usuario:
                                                     item1.nombre_usuario,
