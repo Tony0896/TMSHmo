@@ -3,15 +3,11 @@ $("#IdUsuario").val(IdUsuario);
 //Borrar variables de sesión y regresar a el Log-in
 function logaout() {
     databaseHandler.db.transaction(function (tx5) {
-        tx5.executeSql(
-            "DELETE FROM Actualizaciones",
-            [],
-            function (tx5, results) {
-                StatusBar.backgroundColorByHexString("#1E9FB4");
-                window.localStorage.clear();
-                window.location.href = "index.html";
-            }
-        );
+        tx5.executeSql("DELETE FROM Actualizaciones", [], function (tx5, results) {
+            StatusBar.backgroundColorByHexString("#1E9FB4");
+            window.localStorage.clear();
+            window.location.href = "index.html";
+        });
     });
 }
 
@@ -122,19 +118,9 @@ function preeliminaCache() {
     // Capacitacion,Diesel,tecnologiasHmo,InsEncierro,InsLavado,Relevos
 
     if (localStorage.getItem("Modulos") == "Capacitacion") {
-        url =
-            urlBase2 +
-            "/capacitacion/datos.php?empresa=" +
-            EmpresaID +
-            "&paso=" +
-            paso;
+        url = urlBase2 + "/capacitacion/datos.php?empresa=" + EmpresaID + "&paso=" + paso;
     } else {
-        url =
-            urlBase2 +
-            "/" +
-            localStorage.getItem("Modulos") +
-            "/datos.php?empresa=" +
-            EmpresaID;
+        url = urlBase2 + "/" + localStorage.getItem("Modulos") + "/datos.php?empresa=" + EmpresaID;
     }
 
     fetch(url)
@@ -163,18 +149,10 @@ function eliminaCache() {
 function changeCamera(check) {
     if (check.includes("0")) {
         localStorage.setItem("camera", "0");
-        swal(
-            "",
-            "Se cambio exitosamente la configuracion de la camara.",
-            "success"
-        );
+        swal("", "Se cambio exitosamente la configuracion de la camara.", "success");
     } else {
         localStorage.setItem("camera", "1");
-        swal(
-            "",
-            "Se cambio exitosamente la configuracion de la camara.",
-            "success"
-        );
+        swal("", "Se cambio exitosamente la configuracion de la camara.", "success");
     }
 }
 function capturePhoto() {
@@ -223,73 +201,48 @@ function capturePhoto() {
             on: {
                 open: function (popup) {
                     var permissions = cordova.plugins.permissions;
-                    permissions.checkPermission(
-                        permissions.CAMERA,
-                        function (status) {
-                            if (status.hasPermission) {
-                                cargarEmpresa(
-                                    `./js/camera-field.js`,
-                                    empresaCargada
-                                );
-                                function empresaCargada() {
-                                    cameraStart(onPhotoDataSuccess);
-                                }
-                                function cargarEmpresa(url, callback) {
-                                    var pie =
-                                        document.getElementsByTagName("fwm")[0];
-                                    var script =
-                                        document.createElement("script");
-                                    script.type = "text/javascript";
-                                    script.src = url;
-                                    script.id = "cameraSource";
-                                    script.onload = callback;
-                                    pie.appendChild(script);
-                                }
-                            } else {
-                                permissions.requestPermission(
-                                    permissions.CAMERA,
-                                    success,
-                                    error
-                                );
-                                function error() {
-                                    app.sheet.close(".popup");
-                                    swal(
-                                        "Se Requiere los permisos",
-                                        "Para poder tomar las evidencias fotograficas necesitamos el permiso.",
-                                        "warning"
-                                    );
-                                }
-                                function success(status) {
-                                    if (!status.hasPermission) {
-                                        error();
-                                    } else {
-                                        cargarEmpresa(
-                                            `./js/camera-field.js`,
-                                            empresaCargada
-                                        );
-                                        function empresaCargada() {
-                                            cameraStart(onPhotoDataSuccess);
-                                        }
-                                        function cargarEmpresa(url, callback) {
-                                            var pie =
-                                                document.getElementsByTagName(
-                                                    "fwm"
-                                                )[0];
-                                            var script =
-                                                document.createElement(
-                                                    "script"
-                                                );
-                                            script.type = "text/javascript";
-                                            script.src = url;
-                                            script.id = "cameraSource";
-                                            script.onload = callback;
-                                            pie.appendChild(script);
-                                        }
+                    permissions.checkPermission(permissions.CAMERA, function (status) {
+                        if (status.hasPermission) {
+                            cargarEmpresa(`./js/camera-field.js`, empresaCargada);
+                            function empresaCargada() {
+                                cameraStart(onPhotoDataSuccess);
+                            }
+                            function cargarEmpresa(url, callback) {
+                                var pie = document.getElementsByTagName("fwm")[0];
+                                var script = document.createElement("script");
+                                script.type = "text/javascript";
+                                script.src = url;
+                                script.id = "cameraSource";
+                                script.onload = callback;
+                                pie.appendChild(script);
+                            }
+                        } else {
+                            permissions.requestPermission(permissions.CAMERA, success, error);
+                            function error() {
+                                app.sheet.close(".popup");
+                                swal("Se Requiere los permisos", "Para poder tomar las evidencias fotograficas necesitamos el permiso.", "warning");
+                            }
+                            function success(status) {
+                                if (!status.hasPermission) {
+                                    error();
+                                } else {
+                                    cargarEmpresa(`./js/camera-field.js`, empresaCargada);
+                                    function empresaCargada() {
+                                        cameraStart(onPhotoDataSuccess);
+                                    }
+                                    function cargarEmpresa(url, callback) {
+                                        var pie = document.getElementsByTagName("fwm")[0];
+                                        var script = document.createElement("script");
+                                        script.type = "text/javascript";
+                                        script.src = url;
+                                        script.id = "cameraSource";
+                                        script.onload = callback;
+                                        pie.appendChild(script);
                                     }
                                 }
                             }
                         }
-                    );
+                    });
                 },
                 opened: function (popup) {
                     localStorage.setItem("cameraField", "Active");
@@ -377,46 +330,32 @@ function moveMenu(val) {
 function EliminarActualizacionesAntiguas() {
     var IdUsuario = localStorage.getItem("Usuario");
     var fecha = new Date();
-    var fecha_ingreso =
-        fecha.getFullYear() +
-        "-" +
-        (fecha.getMonth() + 1) +
-        "-" +
-        fecha.getDate();
+    var fecha_ingreso = fecha.getFullYear() + "-" + (fecha.getMonth() + 1) + "-" + fecha.getDate();
     fecha_eliminar = editar_fecha(fecha_ingreso, "-30", "d", "-");
     databaseHandler.db.transaction(function (tx5) {
-        tx5.executeSql(
-            "SELECT * FROM Actualizaciones  WHERE Fecha < ? AND IdUsuario = ?",
-            [fecha_eliminar, IdUsuario],
-            function (tx5, results) {
-                var length = results.rows.length;
-                for (var i = 0; i < length; i++) {
-                    var item2 = results.rows.item(i);
-                    var IdEliminar = item2.idActualizacion;
-                    databaseHandler.db.transaction(
-                        function (tx4) {
-                            tx4.executeSql(
-                                "DELETE FROM Actualizaciones WHERE idActualizacion = ?",
-                                [IdEliminar],
-                                function (tx4, results) {},
-                                function (tx4, error) {
-                                    console.errror(
-                                        "Error al eliminar: " + error.message
-                                    );
-                                }
-                            );
-                        },
-                        function (error) {
-                            console.error(
-                                "Error al seleccionar actualzaciones:" +
-                                    error.message
-                            );
-                        },
-                        function () {}
-                    );
-                }
+        tx5.executeSql("SELECT * FROM Actualizaciones  WHERE Fecha < ? AND IdUsuario = ?", [fecha_eliminar, IdUsuario], function (tx5, results) {
+            var length = results.rows.length;
+            for (var i = 0; i < length; i++) {
+                var item2 = results.rows.item(i);
+                var IdEliminar = item2.idActualizacion;
+                databaseHandler.db.transaction(
+                    function (tx4) {
+                        tx4.executeSql(
+                            "DELETE FROM Actualizaciones WHERE idActualizacion = ?",
+                            [IdEliminar],
+                            function (tx4, results) {},
+                            function (tx4, error) {
+                                console.errror("Error al eliminar: " + error.message);
+                            }
+                        );
+                    },
+                    function (error) {
+                        console.error("Error al seleccionar actualzaciones:" + error.message);
+                    },
+                    function () {}
+                );
             }
-        );
+        });
     });
 }
 function inputLleno(id, value) {
@@ -450,21 +389,15 @@ var testFirma;
 function createFirma(val) {
     screen.orientation.lock("landscape");
     if (val) {
-        var signaturePad = new SignaturePad(
-            document.getElementById("signature-pad_" + val),
-            {
-                backgroundColor: "rgba(255, 255, 255, 0)",
-                penColor: "rgb(6, 62, 127)",
-            }
-        );
+        var signaturePad = new SignaturePad(document.getElementById("signature-pad_" + val), {
+            backgroundColor: "rgba(255, 255, 255, 0)",
+            penColor: "rgb(6, 62, 127)",
+        });
     } else {
-        var signaturePad = new SignaturePad(
-            document.getElementById("signature-pad"),
-            {
-                backgroundColor: "rgba(255, 255, 255, 0)",
-                penColor: "rgb(6, 62, 127)",
-            }
-        );
+        var signaturePad = new SignaturePad(document.getElementById("signature-pad"), {
+            backgroundColor: "rgba(255, 255, 255, 0)",
+            penColor: "rgb(6, 62, 127)",
+        });
     }
     testFirma = signaturePad;
 }
@@ -515,73 +448,48 @@ function capturaFirma() {
             on: {
                 open: function (popup) {
                     var permissions = cordova.plugins.permissions;
-                    permissions.checkPermission(
-                        permissions.CAMERA,
-                        function (status) {
-                            if (status.hasPermission) {
-                                cargarEmpresa(
-                                    `./js/camera-field.js`,
-                                    empresaCargada
-                                );
-                                function empresaCargada() {
-                                    cameraStart(onPhotoSingSuccess);
-                                }
-                                function cargarEmpresa(url, callback) {
-                                    var pie =
-                                        document.getElementsByTagName("fwm")[0];
-                                    var script =
-                                        document.createElement("script");
-                                    script.type = "text/javascript";
-                                    script.src = url;
-                                    script.id = "cameraSource";
-                                    script.onload = callback;
-                                    pie.appendChild(script);
-                                }
-                            } else {
-                                permissions.requestPermission(
-                                    permissions.CAMERA,
-                                    success,
-                                    error
-                                );
-                                function error() {
-                                    app.sheet.close(".popup");
-                                    swal(
-                                        "Se requiere los permisos",
-                                        "Para poder tomar las evidencias fotograficas necesitamos el permiso.",
-                                        "warning"
-                                    );
-                                }
-                                function success(status) {
-                                    if (!status.hasPermission) {
-                                        error();
-                                    } else {
-                                        cargarEmpresa(
-                                            `./js/camera-field.js`,
-                                            empresaCargada
-                                        );
-                                        function empresaCargada() {
-                                            cameraStart(onPhotoSingSuccess);
-                                        }
-                                        function cargarEmpresa(url, callback) {
-                                            var pie =
-                                                document.getElementsByTagName(
-                                                    "fwm"
-                                                )[0];
-                                            var script =
-                                                document.createElement(
-                                                    "script"
-                                                );
-                                            script.type = "text/javascript";
-                                            script.src = url;
-                                            script.id = "cameraSource";
-                                            script.onload = callback;
-                                            pie.appendChild(script);
-                                        }
+                    permissions.checkPermission(permissions.CAMERA, function (status) {
+                        if (status.hasPermission) {
+                            cargarEmpresa(`./js/camera-field.js`, empresaCargada);
+                            function empresaCargada() {
+                                cameraStart(onPhotoSingSuccess);
+                            }
+                            function cargarEmpresa(url, callback) {
+                                var pie = document.getElementsByTagName("fwm")[0];
+                                var script = document.createElement("script");
+                                script.type = "text/javascript";
+                                script.src = url;
+                                script.id = "cameraSource";
+                                script.onload = callback;
+                                pie.appendChild(script);
+                            }
+                        } else {
+                            permissions.requestPermission(permissions.CAMERA, success, error);
+                            function error() {
+                                app.sheet.close(".popup");
+                                swal("Se requiere los permisos", "Para poder tomar las evidencias fotograficas necesitamos el permiso.", "warning");
+                            }
+                            function success(status) {
+                                if (!status.hasPermission) {
+                                    error();
+                                } else {
+                                    cargarEmpresa(`./js/camera-field.js`, empresaCargada);
+                                    function empresaCargada() {
+                                        cameraStart(onPhotoSingSuccess);
+                                    }
+                                    function cargarEmpresa(url, callback) {
+                                        var pie = document.getElementsByTagName("fwm")[0];
+                                        var script = document.createElement("script");
+                                        script.type = "text/javascript";
+                                        script.src = url;
+                                        script.id = "cameraSource";
+                                        script.onload = callback;
+                                        pie.appendChild(script);
                                     }
                                 }
                             }
                         }
-                    );
+                    });
                 },
                 opened: function (popup) {
                     localStorage.setItem("cameraField", "Active");
@@ -686,9 +594,7 @@ function editar_fecha(fecha, intervalo, dma, separador) {
     if (dma == "m" || dma == "M") {
         fechaFinal.setMonth(fechaInicial.getMonth() + parseInt(intervalo));
     } else if (dma == "y" || dma == "Y") {
-        fechaFinal.setFullYear(
-            fechaInicial.getFullYear() + parseInt(intervalo)
-        );
+        fechaFinal.setFullYear(fechaInicial.getFullYear() + parseInt(intervalo));
     } else if (dma == "d" || dma == "D") {
         fechaFinal.setDate(fechaInicial.getDate() + parseInt(intervalo));
     } else {
@@ -781,14 +687,10 @@ function recarga_history(mes_pdfs, year_pdfs) {
         function (data) {
             var content = JSON.parse(data);
             if (content == 0) {
-                $("#cedul").html(
-                    `<tr><td colspan = "3"><span>No hay datos para mostrar</span></td></tr>`
-                );
+                $("#cedul").html(`<tr><td colspan = "3"><span>No hay datos para mostrar</span></td></tr>`);
             } else {
                 if (data == "null") {
-                    $("#cedul").html(
-                        `<tr><td colspan = "3"><span>No hay datos para mostrar</span></td></tr>`
-                    );
+                    $("#cedul").html(`<tr><td colspan = "3"><span>No hay datos para mostrar</span></td></tr>`);
                 } else {
                     if (content.length > 0) {
                         var html = "";
@@ -811,9 +713,7 @@ function recarga_history(mes_pdfs, year_pdfs) {
                         }
                         $("#cedul").html(html);
                     } else {
-                        $("#cedul").html(
-                            `<tr><td colspan = "3"><span>No hay datos para mostrar</span></td></tr>`
-                        );
+                        $("#cedul").html(`<tr><td colspan = "3"><span>No hay datos para mostrar</span></td></tr>`);
                     }
                 }
             }
@@ -908,9 +808,7 @@ function recargacedulas() {
                     }
                 },
                 function (tx5, error) {
-                    console.error(
-                        "Error al consultar bandeja de salida: " + error.message
-                    );
+                    console.error("Error al consultar bandeja de salida: " + error.message);
                 }
             );
         },
@@ -992,22 +890,10 @@ function continuarCedCap(id_cedula, tipo) {
                     function (tx, results) {
                         var item2 = results.rows.item(0);
                         localStorage.setItem("FK_Becario", item2.id_candidato);
-                        localStorage.setItem(
-                            "IDCurso",
-                            item2.geolocalizacion_entrada
-                        );
-                        localStorage.setItem(
-                            "IDTipoCurso",
-                            item2.geolocalizacion_salida
-                        );
-                        localStorage.setItem(
-                            "NombreCurso",
-                            item2.nombre_evalua
-                        );
-                        localStorage.setItem(
-                            "nameBecario",
-                            item2.nombre_cliente
-                        );
+                        localStorage.setItem("IDCurso", item2.geolocalizacion_entrada);
+                        localStorage.setItem("IDTipoCurso", item2.geolocalizacion_salida);
+                        localStorage.setItem("NombreCurso", item2.nombre_evalua);
+                        localStorage.setItem("nameBecario", item2.nombre_cliente);
                         app.views.main.router.back("/formCapacita5/", {
                             force: true,
                             ignoreCache: true,
@@ -1074,11 +960,7 @@ function IniciaCheckList() {
                     function (tx, results) {
                         //app.dialog.progress('Generando CheckList','red');
                         var progress = 0;
-                        var dialog = app.dialog.progress(
-                            "Generando CheckList",
-                            progress,
-                            "red"
-                        );
+                        var dialog = app.dialog.progress("Generando CheckList", progress, "red");
                         var empresa = localStorage.getItem("empresa");
                         var item = results.rows.item(0);
                         localStorage.setItem("IdCedula", item.Id);
@@ -1098,11 +980,7 @@ function IniciaCheckList() {
                         );
                         var NomJson = "datos_check_desc" + empresa;
                         app.request({
-                            url:
-                                cordova.file.dataDirectory +
-                                "jsons_RevImagen/" +
-                                NomJson +
-                                ".json",
+                            url: cordova.file.dataDirectory + "jsons_RevImagen/" + NomJson + ".json",
                             method: "GET",
                             dataType: "json",
                             success: function (data) {
@@ -1119,9 +997,7 @@ function IniciaCheckList() {
                                 } else {
                                     dialog.setText("1 de " + aux);
                                     for (var j = 0; j < data.length; j++) {
-                                        if (
-                                            data[j].modelos == id_modelo_check
-                                        ) {
+                                        if (data[j].modelos == id_modelo_check) {
                                             aux2++;
                                             productHandler.insertPreguntas(
                                                 id_cedula,
@@ -1145,9 +1021,7 @@ function IniciaCheckList() {
                         });
                     },
                     function (tx, error) {
-                        console.log(
-                            "Error al guardar cedula: " + error.message
-                        );
+                        console.log("Error al guardar cedula: " + error.message);
                     }
                 );
             },
@@ -1164,9 +1038,7 @@ function validaradios(id, numero, pregunta, multiple, FK_equipo, typeLavado) {
         var ids = id.split("-");
         var check = ids[1];
         if (check.includes("1")) {
-            var valCheck = document.getElementById(
-                ids[0] + "-" + ids[1]
-            ).checked;
+            var valCheck = document.getElementById(ids[0] + "-" + ids[1]).checked;
             if (valCheck == true) {
                 var otherCheck = ids[0] + "-2";
                 document.getElementById(otherCheck).checked = false;
@@ -1176,9 +1048,7 @@ function validaradios(id, numero, pregunta, multiple, FK_equipo, typeLavado) {
                 $("#" + labels2).removeClass("checked");
             }
         } else if (check.includes("2")) {
-            var valCheck = document.getElementById(
-                ids[0] + "-" + ids[1]
-            ).checked;
+            var valCheck = document.getElementById(ids[0] + "-" + ids[1]).checked;
             if (valCheck == true) {
                 var otherCheck = ids[0] + "-1";
                 document.getElementById(otherCheck).checked = false;
@@ -1191,20 +1061,12 @@ function validaradios(id, numero, pregunta, multiple, FK_equipo, typeLavado) {
             }
         }
         actualizacheck(id);
-    } else if (
-        numero == 4 ||
-        numero == 5 ||
-        numero == 6 ||
-        numero == 7 ||
-        numero == 8
-    ) {
+    } else if (numero == 4 || numero == 5 || numero == 6 || numero == 7 || numero == 8) {
         if (numero == 4) {
             var ids = id.split("-");
             var check = ids[1];
             if (check.includes("1")) {
-                var valCheck = document.getElementById(
-                    ids[0] + "-" + ids[1]
-                ).checked;
+                var valCheck = document.getElementById(ids[0] + "-" + ids[1]).checked;
                 if (valCheck == true) {
                     var otherCheck = ids[0] + "-2";
                     document.getElementById(otherCheck).checked = false;
@@ -1214,9 +1076,7 @@ function validaradios(id, numero, pregunta, multiple, FK_equipo, typeLavado) {
                     $("#" + labels2).removeClass("checked");
                 }
             } else if (check.includes("2")) {
-                var valCheck = document.getElementById(
-                    ids[0] + "-" + ids[1]
-                ).checked;
+                var valCheck = document.getElementById(ids[0] + "-" + ids[1]).checked;
                 if (valCheck == true) {
                     var otherCheck = ids[0] + "-1";
                     document.getElementById(otherCheck).checked = false;
@@ -1226,18 +1086,9 @@ function validaradios(id, numero, pregunta, multiple, FK_equipo, typeLavado) {
                     $("#" + labels1).removeClass("checked");
                     var id_pregunta = ids[0].replace("radio", "");
                     if (numero == 4) {
-                        SeleccionarDanosControlTec(
-                            id_pregunta,
-                            pregunta,
-                            multiple,
-                            FK_equipo
-                        );
+                        SeleccionarDanosControlTec(id_pregunta, pregunta, multiple, FK_equipo);
                     } else if (numero == 5) {
-                        SeleccionarDanosInsEncierro(
-                            id_pregunta,
-                            pregunta,
-                            multiple
-                        );
+                        SeleccionarDanosInsEncierro(id_pregunta, pregunta, multiple);
                     }
                 }
             }
@@ -1317,9 +1168,7 @@ function actualizacheck(id) {
                     [respuesta, comentarios, id_cedula, id_pregunta],
                     function (tx, results) {},
                     function (tx, error) {
-                        console.error(
-                            "Error al guardar cierre: " + error.message
-                        );
+                        console.error("Error al guardar cierre: " + error.message);
                     }
                 );
             },
@@ -1336,9 +1185,7 @@ function actualizacheck(id) {
                     [respuesta, id_cedula, id_pregunta],
                     function (tx, results) {},
                     function (tx, error) {
-                        console.error(
-                            "Error al guardar cierre: " + error.message
-                        );
+                        console.error("Error al guardar cierre: " + error.message);
                     }
                 );
             },
@@ -1364,18 +1211,13 @@ function agregaComentarios(id_pregunta, mul) {
     if (mul == 1 || mul == 2) {
         var seleccionados = $("#opts_modal").val();
         if (seleccionados.length == 0) {
-            swal(
-                "",
-                "Selecciona al menos una opción del desplegable.",
-                "warning"
-            );
+            swal("", "Selecciona al menos una opción del desplegable.", "warning");
             return false;
         } else {
             var opts = "";
             $("#opts_modal option").each(function () {
                 if (this.selected) {
-                    opts =
-                        opts + ", " + capitalizarPrimeraLetra($(this).text());
+                    opts = opts + ", " + capitalizarPrimeraLetra($(this).text());
                 }
             });
             opts = opts.slice(1);
@@ -1412,16 +1254,10 @@ function agregaComentarios(id_pregunta, mul) {
                     function (tx, results) {
                         $("#span-" + id_pregunta).html(name);
                         app.sheet.close("#sheet-modal");
-                        swal(
-                            "",
-                            "Comentario guardado correctamente",
-                            "success"
-                        );
+                        swal("", "Comentario guardado correctamente", "success");
                     },
                     function (tx, error) {
-                        console.error(
-                            "Error al guardar cierre: " + error.message
-                        );
+                        console.error("Error al guardar cierre: " + error.message);
                     }
                 );
             },
@@ -1441,11 +1277,7 @@ function guardaComentarios_generales(val) {
                 "UPDATE datos_generales_checklist SET comentarios_generales = ? WHERE id_cedula = ?",
                 [val, id_cedula],
                 function (tx, results) {
-                    swal(
-                        "",
-                        "Observaciones guardadas correctamente",
-                        "success"
-                    );
+                    swal("", "Observaciones guardadas correctamente", "success");
                 },
                 function (tx, error) {
                     console.error("Error al guardar cierre: " + error.message);
@@ -1492,64 +1324,46 @@ function EnviarCheckList() {
 function SeleccionarDanos(id) {
     var id_cedula = localStorage.getItem("IdCedula");
     databaseHandler.db.transaction(function (tx5) {
-        tx5.executeSql(
-            "SELECT * FROM checklist WHERE id_pregunta = ? AND id_cedula = ?",
-            [id, id_cedula],
-            function (tx5, results) {
-                var item2 = results.rows.item(0);
-                if (item2.multiple == 1) {
-                    var text = item2.revision;
-                    let result = text.includes("(");
-                    if (result) {
-                        var resultados = text.split("(");
-                        var titulo_modal = resultados[0].trim();
-                        var divididos = resultados[1].split(",");
-                        var opciones =
-                            '<select class="FWM-input" id="opts_modal" multiple>';
-                        var quitapar = "";
-                        for (i = 0; i < divididos.length; i++) {
-                            quitapar = divididos[i].replace("(", "");
-                            quitapar = quitapar.replace(")", "");
-                            quitapar = capitalizarPrimeraLetra(quitapar);
-                            opciones =
-                                opciones +
-                                `<option value=` +
-                                quitapar.trim() +
-                                `>` +
-                                quitapar.trim() +
-                                `</option>`;
-                        }
-                        opciones = opciones + "</select>";
-                        CreaModalOption(id, opciones, 1, titulo_modal);
-                    } else {
-                        var titulo_modal = "";
-                        var divididos = text.split(",");
-                        var opciones =
-                            '<select class="FWM-input" id="opts_modal" multiple>';
-                        var quitapar = "";
-                        for (i = 0; i < divididos.length; i++) {
-                            quitapar = divididos[i].replace("(", "");
-                            quitapar = quitapar.replace(")", "");
-                            quitapar = capitalizarPrimeraLetra(quitapar);
-                            opciones =
-                                opciones +
-                                `<option value=` +
-                                quitapar.trim() +
-                                `>` +
-                                quitapar.trim() +
-                                `</option>`;
-                        }
-                        opciones = opciones + "</select>";
-                        var titulo_modal = "";
-                        CreaModalOption(id, opciones, 2, titulo_modal);
+        tx5.executeSql("SELECT * FROM checklist WHERE id_pregunta = ? AND id_cedula = ?", [id, id_cedula], function (tx5, results) {
+            var item2 = results.rows.item(0);
+            if (item2.multiple == 1) {
+                var text = item2.revision;
+                let result = text.includes("(");
+                if (result) {
+                    var resultados = text.split("(");
+                    var titulo_modal = resultados[0].trim();
+                    var divididos = resultados[1].split(",");
+                    var opciones = '<select class="FWM-input" id="opts_modal" multiple>';
+                    var quitapar = "";
+                    for (i = 0; i < divididos.length; i++) {
+                        quitapar = divididos[i].replace("(", "");
+                        quitapar = quitapar.replace(")", "");
+                        quitapar = capitalizarPrimeraLetra(quitapar);
+                        opciones = opciones + `<option value=` + quitapar.trim() + `>` + quitapar.trim() + `</option>`;
                     }
+                    opciones = opciones + "</select>";
+                    CreaModalOption(id, opciones, 1, titulo_modal);
                 } else {
-                    var opciones = false;
                     var titulo_modal = "";
-                    CreaModalOption(id, opciones, 3, titulo_modal);
+                    var divididos = text.split(",");
+                    var opciones = '<select class="FWM-input" id="opts_modal" multiple>';
+                    var quitapar = "";
+                    for (i = 0; i < divididos.length; i++) {
+                        quitapar = divididos[i].replace("(", "");
+                        quitapar = quitapar.replace(")", "");
+                        quitapar = capitalizarPrimeraLetra(quitapar);
+                        opciones = opciones + `<option value=` + quitapar.trim() + `>` + quitapar.trim() + `</option>`;
+                    }
+                    opciones = opciones + "</select>";
+                    var titulo_modal = "";
+                    CreaModalOption(id, opciones, 2, titulo_modal);
                 }
+            } else {
+                var opciones = false;
+                var titulo_modal = "";
+                CreaModalOption(id, opciones, 3, titulo_modal);
             }
-        );
+        });
     });
 }
 
@@ -1568,24 +1382,22 @@ function CreaModalOption(id, opciones, mul, titulo_modal) {
     var NomDescCli = "danios";
     var html = "";
 
-    app.request.get(
-        cordova.file.dataDirectory + "jsons_RevImagen/" + NomDescCli + ".json",
-        function (data) {
-            var content2 = JSON.parse(data);
-            for (var x = 0; x < content2.length; x++) {
-                html =
-                    html +
-                    `<label class="label_modal"><input class="cbox_modal obligatorio" type="checkbox" id="cbox` +
-                    content2[x].id_danio +
-                    `" value="` +
-                    content2[x].tipo_danio +
-                    `">` +
-                    content2[x].tipo_danio +
-                    `</label><br>`;
-            }
-            var popEvidencia = app.popup.create({
-                content:
-                    `
+    app.request.get(cordova.file.dataDirectory + "jsons_RevImagen/" + NomDescCli + ".json", function (data) {
+        var content2 = JSON.parse(data);
+        for (var x = 0; x < content2.length; x++) {
+            html =
+                html +
+                `<label class="label_modal"><input class="cbox_modal obligatorio" type="checkbox" id="cbox` +
+                content2[x].id_danio +
+                `" value="` +
+                content2[x].tipo_danio +
+                `">` +
+                content2[x].tipo_danio +
+                `</label><br>`;
+        }
+        var popEvidencia = app.popup.create({
+            content:
+                `
             <div class="sheet-modal my-sheet" id="sheet-modal" name="sheet">
             <div class="toolbar">
                 <div class="toolbar-inner">
@@ -1597,34 +1409,34 @@ function CreaModalOption(id, opciones, mul, titulo_modal) {
                 <div class="block">
                     <h3 class="FWN-titulo-2">¿Que tipo de daño es?</h3><hr>
                     <span id="titulo_modal" style="display:` +
-                    display1 +
-                    `;color: #FF0037;" class="span FWM-span-form">` +
-                    titulo_modal +
-                    `</span>
+                display1 +
+                `;color: #FF0037;" class="span FWM-span-form">` +
+                titulo_modal +
+                `</span>
                     <div id="div_opt" style="display:` +
-                    display +
-                    `; padding-top: 10px;margin-bottom: 20px;">
+                display +
+                `; padding-top: 10px;margin-bottom: 20px;">
                     ` +
-                    opciones +
-                    `
+                opciones +
+                `
                     </div>
                     <div class="list FWM-fixing-form" id="div_cboxs" style="margin-top: 25px;"> 
                         <input type="hidden" id="inputEvidencia" value=` +
-                    id +
-                    `>
+                id +
+                `>
                         <input type="hidden" id="pasa" value="0">
                             ` +
-                    html +
-                    `
+                html +
+                `
                         <div class="block grid-resizable-demo" style="margin-bottom: 70px;">
                             <div class="row align-items-stretch" style="text-align: center;">
                                 <div class="col-100 medium-50" style="min-width: 50px; border-style: none;">
                                     <span class="resize-handler"></span>
                                     <a href="#" onclick="agregaComentarios(` +
-                    id +
-                    `,` +
-                    mul +
-                    `);" style="background-color: #FF0037;" class="boton-equipo">Guardar</a>
+                id +
+                `,` +
+                mul +
+                `);" style="background-color: #FF0037;" class="boton-equipo">Guardar</a>
                                 </div>
                             </div>
                         </div>
@@ -1632,56 +1444,45 @@ function CreaModalOption(id, opciones, mul, titulo_modal) {
                 </div>
             </div>
         </div>`,
-                swipeToClose: false,
-                closeByOutsideClick: false,
-                closeByBackdropClick: false,
-                closeOnEscape: false,
-                on: {
-                    open: function (popup) {
-                        $("#close_sheet").click(function () {
-                            if ($("#pasa").val() != 0) {
-                                app.sheet.close("#sheet-modal");
-                            } else {
-                                swal({
-                                    title: "Aviso",
-                                    text: "Aún no seleccionas o guardas una opción, ¿Estas seguro que deseas regresar?",
-                                    icon: "warning",
-                                    buttons: true,
-                                    dangerMode: false,
-                                }).then((willGoBack) => {
-                                    if (willGoBack) {
-                                        var otherCheck = "radio" + id + "-2";
-                                        document.getElementById(
-                                            otherCheck
-                                        ).checked = false;
-                                        var Check = "radio" + id + "-1";
-                                        document.getElementById(
-                                            Check
-                                        ).checked = true;
-                                        var labels1 = Check.replace(
-                                            "radio",
-                                            "label"
-                                        );
-                                        var labels2 = otherCheck.replace(
-                                            "radio",
-                                            "label"
-                                        );
-                                        $("#" + labels1).addClass("checked");
-                                        $("#" + labels2).removeClass("checked");
-                                        actualizacheck(Check);
-                                        app.sheet.close("#sheet-modal");
-                                    } else {
-                                    }
-                                });
-                            }
-                        });
-                    },
+            swipeToClose: false,
+            closeByOutsideClick: false,
+            closeByBackdropClick: false,
+            closeOnEscape: false,
+            on: {
+                open: function (popup) {
+                    $("#close_sheet").click(function () {
+                        if ($("#pasa").val() != 0) {
+                            app.sheet.close("#sheet-modal");
+                        } else {
+                            swal({
+                                title: "Aviso",
+                                text: "Aún no seleccionas o guardas una opción, ¿Estas seguro que deseas regresar?",
+                                icon: "warning",
+                                buttons: true,
+                                dangerMode: false,
+                            }).then((willGoBack) => {
+                                if (willGoBack) {
+                                    var otherCheck = "radio" + id + "-2";
+                                    document.getElementById(otherCheck).checked = false;
+                                    var Check = "radio" + id + "-1";
+                                    document.getElementById(Check).checked = true;
+                                    var labels1 = Check.replace("radio", "label");
+                                    var labels2 = otherCheck.replace("radio", "label");
+                                    $("#" + labels1).addClass("checked");
+                                    $("#" + labels2).removeClass("checked");
+                                    actualizacheck(Check);
+                                    app.sheet.close("#sheet-modal");
+                                } else {
+                                }
+                            });
+                        }
+                    });
                 },
-            });
+            },
+        });
 
-            popEvidencia.open();
-        }
-    );
+        popEvidencia.open();
+    });
 }
 //fin checklist
 //inicio de Revision Limpieza
@@ -1725,11 +1526,7 @@ function IniciaCheckListLimp() {
                     function (tx, results) {
                         //app.dialog.progress('Generando CheckList','red');
                         var progress = 0;
-                        var dialog = app.dialog.progress(
-                            "Generando CheckList",
-                            progress,
-                            "red"
-                        );
+                        var dialog = app.dialog.progress("Generando CheckList", progress, "red");
                         var empresa = localStorage.getItem("empresa");
                         var item = results.rows.item(0);
                         localStorage.setItem("IdCedula", item.Id);
@@ -1749,11 +1546,7 @@ function IniciaCheckListLimp() {
                         );
                         var NomJson = "datos_check_desc" + empresa;
                         app.request({
-                            url:
-                                cordova.file.dataDirectory +
-                                "jsons_limp/" +
-                                NomJson +
-                                ".json",
+                            url: cordova.file.dataDirectory + "jsons_limp/" + NomJson + ".json",
                             method: "GET",
                             dataType: "json",
                             success: function (data) {
@@ -1770,9 +1563,7 @@ function IniciaCheckListLimp() {
                                 } else {
                                     dialog.setText("1 de " + aux);
                                     for (var j = 0; j < data.length; j++) {
-                                        if (
-                                            data[j].modelos == id_modelo_check
-                                        ) {
+                                        if (data[j].modelos == id_modelo_check) {
                                             aux2++;
                                             productHandler.insertPreguntas_limp(
                                                 id_cedula,
@@ -1796,9 +1587,7 @@ function IniciaCheckListLimp() {
                         });
                     },
                     function (tx, error) {
-                        console.log(
-                            "Error al guardar cedula: " + error.message
-                        );
+                        console.log("Error al guardar cedula: " + error.message);
                     }
                 );
             },
@@ -1833,9 +1622,7 @@ function validaradios_limp(id, numero) {
         var ids = id.split("-");
         var check = ids[1];
         if (check.includes("1")) {
-            var valCheck = document.getElementById(
-                ids[0] + "-" + ids[1]
-            ).checked;
+            var valCheck = document.getElementById(ids[0] + "-" + ids[1]).checked;
             if (valCheck == true) {
                 var otherCheck = ids[0] + "-2";
                 document.getElementById(otherCheck).checked = false;
@@ -1845,9 +1632,7 @@ function validaradios_limp(id, numero) {
                 $("#" + labels2).removeClass("checked");
             }
         } else if (check.includes("2")) {
-            var valCheck = document.getElementById(
-                ids[0] + "-" + ids[1]
-            ).checked;
+            var valCheck = document.getElementById(ids[0] + "-" + ids[1]).checked;
             if (valCheck == true) {
                 var otherCheck = ids[0] + "-1";
                 document.getElementById(otherCheck).checked = false;
@@ -1876,9 +1661,7 @@ function actualizacheck_limp(id) {
                     [respuesta, comentarios, id_cedula, id_pregunta],
                     function (tx, results) {},
                     function (tx, error) {
-                        console.error(
-                            "Error al guardar cierre: " + error.message
-                        );
+                        console.error("Error al guardar cierre: " + error.message);
                     }
                 );
             },
@@ -1895,9 +1678,7 @@ function actualizacheck_limp(id) {
                     [respuesta, id_cedula, id_pregunta],
                     function (tx, results) {},
                     function (tx, error) {
-                        console.error(
-                            "Error al guardar cierre: " + error.message
-                        );
+                        console.error("Error al guardar cierre: " + error.message);
                     }
                 );
             },
@@ -1921,11 +1702,7 @@ function guardaComentarios_generales_limp(val) {
                 "UPDATE datos_generales_revlimp SET comentarios_generales = ? WHERE id_cedula = ?",
                 [val, id_cedula],
                 function (tx, results) {
-                    swal(
-                        "",
-                        "Observaciones guardadas correctamente",
-                        "success"
-                    );
+                    swal("", "Observaciones guardadas correctamente", "success");
                 },
                 function (tx, error) {
                     console.error("Error al guardar cierre: " + error.message);
@@ -2093,45 +1870,29 @@ function GuardaDesincorporacion() {
                                 swal("", "Guardado correctamente", "success");
                                 setTimeout(function () {
                                     swal.close();
-                                    app.views.main.router.back(
-                                        "/yallegue_desin/",
-                                        {
-                                            force: true,
-                                            ignoreCache: true,
-                                            reload: true,
-                                        }
-                                    );
+                                    app.views.main.router.back("/yallegue_desin/", {
+                                        force: true,
+                                        ignoreCache: true,
+                                        reload: true,
+                                    });
                                 }, 1500);
                             },
                             function (tx, error) {
-                                console.error(
-                                    "Error al consultar bandeja de salida: " +
-                                        error.message
-                                );
+                                console.error("Error al consultar bandeja de salida: " + error.message);
                             }
                         );
                     },
                     function (error) {
-                        console.error(
-                            "Error al consultar bandeja de salida: " +
-                                error.message
-                        );
+                        console.error("Error al consultar bandeja de salida: " + error.message);
                     },
                     function (error) {
-                        console.error(
-                            "Error al consultar bandeja de salida: " +
-                                error.message
-                        );
+                        console.error("Error al consultar bandeja de salida: " + error.message);
                     }
                 );
             }
         });
     } else {
-        swal(
-            "",
-            "Debes llenar estos campos para poder guardar: " + quita_coma,
-            "warning"
-        );
+        swal("", "Debes llenar estos campos para poder guardar: " + quita_coma, "warning");
         return false;
     }
 }
@@ -2147,11 +1908,7 @@ function check_jornada(val) {
                     $("#" + $(campo).attr("id")).prop("readonly", true);
                 });
                 $("#sentido_inc").prop("disabled", true);
-                $("#sentido_inc").css(
-                    "background-color",
-                    "#f5f5f5",
-                    "!important"
-                );
+                $("#sentido_inc").css("background-color", "#f5f5f5", "!important");
                 $("#incumplimiento").addClass("obligatorio");
                 $("#incumplimiento").prop("readonly", false);
                 $("#km_perdidos").addClass("obligatorio");
@@ -2164,11 +1921,7 @@ function check_jornada(val) {
                     $("#" + $(campo).attr("id")).val("");
                     $("#" + $(campo).attr("id")).prop("readonly", false);
                 });
-                $("#sentido_inc").css(
-                    "background-color",
-                    "#ffffff",
-                    "!important"
-                );
+                $("#sentido_inc").css("background-color", "#ffffff", "!important");
                 $("#sentido_inc").prop("disabled", false);
             }
         }
@@ -2212,20 +1965,17 @@ function get_datos_completos(form) {
         if ($(campo).get(0).tagName == "SELECT") {
             if (campo.value.trim() == 0 || campo.value.trim() == "") {
                 valido = false;
-                trae_los_campos_sin_llennar =
-                    trae_los_campos_sin_llennar + ", " + $(campo).attr("name");
+                trae_los_campos_sin_llennar = trae_los_campos_sin_llennar + ", " + $(campo).attr("name");
             }
         } else if ($(campo).get(0).tagName == "TEXTAREA") {
             if (campo.value.trim() === "") {
                 valido = false;
-                trae_los_campos_sin_llennar =
-                    trae_los_campos_sin_llennar + ", " + $(campo).attr("name");
+                trae_los_campos_sin_llennar = trae_los_campos_sin_llennar + ", " + $(campo).attr("name");
             }
         } else {
             if (campo.value.trim() === "") {
                 valido = false;
-                trae_los_campos_sin_llennar =
-                    trae_los_campos_sin_llennar + ", " + $(campo).attr("name");
+                trae_los_campos_sin_llennar = trae_los_campos_sin_llennar + ", " + $(campo).attr("name");
             }
         }
     });
@@ -2319,10 +2069,8 @@ function iniciarDesincorporaciones() {
                             dangerMode: true,
                         }).then((RESP) => {
                             if (RESP == true) {
-                                var id_usuario =
-                                    localStorage.getItem("Usuario");
-                                var nombre_usuario =
-                                    localStorage.getItem("nombre");
+                                var id_usuario = localStorage.getItem("Usuario");
+                                var nombre_usuario = localStorage.getItem("nombre");
                                 var Usuario = localStorage.getItem("Usuario");
                                 var fecha_llegada = getDateWhitZeros();
                                 var horario_programado = fecha_llegada;
@@ -2349,21 +2097,10 @@ function iniciarDesincorporaciones() {
                                             [],
                                             function (tx, results) {
                                                 var item = results.rows.item(0);
-                                                localStorage.setItem(
-                                                    "IdCedula",
-                                                    item.Id
-                                                );
+                                                localStorage.setItem("IdCedula", item.Id);
                                                 var id_cedula = item.Id;
                                                 var estatusd = "Abierto";
-                                                productHandler.addDesincorHeader(
-                                                    id_cedula,
-                                                    nombre_cliente,
-                                                    fecha_llegada,
-                                                    estatusd,
-                                                    Usuario,
-                                                    0,
-                                                    0
-                                                );
+                                                productHandler.addDesincorHeader(id_cedula, nombre_cliente, fecha_llegada, estatusd, Usuario, 0, 0);
                                                 app.views.main.router.navigate({
                                                     name: "yallegue_desin",
                                                 });
@@ -2407,47 +2144,28 @@ function RevisaHeaders() {
     var usuarioCierre = "";
     var empresa = "";
 
-    app.request.get(
-        cordova.file.dataDirectory + "jsons_desin/" + NomJson + ".json",
-        function (data) {
-            var content2 = JSON.parse(data);
-            if (content2 == null) {
-            } else {
-                for (var x = 0; x < content2.length; x++) {
-                    if (content2[x].Fecha2 == hoy[0]) {
-                        encontro = true;
-                        id = content2[x].ID;
-                        empresa = content2[x].Empresa;
-                        folio = content2[x].Folio;
-                        fecha = content2[x].Fecha;
-                        estatus = content2[x].Estatus;
-                        usuarioApertura = content2[x].UsuarioApertura;
-                        usuarioCierre = content2[x].UsuarioCierre;
-                        GuardaHeaderDesktop(
-                            id,
-                            empresa,
-                            folio,
-                            fecha,
-                            estatus,
-                            usuarioApertura,
-                            usuarioCierre
-                        );
-                    }
+    app.request.get(cordova.file.dataDirectory + "jsons_desin/" + NomJson + ".json", function (data) {
+        var content2 = JSON.parse(data);
+        if (content2 == null) {
+        } else {
+            for (var x = 0; x < content2.length; x++) {
+                if (content2[x].Fecha2 == hoy[0]) {
+                    encontro = true;
+                    id = content2[x].ID;
+                    empresa = content2[x].Empresa;
+                    folio = content2[x].Folio;
+                    fecha = content2[x].Fecha;
+                    estatus = content2[x].Estatus;
+                    usuarioApertura = content2[x].UsuarioApertura;
+                    usuarioCierre = content2[x].UsuarioCierre;
+                    GuardaHeaderDesktop(id, empresa, folio, fecha, estatus, usuarioApertura, usuarioCierre);
                 }
             }
         }
-    );
+    });
 }
 
-function GuardaHeaderDesktop(
-    id,
-    empresa,
-    folio,
-    fecha,
-    estatus,
-    usuarioApertura,
-    usuarioCierre
-) {
+function GuardaHeaderDesktop(id, empresa, folio, fecha, estatus, usuarioApertura, usuarioCierre) {
     databaseHandler.db.transaction(
         function (tx5) {
             tx5.executeSql(
@@ -2462,17 +2180,7 @@ function GuardaHeaderDesktop(
                         var estatus = 0;
                         var geolocation = "";
                         var tipo_cedula = "Desincorporaciones";
-                        productHandler.addCedulayb(
-                            id_usuario,
-                            nombre_usuario,
-                            fecha,
-                            geolocation,
-                            id_cliente,
-                            empresa,
-                            fecha,
-                            estatus,
-                            tipo_cedula
-                        );
+                        productHandler.addCedulayb(id_usuario, nombre_usuario, fecha, geolocation, id_cliente, empresa, fecha, estatus, tipo_cedula);
                         databaseHandler.db.transaction(
                             function (tx) {
                                 tx.executeSql(
@@ -2480,10 +2188,7 @@ function GuardaHeaderDesktop(
                                     [],
                                     function (tx, results) {
                                         var item = results.rows.item(0);
-                                        localStorage.setItem(
-                                            "IdCedula",
-                                            item.Id
-                                        );
+                                        localStorage.setItem("IdCedula", item.Id);
                                         var id_cedula = item.Id;
                                         if (usuarioCierre) {
                                             var estatusd = "Concluido";
@@ -2497,25 +2202,11 @@ function GuardaHeaderDesktop(
                                                 id,
                                                 usuarioCierre
                                             );
-                                            PintaCedulas(
-                                                0,
-                                                "Desincorporaciones"
-                                            );
+                                            PintaCedulas(0, "Desincorporaciones");
                                         } else {
                                             var estatusd = "Abierto";
-                                            productHandler.addDesincorHeader(
-                                                id_cedula,
-                                                empresa,
-                                                fecha,
-                                                estatusd,
-                                                usuarioApertura,
-                                                2,
-                                                id
-                                            );
-                                            PintaCedulas(
-                                                0,
-                                                "Desincorporaciones"
-                                            );
+                                            productHandler.addDesincorHeader(id_cedula, empresa, fecha, estatusd, usuarioApertura, 2, id);
+                                            PintaCedulas(0, "Desincorporaciones");
                                         }
                                         InsertaDetails(id_cedula, id);
                                     },
@@ -2535,38 +2226,18 @@ function GuardaHeaderDesktop(
                                 function (tx) {
                                     tx.executeSql(
                                         "UPDATE desincorporaciones SET userApertura = ?, userCierre = ?,estatus = ?, estatus_servidor = ?, fecha2 = ? WHERE id_cedula = ?",
-                                        [
-                                            usuarioApertura,
-                                            usuarioCierre,
-                                            estatusd,
-                                            estatusn,
-                                            fecha,
-                                            id_cedula,
-                                        ],
+                                        [usuarioApertura, usuarioCierre, estatusd, estatusn, fecha, id_cedula],
                                         function (tx, results) {
-                                            PintaCedulas(
-                                                0,
-                                                "Desincorporaciones"
-                                            );
-                                            InsertaDetails(
-                                                id_cedula,
-                                                item2.id_servidor
-                                            );
+                                            PintaCedulas(0, "Desincorporaciones");
+                                            InsertaDetails(id_cedula, item2.id_servidor);
                                             databaseHandler.db.transaction(
                                                 function (tx) {
                                                     tx.executeSql(
                                                         "UPDATE cedulas_general SET fecha_salida  = ?,estatus = ? WHERE id_cedula = ?",
                                                         [fecha, 3, id_cedula],
-                                                        function (
-                                                            tx,
-                                                            results
-                                                        ) {},
+                                                        function (tx, results) {},
                                                         function (tx, error) {
-                                                            swal(
-                                                                "Error al guardar",
-                                                                error.message,
-                                                                "error"
-                                                            );
+                                                            swal("Error al guardar", error.message, "error");
                                                         }
                                                     );
                                                 },
@@ -2587,23 +2258,10 @@ function GuardaHeaderDesktop(
                                 function (tx) {
                                     tx.executeSql(
                                         "UPDATE desincorporaciones SET userApertura = ?, userCierre = ?,estatus = ?, estatus_servidor = ?, fecha2 = ? WHERE id_cedula = ?",
-                                        [
-                                            usuarioApertura,
-                                            usuarioCierre,
-                                            estatusd,
-                                            estatusn,
-                                            fecha,
-                                            id_cedula,
-                                        ],
+                                        [usuarioApertura, usuarioCierre, estatusd, estatusn, fecha, id_cedula],
                                         function (tx, results) {
-                                            PintaCedulas(
-                                                0,
-                                                "Desincorporaciones"
-                                            );
-                                            InsertaDetails(
-                                                id_cedula,
-                                                item2.id_servidor
-                                            );
+                                            PintaCedulas(0, "Desincorporaciones");
+                                            InsertaDetails(id_cedula, item2.id_servidor);
                                         },
                                         function (tx, error) {}
                                     );
@@ -2615,9 +2273,7 @@ function GuardaHeaderDesktop(
                     }
                 },
                 function (tx5, error) {
-                    console.error(
-                        "Error al consultar bandeja de salida: " + error.message
-                    );
+                    console.error("Error al consultar bandeja de salida: " + error.message);
                 }
             );
         },
@@ -2652,10 +2308,7 @@ function PintaCedulas(estatus, tipo) {
                         $("#pendientes").html(html);
                     },
                     function (tx5, error) {
-                        console.error(
-                            "Error al consultar bandeja de salida: " +
-                                error.message
-                        );
+                        console.error("Error al consultar bandeja de salida: " + error.message);
                     }
                 );
             },
@@ -2693,22 +2346,15 @@ function PintaCedulas(estatus, tipo) {
                         $("#pendientes").html(html);
                     },
                     function (tx5, error) {
-                        console.error(
-                            "Error al consultar bandeja de salida: " +
-                                error.message
-                        );
+                        console.error("Error al consultar bandeja de salida: " + error.message);
                     }
                 );
             },
             function (error) {
-                console.error(
-                    "Error al consultar bandeja de salida: " + error.message
-                );
+                console.error("Error al consultar bandeja de salida: " + error.message);
             },
             function (error) {
-                console.error(
-                    "Error al consultar bandeja de salida: " + error.message
-                );
+                console.error("Error al consultar bandeja de salida: " + error.message);
             }
         );
     }
@@ -2716,91 +2362,85 @@ function PintaCedulas(estatus, tipo) {
 function InsertaDetails(id_cedula, id_servidor) {
     var empresa = localStorage.getItem("empresa");
     var NomJson = "Details_" + empresa;
-    app.request.get(
-        cordova.file.dataDirectory + "jsons_desin/" + NomJson + ".json",
-        function (data) {
-            var content2 = JSON.parse(data);
-            if (content2 == null) {
-            } else {
-                for (var x = 0; x < content2.length; x++) {
-                    if (id_servidor == content2[x].IDCabecero) {
-                        productHandler.addDetailsDes(
-                            content2[x].ID,
-                            content2[x].IDCabecero,
-                            content2[x].Apoyo,
-                            content2[x].JornadasNoIncorporadas,
-                            content2[x].HoraD,
-                            content2[x].HoraI,
-                            content2[x].UnidadDID,
-                            content2[x].UnidadD,
-                            content2[x].UnidadIID,
-                            content2[x].UnidadI,
-                            content2[x].Itinerario,
-                            content2[x].Motivo,
-                            content2[x].Falla,
-                            content2[x].SentidoD,
-                            content2[x].SentidoI,
-                            content2[x].UbicacionD,
-                            content2[x].Incumplimiento,
-                            content2[x].OperadorD,
-                            content2[x].OperadorI,
-                            content2[x].KmD,
-                            content2[x].KmI,
-                            content2[x].KmPerdidos,
-                            content2[x].FolioD,
-                            content2[x].FolioI,
-                            content2[x].UsuarioI,
-                            content2[x].UsuarioD,
-                            content2[x].HoraCapturaD,
-                            content2[x].HoraCapturaI,
-                            content2[x].Origen,
-                            content2[x].UbicacionI,
-                            content2[x].JornadaSinIncorporacion,
-                            x,
-                            content2.length,
-                            id_cedula
-                        );
-                    }
+    app.request.get(cordova.file.dataDirectory + "jsons_desin/" + NomJson + ".json", function (data) {
+        var content2 = JSON.parse(data);
+        if (content2 == null) {
+        } else {
+            for (var x = 0; x < content2.length; x++) {
+                if (id_servidor == content2[x].IDCabecero) {
+                    productHandler.addDetailsDes(
+                        content2[x].ID,
+                        content2[x].IDCabecero,
+                        content2[x].Apoyo,
+                        content2[x].JornadasNoIncorporadas,
+                        content2[x].HoraD,
+                        content2[x].HoraI,
+                        content2[x].UnidadDID,
+                        content2[x].UnidadD,
+                        content2[x].UnidadIID,
+                        content2[x].UnidadI,
+                        content2[x].Itinerario,
+                        content2[x].Motivo,
+                        content2[x].Falla,
+                        content2[x].SentidoD,
+                        content2[x].SentidoI,
+                        content2[x].UbicacionD,
+                        content2[x].Incumplimiento,
+                        content2[x].OperadorD,
+                        content2[x].OperadorI,
+                        content2[x].KmD,
+                        content2[x].KmI,
+                        content2[x].KmPerdidos,
+                        content2[x].FolioD,
+                        content2[x].FolioI,
+                        content2[x].UsuarioI,
+                        content2[x].UsuarioD,
+                        content2[x].HoraCapturaD,
+                        content2[x].HoraCapturaI,
+                        content2[x].Origen,
+                        content2[x].UbicacionI,
+                        content2[x].JornadaSinIncorporacion,
+                        x,
+                        content2.length,
+                        id_cedula
+                    );
                 }
             }
         }
-    );
+    });
     var NomJson2 = "DetailsApoyos_" + empresa;
-    app.request.get(
-        cordova.file.dataDirectory + "jsons_desin/" + NomJson2 + ".json",
-        function (data) {
-            var content3 = JSON.parse(data);
-            if (content3 == null) {
-            } else {
-                for (var x = 0; x < content3.length; x++) {
-                    if (id_servidor == content3[x].IDCabecero) {
-                        productHandler.addDetailsApoyo(
-                            content3[x].ID,
-                            content3[x].IDCabecero,
-                            content3[x].Apoyo,
-                            content3[x].TipoUnidad,
-                            content3[x].Hora,
-                            content3[x].UnidadID,
-                            content3[x].Unidad,
-                            content3[x].Ubicacion,
-                            content3[x].Itinerario,
-                            content3[x].TramoDeApoyo,
-                            content3[x].Sentido,
-                            content3[x].kilometrajeUnidad,
-                            content3[x].kilometrajeApoyo,
-                            content3[x].Operador,
-                            content3[x].Usuario,
-                            content3[x].HoraCaptura,
-                            content3[x].Origen,
-                            x,
-                            content3.length,
-                            id_cedula
-                        );
-                    }
+    app.request.get(cordova.file.dataDirectory + "jsons_desin/" + NomJson2 + ".json", function (data) {
+        var content3 = JSON.parse(data);
+        if (content3 == null) {
+        } else {
+            for (var x = 0; x < content3.length; x++) {
+                if (id_servidor == content3[x].IDCabecero) {
+                    productHandler.addDetailsApoyo(
+                        content3[x].ID,
+                        content3[x].IDCabecero,
+                        content3[x].Apoyo,
+                        content3[x].TipoUnidad,
+                        content3[x].Hora,
+                        content3[x].UnidadID,
+                        content3[x].Unidad,
+                        content3[x].Ubicacion,
+                        content3[x].Itinerario,
+                        content3[x].TramoDeApoyo,
+                        content3[x].Sentido,
+                        content3[x].kilometrajeUnidad,
+                        content3[x].kilometrajeApoyo,
+                        content3[x].Operador,
+                        content3[x].Usuario,
+                        content3[x].HoraCaptura,
+                        content3[x].Origen,
+                        x,
+                        content3.length,
+                        id_cedula
+                    );
                 }
             }
         }
-    );
+    });
 }
 function GuardaIncorporacion() {
     var values = get_datos_completos("datos_form");
@@ -2871,21 +2511,14 @@ function GuardaIncorporacion() {
                                                 id_desD,
                                             ],
                                             function (tx, results) {
-                                                swal(
-                                                    "",
-                                                    "Guardado correctamente",
-                                                    "success"
-                                                );
+                                                swal("", "Guardado correctamente", "success");
                                                 setTimeout(function () {
                                                     swal.close();
-                                                    app.views.main.router.back(
-                                                        "/yallegue_desin/",
-                                                        {
-                                                            force: true,
-                                                            ignoreCache: true,
-                                                            reload: true,
-                                                        }
-                                                    );
+                                                    app.views.main.router.back("/yallegue_desin/", {
+                                                        force: true,
+                                                        ignoreCache: true,
+                                                        reload: true,
+                                                    });
                                                 }, 1500);
                                             },
                                             function (tx, error) {}
@@ -2904,11 +2537,7 @@ function GuardaIncorporacion() {
             }
         });
     } else {
-        swal(
-            "",
-            "Debes llenar estos campos para poder guardar: " + quita_coma,
-            "warning"
-        );
+        swal("", "Debes llenar estos campos para poder guardar: " + quita_coma, "warning");
         return false;
     }
 }
@@ -2943,26 +2572,14 @@ function RefreshDataSustitucion() {
 }
 function CerrarReporte() {
     var MyDate = new Date();
-    var time1 =
-        ("0" + MyDate.getHours()).slice(-2) +
-        ":" +
-        ("0" + MyDate.getMinutes()).slice(-2) +
-        ":" +
-        ("0" + MyDate.getSeconds()).slice(-2);
+    var time1 = ("0" + MyDate.getHours()).slice(-2) + ":" + ("0" + MyDate.getMinutes()).slice(-2) + ":" + ("0" + MyDate.getSeconds()).slice(-2);
 
     const date1 = new Date("2023-01-01 " + time1);
     const date2 = new Date("2023-01-01 23:00");
     const date3 = new Date("2023-01-01 03:00");
 
-    if (
-        date1.getTime() < date2.getTime() &&
-        date1.getTime() > date3.getTime()
-    ) {
-        swal(
-            "",
-            "Este botón solo estará activo después de las 23 horas",
-            "warning"
-        );
+    if (date1.getTime() < date2.getTime() && date1.getTime() > date3.getTime()) {
+        swal("", "Este botón solo estará activo después de las 23 horas", "warning");
         return false;
     }
 
@@ -2976,18 +2593,12 @@ function CerrarReporte() {
                     var length = results.rows.length;
                     if (length == 0) {
                     } else {
-                        swal(
-                            "",
-                            "Aún tienes jornadas que no se han incorporado, debes cerrarlas para poder finalizar el reporte.",
-                            "warning"
-                        );
+                        swal("", "Aún tienes jornadas que no se han incorporado, debes cerrarlas para poder finalizar el reporte.", "warning");
                         return false;
                     }
                 },
                 function (tx5, error) {
-                    console.error(
-                        "Error al consultar bandeja de salida: " + error.message
-                    );
+                    console.error("Error al consultar bandeja de salida: " + error.message);
                 }
             );
         },
@@ -3019,15 +2630,10 @@ function CerrarReporte() {
                                         "UPDATE cedulas_general SET fecha_salida  = ?,estatus = ? WHERE id_cedula = ?",
                                         [fecha_salida, estatus, id_cedula],
                                         function (tx, results) {
-                                            window.location.href =
-                                                "./menu.html";
+                                            window.location.href = "./menu.html";
                                         },
                                         function (tx, error) {
-                                            swal(
-                                                "Error al guardar",
-                                                error.message,
-                                                "error"
-                                            );
+                                            swal("Error al guardar", error.message, "error");
                                         }
                                     );
                                 },
@@ -3105,14 +2711,7 @@ function ActualizaFolio() {
         function (tx) {
             tx.executeSql(
                 sql,
-                [
-                    Folios,
-                    Inclumplimiento,
-                    km_perdidos,
-                    estatus_servidor,
-                    id_cedula,
-                    id_desD,
-                ],
+                [Folios, Inclumplimiento, km_perdidos, estatus_servidor, id_cedula, id_desD],
                 function (tx, results) {
                     swal("", "Guardado correctamente", "success");
                     setTimeout(function () {
@@ -3135,11 +2734,7 @@ function check_hour(val) {
     var horades = $("#hora_des").val();
     if (horades <= val) {
     } else {
-        swal(
-            "",
-            "La hora no puede ser menor a la hora de desincorporación.",
-            "warning"
-        );
+        swal("", "La hora no puede ser menor a la hora de desincorporación.", "warning");
         $("#hora_inc").val("");
     }
 }
@@ -3221,49 +2816,28 @@ function GuardarTRFApoyos() {
                         function (tx) {
                             tx.executeSql(
                                 "UPDATE TRFapoyo SET TramoDeApoyo = ?, kilometrajeApoyo = ?, estatus_servidor = ? WHERE id_apoyo = ?",
-                                [
-                                    TramoDeApoyo,
-                                    kilometrajeApoyo,
-                                    estatus_servidor,
-                                    id_apoyo,
-                                ],
+                                [TramoDeApoyo, kilometrajeApoyo, estatus_servidor, id_apoyo],
                                 function (tx, results) {
-                                    swal(
-                                        "",
-                                        "Guardado correctamente",
-                                        "success"
-                                    );
+                                    swal("", "Guardado correctamente", "success");
                                     setTimeout(function () {
                                         swal.close();
-                                        app.views.main.router.back(
-                                            "/yallegue_desin/",
-                                            {
-                                                force: true,
-                                                ignoreCache: true,
-                                                reload: true,
-                                            }
-                                        );
+                                        app.views.main.router.back("/yallegue_desin/", {
+                                            force: true,
+                                            ignoreCache: true,
+                                            reload: true,
+                                        });
                                     }, 1500);
                                 },
                                 function (tx, error) {
-                                    console.error(
-                                        "Error al consultar bandeja de salida: " +
-                                            error.message
-                                    );
+                                    console.error("Error al consultar bandeja de salida: " + error.message);
                                 }
                             );
                         },
                         function (error) {
-                            console.error(
-                                "Error al consultar bandeja de salida: " +
-                                    error.message
-                            );
+                            console.error("Error al consultar bandeja de salida: " + error.message);
                         },
                         function (error) {
-                            console.error(
-                                "Error al consultar bandeja de salida: " +
-                                    error.message
-                            );
+                            console.error("Error al consultar bandeja de salida: " + error.message);
                         }
                     );
                 } else {
@@ -3292,42 +2866,26 @@ function GuardarTRFApoyos() {
                                     kilometrajeApoyo,
                                 ],
                                 function (tx, results) {
-                                    swal(
-                                        "",
-                                        "Guardado correctamente",
-                                        "success"
-                                    );
+                                    swal("", "Guardado correctamente", "success");
                                     setTimeout(function () {
                                         swal.close();
-                                        app.views.main.router.back(
-                                            "/yallegue_desin/",
-                                            {
-                                                force: true,
-                                                ignoreCache: true,
-                                                reload: true,
-                                            }
-                                        );
+                                        app.views.main.router.back("/yallegue_desin/", {
+                                            force: true,
+                                            ignoreCache: true,
+                                            reload: true,
+                                        });
                                     }, 1500);
                                 },
                                 function (tx, error) {
-                                    console.error(
-                                        "Error al consultar bandeja de salida: " +
-                                            error.message
-                                    );
+                                    console.error("Error al consultar bandeja de salida: " + error.message);
                                 }
                             );
                         },
                         function (error) {
-                            console.error(
-                                "Error al consultar bandeja de salida: " +
-                                    error.message
-                            );
+                            console.error("Error al consultar bandeja de salida: " + error.message);
                         },
                         function (error) {
-                            console.error(
-                                "Error al consultar bandeja de salida: " +
-                                    error.message
-                            );
+                            console.error("Error al consultar bandeja de salida: " + error.message);
                         }
                     );
                 }
@@ -3335,11 +2893,7 @@ function GuardarTRFApoyos() {
             // TRFapoyo(id_cedula, Apoyo, TipoUnidad, Hora, UnidadID, Unidad, Itinerario, Sentido, Ubicacion, Operador, id_operador, kilometrajeUnidad, Usuario, estatus_servidor, id_servidor, HoraCaptura, TramoDeApoyo, kilometrajeApoyo);
         });
     } else {
-        swal(
-            "",
-            "Debes llenar estos campos para poder guardar: " + quita_coma,
-            "warning"
-        );
+        swal("", "Debes llenar estos campos para poder guardar: " + quita_coma, "warning");
         return false;
     }
 }
@@ -3588,11 +3142,7 @@ function generaEvaluacion(val) {
                     function (tx, results) {
                         //app.dialog.progress('Generando CheckList','red');
                         var progress = 0;
-                        var dialog = app.dialog.progress(
-                            "Generando Curso",
-                            progress,
-                            "red"
-                        );
+                        var dialog = app.dialog.progress("Generando Curso", progress, "red");
                         var empresa = localStorage.getItem("empresa");
                         var item = results.rows.item(0);
                         localStorage.setItem("IdCedula", item.Id);
@@ -3619,20 +3169,14 @@ function generaEvaluacion(val) {
                             );
                             var NomJson = "CursoCiertoFalso" + empresa;
                             app.request({
-                                url:
-                                    cordova.file.dataDirectory +
-                                    "jsons_capacitacion/" +
-                                    NomJson +
-                                    ".json",
+                                url: cordova.file.dataDirectory + "jsons_capacitacion/" + NomJson + ".json",
                                 method: "GET",
                                 dataType: "json",
                                 success: function (data) {
                                     var aux = 0;
                                     var aux2 = 0;
                                     for (var j = 0; j < data.length; j++) {
-                                        if (
-                                            data[j].IDNombreCurso == id_course
-                                        ) {
+                                        if (data[j].IDNombreCurso == id_course) {
                                             aux++;
                                         }
                                     }
@@ -3642,10 +3186,7 @@ function generaEvaluacion(val) {
                                     } else {
                                         dialog.setText("1 de " + aux);
                                         for (var j = 0; j < data.length; j++) {
-                                            if (
-                                                data[j].IDNombreCurso ==
-                                                id_course
-                                            ) {
+                                            if (data[j].IDNombreCurso == id_course) {
                                                 aux2++;
                                                 productHandler.insertPreguntasCiertoFalso(
                                                     id_cedula,
@@ -3685,20 +3226,14 @@ function generaEvaluacion(val) {
                             );
                             var NomJson = "CursoSiNoValor" + empresa;
                             app.request({
-                                url:
-                                    cordova.file.dataDirectory +
-                                    "jsons_capacitacion/" +
-                                    NomJson +
-                                    ".json",
+                                url: cordova.file.dataDirectory + "jsons_capacitacion/" + NomJson + ".json",
                                 method: "GET",
                                 dataType: "json",
                                 success: function (data) {
                                     var aux = 0;
                                     var aux2 = 0;
                                     for (var j = 0; j < data.length; j++) {
-                                        if (
-                                            data[j].IDNombreCurso == id_course
-                                        ) {
+                                        if (data[j].IDNombreCurso == id_course) {
                                             aux++;
                                         }
                                     }
@@ -3708,10 +3243,7 @@ function generaEvaluacion(val) {
                                     } else {
                                         dialog.setText("1 de " + aux);
                                         for (var j = 0; j < data.length; j++) {
-                                            if (
-                                                data[j].IDNombreCurso ==
-                                                id_course
-                                            ) {
+                                            if (data[j].IDNombreCurso == id_course) {
                                                 aux2++;
                                                 productHandler.insertPreguntasSiNoValor(
                                                     id_cedula,
@@ -3750,20 +3282,14 @@ function generaEvaluacion(val) {
                             );
                             var NomJson = "PreguntasMultiple_" + empresa;
                             app.request({
-                                url:
-                                    cordova.file.dataDirectory +
-                                    "jsons_capacitacion/" +
-                                    NomJson +
-                                    ".json",
+                                url: cordova.file.dataDirectory + "jsons_capacitacion/" + NomJson + ".json",
                                 method: "GET",
                                 dataType: "json",
                                 success: function (data) {
                                     var aux = 0;
                                     var aux2 = 0;
                                     for (var j = 0; j < data.length; j++) {
-                                        if (
-                                            data[j].IDNombreCurso == id_course
-                                        ) {
+                                        if (data[j].IDNombreCurso == id_course) {
                                             aux++;
                                         }
                                     }
@@ -3773,10 +3299,7 @@ function generaEvaluacion(val) {
                                     } else {
                                         dialog.setText("1 de " + aux);
                                         for (var j = 0; j < data.length; j++) {
-                                            if (
-                                                data[j].IDNombreCurso ==
-                                                id_course
-                                            ) {
+                                            if (data[j].IDNombreCurso == id_course) {
                                                 aux2++;
                                                 productHandler.insertPreguntasMultiple(
                                                     id_cedula,
@@ -3794,11 +3317,7 @@ function generaEvaluacion(val) {
                             });
                             var NomJson2 = "RespuestasMultiples_" + empresa;
                             app.request({
-                                url:
-                                    cordova.file.dataDirectory +
-                                    "jsons_capacitacion/" +
-                                    NomJson2 +
-                                    ".json",
+                                url: cordova.file.dataDirectory + "jsons_capacitacion/" + NomJson2 + ".json",
                                 method: "GET",
                                 dataType: "json",
                                 success: function (data) {
@@ -3839,20 +3358,14 @@ function generaEvaluacion(val) {
                             );
                             var NomJson = "PreguntasMultiple_" + empresa;
                             app.request({
-                                url:
-                                    cordova.file.dataDirectory +
-                                    "jsons_capacitacion/" +
-                                    NomJson +
-                                    ".json",
+                                url: cordova.file.dataDirectory + "jsons_capacitacion/" + NomJson + ".json",
                                 method: "GET",
                                 dataType: "json",
                                 success: function (data) {
                                     var aux = 0;
                                     var aux2 = 0;
                                     for (var j = 0; j < data.length; j++) {
-                                        if (
-                                            data[j].IDNombreCurso == id_course
-                                        ) {
+                                        if (data[j].IDNombreCurso == id_course) {
                                             aux++;
                                         }
                                     }
@@ -3862,10 +3375,7 @@ function generaEvaluacion(val) {
                                     } else {
                                         dialog.setText("1 de " + aux);
                                         for (var j = 0; j < data.length; j++) {
-                                            if (
-                                                data[j].IDNombreCurso ==
-                                                id_course
-                                            ) {
+                                            if (data[j].IDNombreCurso == id_course) {
                                                 aux2++;
                                                 productHandler.insertPreguntasMultiple(
                                                     id_cedula,
@@ -3883,11 +3393,7 @@ function generaEvaluacion(val) {
                             });
                             var NomJson2 = "RespuestasMultiples_" + empresa;
                             app.request({
-                                url:
-                                    cordova.file.dataDirectory +
-                                    "jsons_capacitacion/" +
-                                    NomJson2 +
-                                    ".json",
+                                url: cordova.file.dataDirectory + "jsons_capacitacion/" + NomJson2 + ".json",
                                 method: "GET",
                                 dataType: "json",
                                 success: function (data) {
@@ -3929,9 +3435,7 @@ function generaEvaluacion(val) {
                         }
                     },
                     function (tx, error) {
-                        console.log(
-                            "Error al guardar cedula: " + error.message
-                        );
+                        console.log("Error al guardar cedula: " + error.message);
                     }
                 );
             },
@@ -3956,23 +3460,14 @@ function guardarCursoCiertoFalsoPuntuacion() {
                 function (tx, results) {
                     var item3 = results.rows.item(0);
                     if (item3.cuenta > 0) {
-                        swal(
-                            "",
-                            "Aún faltan preguntas por contestar",
-                            "warning"
-                        );
+                        swal("", "Aún faltan preguntas por contestar", "warning");
                         return false;
                     } else {
                         databaseHandler.db.transaction(
                             function (tx) {
                                 tx.executeSql(
                                     "UPDATE datosGeneralesCurso SET apto = ?, observaciones = ?, firmaInstructor = ? WHERE id_cedula = ?",
-                                    [
-                                        apto,
-                                        observaciones,
-                                        firmaInstructor,
-                                        id_cedula,
-                                    ],
+                                    [apto, observaciones, firmaInstructor, id_cedula],
                                     function (tx, results) {
                                         swal({
                                             title: "Aviso",
@@ -3982,34 +3477,18 @@ function guardarCursoCiertoFalsoPuntuacion() {
                                             dangerMode: true,
                                         }).then((RESP) => {
                                             if (RESP == true) {
-                                                var fecha_salida =
-                                                    getDateWhitZeros();
+                                                var fecha_salida = getDateWhitZeros();
                                                 var estatus = 1;
                                                 databaseHandler.db.transaction(
                                                     function (tx) {
                                                         tx.executeSql(
                                                             "UPDATE cedulas_general SET fecha_salida  = ?,estatus = ? WHERE id_cedula = ?",
-                                                            [
-                                                                fecha_salida,
-                                                                estatus,
-                                                                id_cedula,
-                                                            ],
-                                                            function (
-                                                                tx,
-                                                                results
-                                                            ) {
-                                                                window.location.href =
-                                                                    "./menu.html";
+                                                            [fecha_salida, estatus, id_cedula],
+                                                            function (tx, results) {
+                                                                window.location.href = "./menu.html";
                                                             },
-                                                            function (
-                                                                tx,
-                                                                error
-                                                            ) {
-                                                                swal(
-                                                                    "Error al guardar",
-                                                                    error.message,
-                                                                    "error"
-                                                                );
+                                                            function (tx, error) {
+                                                                swal("Error al guardar", error.message, "error");
                                                             }
                                                         );
                                                     },
@@ -4020,10 +3499,7 @@ function guardarCursoCiertoFalsoPuntuacion() {
                                         });
                                     },
                                     function (tx, error) {
-                                        console.error(
-                                            "Error al guardar cierre: " +
-                                                error.message
-                                        );
+                                        console.error("Error al guardar cierre: " + error.message);
                                     }
                                 );
                             },
@@ -4054,23 +3530,14 @@ function guardarCursoCiertoFalso() {
                 function (tx, results) {
                     var item3 = results.rows.item(0);
                     if (item3.cuenta > 0) {
-                        swal(
-                            "",
-                            "Aún faltan preguntas por contestar",
-                            "warning"
-                        );
+                        swal("", "Aún faltan preguntas por contestar", "warning");
                         return false;
                     } else {
                         databaseHandler.db.transaction(
                             function (tx) {
                                 tx.executeSql(
                                     "UPDATE datosGeneralesCurso SET apto = ?, observaciones = ?, firmaInstructor = ? WHERE id_cedula = ?",
-                                    [
-                                        apto,
-                                        observaciones,
-                                        firmaInstructor,
-                                        id_cedula,
-                                    ],
+                                    [apto, observaciones, firmaInstructor, id_cedula],
                                     function (tx, results) {
                                         swal({
                                             title: "Aviso",
@@ -4080,34 +3547,18 @@ function guardarCursoCiertoFalso() {
                                             dangerMode: true,
                                         }).then((RESP) => {
                                             if (RESP == true) {
-                                                var fecha_salida =
-                                                    getDateWhitZeros();
+                                                var fecha_salida = getDateWhitZeros();
                                                 var estatus = 1;
                                                 databaseHandler.db.transaction(
                                                     function (tx) {
                                                         tx.executeSql(
                                                             "UPDATE cedulas_general SET fecha_salida  = ?,estatus = ? WHERE id_cedula = ?",
-                                                            [
-                                                                fecha_salida,
-                                                                estatus,
-                                                                id_cedula,
-                                                            ],
-                                                            function (
-                                                                tx,
-                                                                results
-                                                            ) {
-                                                                window.location.href =
-                                                                    "./menu.html";
+                                                            [fecha_salida, estatus, id_cedula],
+                                                            function (tx, results) {
+                                                                window.location.href = "./menu.html";
                                                             },
-                                                            function (
-                                                                tx,
-                                                                error
-                                                            ) {
-                                                                swal(
-                                                                    "Error al guardar",
-                                                                    error.message,
-                                                                    "error"
-                                                                );
+                                                            function (tx, error) {
+                                                                swal("Error al guardar", error.message, "error");
                                                             }
                                                         );
                                                     },
@@ -4118,10 +3569,7 @@ function guardarCursoCiertoFalso() {
                                         });
                                     },
                                     function (tx, error) {
-                                        console.error(
-                                            "Error al guardar cierre: " +
-                                                error.message
-                                        );
+                                        console.error("Error al guardar cierre: " + error.message);
                                     }
                                 );
                             },
@@ -4230,83 +3678,40 @@ function generarAsistencia() {
                                     [],
                                     function (tx, results) {
                                         var progress = 0;
-                                        var dialog = app.dialog.progress(
-                                            "Generando Lista",
-                                            progress,
-                                            "red"
-                                        );
-                                        var empresa =
-                                            localStorage.getItem("empresa");
+                                        var dialog = app.dialog.progress("Generando Lista", progress, "red");
+                                        var empresa = localStorage.getItem("empresa");
                                         var item = results.rows.item(0);
-                                        localStorage.setItem(
-                                            "IdCedula",
-                                            item.Id
-                                        );
+                                        localStorage.setItem("IdCedula", item.Id);
                                         var id_cedula = item.Id;
-                                        productHandler.asistenciaHeader(
-                                            id_cedula,
-                                            fecha[0],
-                                            id_instructor,
-                                            nombreInstructor,
-                                            fecha_captura
-                                        );
-                                        var NomJson =
-                                            "BecariosVsInstructor_" + empresa;
+                                        productHandler.asistenciaHeader(id_cedula, fecha[0], id_instructor, nombreInstructor, fecha_captura);
+                                        var NomJson = "BecariosVsInstructor_" + empresa;
                                         app.request({
-                                            url:
-                                                cordova.file.dataDirectory +
-                                                "jsons_capacitacion/" +
-                                                NomJson +
-                                                ".json",
+                                            url: cordova.file.dataDirectory + "jsons_capacitacion/" + NomJson + ".json",
                                             method: "GET",
                                             dataType: "json",
                                             success: function (data) {
                                                 var aux = 0;
                                                 var aux2 = 0;
-                                                for (
-                                                    var j = 0;
-                                                    j < data.length;
-                                                    j++
-                                                ) {
-                                                    if (
-                                                        data[j]
-                                                            .FKPersonalInstructor ==
-                                                        id_instructor
-                                                    ) {
+                                                for (var j = 0; j < data.length; j++) {
+                                                    if (data[j].FKPersonalInstructor == id_instructor) {
                                                         aux++;
                                                     }
                                                 }
                                                 if (aux == 0) {
                                                     app.dialog.close();
-                                                    swal(
-                                                        "",
-                                                        "Algo salió mal. No tienes Becarios Asignados.",
-                                                        "error"
-                                                    );
+                                                    swal("", "Algo salió mal. No tienes Becarios Asignados.", "error");
                                                 } else {
-                                                    dialog.setText(
-                                                        "1 de " + aux
-                                                    );
-                                                    for (
-                                                        var j = 0;
-                                                        j < data.length;
-                                                        j++
-                                                    ) {
-                                                        if (
-                                                            data[j]
-                                                                .FKPersonalInstructor ==
-                                                            id_instructor
-                                                        ) {
+                                                    dialog.setText("1 de " + aux);
+                                                    for (var j = 0; j < data.length; j++) {
+                                                        if (data[j].FKPersonalInstructor == id_instructor) {
                                                             aux2++;
                                                             // asistenciaDetails(id_cedula integer, fecha text, id_becario int,claveBecario, nameBecario, asiste int, fechaCaptura text)
                                                             productHandler.asistenciaDetails(
                                                                 id_cedula,
                                                                 fecha[0],
                                                                 data[j].ID,
-                                                                data[j]
-                                                                    .claveBecario,
-                                                                data[j]
-                                                                    .nameBecario,
+                                                                data[j].claveBecario,
+                                                                data[j].nameBecario,
                                                                 0,
                                                                 fecha_captura,
                                                                 aux,
@@ -4319,10 +3724,7 @@ function generarAsistencia() {
                                         });
                                     },
                                     function (tx, error) {
-                                        console.log(
-                                            "Error al guardar cedula: " +
-                                                error.message
-                                        );
+                                        console.log("Error al guardar cedula: " + error.message);
                                     }
                                 );
                             },
@@ -4330,17 +3732,11 @@ function generarAsistencia() {
                             function () {}
                         );
                     } else {
-                        swal(
-                            "",
-                            "Ya existe una asistencia registrada",
-                            "warning"
-                        );
+                        swal("", "Ya existe una asistencia registrada", "warning");
                     }
                 },
                 function (tx5, error) {
-                    console.error(
-                        "Error al consultar bandeja de salida: " + error.message
-                    );
+                    console.error("Error al consultar bandeja de salida: " + error.message);
                 }
             );
         },
@@ -4453,11 +3849,7 @@ function LLamarCursos(ID, FKPersonalBecario, nameBecario) {
     var html = "";
     localStorage.setItem("nameBecario", nameBecario);
     app.request({
-        url:
-            cordova.file.dataDirectory +
-            "jsons_capacitacion/" +
-            NomJson +
-            ".json",
+        url: cordova.file.dataDirectory + "jsons_capacitacion/" + NomJson + ".json",
         method: "GET",
         dataType: "json",
         success: function (data) {
@@ -4519,11 +3911,7 @@ function LLamarIMTES(ID, FKPersonalBecario, nameBecario) {
     var html = "";
     localStorage.setItem("nameBecario", nameBecario);
     app.request({
-        url:
-            cordova.file.dataDirectory +
-            "jsons_capacitacion/" +
-            NomJson +
-            ".json",
+        url: cordova.file.dataDirectory + "jsons_capacitacion/" + NomJson + ".json",
         method: "GET",
         dataType: "json",
         success: function (data) {
@@ -4577,16 +3965,7 @@ function LLamarIMTES(ID, FKPersonalBecario, nameBecario) {
     });
 }
 
-function GenerarCurso(
-    IDMov,
-    FK_Becario,
-    IDCurso,
-    IDTipoCurso,
-    OpDiario,
-    NombreCurso,
-    Realizado,
-    costo
-) {
+function GenerarCurso(IDMov, FK_Becario, IDCurso, IDTipoCurso, OpDiario, NombreCurso, Realizado, costo) {
     localStorage.setItem("IDMov", IDMov);
     localStorage.setItem("FK_Becario", FK_Becario);
     localStorage.setItem("IDCurso", IDCurso);
@@ -4609,11 +3988,7 @@ function GenerarCurso(
                 </div></div>`;
             let encontro = false;
             app.request({
-                url:
-                    cordova.file.dataDirectory +
-                    "jsons_capacitacion/" +
-                    NomJson +
-                    ".json",
+                url: cordova.file.dataDirectory + "jsons_capacitacion/" + NomJson + ".json",
                 method: "GET",
                 dataType: "json",
                 success: function (data) {
@@ -4622,15 +3997,10 @@ function GenerarCurso(
                         segundaBusqueda22(IDCurso, FK_Becario);
                     } else {
                         for (var j = 0; j < data.length; j++) {
-                            if (
-                                data[j].FK_IDCurso == IDCurso &&
-                                data[j].FK_Becario == FK_Becario
-                            ) {
+                            if (data[j].FK_IDCurso == IDCurso && data[j].FK_Becario == FK_Becario) {
                                 encontro = true;
                                 var check = "";
-                                data[j].apto == 1
-                                    ? (check = "checked")
-                                    : (check = "");
+                                data[j].apto == 1 ? (check = "checked") : (check = "");
                                 html = `<div class="card-content">
                                     <div class="card" style="text-align: center;padding-left: 15px;padding-right: 15px;border: 1px solid #005D99;border-radius: 10px;">
                                         <div class="container-check">
@@ -4716,11 +4086,7 @@ function segundaBusqueda22(IDCurso, FK_Becario) {
     var NomJson = "DatosEvaluacionD_" + empresa;
     let encontro = false;
     app.request({
-        url:
-            cordova.file.dataDirectory +
-            "jsons_capacitacion/" +
-            NomJson +
-            ".json",
+        url: cordova.file.dataDirectory + "jsons_capacitacion/" + NomJson + ".json",
         method: "GET",
         dataType: "json",
         success: function (data) {
@@ -4728,10 +4094,7 @@ function segundaBusqueda22(IDCurso, FK_Becario) {
             if (length == 0) {
             } else {
                 for (var j = 0; j < data.length; j++) {
-                    if (
-                        data[j].FK_IDCurso == IDCurso &&
-                        data[j].FK_Becario == FK_Becario
-                    ) {
+                    if (data[j].FK_IDCurso == IDCurso && data[j].FK_Becario == FK_Becario) {
                         console.log(encontro);
                         encontro = true;
                         var check = "";
@@ -4886,12 +4249,7 @@ function sincronizaDatosCapacitacion() {
     // let urlBase2 = "http://192.168.100.4/Desarrollo/CISAApp/HMOFiles/Exec";
     // var urlBase2 = "http://172.16.0.143/Desarrollo/CISAApp/HMOFiles/Exec";
     let urlBase2 = "http://tmshmo.ci-sa.com.mx/www.CISAAPP.com/HMOFiles/Exec";
-    let url =
-        urlBase2 +
-        "/capacitacion/datos.php?empresa=" +
-        EmpresaID +
-        "&paso=" +
-        paso;
+    let url = urlBase2 + "/capacitacion/datos.php?empresa=" + EmpresaID + "&paso=" + paso;
 
     fetch(url).then((response) => {
         console.log("Sincroniza datos OK!");
@@ -4914,11 +4272,7 @@ function guardarCursoMultiple() {
                 function (tx, results) {
                     var item3 = results.rows.item(0);
                     if (item3.cuenta > 0) {
-                        swal(
-                            "",
-                            "Aún faltan preguntas por contestar",
-                            "warning"
-                        );
+                        swal("", "Aún faltan preguntas por contestar", "warning");
                         return false;
                     } else {
                         $("#PuntosCurso").val(0);
@@ -4935,22 +4289,13 @@ function guardarCursoMultiple() {
                                             var item2 = results.rows.item(i);
                                             FK_IDPregunta = item2.FK_IDPregunta;
                                             Respuesta = item2.Respuesta;
-                                            getOpcionesMultiples(
-                                                FK_IDPregunta,
-                                                Respuesta,
-                                                length
-                                            );
+                                            getOpcionesMultiples(FK_IDPregunta, Respuesta, length);
                                         }
                                         databaseHandler.db.transaction(
                                             function (tx) {
                                                 tx.executeSql(
                                                     "UPDATE datosGeneralesCurso SET apto = ?, observaciones = ?, firmaInstructor = ? WHERE id_cedula = ?",
-                                                    [
-                                                        apto,
-                                                        observaciones,
-                                                        firmaInstructor,
-                                                        id_cedula,
-                                                    ],
+                                                    [apto, observaciones, firmaInstructor, id_cedula],
                                                     function (tx, results) {
                                                         swal({
                                                             title: "Aviso",
@@ -4960,52 +4305,29 @@ function guardarCursoMultiple() {
                                                             dangerMode: true,
                                                         }).then((RESP) => {
                                                             if (RESP == true) {
-                                                                var fecha_salida =
-                                                                    getDateWhitZeros();
+                                                                var fecha_salida = getDateWhitZeros();
                                                                 var estatus = 1;
                                                                 databaseHandler.db.transaction(
-                                                                    function (
-                                                                        tx
-                                                                    ) {
+                                                                    function (tx) {
                                                                         tx.executeSql(
                                                                             "UPDATE cedulas_general SET fecha_salida  = ?,estatus = ? WHERE id_cedula = ?",
-                                                                            [
-                                                                                fecha_salida,
-                                                                                estatus,
-                                                                                id_cedula,
-                                                                            ],
-                                                                            function (
-                                                                                tx,
-                                                                                results
-                                                                            ) {
-                                                                                window.location.href =
-                                                                                    "./menu.html";
+                                                                            [fecha_salida, estatus, id_cedula],
+                                                                            function (tx, results) {
+                                                                                window.location.href = "./menu.html";
                                                                             },
-                                                                            function (
-                                                                                tx,
-                                                                                error
-                                                                            ) {
-                                                                                swal(
-                                                                                    "Error al guardar",
-                                                                                    error.message,
-                                                                                    "error"
-                                                                                );
+                                                                            function (tx, error) {
+                                                                                swal("Error al guardar", error.message, "error");
                                                                             }
                                                                         );
                                                                     },
-                                                                    function (
-                                                                        error
-                                                                    ) {},
+                                                                    function (error) {},
                                                                     function () {}
                                                                 );
                                                             }
                                                         });
                                                     },
                                                     function (tx, error) {
-                                                        console.error(
-                                                            "Error al guardar cierre: " +
-                                                                error.message
-                                                        );
+                                                        console.error("Error al guardar cierre: " + error.message);
                                                     }
                                                 );
                                             },
@@ -5040,9 +4362,7 @@ function getOpcionesMultiples(FK_IDPregunta, Respuesta, length2) {
                     for (var j = 0; j < length; j++) {
                         letter++;
                         var item3 = results.rows.item(j);
-                        Respuesta == letter && item3.Correcta == 1
-                            ? puntos++
-                            : null;
+                        Respuesta == letter && item3.Correcta == 1 ? puntos++ : null;
                     }
                     let promedio = (puntos * 100) / length2;
                     $("#PuntosCurso").val(puntos);
@@ -5061,11 +4381,7 @@ function verDetalleCapacitacion(ID, FKPersonalBecario, nameBecario) {
     var coursesHTML = "";
     var imtesHTML = "";
     app.request({
-        url:
-            cordova.file.dataDirectory +
-            "jsons_capacitacion/" +
-            NomJson +
-            ".json",
+        url: cordova.file.dataDirectory + "jsons_capacitacion/" + NomJson + ".json",
         method: "GET",
         dataType: "json",
         success: function (data) {
@@ -5188,41 +4504,24 @@ function GuardarPhoto() {
                 function (tx) {
                     tx.executeSql(
                         "INSERT INTO IEN_EvidenciasLavado(id_cedula,FKHeader,evidencia,fecha,typeLavado,proceso) VALUES (?,?,?,?,?,1)",
-                        [
-                            id_cedula,
-                            localStorage.getItem("IdHeader"),
-                            foto,
-                            getDateWhitZeros(),
-                            typeLavado,
-                        ],
+                        [id_cedula, localStorage.getItem("IdHeader"), foto, getDateWhitZeros(), typeLavado],
                         function (tx, results) {
                             databaseHandler.db.transaction(
                                 function (tx1) {
                                     tx1.executeSql(
                                         "Select * from IEN_EvidenciasLavado where id_cedula= ? AND FKHeader = ? AND proceso = 1 ORDER BY id_evidencia DESC LIMIT 1",
-                                        [
-                                            id_cedula,
-                                            localStorage.getItem("IdHeader"),
-                                        ],
+                                        [id_cedula, localStorage.getItem("IdHeader")],
                                         function (tx, results) {
                                             var item = results.rows.item(0);
-                                            $("#evidencias_div").css(
-                                                "display",
-                                                "none"
-                                            );
-                                            $("#div_botones_camara")
-                                                .html(`<div style="min-width: 50px; border-style: none;">
+                                            $("#evidencias_div").css("display", "none");
+                                            $("#div_botones_camara").html(`<div style="min-width: 50px; border-style: none;">
                                                 <span class="resize-handler"></span>
                                                 <a href="#" onclick="ValidarCapturePhotoLavado()" style="background-color: #fff;border: 3px solid #005D99;color:#005D99" class="boton-equipo">
                                                     Agregar Evidencia <i class="icon material-icons md-only" style="display: inline-block;margin-left: 12px;color:#005D99">photo_camera</i>
                                                 </a>
                                             </div>`);
                                             $("#imagenC").val("");
-                                            swal(
-                                                "",
-                                                "Foto guardada correctamente",
-                                                "success"
-                                            );
+                                            swal("", "Foto guardada correctamente", "success");
                                             $("#facturas").append(
                                                 "<tr id='fila" +
                                                     item.id_evidencia +
@@ -5241,10 +4540,7 @@ function GuardarPhoto() {
                                                     item.id_evidencia +
                                                     ",1);' style='border: none; outline:none;'><i class='icon material-icons md-only' style='display: inline-block;margin-left: 12px;color:#FF0037;font-size: 40px;'>delete_forever</i></a></td></tr>"
                                             );
-                                            $(".message-nr").css(
-                                                "display",
-                                                "none"
-                                            );
+                                            $(".message-nr").css("display", "none");
                                         }
                                     );
                                 },
@@ -5272,23 +4568,15 @@ function GuardarPhoto() {
                                         [id_cedula],
                                         function (tx, results) {
                                             var item = results.rows.item(0);
-                                            $("#evidencias_div").css(
-                                                "display",
-                                                "none"
-                                            );
-                                            $("#div_botones_camara")
-                                                .html(`<div style="min-width: 50px; border-style: none;">
+                                            $("#evidencias_div").css("display", "none");
+                                            $("#div_botones_camara").html(`<div style="min-width: 50px; border-style: none;">
                                                 <span class="resize-handler"></span>
                                                 <a href="#" onclick="ValidarCapturePhoto()" style="background-color: #fff;border: 3px solid #005D99;color:#005D99" class="boton-equipo">
                                                     Agregar Evidencia <i class="icon material-icons md-only" style="display: inline-block;margin-left: 12px;color:#005D99">photo_camera</i>
                                                 </a>
                                             </div>`);
                                             $("#imagenC").val("");
-                                            swal(
-                                                "",
-                                                "Foto guardada correctamente",
-                                                "success"
-                                            );
+                                            swal("", "Foto guardada correctamente", "success");
                                             $("#facturas").append(
                                                 "<tr id='fila" +
                                                     item.id_evidencia +
@@ -5298,10 +4586,7 @@ function GuardarPhoto() {
                                                     item.id_evidencia +
                                                     ",1);' style='border: none; outline:none;'><i class='icon material-icons md-only' style='display: inline-block;margin-left: 12px;color:#FF0037;font-size: 40px;'>delete_forever</i></a></td></tr>"
                                             );
-                                            $("#message-nr").css(
-                                                "display",
-                                                "none"
-                                            );
+                                            $("#message-nr").css("display", "none");
                                         }
                                     );
                                 },
@@ -5325,18 +4610,14 @@ function ValidarCapturePhoto() {
     var id_cedula = localStorage.getItem("IdCedula");
     databaseHandler.db.transaction(
         function (tx1) {
-            tx1.executeSql(
-                "Select COUNT(id_cedula) as cuenta from CAP_Evidencias where id_cedula= ?",
-                [id_cedula],
-                function (tx, results) {
-                    var item = results.rows.item(0);
-                    if (item.cuenta <= 2) {
-                        capturePhoto();
-                    } else {
-                        swal("", "Solo puedes agregar máx. 3 fotos", "warning");
-                    }
+            tx1.executeSql("Select COUNT(id_cedula) as cuenta from CAP_Evidencias where id_cedula= ?", [id_cedula], function (tx, results) {
+                var item = results.rows.item(0);
+                if (item.cuenta <= 2) {
+                    capturePhoto();
+                } else {
+                    swal("", "Solo puedes agregar máx. 3 fotos", "warning");
                 }
-            );
+            });
         },
         function (error) {},
         function () {}
@@ -5351,19 +4632,11 @@ function eliminarFilaFoto(index, val) {
                     "DELETE FROM CAP_Evidencias WHERE id_evidencia = ?",
                     [index],
                     function (tx, results) {
-                        swal(
-                            "",
-                            "El registro se elimino satisfactoriamente",
-                            "success"
-                        );
+                        swal("", "El registro se elimino satisfactoriamente", "success");
                         $("#fila" + index).remove();
                     },
                     function (tx, error) {
-                        swal(
-                            "Error al eliminar registro",
-                            error.message,
-                            "error"
-                        );
+                        swal("Error al eliminar registro", error.message, "error");
                     }
                 );
             },
@@ -5382,85 +4655,57 @@ function guardarCursoEvidencias() {
 
     databaseHandler.db.transaction(
         function (tx) {
-            tx.executeSql(
-                "Select COUNT(id_cedula) as cuenta from CAP_Evidencias where id_cedula= ?",
-                [id_cedula],
-                function (tx, results) {
-                    var item3 = results.rows.item(0);
-                    if (item3.cuenta <= 0) {
-                        swal("", "Aún no haz agregado evidencias", "warning");
-                        return false;
-                    } else {
-                        databaseHandler.db.transaction(
-                            function (tx) {
-                                tx.executeSql(
-                                    "UPDATE datosGeneralesCurso SET apto = ?, observaciones = ?, firmaInstructor = ? WHERE id_cedula = ?",
-                                    [
-                                        apto,
-                                        observaciones,
-                                        firmaInstructor,
-                                        id_cedula,
-                                    ],
-                                    function (tx, results) {
-                                        swal({
-                                            title: "Aviso",
-                                            text: "¿Estas seguro de querer finalizar la prueba?",
-                                            icon: "warning",
-                                            buttons: true,
-                                            dangerMode: true,
-                                        }).then((RESP) => {
-                                            if (RESP == true) {
-                                                var fecha_salida =
-                                                    getDateWhitZeros();
-                                                var estatus = 1;
-                                                databaseHandler.db.transaction(
-                                                    function (tx) {
-                                                        tx.executeSql(
-                                                            "UPDATE cedulas_general SET fecha_salida  = ?,estatus = ? WHERE id_cedula = ?",
-                                                            [
-                                                                fecha_salida,
-                                                                estatus,
-                                                                id_cedula,
-                                                            ],
-                                                            function (
-                                                                tx,
-                                                                results
-                                                            ) {
-                                                                window.location.href =
-                                                                    "./menu.html";
-                                                            },
-                                                            function (
-                                                                tx,
-                                                                error
-                                                            ) {
-                                                                swal(
-                                                                    "Error al guardar",
-                                                                    error.message,
-                                                                    "error"
-                                                                );
-                                                            }
-                                                        );
-                                                    },
-                                                    function (error) {},
-                                                    function () {}
-                                                );
-                                            }
-                                        });
-                                    },
-                                    function (tx, error) {
-                                        console.error(
-                                            "Error al guardar cierre: " +
-                                                error.message
-                                        );
-                                    }
-                                );
-                            },
-                            function (error) {},
-                            function () {}
-                        );
-                    }
+            tx.executeSql("Select COUNT(id_cedula) as cuenta from CAP_Evidencias where id_cedula= ?", [id_cedula], function (tx, results) {
+                var item3 = results.rows.item(0);
+                if (item3.cuenta <= 0) {
+                    swal("", "Aún no haz agregado evidencias", "warning");
+                    return false;
+                } else {
+                    databaseHandler.db.transaction(
+                        function (tx) {
+                            tx.executeSql(
+                                "UPDATE datosGeneralesCurso SET apto = ?, observaciones = ?, firmaInstructor = ? WHERE id_cedula = ?",
+                                [apto, observaciones, firmaInstructor, id_cedula],
+                                function (tx, results) {
+                                    swal({
+                                        title: "Aviso",
+                                        text: "¿Estas seguro de querer finalizar la prueba?",
+                                        icon: "warning",
+                                        buttons: true,
+                                        dangerMode: true,
+                                    }).then((RESP) => {
+                                        if (RESP == true) {
+                                            var fecha_salida = getDateWhitZeros();
+                                            var estatus = 1;
+                                            databaseHandler.db.transaction(
+                                                function (tx) {
+                                                    tx.executeSql(
+                                                        "UPDATE cedulas_general SET fecha_salida  = ?,estatus = ? WHERE id_cedula = ?",
+                                                        [fecha_salida, estatus, id_cedula],
+                                                        function (tx, results) {
+                                                            window.location.href = "./menu.html";
+                                                        },
+                                                        function (tx, error) {
+                                                            swal("Error al guardar", error.message, "error");
+                                                        }
+                                                    );
+                                                },
+                                                function (error) {},
+                                                function () {}
+                                            );
+                                        }
+                                    });
+                                },
+                                function (tx, error) {
+                                    console.error("Error al guardar cierre: " + error.message);
+                                }
+                            );
+                        },
+                        function (error) {},
+                        function () {}
+                    );
                 }
-            );
+            });
         },
         function (error) {},
         function () {}
@@ -5475,9 +4720,7 @@ function generarCursoManejo() {
         var id_usuario = localStorage.getItem("Usuario");
         var nombre_usuario = localStorage.getItem("nombre");
         var fecha_llegada = getDateWhitZeros();
-        var geolocation = $("#CursosTecnicos")
-            .find("option:selected")
-            .attr("name");
+        var geolocation = $("#CursosTecnicos").find("option:selected").attr("name");
         var id_cliente = localStorage.getItem("empresa");
         var nombre_cliente = $("#nombreCandidato").val();
         var horario_programado = fecha_llegada;
@@ -5496,9 +4739,7 @@ function generarCursoManejo() {
         var id_candidato = $("#id_candidato").val();
         var fecha_captura = getDateWhitZeros();
         var id_course = $("#CursosTecnicos").val(); //! dinamic
-        var IDTipoCurso = $("#CursosTecnicos")
-            .find("option:selected")
-            .attr("name");
+        var IDTipoCurso = $("#CursosTecnicos").find("option:selected").attr("name");
         var ID_AT = $("#ID_AT").val();
         var costo = 0;
         var Prueba = 1;
@@ -5524,11 +4765,7 @@ function generarCursoManejo() {
                     function (tx, results) {
                         //app.dialog.progress('Generando CheckList','red');
                         var progress = 0;
-                        var dialog = app.dialog.progress(
-                            "Generando Curso",
-                            progress,
-                            "red"
-                        );
+                        var dialog = app.dialog.progress("Generando Curso", progress, "red");
                         var empresa = localStorage.getItem("empresa");
                         var item = results.rows.item(0);
                         localStorage.setItem("IdCedula", item.Id);
@@ -5554,20 +4791,14 @@ function generarCursoManejo() {
                             );
                             var NomJson = "CursoCiertoFalso" + empresa;
                             app.request({
-                                url:
-                                    cordova.file.dataDirectory +
-                                    "jsons_capacitacion/" +
-                                    NomJson +
-                                    ".json",
+                                url: cordova.file.dataDirectory + "jsons_capacitacion/" + NomJson + ".json",
                                 method: "GET",
                                 dataType: "json",
                                 success: function (data) {
                                     var aux = 0;
                                     var aux2 = 0;
                                     for (var j = 0; j < data.length; j++) {
-                                        if (
-                                            data[j].IDNombreCurso == id_course
-                                        ) {
+                                        if (data[j].IDNombreCurso == id_course) {
                                             aux++;
                                         }
                                     }
@@ -5577,10 +4808,7 @@ function generarCursoManejo() {
                                     } else {
                                         dialog.setText("1 de " + aux);
                                         for (var j = 0; j < data.length; j++) {
-                                            if (
-                                                data[j].IDNombreCurso ==
-                                                id_course
-                                            ) {
+                                            if (data[j].IDNombreCurso == id_course) {
                                                 aux2++;
                                                 productHandler.insertPreguntasCiertoFalso(
                                                     id_cedula,
@@ -5619,20 +4847,14 @@ function generarCursoManejo() {
                             );
                             var NomJson = "CursoSiNoValor" + empresa;
                             app.request({
-                                url:
-                                    cordova.file.dataDirectory +
-                                    "jsons_capacitacion/" +
-                                    NomJson +
-                                    ".json",
+                                url: cordova.file.dataDirectory + "jsons_capacitacion/" + NomJson + ".json",
                                 method: "GET",
                                 dataType: "json",
                                 success: function (data) {
                                     var aux = 0;
                                     var aux2 = 0;
                                     for (var j = 0; j < data.length; j++) {
-                                        if (
-                                            data[j].IDNombreCurso == id_course
-                                        ) {
+                                        if (data[j].IDNombreCurso == id_course) {
                                             aux++;
                                         }
                                     }
@@ -5642,10 +4864,7 @@ function generarCursoManejo() {
                                     } else {
                                         dialog.setText("1 de " + aux);
                                         for (var j = 0; j < data.length; j++) {
-                                            if (
-                                                data[j].IDNombreCurso ==
-                                                id_course
-                                            ) {
+                                            if (data[j].IDNombreCurso == id_course) {
                                                 aux2++;
                                                 productHandler.insertPreguntasSiNoValor(
                                                     id_cedula,
@@ -5683,20 +4902,14 @@ function generarCursoManejo() {
                             );
                             var NomJson = "PreguntasMultiple_" + empresa;
                             app.request({
-                                url:
-                                    cordova.file.dataDirectory +
-                                    "jsons_capacitacion/" +
-                                    NomJson +
-                                    ".json",
+                                url: cordova.file.dataDirectory + "jsons_capacitacion/" + NomJson + ".json",
                                 method: "GET",
                                 dataType: "json",
                                 success: function (data) {
                                     var aux = 0;
                                     var aux2 = 0;
                                     for (var j = 0; j < data.length; j++) {
-                                        if (
-                                            data[j].IDNombreCurso == id_course
-                                        ) {
+                                        if (data[j].IDNombreCurso == id_course) {
                                             aux++;
                                         }
                                     }
@@ -5706,10 +4919,7 @@ function generarCursoManejo() {
                                     } else {
                                         dialog.setText("1 de " + aux);
                                         for (var j = 0; j < data.length; j++) {
-                                            if (
-                                                data[j].IDNombreCurso ==
-                                                id_course
-                                            ) {
+                                            if (data[j].IDNombreCurso == id_course) {
                                                 aux2++;
                                                 productHandler.insertPreguntasMultiple(
                                                     id_cedula,
@@ -5727,11 +4937,7 @@ function generarCursoManejo() {
                             });
                             var NomJson2 = "RespuestasMultiples_" + empresa;
                             app.request({
-                                url:
-                                    cordova.file.dataDirectory +
-                                    "jsons_capacitacion/" +
-                                    NomJson2 +
-                                    ".json",
+                                url: cordova.file.dataDirectory + "jsons_capacitacion/" + NomJson2 + ".json",
                                 method: "GET",
                                 dataType: "json",
                                 success: function (data) {
@@ -5771,20 +4977,14 @@ function generarCursoManejo() {
                             );
                             var NomJson = "PreguntasMultiple_" + empresa;
                             app.request({
-                                url:
-                                    cordova.file.dataDirectory +
-                                    "jsons_capacitacion/" +
-                                    NomJson +
-                                    ".json",
+                                url: cordova.file.dataDirectory + "jsons_capacitacion/" + NomJson + ".json",
                                 method: "GET",
                                 dataType: "json",
                                 success: function (data) {
                                     var aux = 0;
                                     var aux2 = 0;
                                     for (var j = 0; j < data.length; j++) {
-                                        if (
-                                            data[j].IDNombreCurso == id_course
-                                        ) {
+                                        if (data[j].IDNombreCurso == id_course) {
                                             aux++;
                                         }
                                     }
@@ -5794,10 +4994,7 @@ function generarCursoManejo() {
                                     } else {
                                         dialog.setText("1 de " + aux);
                                         for (var j = 0; j < data.length; j++) {
-                                            if (
-                                                data[j].IDNombreCurso ==
-                                                id_course
-                                            ) {
+                                            if (data[j].IDNombreCurso == id_course) {
                                                 aux2++;
                                                 productHandler.insertPreguntasMultiple(
                                                     id_cedula,
@@ -5815,11 +5012,7 @@ function generarCursoManejo() {
                             });
                             var NomJson2 = "RespuestasMultiples_" + empresa;
                             app.request({
-                                url:
-                                    cordova.file.dataDirectory +
-                                    "jsons_capacitacion/" +
-                                    NomJson2 +
-                                    ".json",
+                                url: cordova.file.dataDirectory + "jsons_capacitacion/" + NomJson2 + ".json",
                                 method: "GET",
                                 dataType: "json",
                                 success: function (data) {
@@ -5860,9 +5053,7 @@ function generarCursoManejo() {
                         }
                     },
                     function (tx, error) {
-                        console.log(
-                            "Error al guardar cedula: " + error.message
-                        );
+                        console.log("Error al guardar cedula: " + error.message);
                     }
                 );
             },
@@ -5870,11 +5061,7 @@ function generarCursoManejo() {
             function () {}
         );
     } else {
-        swal(
-            "",
-            "Debes llenar estos campos para poder guardar: " + quita_coma,
-            "warning"
-        );
+        swal("", "Debes llenar estos campos para poder guardar: " + quita_coma, "warning");
         return false;
     }
 }
@@ -5884,20 +5071,16 @@ function validaEventos(fecha) {
 
     databaseHandler.db.transaction(
         function (tx) {
-            tx.executeSql(
-                "Select id_becario from asistenciaDetails where id_cedula= ?",
-                [id_cedula],
-                function (tx, results) {
-                    var length = results.rows.length;
-                    if (length == 0) {
-                    } else {
-                        for (var i = 0; i < length; i++) {
-                            var item = results.rows.item(i);
-                            validaEventosDetails(fecha, item.id_becario);
-                        }
+            tx.executeSql("Select id_becario from asistenciaDetails where id_cedula= ?", [id_cedula], function (tx, results) {
+                var length = results.rows.length;
+                if (length == 0) {
+                } else {
+                    for (var i = 0; i < length; i++) {
+                        var item = results.rows.item(i);
+                        validaEventosDetails(fecha, item.id_becario);
                     }
                 }
-            );
+            });
         },
         function (error) {},
         function () {}
@@ -5908,11 +5091,7 @@ function validaEventosDetails(fecha, id_becario) {
     var empresa = localStorage.getItem("empresa");
     var NomJson = "ViewIncidencias_" + empresa;
     app.request({
-        url:
-            cordova.file.dataDirectory +
-            "jsons_capacitacion/" +
-            NomJson +
-            ".json",
+        url: cordova.file.dataDirectory + "jsons_capacitacion/" + NomJson + ".json",
         method: "GET",
         dataType: "json",
         success: function (data) {
@@ -5940,11 +5119,7 @@ function getCalificacionCursoValor(puntos) {
     let NomJson = "Calificaciones_" + empresa;
     let califf = 0;
     app.request({
-        url:
-            cordova.file.dataDirectory +
-            "jsons_capacitacion/" +
-            NomJson +
-            ".json",
+        url: cordova.file.dataDirectory + "jsons_capacitacion/" + NomJson + ".json",
         method: "GET",
         dataType: "json",
         success: function (data) {
@@ -5957,30 +5132,16 @@ function getCalificacionCursoValor(puntos) {
                         min--;
                         if (puntos > min && puntos <= dat.Calif7) {
                             califf = 7;
-                        } else if (
-                            puntos >= dat.Calif7 &&
-                            puntos <= dat.Calif8
-                        ) {
+                        } else if (puntos >= dat.Calif7 && puntos <= dat.Calif8) {
                             califf = 8;
-                        } else if (
-                            puntos > dat.Calif8 &&
-                            puntos <= dat.Calif9
-                        ) {
+                        } else if (puntos > dat.Calif8 && puntos <= dat.Calif9) {
                             califf = 9;
-                        } else if (
-                            puntos > dat.Calif9 &&
-                            puntos <= dat.Calif10
-                        ) {
+                        } else if (puntos > dat.Calif9 && puntos <= dat.Calif10) {
                             califf = 10;
                         } else {
                             califf = 0;
                         }
-                        $("#calificacion_text").html(
-                            "Puntaje Obtenido: " +
-                                puntos +
-                                ", Calificación: " +
-                                califf
-                        );
+                        $("#calificacion_text").html("Puntaje Obtenido: " + puntos + ", Calificación: " + califf);
                         actualizaPromedio2(califf);
                     }
                 });
@@ -6144,11 +5305,7 @@ function inspeccionarUnidad() {
                             let credencial = $("#credencial").val();
                             let fecha_inicio = getDateWhitZeros();
                             let progress = 0;
-                            let dialog = app.dialog.progress(
-                                "Trabajando... ",
-                                progress,
-                                "red"
-                            );
+                            let dialog = app.dialog.progress("Trabajando... ", progress, "red");
                             let id_empresa = localStorage.getItem("empresa");
                             let NomJson = "datos_check" + id_empresa;
 
@@ -6157,15 +5314,7 @@ function inspeccionarUnidad() {
                                 function (tx) {
                                     tx.executeSql(
                                         "insert into DesTechHeader(id_cedula, unidad, id_unidad, id_operador, operador, credencial, fecha_inicio) values(?, ?, ?, ?, ?, ?, ?)",
-                                        [
-                                            id_cedula,
-                                            unidad,
-                                            id_unidad,
-                                            id_operador,
-                                            operador,
-                                            credencial,
-                                            fecha_inicio,
-                                        ],
+                                        [id_cedula, unidad, id_unidad, id_operador, operador, credencial, fecha_inicio],
                                         function (tx, results) {
                                             databaseHandler.db.transaction(
                                                 function (tx) {
@@ -6173,89 +5322,40 @@ function inspeccionarUnidad() {
                                                         "Select MAX(IdHeader) as IdHeader from DesTechHeader",
                                                         [],
                                                         function (tx, results) {
-                                                            var item =
-                                                                results.rows.item(
-                                                                    0
-                                                                );
-                                                            localStorage.setItem(
-                                                                "IdHeader",
-                                                                item.IdHeader
-                                                            );
+                                                            var item = results.rows.item(0);
+                                                            localStorage.setItem("IdHeader", item.IdHeader);
                                                             app.request({
-                                                                url:
-                                                                    cordova.file
-                                                                        .dataDirectory +
-                                                                    "jsons_tecnologiasHmo/" +
-                                                                    NomJson +
-                                                                    ".json",
+                                                                url: cordova.file.dataDirectory + "jsons_tecnologiasHmo/" + NomJson + ".json",
                                                                 method: "GET",
-                                                                dataType:
-                                                                    "json",
-                                                                success:
-                                                                    function (
-                                                                        data
-                                                                    ) {
-                                                                        var aux =
-                                                                            data.length;
-                                                                        var aux2 = 0;
-                                                                        if (
-                                                                            aux ==
-                                                                            0
-                                                                        ) {
-                                                                            app.dialog.close();
-                                                                            swal(
-                                                                                "",
-                                                                                "Algo salió mal.",
-                                                                                "warning"
+                                                                dataType: "json",
+                                                                success: function (data) {
+                                                                    var aux = data.length;
+                                                                    var aux2 = 0;
+                                                                    if (aux == 0) {
+                                                                        app.dialog.close();
+                                                                        swal("", "Algo salió mal.", "warning");
+                                                                    } else {
+                                                                        dialog.setText("1 de " + aux);
+                                                                        for (var j = 0; j < data.length; j++) {
+                                                                            aux2++;
+                                                                            productHandler.addDesTechHmoDetails(
+                                                                                id_cedula,
+                                                                                item.IdHeader,
+                                                                                data[j].ID,
+                                                                                data[j].Pregunta,
+                                                                                data[j].Multiple,
+                                                                                data[j].FK_formato,
+                                                                                data[j].FK_equipo,
+                                                                                aux,
+                                                                                aux2
                                                                             );
-                                                                        } else {
-                                                                            dialog.setText(
-                                                                                "1 de " +
-                                                                                    aux
-                                                                            );
-                                                                            for (
-                                                                                var j = 0;
-                                                                                j <
-                                                                                data.length;
-                                                                                j++
-                                                                            ) {
-                                                                                aux2++;
-                                                                                productHandler.addDesTechHmoDetails(
-                                                                                    id_cedula,
-                                                                                    item.IdHeader,
-                                                                                    data[
-                                                                                        j
-                                                                                    ]
-                                                                                        .ID,
-                                                                                    data[
-                                                                                        j
-                                                                                    ]
-                                                                                        .Pregunta,
-                                                                                    data[
-                                                                                        j
-                                                                                    ]
-                                                                                        .Multiple,
-                                                                                    data[
-                                                                                        j
-                                                                                    ]
-                                                                                        .FK_formato,
-                                                                                    data[
-                                                                                        j
-                                                                                    ]
-                                                                                        .FK_equipo,
-                                                                                    aux,
-                                                                                    aux2
-                                                                                );
-                                                                            }
                                                                         }
-                                                                    },
+                                                                    }
+                                                                },
                                                             });
                                                         },
                                                         function (tx, error) {
-                                                            console.log(
-                                                                "Error al guardar cedula: " +
-                                                                    error.message
-                                                            );
+                                                            console.log("Error al guardar cedula: " + error.message);
                                                         }
                                                     );
                                                 },
@@ -6264,10 +5364,7 @@ function inspeccionarUnidad() {
                                             );
                                         },
                                         function (tx, error) {
-                                            console.error(
-                                                "Error registrar:" +
-                                                    error.message
-                                            );
+                                            console.error("Error registrar:" + error.message);
                                         }
                                     );
                                 },
@@ -6281,17 +5378,11 @@ function inspeccionarUnidad() {
                             $("#id_operador").val("");
                             $("#credencial").val("");
                             $("#operador").val("");
-                            swal(
-                                "",
-                                "Esta unidad ya la tienes registrada.",
-                                "warning"
-                            );
+                            swal("", "Esta unidad ya la tienes registrada.", "warning");
                         }
                     },
                     function (tx, error) {
-                        console.log(
-                            "Error al guardar cedula: " + error.message
-                        );
+                        console.log("Error al guardar cedula: " + error.message);
                     }
                 );
             },
@@ -6321,21 +5412,12 @@ function TerminarCheckListHMO() {
                                 function (tx) {
                                     tx.executeSql(
                                         "UPDATE DesTechHeader SET fecha_fin = ?, observaciones= ? WHERE id_cedula = ? AND IdHeader = ?;",
-                                        [
-                                            getDateWhitZeros(),
-                                            observaciones,
-                                            id_cedula,
-                                            IdHeader,
-                                        ],
+                                        [getDateWhitZeros(), observaciones, id_cedula, IdHeader],
                                         function (tx, results) {
                                             regresaTechHmo();
                                         },
                                         function (tx, error) {
-                                            swal(
-                                                "Error al guardar",
-                                                error.message,
-                                                "error"
-                                            );
+                                            swal("Error al guardar", error.message, "error");
                                         }
                                     );
                                 },
@@ -6343,18 +5425,11 @@ function TerminarCheckListHMO() {
                                 function () {}
                             );
                         } else {
-                            swal(
-                                "",
-                                "Debes responder a todos los conceptos para poder continuar.",
-                                "warning"
-                            );
+                            swal("", "Debes responder a todos los conceptos para poder continuar.", "warning");
                         }
                     },
                     function (tx5, error) {
-                        console.error(
-                            "Error al consultar bandeja de salida: " +
-                                error.message
-                        );
+                        console.error("Error al consultar bandeja de salida: " + error.message);
                     }
                 );
             },
@@ -6384,40 +5459,26 @@ function SeleccionarDanosControlTec(id, pregunta, multiple, FK_equipo) {
             var resultados = text.split("(");
             var titulo_modal = resultados[0].trim();
             var divididos = resultados[1].split(",");
-            var opciones =
-                '<select class="FWM-input" id="opts_modal" multiple>';
+            var opciones = '<select class="FWM-input" id="opts_modal" multiple>';
             var quitapar = "";
             for (i = 0; i < divididos.length; i++) {
                 quitapar = divididos[i].replace("(", "");
                 quitapar = quitapar.replace(")", "");
                 quitapar = capitalizarPrimeraLetra(quitapar);
-                opciones =
-                    opciones +
-                    `<option value=` +
-                    quitapar.trim() +
-                    `>` +
-                    quitapar.trim() +
-                    `</option>`;
+                opciones = opciones + `<option value=` + quitapar.trim() + `>` + quitapar.trim() + `</option>`;
             }
             opciones = opciones + "</select>";
             CreaModalOptionCtlTec(id, opciones, 1, titulo_modal, FK_equipo);
         } else {
             var titulo_modal = "";
             var divididos = text.split(",");
-            var opciones =
-                '<select class="FWM-input" id="opts_modal" multiple>';
+            var opciones = '<select class="FWM-input" id="opts_modal" multiple>';
             var quitapar = "";
             for (i = 0; i < divididos.length; i++) {
                 quitapar = divididos[i].replace("(", "");
                 quitapar = quitapar.replace(")", "");
                 quitapar = capitalizarPrimeraLetra(quitapar);
-                opciones =
-                    opciones +
-                    `<option value=` +
-                    quitapar.trim() +
-                    `>` +
-                    quitapar.trim() +
-                    `</option>`;
+                opciones = opciones + `<option value=` + quitapar.trim() + `>` + quitapar.trim() + `</option>`;
             }
             opciones = opciones + "</select>";
             var titulo_modal = "";
@@ -6445,19 +5506,10 @@ function actualizacheckControlTec(id) {
             function (tx) {
                 tx.executeSql(
                     "UPDATE DesTechDetails SET respuesta = ?,comentarios = ?, falla = ? WHERE id_cedula = ? AND Fk_pregunta = ? AND IdHeader = ?",
-                    [
-                        respuesta,
-                        comentarios,
-                        comentarios,
-                        id_cedula,
-                        id_pregunta,
-                        IdHeader,
-                    ],
+                    [respuesta, comentarios, comentarios, id_cedula, id_pregunta, IdHeader],
                     function (tx, results) {},
                     function (tx, error) {
-                        console.error(
-                            "Error al guardar cierre: " + error.message
-                        );
+                        console.error("Error al guardar cierre: " + error.message);
                     }
                 );
             },
@@ -6474,9 +5526,7 @@ function actualizacheckControlTec(id) {
                     [respuesta, id_cedula, id_pregunta, IdHeader],
                     function (tx, results) {},
                     function (tx, error) {
-                        console.error(
-                            "Error al guardar cierre: " + error.message
-                        );
+                        console.error("Error al guardar cierre: " + error.message);
                     }
                 );
             },
@@ -6490,18 +5540,13 @@ function agregaComentariosCtlTec(id_pregunta, mul, FK_equipo) {
     if (mul == 1 || mul == 2) {
         var seleccionados = $("#opts_modal").val();
         if (seleccionados.length == 0) {
-            swal(
-                "",
-                "Selecciona al menos una opción del desplegable.",
-                "warning"
-            );
+            swal("", "Selecciona al menos una opción del desplegable.", "warning");
             return false;
         } else {
             var opts = "";
             $("#opts_modal option").each(function () {
                 if (this.selected) {
-                    opts =
-                        opts + ", " + capitalizarPrimeraLetra($(this).text());
+                    opts = opts + ", " + capitalizarPrimeraLetra($(this).text());
                 }
             });
             opts = opts.slice(1);
@@ -6551,32 +5596,15 @@ function agregaComentariosCtlTec(id_pregunta, mul, FK_equipo) {
                 function (tx) {
                     tx.executeSql(
                         "UPDATE DesTechDetails SET falla = ?, comentarios = ?, FKsFallas = ? WHERE id_cedula = ? AND Fk_pregunta = ? AND IdHeader = ?",
-                        [
-                            name,
-                            obs_generales,
-                            name2,
-                            id_cedula,
-                            id_pregunta,
-                            IdHeader,
-                        ],
+                        [name, obs_generales, name2, id_cedula, id_pregunta, IdHeader],
                         function (tx, results) {
                             $("#span-" + id_pregunta).html(name);
-                            $("#spanComentarios-" + id_pregunta).html(
-                                obs_generales
-                                    ? `Comentarios:  ${obs_generales}`
-                                    : ``
-                            );
+                            $("#spanComentarios-" + id_pregunta).html(obs_generales ? `Comentarios:  ${obs_generales}` : ``);
                             app.sheet.close("#sheet-modal");
-                            swal(
-                                "",
-                                "Comentario guardado correctamente",
-                                "success"
-                            );
+                            swal("", "Comentario guardado correctamente", "success");
                         },
                         function (tx, error) {
-                            console.error(
-                                "Error al guardar cierre: " + error.message
-                            );
+                            console.error("Error al guardar cierre: " + error.message);
                         }
                     );
                 },
@@ -6606,25 +5634,18 @@ function CreaModalOptionCtlTec(id, opciones, mul, titulo_modal, FK_equipo) {
     var NomDescCli = "fallos";
     var html = "";
     let texto;
-    FK_equipo == 0
-        ? (texto = "Describe la falla que tiene")
-        : (texto = "Selecciona una o varias fallas");
-    app.request.get(
-        cordova.file.dataDirectory +
-            "jsons_tecnologiasHmo/" +
-            NomDescCli +
-            ".json",
-        function (data) {
-            var content2 = JSON.parse(data);
-            for (var x = 0; x < content2.length; x++) {
-                if (FK_equipo == content2[x].id_tipo_equipo_recaudo) {
-                    html =
-                        html +
-                        `<label class="label_modal"><input class="cbox_modal obligatorio" type="checkbox" id="cbox${content2[x].id_tipo_falla}" value="${content2[x].nombre_tipo_falla}">${content2[x].nombre_tipo_falla}</label><br>`;
-                }
+    FK_equipo == 0 ? (texto = "Describe la falla que tiene") : (texto = "Selecciona una o varias fallas");
+    app.request.get(cordova.file.dataDirectory + "jsons_tecnologiasHmo/" + NomDescCli + ".json", function (data) {
+        var content2 = JSON.parse(data);
+        for (var x = 0; x < content2.length; x++) {
+            if (FK_equipo == content2[x].id_tipo_equipo_recaudo) {
+                html =
+                    html +
+                    `<label class="label_modal"><input class="cbox_modal obligatorio" type="checkbox" id="cbox${content2[x].id_tipo_falla}" value="${content2[x].nombre_tipo_falla}">${content2[x].nombre_tipo_falla}</label><br>`;
             }
-            var popEvidencia = app.popup.create({
-                content: `
+        }
+        var popEvidencia = app.popup.create({
+            content: `
             <div class="sheet-modal my-sheet" id="sheet-modal" name="sheet">
             <div class="toolbar">
                 <div class="toolbar-inner">
@@ -6659,54 +5680,43 @@ function CreaModalOptionCtlTec(id, opciones, mul, titulo_modal, FK_equipo) {
                 </div>
             </div>
         </div>`,
-                swipeToClose: false,
-                closeByOutsideClick: false,
-                closeByBackdropClick: false,
-                closeOnEscape: false,
-                on: {
-                    open: function (popup) {
-                        $("#close_sheet").click(function () {
-                            if ($("#pasa").val() != 0) {
-                                app.sheet.close("#sheet-modal");
-                            } else {
-                                swal({
-                                    title: "Aviso",
-                                    text: "Aún no seleccionas o guardas una opción, ¿Estas seguro que deseas regresar?",
-                                    icon: "warning",
-                                    buttons: true,
-                                    dangerMode: false,
-                                }).then((willGoBack) => {
-                                    if (willGoBack) {
-                                        var otherCheck = "radio" + id + "-2";
-                                        document.getElementById(
-                                            otherCheck
-                                        ).checked = false;
-                                        var Check = "radio" + id + "-1";
-                                        document.getElementById(
-                                            Check
-                                        ).checked = true;
-                                        var labels1 = Check.replace(
-                                            "radio",
-                                            "label"
-                                        );
-                                        var labels2 = otherCheck.replace(
-                                            "radio",
-                                            "label"
-                                        );
-                                        $("#" + labels1).addClass("checked");
-                                        $("#" + labels2).removeClass("checked");
-                                        actualizacheckControlTec(Check);
-                                        app.sheet.close("#sheet-modal");
-                                    }
-                                });
-                            }
-                        });
-                    },
+            swipeToClose: false,
+            closeByOutsideClick: false,
+            closeByBackdropClick: false,
+            closeOnEscape: false,
+            on: {
+                open: function (popup) {
+                    $("#close_sheet").click(function () {
+                        if ($("#pasa").val() != 0) {
+                            app.sheet.close("#sheet-modal");
+                        } else {
+                            swal({
+                                title: "Aviso",
+                                text: "Aún no seleccionas o guardas una opción, ¿Estas seguro que deseas regresar?",
+                                icon: "warning",
+                                buttons: true,
+                                dangerMode: false,
+                            }).then((willGoBack) => {
+                                if (willGoBack) {
+                                    var otherCheck = "radio" + id + "-2";
+                                    document.getElementById(otherCheck).checked = false;
+                                    var Check = "radio" + id + "-1";
+                                    document.getElementById(Check).checked = true;
+                                    var labels1 = Check.replace("radio", "label");
+                                    var labels2 = otherCheck.replace("radio", "label");
+                                    $("#" + labels1).addClass("checked");
+                                    $("#" + labels2).removeClass("checked");
+                                    actualizacheckControlTec(Check);
+                                    app.sheet.close("#sheet-modal");
+                                }
+                            });
+                        }
+                    });
                 },
-            });
-            popEvidencia.open();
-        }
-    );
+            },
+        });
+        popEvidencia.open();
+    });
 }
 
 function regresaTechHmo() {
@@ -6771,15 +5781,10 @@ function FinalizarInspecciones() {
                                         "UPDATE cedulas_general SET fecha_salida  = ?,estatus = ? WHERE id_cedula = ?",
                                         [fecha_salida, estatus, id_cedula],
                                         function (tx, results) {
-                                            window.location.href =
-                                                "./menu.html";
+                                            window.location.href = "./menu.html";
                                         },
                                         function (tx, error) {
-                                            swal(
-                                                "Error al guardar",
-                                                error.message,
-                                                "error"
-                                            );
+                                            swal("Error al guardar", error.message, "error");
                                         }
                                     );
                                 },
@@ -6822,11 +5827,7 @@ function eliminarInspeccion(IdHeader) {
                                         [id_cedula, IdHeader],
                                         function (tx, results) {
                                             $("#renglon_" + IdHeader).remove();
-                                            swal(
-                                                "",
-                                                "Eliminado correctamente",
-                                                "success"
-                                            );
+                                            swal("", "Eliminado correctamente", "success");
                                         },
                                         function (tx, error) {}
                                     );
@@ -6921,11 +5922,7 @@ function buscadorRelevos(valor) {
         empresa = localStorage.getItem("empresa");
         var NomJson = "personal_" + empresa;
         app.request({
-            url:
-                cordova.file.dataDirectory +
-                "jsons_Relevos/" +
-                NomJson +
-                ".json",
+            url: cordova.file.dataDirectory + "jsons_Relevos/" + NomJson + ".json",
             method: "GET",
             dataType: "json",
             success: function (data) {
@@ -6958,11 +5955,7 @@ function buscadorRelevos(valor) {
             },
         });
     } else {
-        swal(
-            "",
-            "No se ha escaneado nada, intenta de nuevo por favor.",
-            "warning"
-        );
+        swal("", "No se ha escaneado nada, intenta de nuevo por favor.", "warning");
     }
 }
 
@@ -6980,11 +5973,7 @@ function segundaBusqueda(ID_personal) {
                 if (data[j].FKPersonal == ID_personal && data[j].Turno == 1) {
                     encontro = true;
                     console.log("programa 1", data[j]);
-                    tercaraBusqeuda(
-                        data[j].Linea,
-                        data[j].Jornada,
-                        ID_personal
-                    );
+                    tercaraBusqeuda(data[j].Linea, data[j].Jornada, ID_personal);
                     $("#IDSale").val(data[j].ID);
                     $("#Eco").val(data[j].Eco);
                     $("#linea").val(data[j].Linea);
@@ -7003,11 +5992,7 @@ function segundaBusqueda(ID_personal) {
                 $("#FKUnidad").val("");
                 $("#linea").val("");
                 $("#jornada").val("");
-                swal(
-                    "",
-                    "El operador no tiene nada asignado para este día.",
-                    "warning"
-                );
+                swal("", "El operador no tiene nada asignado para este día.", "warning");
                 app.dialog.close();
             }
         },
@@ -7024,11 +6009,7 @@ function tercaraBusqeuda(Linea, Jornada, ID_personal) {
         success: function (data) {
             let encontro = false;
             for (var j = 0; j < data.length; j++) {
-                if (
-                    data[j].Linea == Linea &&
-                    data[j].Jornada == Jornada &&
-                    data[j].Turno == 2
-                ) {
+                if (data[j].Linea == Linea && data[j].Jornada == Jornada && data[j].Turno == 2) {
                     if (ID_personal == data[j].FKPersonal) {
                         console.log("programa 2 completo", data[j]);
                         encontro = true;
@@ -7080,11 +6061,7 @@ function revisaRelevos(valor) {
         empresa = localStorage.getItem("empresa");
         var NomJson = "personal_" + empresa;
         app.request({
-            url:
-                cordova.file.dataDirectory +
-                "jsons_Relevos/" +
-                NomJson +
-                ".json",
+            url: cordova.file.dataDirectory + "jsons_Relevos/" + NomJson + ".json",
             method: "GET",
             dataType: "json",
             success: function (data) {
@@ -7108,13 +6085,7 @@ function revisaRelevos(valor) {
                                     swal("", "Licencia Vencida.", "warning");
                                 }
                                 if (data[j].dias > 0 && data[j].dias <= 10) {
-                                    swal(
-                                        "",
-                                        "Licencia esta a " +
-                                            data[j].dias +
-                                            " días de vencer.",
-                                        "warning"
-                                    );
+                                    swal("", "Licencia esta a " + data[j].dias + " días de vencer.", "warning");
                                 }
                             }
                         } else {
@@ -7127,42 +6098,21 @@ function revisaRelevos(valor) {
                                 dangerMode: true,
                             }).then((RESP) => {
                                 if (RESP == true) {
-                                    if (
-                                        data[j].EstatusOperador == "Suspendido"
-                                    ) {
+                                    if (data[j].EstatusOperador == "Suspendido") {
                                         $("#claveEmpleadoE").val("");
                                         $("#fullNameE").val("");
-                                        swal(
-                                            "",
-                                            "Operador suspendido.",
-                                            "warning"
-                                        );
+                                        swal("", "Operador suspendido.", "warning");
                                         return false;
                                     } else {
                                         if (data[j].dias < 0) {
                                             $("#claveEmpleadoE").val("");
                                             $("#fullNameE").val("");
-                                            swal(
-                                                "",
-                                                "Licencia Vencida.",
-                                                "warning"
-                                            );
+                                            swal("", "Licencia Vencida.", "warning");
                                         }
-                                        if (
-                                            data[j].dias > 0 &&
-                                            data[j].dias <= 10
-                                        ) {
-                                            swal(
-                                                "",
-                                                "Licencia esta a " +
-                                                    data[j].dias +
-                                                    " días de vencer.",
-                                                "warning"
-                                            );
+                                        if (data[j].dias > 0 && data[j].dias <= 10) {
+                                            swal("", "Licencia esta a " + data[j].dias + " días de vencer.", "warning");
                                         }
-                                        $("#ID_personalE").val(
-                                            data[j].ID_personal
-                                        );
+                                        $("#ID_personalE").val(data[j].ID_personal);
                                     }
                                     // swal("", "Licencia esta a "+data[j].dias+" días de vencer.", "warning")
                                 } else {
@@ -7184,11 +6134,7 @@ function revisaRelevos(valor) {
             },
         });
     } else {
-        swal(
-            "",
-            "No se ha escaneado nada, intenta de nuevo por favor.",
-            "warning"
-        );
+        swal("", "No se ha escaneado nada, intenta de nuevo por favor.", "warning");
     }
 }
 
@@ -7298,9 +6244,7 @@ function guardaRelevo() {
                         );
                     },
                     function (tx, error) {
-                        console.log(
-                            "Error al guardar cedula: " + error.message
-                        );
+                        console.log("Error al guardar cedula: " + error.message);
                     }
                 );
             },
@@ -7356,28 +6300,18 @@ function guardarRelevos() {
                                 }).then((RESP) => {
                                     if (RESP == true) {
                                         var fecha_salida = getDateWhitZeros();
-                                        var id_cedula =
-                                            localStorage.getItem("IdCedula");
+                                        var id_cedula = localStorage.getItem("IdCedula");
                                         var estatus = 1;
                                         databaseHandler.db.transaction(
                                             function (tx) {
                                                 tx.executeSql(
                                                     "UPDATE cedulas_general SET fecha_salida  = ?,estatus = ? WHERE id_cedula = ?",
-                                                    [
-                                                        fecha_salida,
-                                                        estatus,
-                                                        id_cedula,
-                                                    ],
+                                                    [fecha_salida, estatus, id_cedula],
                                                     function (tx, results) {
-                                                        window.location.href =
-                                                            "./menu.html";
+                                                        window.location.href = "./menu.html";
                                                     },
                                                     function (tx, error) {
-                                                        swal(
-                                                            "Error al guardar",
-                                                            error.message,
-                                                            "error"
-                                                        );
+                                                        swal("Error al guardar", error.message, "error");
                                                     }
                                                 );
                                             },
@@ -7388,11 +6322,7 @@ function guardarRelevos() {
                                 });
                             },
                             function (tx, error) {
-                                swal(
-                                    "Error al guardar",
-                                    error.message,
-                                    "error"
-                                );
+                                swal("Error al guardar", error.message, "error");
                             }
                         );
                     },
@@ -7403,11 +6333,7 @@ function guardarRelevos() {
                 swal("", "Debes seleccionar una unidad.", "warning");
             }
         } else {
-            swal(
-                "",
-                "Debes escanear la credencial del relevo para poder continuar.",
-                "warning"
-            );
+            swal("", "Debes escanear la credencial del relevo para poder continuar.", "warning");
         }
     }, 800);
 }
@@ -7417,11 +6343,7 @@ function busquedaEvaluacion2(IDCurso, FK_Becario) {
     let NomJson = "DatosEvaluacionS_" + empresa;
     let html = "";
     app.request({
-        url:
-            cordova.file.dataDirectory +
-            "jsons_capacitacion/" +
-            NomJson +
-            ".json",
+        url: cordova.file.dataDirectory + "jsons_capacitacion/" + NomJson + ".json",
         method: "GET",
         dataType: "json",
         success: function (data) {
@@ -7430,30 +6352,19 @@ function busquedaEvaluacion2(IDCurso, FK_Becario) {
             } else {
                 let encontro = false;
                 for (var j = 0; j < data.length; j++) {
-                    if (
-                        data[j].FK_IDCurso == IDCurso &&
-                        data[j].FK_Becario == FK_Becario
-                    ) {
+                    if (data[j].FK_IDCurso == IDCurso && data[j].FK_Becario == FK_Becario) {
                         encontro = true;
                         var check = "";
                         data[j].apto == 1 ? (check = "checked") : (check = "");
                         html += `<div class="timeline-item">
-                            <div class="timeline-item-date">${
-                                data[j].fecha
-                            }</div>
+                            <div class="timeline-item-date">${data[j].fecha}</div>
                             <div class="timeline-item-content">
                                 <div class="timeline-item-time">Apto</div>
-                                <div class="timeline-item-text">${
-                                    data[j].apto == 1 ? "Si" : "No"
-                                }</div>
+                                <div class="timeline-item-text">${data[j].apto == 1 ? "Si" : "No"}</div>
                                 <div class="timeline-item-time">Promedio</div>
-                                <div class="timeline-item-text">${
-                                    data[j].promedio
-                                }</div>
+                                <div class="timeline-item-text">${data[j].promedio}</div>
                                 <div class="timeline-item-time">Observaciones</div>
-                                <div class="timeline-item-text">${
-                                    data[j].observaciones
-                                }</div>
+                                <div class="timeline-item-text">${data[j].observaciones}</div>
                             </div>
                         </div>`;
                     }
@@ -7471,8 +6382,7 @@ function sincronizaDatosRelevos() {
     // let urlBase2 = "http://192.168.100.4/Desarrollo/CISAApp/HMOFiles/Exec";
     // var urlBase2 = "http://172.16.0.143/Desarrollo/CISAApp/HMOFiles/Exec";
     let urlBase2 = "http://tmshmo.ci-sa.com.mx/www.CISAAPP.com/HMOFiles/Exec";
-    let url =
-        urlBase2 + "/Relevos/datos.php?empresa=" + EmpresaID + "&paso=" + paso;
+    let url = urlBase2 + "/Relevos/datos.php?empresa=" + EmpresaID + "&paso=" + paso;
 
     fetch(url).then((response) => {
         console.log("Sincroniza datos OK!");
@@ -7487,31 +6397,18 @@ function continuarCedInsEncierro(id_cedula, tipo) {
     if (tipo == 1) {
         databaseHandler.db.transaction(
             function (tx) {
-                tx.executeSql(
-                    "Select * from cedulas_general where id_cedula= ?",
-                    [id_cedula],
-                    function (tx, results) {
-                        let item2 = results.rows.item(0);
-                        localStorage.setItem(
-                            "IDCampania",
-                            item2.geolocalizacion_entrada
-                        );
-                        localStorage.setItem(
-                            "nombreCampania",
-                            item2.nombre_evalua
-                        );
-                        localStorage.setItem(
-                            "FK_formato",
-                            item2.geolocalizacion_salida
-                        );
+                tx.executeSql("Select * from cedulas_general where id_cedula= ?", [id_cedula], function (tx, results) {
+                    let item2 = results.rows.item(0);
+                    localStorage.setItem("IDCampania", item2.geolocalizacion_entrada);
+                    localStorage.setItem("nombreCampania", item2.nombre_evalua);
+                    localStorage.setItem("FK_formato", item2.geolocalizacion_salida);
 
-                        app.views.main.router.back("/formEncierro1/", {
-                            force: true,
-                            ignoreCache: true,
-                            reload: true,
-                        });
-                    }
-                );
+                    app.views.main.router.back("/formEncierro1/", {
+                        force: true,
+                        ignoreCache: true,
+                        reload: true,
+                    });
+                });
             },
             function (error) {},
             function () {}
@@ -7568,9 +6465,7 @@ function preCreaCampania(IDCampania, nombreCampania, FK_formato) {
                             });
                         },
                         function (tx, error) {
-                            console.log(
-                                "Error al guardar cedula: " + error.message
-                            );
+                            console.log("Error al guardar cedula: " + error.message);
                         }
                     );
                 },
@@ -7589,11 +6484,7 @@ function creaRevisiones() {
     let dialog = app.dialog.progress("Generando Lista", progress, "red");
     let empresa = localStorage.getItem("empresa");
     app.request({
-        url:
-            cordova.file.dataDirectory +
-            "jsons_InsEncierro/" +
-            NomJson +
-            ".json",
+        url: cordova.file.dataDirectory + "jsons_InsEncierro/" + NomJson + ".json",
         method: "GET",
         dataType: "json",
         success: function (data) {
@@ -7679,15 +6570,10 @@ function inspeccionarUnidadEncierro() {
                             let id_unidad = $("#id_unidad").val();
                             let fecha_captura = getDateWhitZeros();
                             let progress = 0;
-                            let dialog = app.dialog.progress(
-                                "Trabajando... ",
-                                progress,
-                                "red"
-                            );
+                            let dialog = app.dialog.progress("Trabajando... ", progress, "red");
                             let id_empresa = localStorage.getItem("empresa");
                             let IDCampania = localStorage.getItem("IDCampania");
-                            let nombreCampania =
-                                localStorage.getItem("nombreCampania");
+                            let nombreCampania = localStorage.getItem("nombreCampania");
                             let FK_formato = localStorage.getItem("FK_formato");
                             let NombreFormato = "";
                             let observaciones = "";
@@ -7715,133 +6601,53 @@ function inspeccionarUnidadEncierro() {
                                                         "Select MAX(ID_Header) as IdHeader from IEN_Header",
                                                         [],
                                                         function (tx, results) {
-                                                            var item =
-                                                                results.rows.item(
-                                                                    0
-                                                                );
-                                                            localStorage.setItem(
-                                                                "IdHeader",
-                                                                item.IdHeader
-                                                            );
+                                                            var item = results.rows.item(0);
+                                                            localStorage.setItem("IdHeader", item.IdHeader);
                                                             app.request({
-                                                                url:
-                                                                    cordova.file
-                                                                        .dataDirectory +
-                                                                    "jsons_InsEncierro/" +
-                                                                    NomJson +
-                                                                    ".json",
+                                                                url: cordova.file.dataDirectory + "jsons_InsEncierro/" + NomJson + ".json",
                                                                 method: "GET",
-                                                                dataType:
-                                                                    "json",
-                                                                success:
-                                                                    function (
-                                                                        data
-                                                                    ) {
-                                                                        var aux = 0;
-                                                                        for (
-                                                                            var j = 0;
-                                                                            j <
-                                                                            data.length;
-                                                                            j++
-                                                                        ) {
-                                                                            if (
-                                                                                data[
-                                                                                    j
-                                                                                ]
-                                                                                    .FK_formato ==
-                                                                                FK_formato
-                                                                            ) {
-                                                                                aux++;
+                                                                dataType: "json",
+                                                                success: function (data) {
+                                                                    var aux = 0;
+                                                                    for (var j = 0; j < data.length; j++) {
+                                                                        if (data[j].FK_formato == FK_formato) {
+                                                                            aux++;
+                                                                        }
+                                                                    }
+                                                                    var aux2 = 0;
+                                                                    if (aux == 0) {
+                                                                        app.dialog.close();
+                                                                        swal("", "Algo salió mal.", "warning");
+                                                                    } else {
+                                                                        dialog.setText("1 de " + aux);
+                                                                        for (var j = 0; j < data.length; j++) {
+                                                                            if (data[j].FK_formato == FK_formato) {
+                                                                                aux2++;
+                                                                                productHandler.insertPreguntasInsEncierro(
+                                                                                    id_cedula,
+                                                                                    item.IdHeader,
+                                                                                    data[j].ID,
+                                                                                    data[j].Pregunta,
+                                                                                    data[j].Multiple,
+                                                                                    data[j].FK_formato,
+                                                                                    data[j].Opcion_1,
+                                                                                    data[j].Opcion_2,
+                                                                                    data[j].Opcion_3,
+                                                                                    data[j].Opcion_4,
+                                                                                    data[j].Opcion_5,
+                                                                                    data[j].Opcion_6,
+                                                                                    0,
+                                                                                    aux,
+                                                                                    aux2
+                                                                                );
                                                                             }
                                                                         }
-                                                                        var aux2 = 0;
-                                                                        if (
-                                                                            aux ==
-                                                                            0
-                                                                        ) {
-                                                                            app.dialog.close();
-                                                                            swal(
-                                                                                "",
-                                                                                "Algo salió mal.",
-                                                                                "warning"
-                                                                            );
-                                                                        } else {
-                                                                            dialog.setText(
-                                                                                "1 de " +
-                                                                                    aux
-                                                                            );
-                                                                            for (
-                                                                                var j = 0;
-                                                                                j <
-                                                                                data.length;
-                                                                                j++
-                                                                            ) {
-                                                                                if (
-                                                                                    data[
-                                                                                        j
-                                                                                    ]
-                                                                                        .FK_formato ==
-                                                                                    FK_formato
-                                                                                ) {
-                                                                                    aux2++;
-                                                                                    productHandler.insertPreguntasInsEncierro(
-                                                                                        id_cedula,
-                                                                                        item.IdHeader,
-                                                                                        data[
-                                                                                            j
-                                                                                        ]
-                                                                                            .ID,
-                                                                                        data[
-                                                                                            j
-                                                                                        ]
-                                                                                            .Pregunta,
-                                                                                        data[
-                                                                                            j
-                                                                                        ]
-                                                                                            .Multiple,
-                                                                                        data[
-                                                                                            j
-                                                                                        ]
-                                                                                            .FK_formato,
-                                                                                        data[
-                                                                                            j
-                                                                                        ]
-                                                                                            .Opcion_1,
-                                                                                        data[
-                                                                                            j
-                                                                                        ]
-                                                                                            .Opcion_2,
-                                                                                        data[
-                                                                                            j
-                                                                                        ]
-                                                                                            .Opcion_3,
-                                                                                        data[
-                                                                                            j
-                                                                                        ]
-                                                                                            .Opcion_4,
-                                                                                        data[
-                                                                                            j
-                                                                                        ]
-                                                                                            .Opcion_5,
-                                                                                        data[
-                                                                                            j
-                                                                                        ]
-                                                                                            .Opcion_6,
-                                                                                        0,
-                                                                                        aux,
-                                                                                        aux2
-                                                                                    );
-                                                                                }
-                                                                            }
-                                                                        }
-                                                                    },
+                                                                    }
+                                                                },
                                                             });
                                                         },
                                                         function (tx, error) {
-                                                            console.log(
-                                                                "Error al guardar cedula: " +
-                                                                    error.message
-                                                            );
+                                                            console.log("Error al guardar cedula: " + error.message);
                                                         }
                                                     );
                                                 },
@@ -7850,10 +6656,7 @@ function inspeccionarUnidadEncierro() {
                                             );
                                         },
                                         function (tx, error) {
-                                            console.error(
-                                                "Error registrar:" +
-                                                    error.message
-                                            );
+                                            console.error("Error registrar:" + error.message);
                                         }
                                     );
                                 },
@@ -7868,17 +6671,11 @@ function inspeccionarUnidadEncierro() {
                             $("#id_operador").val("");
                             $("#credencial").val("");
                             $("#operador").val("");
-                            swal(
-                                "",
-                                "Esta unidad ya la tienes registrada.",
-                                "warning"
-                            );
+                            swal("", "Esta unidad ya la tienes registrada.", "warning");
                         }
                     },
                     function (tx, error) {
-                        console.log(
-                            "Error al guardar cedula: " + error.message
-                        );
+                        console.log("Error al guardar cedula: " + error.message);
                     }
                 );
             },
@@ -7895,10 +6692,7 @@ function TerminarInspeccionHMO() {
         function (tx5) {
             tx5.executeSql(
                 "SELECT COUNT(id_cedula) as cuenta FROM IEN_Details WHERE id_cedula = ? AND FKHeader = ? AND respuesta is null",
-                [
-                    localStorage.getItem("IdCedula"),
-                    localStorage.getItem("IdHeader"),
-                ],
+                [localStorage.getItem("IdCedula"), localStorage.getItem("IdHeader")],
                 function (tx5, results) {
                     let item = results.rows.item(0);
                     if (item.cuenta > 0) {
@@ -7932,12 +6726,7 @@ function TerminarInspeccionHMOUnidad() {
         function (tx5) {
             tx5.executeSql(
                 "UPDATE IEN_Header SET fechaFin = ?, observaciones = ? WHERE id_cedula = ? AND ID_Header = ?",
-                [
-                    fechaFin,
-                    observaciones,
-                    localStorage.getItem("IdCedula"),
-                    localStorage.getItem("IdHeader"),
-                ],
+                [fechaFin, observaciones, localStorage.getItem("IdCedula"), localStorage.getItem("IdHeader")],
                 function (tx5, results) {
                     app.views.main.router.back("/formEncierro1/", {
                         force: true,
@@ -7946,9 +6735,7 @@ function TerminarInspeccionHMOUnidad() {
                     });
                 },
                 function (tx5, error) {
-                    console.error(
-                        "Error al consultar bandeja de salida: " + error.message
-                    );
+                    console.error("Error al consultar bandeja de salida: " + error.message);
                 }
             );
         },
@@ -7985,11 +6772,7 @@ function eliminarInspeccionEncierro(IdHeader) {
                                         [id_cedula, IdHeader],
                                         function (tx, results) {
                                             $("#renglon_" + IdHeader).remove();
-                                            swal(
-                                                "",
-                                                "Eliminado correctamente",
-                                                "success"
-                                            );
+                                            swal("", "Eliminado correctamente", "success");
                                         },
                                         function (tx, error) {}
                                     );
@@ -8024,19 +6807,14 @@ function CreaModalOptionInsEncierro(id, opciones, mul, titulo_modal) {
     var html = "";
     let texto;
     texto = "Selecciona una o varias fallas";
-    app.request.get(
-        cordova.file.dataDirectory +
-            "jsons_InsEncierro/" +
-            NomDescCli +
-            ".json",
-        function (data) {
-            var content2 = JSON.parse(data);
-            for (var x = 0; x < content2.length; x++) {
-                html += `<label class="label_modal"><input class="cbox_modal obligatorio" type="checkbox" id="cbox${content2[x].id_danio}" value="${content2[x].tipo_danio}">${content2[x].tipo_danio}</label><br>`;
-            }
+    app.request.get(cordova.file.dataDirectory + "jsons_InsEncierro/" + NomDescCli + ".json", function (data) {
+        var content2 = JSON.parse(data);
+        for (var x = 0; x < content2.length; x++) {
+            html += `<label class="label_modal"><input class="cbox_modal obligatorio" type="checkbox" id="cbox${content2[x].id_danio}" value="${content2[x].tipo_danio}">${content2[x].tipo_danio}</label><br>`;
+        }
 
-            var popEvidencia = app.popup.create({
-                content: `
+        var popEvidencia = app.popup.create({
+            content: `
             <div class="sheet-modal my-sheet" id="sheet-modal" name="sheet">
                 <div class="toolbar">
                     <div class="toolbar-inner">
@@ -8074,77 +6852,61 @@ function CreaModalOptionInsEncierro(id, opciones, mul, titulo_modal) {
                     </div>
                 </div>
             </div>`,
-                swipeToClose: false,
-                closeByOutsideClick: false,
-                closeByBackdropClick: false,
-                closeOnEscape: false,
-                on: {
-                    open: function (popup) {
-                        $("#close_sheet").click(function () {
-                            if ($("#pasa").val() != 0) {
-                                app.sheet.close("#sheet-modal");
-                            } else {
-                                swal({
-                                    title: "Aviso",
-                                    text: "Aún no seleccionas o guardas una opción, ¿Estas seguro que deseas regresar?",
-                                    icon: "warning",
-                                    buttons: true,
-                                    dangerMode: false,
-                                }).then((willGoBack) => {
-                                    if (willGoBack) {
-                                        var otherCheck = "radio" + id + "-2";
-                                        document.getElementById(
-                                            otherCheck
-                                        ).checked = false;
-                                        var Check = "radio" + id + "-1";
-                                        document.getElementById(
-                                            Check
-                                        ).checked = false;
-                                        var Checks = "radio" + id + "-0";
-                                        document.getElementById(
-                                            Checks
-                                        ).checked = true;
-                                        var labels0 = Checks.replace(
-                                            "radio",
-                                            "label"
-                                        );
-                                        var labels1 = Check.replace(
-                                            "radio",
-                                            "label"
-                                        );
-                                        var labels2 = otherCheck.replace(
-                                            "radio",
-                                            "label"
-                                        );
-                                        $("#" + labels0).addClass("checked");
-                                        $("#" + labels1).removeClass("checked");
-                                        $("#" + labels2).removeClass("checked");
-                                        actualizacheckInsEncierro(Checks);
-                                        app.sheet.close("#sheet-modal");
-                                    }
-                                });
-                            }
-                        });
+            swipeToClose: false,
+            closeByOutsideClick: false,
+            closeByBackdropClick: false,
+            closeOnEscape: false,
+            on: {
+                open: function (popup) {
+                    $("#close_sheet").click(function () {
+                        if ($("#pasa").val() != 0) {
+                            app.sheet.close("#sheet-modal");
+                        } else {
+                            swal({
+                                title: "Aviso",
+                                text: "Aún no seleccionas o guardas una opción, ¿Estas seguro que deseas regresar?",
+                                icon: "warning",
+                                buttons: true,
+                                dangerMode: false,
+                            }).then((willGoBack) => {
+                                if (willGoBack) {
+                                    var otherCheck = "radio" + id + "-2";
+                                    document.getElementById(otherCheck).checked = false;
+                                    var Check = "radio" + id + "-1";
+                                    document.getElementById(Check).checked = false;
+                                    var Checks = "radio" + id + "-0";
+                                    document.getElementById(Checks).checked = true;
+                                    var labels0 = Checks.replace("radio", "label");
+                                    var labels1 = Check.replace("radio", "label");
+                                    var labels2 = otherCheck.replace("radio", "label");
+                                    $("#" + labels0).addClass("checked");
+                                    $("#" + labels1).removeClass("checked");
+                                    $("#" + labels2).removeClass("checked");
+                                    actualizacheckInsEncierro(Checks);
+                                    app.sheet.close("#sheet-modal");
+                                }
+                            });
+                        }
+                    });
 
-                        // $("#buscadorFallas").on("keyup paste", function(){
-                        //     let query = this.value
-                        //     app.request.get(cordova.file.dataDirectory + "jsons_InsEncierro/"+NomDescCli+".json", function (data) {
-                        //         var content2 = JSON.parse(data);
-                        //         let html = ''
-                        //         for(var x = 0; x < content2.length; x++) {
-                        //             if(content2[x].tipo_danio.toLowerCase().indexOf(query.toLowerCase()) >= 0){
-                        //                 html += `<label class="label_modal"><input class="cbox_modal obligatorio" type="checkbox" id="cbox${content2[x].id_danio}" value="${content2[x].tipo_danio}">${content2[x].tipo_danio}</label><br>`;
-                        //             }
-                        //         }
-                        //         $("#div_cboxs").html(html)
-                        //     });
-                        // })
-                    },
+                    // $("#buscadorFallas").on("keyup paste", function(){
+                    //     let query = this.value
+                    //     app.request.get(cordova.file.dataDirectory + "jsons_InsEncierro/"+NomDescCli+".json", function (data) {
+                    //         var content2 = JSON.parse(data);
+                    //         let html = ''
+                    //         for(var x = 0; x < content2.length; x++) {
+                    //             if(content2[x].tipo_danio.toLowerCase().indexOf(query.toLowerCase()) >= 0){
+                    //                 html += `<label class="label_modal"><input class="cbox_modal obligatorio" type="checkbox" id="cbox${content2[x].id_danio}" value="${content2[x].tipo_danio}">${content2[x].tipo_danio}</label><br>`;
+                    //             }
+                    //         }
+                    //         $("#div_cboxs").html(html)
+                    //     });
+                    // })
                 },
-            });
-            popEvidencia.open();
-        }
-    );
+            },
+        });
+        popEvidencia.open();
+    });
 }
 
 function SeleccionarDanosInsEncierro(id, pregunta, multiple) {
@@ -8155,40 +6917,26 @@ function SeleccionarDanosInsEncierro(id, pregunta, multiple) {
             var resultados = text.split("(");
             var titulo_modal = resultados[0].trim();
             var divididos = resultados[1].split(",");
-            var opciones =
-                '<select class="FWM-input" id="opts_modal" multiple>';
+            var opciones = '<select class="FWM-input" id="opts_modal" multiple>';
             var quitapar = "";
             for (i = 0; i < divididos.length; i++) {
                 quitapar = divididos[i].replace("(", "");
                 quitapar = quitapar.replace(")", "");
                 quitapar = capitalizarPrimeraLetra(quitapar);
-                opciones =
-                    opciones +
-                    `<option value=` +
-                    quitapar.trim() +
-                    `>` +
-                    quitapar.trim() +
-                    `</option>`;
+                opciones = opciones + `<option value=` + quitapar.trim() + `>` + quitapar.trim() + `</option>`;
             }
             opciones = opciones + "</select>";
             CreaModalOptionInsEncierro(id, opciones, 1, titulo_modal);
         } else {
             var titulo_modal = "";
             var divididos = text.split(",");
-            var opciones =
-                '<select class="FWM-input" id="opts_modal" multiple>';
+            var opciones = '<select class="FWM-input" id="opts_modal" multiple>';
             var quitapar = "";
             for (i = 0; i < divididos.length; i++) {
                 quitapar = divididos[i].replace("(", "");
                 quitapar = quitapar.replace(")", "");
                 quitapar = capitalizarPrimeraLetra(quitapar);
-                opciones =
-                    opciones +
-                    `<option value=` +
-                    quitapar.trim() +
-                    `>` +
-                    quitapar.trim() +
-                    `</option>`;
+                opciones = opciones + `<option value=` + quitapar.trim() + `>` + quitapar.trim() + `</option>`;
             }
             opciones = opciones + "</select>";
             var titulo_modal = "";
@@ -8227,18 +6975,13 @@ function agregaComentariosInsEncierro(id_pregunta, mul) {
     if (mul == 1 || mul == 2) {
         var seleccionados = $("#opts_modal").val();
         if (seleccionados.length == 0) {
-            swal(
-                "",
-                "Selecciona al menos una opción del desplegable.",
-                "warning"
-            );
+            swal("", "Selecciona al menos una opción del desplegable.", "warning");
             return false;
         } else {
             var opts = "";
             $("#opts_modal option").each(function () {
                 if (this.selected) {
-                    opts =
-                        opts + ", " + capitalizarPrimeraLetra($(this).text());
+                    opts = opts + ", " + capitalizarPrimeraLetra($(this).text());
                 }
             });
             opts = opts.slice(1);
@@ -8279,32 +7022,15 @@ function agregaComentariosInsEncierro(id_pregunta, mul) {
             function (tx) {
                 tx.executeSql(
                     "UPDATE IEN_Details SET falla = ?, comentarios = ?, FKsFallas = ? WHERE id_cedula = ? AND Fk_pregunta = ? AND FKHeader = ?",
-                    [
-                        name,
-                        obs_generales,
-                        name2,
-                        id_cedula,
-                        id_pregunta,
-                        IdHeader,
-                    ],
+                    [name, obs_generales, name2, id_cedula, id_pregunta, IdHeader],
                     function (tx, results) {
                         $("#span-" + id_pregunta).html(name);
-                        $("#spanComentarios-" + id_pregunta).html(
-                            obs_generales
-                                ? `Comentarios:  ${obs_generales}`
-                                : ``
-                        );
+                        $("#spanComentarios-" + id_pregunta).html(obs_generales ? `Comentarios:  ${obs_generales}` : ``);
                         app.sheet.close("#sheet-modal");
-                        swal(
-                            "",
-                            "Comentario guardado correctamente",
-                            "success"
-                        );
+                        swal("", "Comentario guardado correctamente", "success");
                     },
                     function (tx, error) {
-                        console.error(
-                            "Error al guardar cierre: " + error.message
-                        );
+                        console.error("Error al guardar cierre: " + error.message);
                     }
                 );
             },
@@ -8330,25 +7056,17 @@ function FinalizarInspeccionesEncierro() {
                             function (tx5) {
                                 tx5.executeSql(
                                     "SELECT unidad FROM IEN_Header WHERE id_cedula = ? AND ID_Header = ?",
-                                    [
-                                        localStorage.getItem("IdCedula"),
-                                        ID_Header,
-                                    ],
+                                    [localStorage.getItem("IdCedula"), ID_Header],
                                     function (tx5, results) {
                                         let item2 = results.rows.item(0);
                                         swal(
                                             "",
-                                            "La unidad: " +
-                                                item2.unidad +
-                                                ", no se termino de inspeccionar. Finalizala para poder continuar.",
+                                            "La unidad: " + item2.unidad + ", no se termino de inspeccionar. Finalizala para poder continuar.",
                                             "warning"
                                         );
                                     },
                                     function (tx5, error) {
-                                        console.error(
-                                            "Error al consultar bandeja de salida: " +
-                                                error.message
-                                        );
+                                        console.error("Error al consultar bandeja de salida: " + error.message);
                                     }
                                 );
                             },
@@ -8365,8 +7083,7 @@ function FinalizarInspeccionesEncierro() {
                         }).then((RESP) => {
                             if (RESP == true) {
                                 var fecha_salida = getDateWhitZeros();
-                                var id_cedula =
-                                    localStorage.getItem("IdCedula");
+                                var id_cedula = localStorage.getItem("IdCedula");
                                 var estatus = 1;
                                 databaseHandler.db.transaction(
                                     function (tx) {
@@ -8374,15 +7091,10 @@ function FinalizarInspeccionesEncierro() {
                                             "UPDATE cedulas_general SET fecha_salida  = ?,estatus = ? WHERE id_cedula = ?",
                                             [fecha_salida, estatus, id_cedula],
                                             function (tx, results) {
-                                                window.location.href =
-                                                    "./menu.html";
+                                                window.location.href = "./menu.html";
                                             },
                                             function (tx, error) {
-                                                swal(
-                                                    "Error al guardar",
-                                                    error.message,
-                                                    "error"
-                                                );
+                                                swal("Error al guardar", error.message, "error");
                                             }
                                         );
                                     },
@@ -8394,9 +7106,7 @@ function FinalizarInspeccionesEncierro() {
                     }
                 },
                 function (tx5, error) {
-                    console.error(
-                        "Error al consultar bandeja de salida: " + error.message
-                    );
+                    console.error("Error al consultar bandeja de salida: " + error.message);
                 }
             );
         },
@@ -8493,10 +7203,7 @@ function addCedulaind(
                                     }
                                 },
                                 function (tx, error) {
-                                    console.log(
-                                        "Error al guardar cedula: " +
-                                            error.message
-                                    );
+                                    console.log("Error al guardar cedula: " + error.message);
                                 }
                             );
                         },
@@ -8505,9 +7212,7 @@ function addCedulaind(
                     );
                 },
                 function (tx, error) {
-                    console.error(
-                        "Error registrar cedula general:" + error.message
-                    );
+                    console.error("Error registrar cedula general:" + error.message);
                 }
             );
         },
@@ -8539,11 +7244,7 @@ function inspeccionarUnidadLavdo2() {
                             let id_unidad = $("#id_unidad").val();
                             let fecha_captura = getDateWhitZeros();
                             let progress = 0;
-                            let dialog = app.dialog.progress(
-                                "Trabajando... ",
-                                progress,
-                                "red"
-                            );
+                            let dialog = app.dialog.progress("Trabajando... ", progress, "red");
                             let id_empresa = localStorage.getItem("empresa");
                             let FK_formato = 0;
                             let fechaFin = "";
@@ -8556,15 +7257,7 @@ function inspeccionarUnidadLavdo2() {
                                 function (tx) {
                                     tx.executeSql(
                                         "insert into IEN_HeaderLavado(id_cedula, FKFormato, fechaFin, fechaInicio, FK_Unidad, observaciones, unidad) values(?, ?, ?, ?, ?, ?, ?)",
-                                        [
-                                            id_cedula,
-                                            FK_formato,
-                                            fechaFin,
-                                            fecha_captura,
-                                            id_unidad,
-                                            observaciones,
-                                            unidad,
-                                        ],
+                                        [id_cedula, FK_formato, fechaFin, fecha_captura, id_unidad, observaciones, unidad],
                                         function (tx, results) {
                                             databaseHandler.db.transaction(
                                                 function (tx) {
@@ -8572,62 +7265,83 @@ function inspeccionarUnidadLavdo2() {
                                                         "Select MAX(ID_HeaderLavado) as IdHeader from IEN_HeaderLavado",
                                                         [],
                                                         function (tx, results) {
-                                                            var item =
-                                                                results.rows.item(
-                                                                    0
-                                                                );
-                                                            localStorage.setItem(
-                                                                "IdHeader",
-                                                                item.IdHeader
-                                                            );
+                                                            var item = results.rows.item(0);
+                                                            localStorage.setItem("IdHeader", item.IdHeader);
                                                             app.request({
-                                                                url:
-                                                                    cordova.file
-                                                                        .dataDirectory +
-                                                                    "jsons_InsLavado/" +
-                                                                    NomJson +
-                                                                    ".json",
+                                                                url: cordova.file.dataDirectory + "jsons_InsLavado/" + NomJson + ".json",
                                                                 method: "GET",
-                                                                dataType:
-                                                                    "json",
-                                                                success:
-                                                                    function (
-                                                                        data
-                                                                    ) {
-                                                                        var aux = 3;
-                                                                        let encontro = false;
-                                                                        dialog.setText(
-                                                                            "1 de " +
-                                                                                aux
-                                                                        );
-                                                                        for (
-                                                                            var j = 0;
-                                                                            j <
-                                                                            data.length;
-                                                                            j++
-                                                                        ) {
-                                                                            if (
-                                                                                data[
-                                                                                    j
-                                                                                ]
-                                                                                    .FK_unidad ==
-                                                                                id_unidad
-                                                                            ) {
-                                                                                encontro = true;
-                                                                                if (
-                                                                                    data[
-                                                                                        j
-                                                                                    ]
-                                                                                        .TypePrograma ==
-                                                                                    "EXHAUSTIVA"
-                                                                                ) {
+                                                                dataType: "json",
+                                                                success: function (data) {
+                                                                    var aux = 3;
+                                                                    let encontro = false;
+                                                                    dialog.setText("1 de " + aux);
+                                                                    for (var j = 0; j < data.length; j++) {
+                                                                        if (data[j].FK_unidad == id_unidad) {
+                                                                            encontro = true;
+                                                                            if (data[j].TypePrograma == "EXHAUSTIVA") {
+                                                                                productHandler.insertPreguntasLavado(
+                                                                                    id_cedula,
+                                                                                    item.IdHeader,
+                                                                                    data[j].ID,
+                                                                                    "¿Se lavó?",
+                                                                                    0,
+                                                                                    0,
+                                                                                    "SI",
+                                                                                    "NO",
+                                                                                    "",
+                                                                                    "",
+                                                                                    "",
+                                                                                    "",
+                                                                                    data[j].TypePrograma,
+                                                                                    1,
+                                                                                    data[j].FK_provedor,
+                                                                                    1,
+                                                                                    3
+                                                                                );
+                                                                                productHandler.insertPreguntasLavado(
+                                                                                    id_cedula,
+                                                                                    item.IdHeader,
+                                                                                    data[j].ID,
+                                                                                    "¿La calificación del lavado es:?",
+                                                                                    0,
+                                                                                    0,
+                                                                                    "BUENO",
+                                                                                    "REGULAR",
+                                                                                    "MALO",
+                                                                                    "",
+                                                                                    "",
+                                                                                    "",
+                                                                                    data[j].TypePrograma,
+                                                                                    1,
+                                                                                    data[j].FK_provedor,
+                                                                                    2,
+                                                                                    3
+                                                                                );
+                                                                                productHandler.insertPreguntasLavado(
+                                                                                    id_cedula,
+                                                                                    item.IdHeader,
+                                                                                    data[j].ID,
+                                                                                    "¿Hubo cambio de proveedor?",
+                                                                                    0,
+                                                                                    0,
+                                                                                    "SI",
+                                                                                    "NO",
+                                                                                    "",
+                                                                                    "",
+                                                                                    "",
+                                                                                    "",
+                                                                                    data[j].TypePrograma,
+                                                                                    2,
+                                                                                    data[j].FK_provedor,
+                                                                                    3,
+                                                                                    3
+                                                                                );
+                                                                            } else {
+                                                                                if (data[j].TypePrograma == "INTERIOR") {
                                                                                     productHandler.insertPreguntasLavado(
                                                                                         id_cedula,
                                                                                         item.IdHeader,
-                                                                                        data[
-                                                                                            j
-                                                                                        ]
-                                                                                            .ID,
+                                                                                        data[j].ID,
                                                                                         "¿Se lavó?",
                                                                                         0,
                                                                                         0,
@@ -8637,25 +7351,16 @@ function inspeccionarUnidadLavdo2() {
                                                                                         "",
                                                                                         "",
                                                                                         "",
-                                                                                        data[
-                                                                                            j
-                                                                                        ]
-                                                                                            .TypePrograma,
+                                                                                        data[j].TypePrograma,
                                                                                         1,
-                                                                                        data[
-                                                                                            j
-                                                                                        ]
-                                                                                            .FK_provedor,
+                                                                                        data[j].FK_provedor,
                                                                                         1,
                                                                                         3
                                                                                     );
                                                                                     productHandler.insertPreguntasLavado(
                                                                                         id_cedula,
                                                                                         item.IdHeader,
-                                                                                        data[
-                                                                                            j
-                                                                                        ]
-                                                                                            .ID,
+                                                                                        data[j].ID,
                                                                                         "¿La calificación del lavado es:?",
                                                                                         0,
                                                                                         0,
@@ -8665,25 +7370,16 @@ function inspeccionarUnidadLavdo2() {
                                                                                         "",
                                                                                         "",
                                                                                         "",
-                                                                                        data[
-                                                                                            j
-                                                                                        ]
-                                                                                            .TypePrograma,
+                                                                                        data[j].TypePrograma,
                                                                                         1,
-                                                                                        data[
-                                                                                            j
-                                                                                        ]
-                                                                                            .FK_provedor,
+                                                                                        data[j].FK_provedor,
                                                                                         2,
                                                                                         3
                                                                                     );
                                                                                     productHandler.insertPreguntasLavado(
                                                                                         id_cedula,
                                                                                         item.IdHeader,
-                                                                                        data[
-                                                                                            j
-                                                                                        ]
-                                                                                            .ID,
+                                                                                        data[j].ID,
                                                                                         "¿Hubo cambio de proveedor?",
                                                                                         0,
                                                                                         0,
@@ -8693,259 +7389,102 @@ function inspeccionarUnidadLavdo2() {
                                                                                         "",
                                                                                         "",
                                                                                         "",
-                                                                                        data[
-                                                                                            j
-                                                                                        ]
-                                                                                            .TypePrograma,
+                                                                                        data[j].TypePrograma,
                                                                                         2,
-                                                                                        data[
-                                                                                            j
-                                                                                        ]
-                                                                                            .FK_provedor,
+                                                                                        data[j].FK_provedor,
                                                                                         3,
                                                                                         3
                                                                                     );
-                                                                                } else {
-                                                                                    if (
-                                                                                        data[
-                                                                                            j
-                                                                                        ]
-                                                                                            .TypePrograma ==
-                                                                                        "INTERIOR"
-                                                                                    ) {
-                                                                                        productHandler.insertPreguntasLavado(
-                                                                                            id_cedula,
-                                                                                            item.IdHeader,
-                                                                                            data[
-                                                                                                j
-                                                                                            ]
-                                                                                                .ID,
-                                                                                            "¿Se lavó?",
-                                                                                            0,
-                                                                                            0,
-                                                                                            "SI",
-                                                                                            "NO",
-                                                                                            "",
-                                                                                            "",
-                                                                                            "",
-                                                                                            "",
-                                                                                            data[
-                                                                                                j
-                                                                                            ]
-                                                                                                .TypePrograma,
-                                                                                            1,
-                                                                                            data[
-                                                                                                j
-                                                                                            ]
-                                                                                                .FK_provedor,
-                                                                                            1,
-                                                                                            3
-                                                                                        );
-                                                                                        productHandler.insertPreguntasLavado(
-                                                                                            id_cedula,
-                                                                                            item.IdHeader,
-                                                                                            data[
-                                                                                                j
-                                                                                            ]
-                                                                                                .ID,
-                                                                                            "¿La calificación del lavado es:?",
-                                                                                            0,
-                                                                                            0,
-                                                                                            "BUENO",
-                                                                                            "REGULAR",
-                                                                                            "MALO",
-                                                                                            "",
-                                                                                            "",
-                                                                                            "",
-                                                                                            data[
-                                                                                                j
-                                                                                            ]
-                                                                                                .TypePrograma,
-                                                                                            1,
-                                                                                            data[
-                                                                                                j
-                                                                                            ]
-                                                                                                .FK_provedor,
-                                                                                            2,
-                                                                                            3
-                                                                                        );
-                                                                                        productHandler.insertPreguntasLavado(
-                                                                                            id_cedula,
-                                                                                            item.IdHeader,
-                                                                                            data[
-                                                                                                j
-                                                                                            ]
-                                                                                                .ID,
-                                                                                            "¿Hubo cambio de proveedor?",
-                                                                                            0,
-                                                                                            0,
-                                                                                            "SI",
-                                                                                            "NO",
-                                                                                            "",
-                                                                                            "",
-                                                                                            "",
-                                                                                            "",
-                                                                                            data[
-                                                                                                j
-                                                                                            ]
-                                                                                                .TypePrograma,
-                                                                                            2,
-                                                                                            data[
-                                                                                                j
-                                                                                            ]
-                                                                                                .FK_provedor,
-                                                                                            3,
-                                                                                            3
-                                                                                        );
-                                                                                    } else if (
-                                                                                        data[
-                                                                                            j
-                                                                                        ]
-                                                                                            .TypePrograma ==
-                                                                                        "EXTERIOR"
-                                                                                    ) {
-                                                                                        productHandler.insertPreguntasLavado(
-                                                                                            id_cedula,
-                                                                                            item.IdHeader,
-                                                                                            data[
-                                                                                                j
-                                                                                            ]
-                                                                                                .ID,
-                                                                                            "¿Se lavó?",
-                                                                                            0,
-                                                                                            0,
-                                                                                            "SI",
-                                                                                            "NO",
-                                                                                            "",
-                                                                                            "",
-                                                                                            "",
-                                                                                            "",
-                                                                                            data[
-                                                                                                j
-                                                                                            ]
-                                                                                                .TypePrograma,
-                                                                                            1,
-                                                                                            data[
-                                                                                                j
-                                                                                            ]
-                                                                                                .FK_provedor,
-                                                                                            1,
-                                                                                            3
-                                                                                        );
-                                                                                        productHandler.insertPreguntasLavado(
-                                                                                            id_cedula,
-                                                                                            item.IdHeader,
-                                                                                            data[
-                                                                                                j
-                                                                                            ]
-                                                                                                .ID,
-                                                                                            "¿La calificación del lavado es:?",
-                                                                                            0,
-                                                                                            0,
-                                                                                            "BUENO",
-                                                                                            "REGULAR",
-                                                                                            "MALO",
-                                                                                            "",
-                                                                                            "",
-                                                                                            "",
-                                                                                            data[
-                                                                                                j
-                                                                                            ]
-                                                                                                .TypePrograma,
-                                                                                            1,
-                                                                                            data[
-                                                                                                j
-                                                                                            ]
-                                                                                                .FK_provedor,
-                                                                                            2,
-                                                                                            3
-                                                                                        );
-                                                                                        productHandler.insertPreguntasLavado(
-                                                                                            id_cedula,
-                                                                                            item.IdHeader,
-                                                                                            data[
-                                                                                                j
-                                                                                            ]
-                                                                                                .ID,
-                                                                                            "¿Hubo cambio de proveedor?",
-                                                                                            0,
-                                                                                            0,
-                                                                                            "SI",
-                                                                                            "NO",
-                                                                                            "",
-                                                                                            "",
-                                                                                            "",
-                                                                                            "",
-                                                                                            data[
-                                                                                                j
-                                                                                            ]
-                                                                                                .TypePrograma,
-                                                                                            2,
-                                                                                            data[
-                                                                                                j
-                                                                                            ]
-                                                                                                .FK_provedor,
-                                                                                            3,
-                                                                                            3
-                                                                                        );
-                                                                                    }
+                                                                                } else if (data[j].TypePrograma == "EXTERIOR") {
+                                                                                    productHandler.insertPreguntasLavado(
+                                                                                        id_cedula,
+                                                                                        item.IdHeader,
+                                                                                        data[j].ID,
+                                                                                        "¿Se lavó?",
+                                                                                        0,
+                                                                                        0,
+                                                                                        "SI",
+                                                                                        "NO",
+                                                                                        "",
+                                                                                        "",
+                                                                                        "",
+                                                                                        "",
+                                                                                        data[j].TypePrograma,
+                                                                                        1,
+                                                                                        data[j].FK_provedor,
+                                                                                        1,
+                                                                                        3
+                                                                                    );
+                                                                                    productHandler.insertPreguntasLavado(
+                                                                                        id_cedula,
+                                                                                        item.IdHeader,
+                                                                                        data[j].ID,
+                                                                                        "¿La calificación del lavado es:?",
+                                                                                        0,
+                                                                                        0,
+                                                                                        "BUENO",
+                                                                                        "REGULAR",
+                                                                                        "MALO",
+                                                                                        "",
+                                                                                        "",
+                                                                                        "",
+                                                                                        data[j].TypePrograma,
+                                                                                        1,
+                                                                                        data[j].FK_provedor,
+                                                                                        2,
+                                                                                        3
+                                                                                    );
+                                                                                    productHandler.insertPreguntasLavado(
+                                                                                        id_cedula,
+                                                                                        item.IdHeader,
+                                                                                        data[j].ID,
+                                                                                        "¿Hubo cambio de proveedor?",
+                                                                                        0,
+                                                                                        0,
+                                                                                        "SI",
+                                                                                        "NO",
+                                                                                        "",
+                                                                                        "",
+                                                                                        "",
+                                                                                        "",
+                                                                                        data[j].TypePrograma,
+                                                                                        2,
+                                                                                        data[j].FK_provedor,
+                                                                                        3,
+                                                                                        3
+                                                                                    );
                                                                                 }
                                                                             }
                                                                         }
-                                                                        if (
-                                                                            !encontro
-                                                                        ) {
-                                                                            let IdHeader =
-                                                                                item.IdHeader;
-                                                                            app.dialog.close();
-                                                                            swal(
-                                                                                {
-                                                                                    title: "Aviso",
-                                                                                    text: "Esta unidad no tiene programación asignada. ¿Quieres agregar la con el lavado Interior?",
-                                                                                    icon: "warning",
-                                                                                    buttons: true,
-                                                                                    dangerMode: false,
-                                                                                }
-                                                                            ).then(
-                                                                                (
-                                                                                    willGoBack
-                                                                                ) => {
-                                                                                    if (
-                                                                                        willGoBack
-                                                                                    ) {
-                                                                                        var NomJson =
-                                                                                            "Proveedores";
-                                                                                        var html =
-                                                                                            "";
-                                                                                        app.request(
-                                                                                            {
-                                                                                                url:
-                                                                                                    cordova
-                                                                                                        .file
-                                                                                                        .dataDirectory +
-                                                                                                    "jsons_InsLavado/" +
-                                                                                                    NomJson +
-                                                                                                    ".json",
-                                                                                                method: "GET",
-                                                                                                dataType:
-                                                                                                    "json",
-                                                                                                success:
-                                                                                                    function (
-                                                                                                        data
-                                                                                                    ) {
-                                                                                                        for (
-                                                                                                            var j = 0;
-                                                                                                            j <
-                                                                                                            data.length;
-                                                                                                            j++
-                                                                                                        ) {
-                                                                                                            html += `<option value="${data[j].ID}">${data[j].NombreProveedor}</option>`;
-                                                                                                        }
+                                                                    }
+                                                                    if (!encontro) {
+                                                                        let IdHeader = item.IdHeader;
+                                                                        app.dialog.close();
+                                                                        swal({
+                                                                            title: "Aviso",
+                                                                            text: "Esta unidad no tiene programación asignada. ¿Quieres agregar la con el lavado Interior?",
+                                                                            icon: "warning",
+                                                                            buttons: true,
+                                                                            dangerMode: false,
+                                                                        }).then((willGoBack) => {
+                                                                            if (willGoBack) {
+                                                                                var NomJson = "Proveedores";
+                                                                                var html = "";
+                                                                                app.request({
+                                                                                    url:
+                                                                                        cordova.file.dataDirectory +
+                                                                                        "jsons_InsLavado/" +
+                                                                                        NomJson +
+                                                                                        ".json",
+                                                                                    method: "GET",
+                                                                                    dataType: "json",
+                                                                                    success: function (data) {
+                                                                                        for (var j = 0; j < data.length; j++) {
+                                                                                            html += `<option value="${data[j].ID}">${data[j].NombreProveedor}</option>`;
+                                                                                        }
 
-                                                                                                        var popEvidencia =
-                                                                                                            app.popup.create(
-                                                                                                                {
-                                                                                                                    content: `
+                                                                                        var popEvidencia = app.popup.create({
+                                                                                            content: `
                                                                                         <div class="sheet-modal my-sheet" id="sheet-modal" name="sheet">
                                                                                             <div class="toolbar">
                                                                                                 <div class="toolbar-inner">
@@ -8976,157 +7515,116 @@ function inspeccionarUnidadLavdo2() {
                                                                                                 </div>
                                                                                             </div>
                                                                                         </div>`,
-                                                                                                                    swipeToClose: false,
-                                                                                                                    closeByOutsideClick: false,
-                                                                                                                    closeByBackdropClick: false,
-                                                                                                                    closeOnEscape: false,
-                                                                                                                    on: {
-                                                                                                                        open: function (
-                                                                                                                            popup
-                                                                                                                        ) {
-                                                                                                                            $(
-                                                                                                                                "#close_sheet"
-                                                                                                                            ).click(
-                                                                                                                                function () {
-                                                                                                                                    if (
-                                                                                                                                        $(
-                                                                                                                                            "#pasa"
-                                                                                                                                        ).val() !=
-                                                                                                                                        0
-                                                                                                                                    ) {
-                                                                                                                                        app.sheet.close(
-                                                                                                                                            "#sheet-modal"
-                                                                                                                                        );
-                                                                                                                                    } else {
-                                                                                                                                        swal(
-                                                                                                                                            {
-                                                                                                                                                title: "Aviso",
-                                                                                                                                                text: "Aún no agregas un proveedor, ¿Quieres cancelar el registro de la unidad?",
-                                                                                                                                                icon: "warning",
-                                                                                                                                                buttons: true,
-                                                                                                                                                dangerMode: false,
-                                                                                                                                            }
-                                                                                                                                        ).then(
-                                                                                                                                            (
-                                                                                                                                                willGoBack
-                                                                                                                                            ) => {
-                                                                                                                                                if (
-                                                                                                                                                    willGoBack
-                                                                                                                                                ) {
-                                                                                                                                                    deleteRegistroProgrmacionLavado(
-                                                                                                                                                        IdHeader
-                                                                                                                                                    );
-                                                                                                                                                }
-                                                                                                                                            }
-                                                                                                                                        );
-                                                                                                                                    }
-                                                                                                                                }
-                                                                                                                            );
-                                                                                                                            $(
-                                                                                                                                "#continuarSinPrograma"
-                                                                                                                            ).click(
-                                                                                                                                function () {
-                                                                                                                                    let dialog =
-                                                                                                                                        app.dialog.progress(
-                                                                                                                                            "Trabajando... ",
-                                                                                                                                            progress,
-                                                                                                                                            "red"
-                                                                                                                                        );
-                                                                                                                                    let aux = 3;
-                                                                                                                                    let FK_provedor =
-                                                                                                                                        $(
-                                                                                                                                            "#proveedoresModal2"
-                                                                                                                                        ).val();
-                                                                                                                                    dialog.setText(
-                                                                                                                                        "1 de " +
-                                                                                                                                            aux
-                                                                                                                                    );
-                                                                                                                                    productHandler.insertPreguntasLavado(
-                                                                                                                                        id_cedula,
-                                                                                                                                        IdHeader,
-                                                                                                                                        0,
-                                                                                                                                        "¿Se lavó?",
-                                                                                                                                        0,
-                                                                                                                                        0,
-                                                                                                                                        "SI",
-                                                                                                                                        "NO",
-                                                                                                                                        "",
-                                                                                                                                        "",
-                                                                                                                                        "",
-                                                                                                                                        "",
-                                                                                                                                        "INTERIOR",
-                                                                                                                                        1,
-                                                                                                                                        FK_provedor,
-                                                                                                                                        1,
-                                                                                                                                        3
-                                                                                                                                    );
-                                                                                                                                    productHandler.insertPreguntasLavado(
-                                                                                                                                        id_cedula,
-                                                                                                                                        IdHeader,
-                                                                                                                                        0,
-                                                                                                                                        "¿La calificación del lavado es:?",
-                                                                                                                                        0,
-                                                                                                                                        0,
-                                                                                                                                        "BUENO",
-                                                                                                                                        "REGULAR",
-                                                                                                                                        "MALO",
-                                                                                                                                        "",
-                                                                                                                                        "",
-                                                                                                                                        "",
-                                                                                                                                        "INTERIOR",
-                                                                                                                                        1,
-                                                                                                                                        FK_provedor,
-                                                                                                                                        2,
-                                                                                                                                        3
-                                                                                                                                    );
-                                                                                                                                    productHandler.insertPreguntasLavado(
-                                                                                                                                        id_cedula,
-                                                                                                                                        IdHeader,
-                                                                                                                                        0,
-                                                                                                                                        "¿Hubo cambio de proveedor?",
-                                                                                                                                        0,
-                                                                                                                                        0,
-                                                                                                                                        "SI",
-                                                                                                                                        "NO",
-                                                                                                                                        "",
-                                                                                                                                        "",
-                                                                                                                                        "",
-                                                                                                                                        "",
-                                                                                                                                        "INTERIOR",
-                                                                                                                                        2,
-                                                                                                                                        FK_provedor,
-                                                                                                                                        3,
-                                                                                                                                        3
-                                                                                                                                    );
-                                                                                                                                    app.sheet.close(
-                                                                                                                                        "#sheet-modal"
-                                                                                                                                    );
-                                                                                                                                }
-                                                                                                                            );
-                                                                                                                        },
-                                                                                                                    },
+                                                                                            swipeToClose: false,
+                                                                                            closeByOutsideClick: false,
+                                                                                            closeByBackdropClick: false,
+                                                                                            closeOnEscape: false,
+                                                                                            on: {
+                                                                                                open: function (popup) {
+                                                                                                    $("#close_sheet").click(function () {
+                                                                                                        if ($("#pasa").val() != 0) {
+                                                                                                            app.sheet.close("#sheet-modal");
+                                                                                                        } else {
+                                                                                                            swal({
+                                                                                                                title: "Aviso",
+                                                                                                                text: "Aún no agregas un proveedor, ¿Quieres cancelar el registro de la unidad?",
+                                                                                                                icon: "warning",
+                                                                                                                buttons: true,
+                                                                                                                dangerMode: false,
+                                                                                                            }).then((willGoBack) => {
+                                                                                                                if (willGoBack) {
+                                                                                                                    deleteRegistroProgrmacionLavado(
+                                                                                                                        IdHeader
+                                                                                                                    );
                                                                                                                 }
-                                                                                                            );
-                                                                                                        popEvidencia.open();
-                                                                                                    },
-                                                                                            }
-                                                                                        );
-                                                                                    } else {
-                                                                                        deleteRegistroProgrmacionLavado(
-                                                                                            IdHeader
-                                                                                        );
-                                                                                    }
-                                                                                }
-                                                                            );
-                                                                        }
-                                                                    },
+                                                                                                            });
+                                                                                                        }
+                                                                                                    });
+                                                                                                    $("#continuarSinPrograma").click(function () {
+                                                                                                        let dialog = app.dialog.progress(
+                                                                                                            "Trabajando... ",
+                                                                                                            progress,
+                                                                                                            "red"
+                                                                                                        );
+                                                                                                        let aux = 3;
+                                                                                                        let FK_provedor =
+                                                                                                            $("#proveedoresModal2").val();
+                                                                                                        dialog.setText("1 de " + aux);
+                                                                                                        productHandler.insertPreguntasLavado(
+                                                                                                            id_cedula,
+                                                                                                            IdHeader,
+                                                                                                            0,
+                                                                                                            "¿Se lavó?",
+                                                                                                            0,
+                                                                                                            0,
+                                                                                                            "SI",
+                                                                                                            "NO",
+                                                                                                            "",
+                                                                                                            "",
+                                                                                                            "",
+                                                                                                            "",
+                                                                                                            "INTERIOR",
+                                                                                                            1,
+                                                                                                            FK_provedor,
+                                                                                                            1,
+                                                                                                            3
+                                                                                                        );
+                                                                                                        productHandler.insertPreguntasLavado(
+                                                                                                            id_cedula,
+                                                                                                            IdHeader,
+                                                                                                            0,
+                                                                                                            "¿La calificación del lavado es:?",
+                                                                                                            0,
+                                                                                                            0,
+                                                                                                            "BUENO",
+                                                                                                            "REGULAR",
+                                                                                                            "MALO",
+                                                                                                            "",
+                                                                                                            "",
+                                                                                                            "",
+                                                                                                            "INTERIOR",
+                                                                                                            1,
+                                                                                                            FK_provedor,
+                                                                                                            2,
+                                                                                                            3
+                                                                                                        );
+                                                                                                        productHandler.insertPreguntasLavado(
+                                                                                                            id_cedula,
+                                                                                                            IdHeader,
+                                                                                                            0,
+                                                                                                            "¿Hubo cambio de proveedor?",
+                                                                                                            0,
+                                                                                                            0,
+                                                                                                            "SI",
+                                                                                                            "NO",
+                                                                                                            "",
+                                                                                                            "",
+                                                                                                            "",
+                                                                                                            "",
+                                                                                                            "INTERIOR",
+                                                                                                            2,
+                                                                                                            FK_provedor,
+                                                                                                            3,
+                                                                                                            3
+                                                                                                        );
+                                                                                                        app.sheet.close("#sheet-modal");
+                                                                                                    });
+                                                                                                },
+                                                                                            },
+                                                                                        });
+                                                                                        popEvidencia.open();
+                                                                                    },
+                                                                                });
+                                                                            } else {
+                                                                                deleteRegistroProgrmacionLavado(IdHeader);
+                                                                            }
+                                                                        });
+                                                                    }
+                                                                },
                                                             });
                                                         },
                                                         function (tx, error) {
-                                                            console.log(
-                                                                "Error al guardar cedula: " +
-                                                                    error.message
-                                                            );
+                                                            console.log("Error al guardar cedula: " + error.message);
                                                         }
                                                     );
                                                 },
@@ -9135,10 +7633,7 @@ function inspeccionarUnidadLavdo2() {
                                             );
                                         },
                                         function (tx, error) {
-                                            console.error(
-                                                "Error registrar:" +
-                                                    error.message
-                                            );
+                                            console.error("Error registrar:" + error.message);
                                         }
                                     );
                                 },
@@ -9153,17 +7648,11 @@ function inspeccionarUnidadLavdo2() {
                             $("#id_operador").val("");
                             $("#credencial").val("");
                             $("#operador").val("");
-                            swal(
-                                "",
-                                "Esta unidad ya la tienes registrada.",
-                                "warning"
-                            );
+                            swal("", "Esta unidad ya la tienes registrada.", "warning");
                         }
                     },
                     function (tx, error) {
-                        console.log(
-                            "Error al guardar cedula: " + error.message
-                        );
+                        console.log("Error al guardar cedula: " + error.message);
                     }
                 );
             },
@@ -9376,14 +7865,8 @@ function eliminarLavado(IdHeader, paso) {
                                             "DELETE FROM IEN_HeaderLavado WHERE id_cedula = ? AND ID_HeaderLavado = ?",
                                             [id_cedula, IdHeader],
                                             function (tx, results) {
-                                                $(
-                                                    "#renglon_" + IdHeader
-                                                ).remove();
-                                                swal(
-                                                    "",
-                                                    "Eliminado correctamente",
-                                                    "success"
-                                                );
+                                                $("#renglon_" + IdHeader).remove();
+                                                swal("", "Eliminado correctamente", "success");
                                             },
                                             function (tx, error) {}
                                         );
@@ -9411,14 +7894,8 @@ function eliminarLavado(IdHeader, paso) {
                                             "DELETE FROM IEN_HeaderResultadoLavado WHERE id_cedula = ? AND ID_HeaderLavado = ?",
                                             [id_cedula, IdHeader],
                                             function (tx, results) {
-                                                $(
-                                                    "#renglon_" + IdHeader
-                                                ).remove();
-                                                swal(
-                                                    "",
-                                                    "Eliminado correctamente",
-                                                    "success"
-                                                );
+                                                $("#renglon_" + IdHeader).remove();
+                                                swal("", "Eliminado correctamente", "success");
                                             },
                                             function (tx, error) {}
                                         );
@@ -9446,14 +7923,8 @@ function eliminarLavado(IdHeader, paso) {
                                             "DELETE FROM IEN_HeaderResultadoLavado WHERE id_cedula = ? AND ID_HeaderLavado = ?",
                                             [id_cedula, IdHeader],
                                             function (tx, results) {
-                                                $(
-                                                    "#renglon_" + IdHeader
-                                                ).remove();
-                                                swal(
-                                                    "",
-                                                    "Eliminado correctamente",
-                                                    "success"
-                                                );
+                                                $("#renglon_" + IdHeader).remove();
+                                                swal("", "Eliminado correctamente", "success");
                                             },
                                             function (tx, error) {}
                                         );
@@ -9498,11 +7969,7 @@ function inspeccionarUnidadLavdo() {
                             let id_unidad = $("#id_unidad").val();
                             let fecha_captura = getDateWhitZeros();
                             let progress = 0;
-                            let dialog = app.dialog.progress(
-                                "Trabajando... ",
-                                progress,
-                                "red"
-                            );
+                            let dialog = app.dialog.progress("Trabajando... ", progress, "red");
                             let id_empresa = localStorage.getItem("empresa");
                             let FK_formato = 0;
                             let fechaFin = "";
@@ -9515,15 +7982,7 @@ function inspeccionarUnidadLavdo() {
                                 function (tx) {
                                     tx.executeSql(
                                         "insert into IEN_HeaderResultadoLavado(id_cedula, FKFormato, fechaFin, fechaInicio, FK_Unidad, observaciones, unidad) values(?, ?, ?, ?, ?, ?, ?)",
-                                        [
-                                            id_cedula,
-                                            FK_formato,
-                                            fechaFin,
-                                            fecha_captura,
-                                            id_unidad,
-                                            observaciones,
-                                            unidad,
-                                        ],
+                                        [id_cedula, FK_formato, fechaFin, fecha_captura, id_unidad, observaciones, unidad],
                                         function (tx, results) {
                                             databaseHandler.db.transaction(
                                                 function (tx) {
@@ -9531,130 +7990,57 @@ function inspeccionarUnidadLavdo() {
                                                         "Select MAX(ID_HeaderLavado) as IdHeader from IEN_HeaderResultadoLavado",
                                                         [],
                                                         function (tx, results) {
-                                                            var item =
-                                                                results.rows.item(
-                                                                    0
-                                                                );
-                                                            localStorage.setItem(
-                                                                "IdHeader",
-                                                                item.IdHeader
-                                                            );
+                                                            var item = results.rows.item(0);
+                                                            localStorage.setItem("IdHeader", item.IdHeader);
                                                             app.request({
-                                                                url:
-                                                                    cordova.file
-                                                                        .dataDirectory +
-                                                                    "jsons_InsLavado/" +
-                                                                    NomJson +
-                                                                    ".json",
+                                                                url: cordova.file.dataDirectory + "jsons_InsLavado/" + NomJson + ".json",
                                                                 method: "GET",
-                                                                dataType:
-                                                                    "json",
-                                                                success:
-                                                                    function (
-                                                                        data
-                                                                    ) {
-                                                                        var aux = 0;
-                                                                        var aux2 = 0;
-                                                                        for (
-                                                                            var j = 0;
-                                                                            j <
-                                                                            data.length;
-                                                                            j++
-                                                                        ) {
-                                                                            if (
-                                                                                data[
-                                                                                    j
-                                                                                ]
-                                                                                    .formatoAplicable ==
-                                                                                1
-                                                                            ) {
-                                                                                aux++;
+                                                                dataType: "json",
+                                                                success: function (data) {
+                                                                    var aux = 0;
+                                                                    var aux2 = 0;
+                                                                    for (var j = 0; j < data.length; j++) {
+                                                                        if (data[j].formatoAplicable == 1) {
+                                                                            aux++;
+                                                                        }
+                                                                    }
+                                                                    if (aux == 0) {
+                                                                        app.dialog.close();
+                                                                        swal(
+                                                                            "",
+                                                                            "Algo salió mal. Al parecer no hay un formato para esta evaluación.",
+                                                                            "warning"
+                                                                        );
+                                                                    } else {
+                                                                        dialog.setText("1 de " + aux);
+                                                                        for (var j = 0; j < data.length; j++) {
+                                                                            if (data[j].formatoAplicable == 1) {
+                                                                                aux2++;
+                                                                                productHandler.insertPreguntasResultadoLavado(
+                                                                                    id_cedula,
+                                                                                    item.IdHeader,
+                                                                                    data[j].ID,
+                                                                                    data[j].Pregunta,
+                                                                                    0,
+                                                                                    data[j].FK_formato,
+                                                                                    data[j].Opcion_1,
+                                                                                    data[j].Opcion_2,
+                                                                                    data[j].Opcion_3,
+                                                                                    data[j].Opcion_4,
+                                                                                    data[j].Opcion_5,
+                                                                                    data[j].Opcion_6,
+                                                                                    1,
+                                                                                    aux,
+                                                                                    aux2
+                                                                                );
                                                                             }
                                                                         }
-                                                                        if (
-                                                                            aux ==
-                                                                            0
-                                                                        ) {
-                                                                            app.dialog.close();
-                                                                            swal(
-                                                                                "",
-                                                                                "Algo salió mal. Al parecer no hay un formato para esta evaluación.",
-                                                                                "warning"
-                                                                            );
-                                                                        } else {
-                                                                            dialog.setText(
-                                                                                "1 de " +
-                                                                                    aux
-                                                                            );
-                                                                            for (
-                                                                                var j = 0;
-                                                                                j <
-                                                                                data.length;
-                                                                                j++
-                                                                            ) {
-                                                                                if (
-                                                                                    data[
-                                                                                        j
-                                                                                    ]
-                                                                                        .formatoAplicable ==
-                                                                                    1
-                                                                                ) {
-                                                                                    aux2++;
-                                                                                    productHandler.insertPreguntasResultadoLavado(
-                                                                                        id_cedula,
-                                                                                        item.IdHeader,
-                                                                                        data[
-                                                                                            j
-                                                                                        ]
-                                                                                            .ID,
-                                                                                        data[
-                                                                                            j
-                                                                                        ]
-                                                                                            .Pregunta,
-                                                                                        0,
-                                                                                        data[
-                                                                                            j
-                                                                                        ]
-                                                                                            .FK_formato,
-                                                                                        data[
-                                                                                            j
-                                                                                        ]
-                                                                                            .Opcion_1,
-                                                                                        data[
-                                                                                            j
-                                                                                        ]
-                                                                                            .Opcion_2,
-                                                                                        data[
-                                                                                            j
-                                                                                        ]
-                                                                                            .Opcion_3,
-                                                                                        data[
-                                                                                            j
-                                                                                        ]
-                                                                                            .Opcion_4,
-                                                                                        data[
-                                                                                            j
-                                                                                        ]
-                                                                                            .Opcion_5,
-                                                                                        data[
-                                                                                            j
-                                                                                        ]
-                                                                                            .Opcion_6,
-                                                                                        1,
-                                                                                        aux,
-                                                                                        aux2
-                                                                                    );
-                                                                                }
-                                                                            }
-                                                                        }
-                                                                    },
+                                                                    }
+                                                                },
                                                             });
                                                         },
                                                         function (tx, error) {
-                                                            console.log(
-                                                                "Error al guardar cedula: " +
-                                                                    error.message
-                                                            );
+                                                            console.log("Error al guardar cedula: " + error.message);
                                                         }
                                                     );
                                                 },
@@ -9663,10 +8049,7 @@ function inspeccionarUnidadLavdo() {
                                             );
                                         },
                                         function (tx, error) {
-                                            console.error(
-                                                "Error registrar:" +
-                                                    error.message
-                                            );
+                                            console.error("Error registrar:" + error.message);
                                         }
                                     );
                                 },
@@ -9681,17 +8064,11 @@ function inspeccionarUnidadLavdo() {
                             $("#id_operador").val("");
                             $("#credencial").val("");
                             $("#operador").val("");
-                            swal(
-                                "",
-                                "Esta unidad ya la tienes registrada.",
-                                "warning"
-                            );
+                            swal("", "Esta unidad ya la tienes registrada.", "warning");
                         }
                     },
                     function (tx, error) {
-                        console.log(
-                            "Error al guardar cedula: " + error.message
-                        );
+                        console.log("Error al guardar cedula: " + error.message);
                     }
                 );
             },
@@ -9771,11 +8148,7 @@ function EvualuacionLavdo() {
                             let id_unidad = $("#id_unidad").val();
                             let fecha_captura = getDateWhitZeros();
                             let progress = 0;
-                            let dialog = app.dialog.progress(
-                                "Trabajando... ",
-                                progress,
-                                "red"
-                            );
+                            let dialog = app.dialog.progress("Trabajando... ", progress, "red");
                             let id_empresa = localStorage.getItem("empresa");
                             let FK_formato = 0;
                             let fechaFin = "";
@@ -9788,15 +8161,7 @@ function EvualuacionLavdo() {
                                 function (tx) {
                                     tx.executeSql(
                                         "insert into IEN_HeaderResultadoLavado(id_cedula, FKFormato, fechaFin, fechaInicio, FK_Unidad, observaciones, unidad) values(?, ?, ?, ?, ?, ?, ?)",
-                                        [
-                                            id_cedula,
-                                            FK_formato,
-                                            fechaFin,
-                                            fecha_captura,
-                                            id_unidad,
-                                            observaciones,
-                                            unidad,
-                                        ],
+                                        [id_cedula, FK_formato, fechaFin, fecha_captura, id_unidad, observaciones, unidad],
                                         function (tx, results) {
                                             databaseHandler.db.transaction(
                                                 function (tx) {
@@ -9804,130 +8169,57 @@ function EvualuacionLavdo() {
                                                         "Select MAX(ID_HeaderLavado) as IdHeader from IEN_HeaderResultadoLavado",
                                                         [],
                                                         function (tx, results) {
-                                                            var item =
-                                                                results.rows.item(
-                                                                    0
-                                                                );
-                                                            localStorage.setItem(
-                                                                "IdHeader",
-                                                                item.IdHeader
-                                                            );
+                                                            var item = results.rows.item(0);
+                                                            localStorage.setItem("IdHeader", item.IdHeader);
                                                             app.request({
-                                                                url:
-                                                                    cordova.file
-                                                                        .dataDirectory +
-                                                                    "jsons_InsLavado/" +
-                                                                    NomJson +
-                                                                    ".json",
+                                                                url: cordova.file.dataDirectory + "jsons_InsLavado/" + NomJson + ".json",
                                                                 method: "GET",
-                                                                dataType:
-                                                                    "json",
-                                                                success:
-                                                                    function (
-                                                                        data
-                                                                    ) {
-                                                                        var aux = 0;
-                                                                        var aux2 = 0;
-                                                                        for (
-                                                                            var j = 0;
-                                                                            j <
-                                                                            data.length;
-                                                                            j++
-                                                                        ) {
-                                                                            if (
-                                                                                data[
-                                                                                    j
-                                                                                ]
-                                                                                    .formatoAplicable ==
-                                                                                2
-                                                                            ) {
-                                                                                aux++;
+                                                                dataType: "json",
+                                                                success: function (data) {
+                                                                    var aux = 0;
+                                                                    var aux2 = 0;
+                                                                    for (var j = 0; j < data.length; j++) {
+                                                                        if (data[j].formatoAplicable == 2) {
+                                                                            aux++;
+                                                                        }
+                                                                    }
+                                                                    if (aux == 0) {
+                                                                        app.dialog.close();
+                                                                        swal(
+                                                                            "",
+                                                                            "Algo salió mal. Al parecer no hay un formato para esta evaluación.",
+                                                                            "warning"
+                                                                        );
+                                                                    } else {
+                                                                        dialog.setText("1 de " + aux);
+                                                                        for (var j = 0; j < data.length; j++) {
+                                                                            if (data[j].formatoAplicable == 2) {
+                                                                                aux2++;
+                                                                                productHandler.insertPreguntasResultadoLavado2(
+                                                                                    id_cedula,
+                                                                                    item.IdHeader,
+                                                                                    data[j].ID,
+                                                                                    data[j].Pregunta,
+                                                                                    0,
+                                                                                    data[j].FK_formato,
+                                                                                    data[j].Opcion_1,
+                                                                                    data[j].Opcion_2,
+                                                                                    data[j].Opcion_3,
+                                                                                    data[j].Opcion_4,
+                                                                                    data[j].Opcion_5,
+                                                                                    data[j].Opcion_6,
+                                                                                    1,
+                                                                                    aux,
+                                                                                    aux2
+                                                                                );
                                                                             }
                                                                         }
-                                                                        if (
-                                                                            aux ==
-                                                                            0
-                                                                        ) {
-                                                                            app.dialog.close();
-                                                                            swal(
-                                                                                "",
-                                                                                "Algo salió mal. Al parecer no hay un formato para esta evaluación.",
-                                                                                "warning"
-                                                                            );
-                                                                        } else {
-                                                                            dialog.setText(
-                                                                                "1 de " +
-                                                                                    aux
-                                                                            );
-                                                                            for (
-                                                                                var j = 0;
-                                                                                j <
-                                                                                data.length;
-                                                                                j++
-                                                                            ) {
-                                                                                if (
-                                                                                    data[
-                                                                                        j
-                                                                                    ]
-                                                                                        .formatoAplicable ==
-                                                                                    2
-                                                                                ) {
-                                                                                    aux2++;
-                                                                                    productHandler.insertPreguntasResultadoLavado2(
-                                                                                        id_cedula,
-                                                                                        item.IdHeader,
-                                                                                        data[
-                                                                                            j
-                                                                                        ]
-                                                                                            .ID,
-                                                                                        data[
-                                                                                            j
-                                                                                        ]
-                                                                                            .Pregunta,
-                                                                                        0,
-                                                                                        data[
-                                                                                            j
-                                                                                        ]
-                                                                                            .FK_formato,
-                                                                                        data[
-                                                                                            j
-                                                                                        ]
-                                                                                            .Opcion_1,
-                                                                                        data[
-                                                                                            j
-                                                                                        ]
-                                                                                            .Opcion_2,
-                                                                                        data[
-                                                                                            j
-                                                                                        ]
-                                                                                            .Opcion_3,
-                                                                                        data[
-                                                                                            j
-                                                                                        ]
-                                                                                            .Opcion_4,
-                                                                                        data[
-                                                                                            j
-                                                                                        ]
-                                                                                            .Opcion_5,
-                                                                                        data[
-                                                                                            j
-                                                                                        ]
-                                                                                            .Opcion_6,
-                                                                                        1,
-                                                                                        aux,
-                                                                                        aux2
-                                                                                    );
-                                                                                }
-                                                                            }
-                                                                        }
-                                                                    },
+                                                                    }
+                                                                },
                                                             });
                                                         },
                                                         function (tx, error) {
-                                                            console.log(
-                                                                "Error al guardar cedula: " +
-                                                                    error.message
-                                                            );
+                                                            console.log("Error al guardar cedula: " + error.message);
                                                         }
                                                     );
                                                 },
@@ -9936,10 +8228,7 @@ function EvualuacionLavdo() {
                                             );
                                         },
                                         function (tx, error) {
-                                            console.error(
-                                                "Error registrar:" +
-                                                    error.message
-                                            );
+                                            console.error("Error registrar:" + error.message);
                                         }
                                     );
                                 },
@@ -9954,17 +8243,11 @@ function EvualuacionLavdo() {
                             $("#id_operador").val("");
                             $("#credencial").val("");
                             $("#operador").val("");
-                            swal(
-                                "",
-                                "Este proveedor ya lo tienes registrado.",
-                                "warning"
-                            );
+                            swal("", "Este proveedor ya lo tienes registrado.", "warning");
                         }
                     },
                     function (tx, error) {
-                        console.log(
-                            "Error al guardar cedula: " + error.message
-                        );
+                        console.log("Error al guardar cedula: " + error.message);
                     }
                 );
             },
@@ -10015,11 +8298,7 @@ function actualizaObsLavado() {
         function (tx) {
             tx.executeSql(
                 "UPDATE IEN_HeaderLavado SET observaciones = ? WHERE id_cedula = ? AND ID_HeaderLavado = ?",
-                [
-                    observaciones,
-                    localStorage.getItem("IdCedula"),
-                    localStorage.getItem("IdHeader"),
-                ],
+                [observaciones, localStorage.getItem("IdCedula"), localStorage.getItem("IdHeader")],
                 function (tx, results) {},
                 function (tx, error) {
                     console.error("Error al guardar cierre: " + error.message);
@@ -10037,11 +8316,7 @@ function ValidarCapturePhotoLavado() {
         function (tx1) {
             tx1.executeSql(
                 "Select COUNT(id_cedula) as cuenta from IEN_EvidenciasLavado where id_cedula= ? AND FKHeader = ? AND typeLavado = ? AND proceso = 1",
-                [
-                    localStorage.getItem("IdCedula"),
-                    localStorage.getItem("IdHeader"),
-                    typeLavado,
-                ],
+                [localStorage.getItem("IdCedula"), localStorage.getItem("IdHeader"), typeLavado],
                 function (tx, results) {
                     var item = results.rows.item(0);
                     if (item.cuenta <= 2) {
@@ -10103,73 +8378,48 @@ function capturePhotoLavado() {
             on: {
                 open: function (popup) {
                     var permissions = cordova.plugins.permissions;
-                    permissions.checkPermission(
-                        permissions.CAMERA,
-                        function (status) {
-                            if (status.hasPermission) {
-                                cargarEmpresa(
-                                    `./js/camera-field.js`,
-                                    empresaCargada
-                                );
-                                function empresaCargada() {
-                                    cameraStart(onPhotoDataSuccess);
-                                }
-                                function cargarEmpresa(url, callback) {
-                                    var pie =
-                                        document.getElementsByTagName("fwm")[0];
-                                    var script =
-                                        document.createElement("script");
-                                    script.type = "text/javascript";
-                                    script.src = url;
-                                    script.id = "cameraSource";
-                                    script.onload = callback;
-                                    pie.appendChild(script);
-                                }
-                            } else {
-                                permissions.requestPermission(
-                                    permissions.CAMERA,
-                                    success,
-                                    error
-                                );
-                                function error() {
-                                    app.sheet.close(".popup");
-                                    swal(
-                                        "Se Requiere los permisos",
-                                        "Para poder tomar las evidencias fotograficas necesitamos el permiso.",
-                                        "warning"
-                                    );
-                                }
-                                function success(status) {
-                                    if (!status.hasPermission) {
-                                        error();
-                                    } else {
-                                        cargarEmpresa(
-                                            `./js/camera-field.js`,
-                                            empresaCargada
-                                        );
-                                        function empresaCargada() {
-                                            cameraStart(onPhotoDataSuccess);
-                                        }
-                                        function cargarEmpresa(url, callback) {
-                                            var pie =
-                                                document.getElementsByTagName(
-                                                    "fwm"
-                                                )[0];
-                                            var script =
-                                                document.createElement(
-                                                    "script"
-                                                );
-                                            script.type = "text/javascript";
-                                            script.src = url;
-                                            script.id = "cameraSource";
-                                            script.onload = callback;
-                                            pie.appendChild(script);
-                                        }
+                    permissions.checkPermission(permissions.CAMERA, function (status) {
+                        if (status.hasPermission) {
+                            cargarEmpresa(`./js/camera-field.js`, empresaCargada);
+                            function empresaCargada() {
+                                cameraStart(onPhotoDataSuccess);
+                            }
+                            function cargarEmpresa(url, callback) {
+                                var pie = document.getElementsByTagName("fwm")[0];
+                                var script = document.createElement("script");
+                                script.type = "text/javascript";
+                                script.src = url;
+                                script.id = "cameraSource";
+                                script.onload = callback;
+                                pie.appendChild(script);
+                            }
+                        } else {
+                            permissions.requestPermission(permissions.CAMERA, success, error);
+                            function error() {
+                                app.sheet.close(".popup");
+                                swal("Se Requiere los permisos", "Para poder tomar las evidencias fotograficas necesitamos el permiso.", "warning");
+                            }
+                            function success(status) {
+                                if (!status.hasPermission) {
+                                    error();
+                                } else {
+                                    cargarEmpresa(`./js/camera-field.js`, empresaCargada);
+                                    function empresaCargada() {
+                                        cameraStart(onPhotoDataSuccess);
+                                    }
+                                    function cargarEmpresa(url, callback) {
+                                        var pie = document.getElementsByTagName("fwm")[0];
+                                        var script = document.createElement("script");
+                                        script.type = "text/javascript";
+                                        script.src = url;
+                                        script.id = "cameraSource";
+                                        script.onload = callback;
+                                        pie.appendChild(script);
                                     }
                                 }
                             }
                         }
-                    );
+                    });
                 },
                 opened: function (popup) {
                     localStorage.setItem("cameraField", "Active");
@@ -10199,19 +8449,11 @@ function eliminarFilaFotoLavado(index, val) {
                     "DELETE FROM IEN_EvidenciasLavado WHERE id_evidencia = ?",
                     [index],
                     function (tx, results) {
-                        swal(
-                            "",
-                            "El registro se elimino satisfactoriamente",
-                            "success"
-                        );
+                        swal("", "El registro se elimino satisfactoriamente", "success");
                         $("#fila" + index).remove();
                     },
                     function (tx, error) {
-                        swal(
-                            "Error al eliminar registro",
-                            error.message,
-                            "error"
-                        );
+                        swal("Error al eliminar registro", error.message, "error");
                     }
                 );
             },
@@ -10328,11 +8570,7 @@ function FinLavado() {
     let signate = $("#signate").val();
     let signate_2 = $("#signate_2").val();
     if (!String(supervisorLavado).trim()) {
-        swal(
-            "",
-            "Debes imgresar el nombre del supervisor de proveedor de lavado.",
-            "warning"
-        );
+        swal("", "Debes imgresar el nombre del supervisor de proveedor de lavado.", "warning");
         return false;
     }
     if (!signate) {
@@ -10340,11 +8578,7 @@ function FinLavado() {
         return false;
     }
     if (!signate_2) {
-        swal(
-            "",
-            "Se debe agregar la firma del supervisor de proveedor de lavado.",
-            "warning"
-        );
+        swal("", "Se debe agregar la firma del supervisor de proveedor de lavado.", "warning");
         return false;
     }
     swal({
@@ -10367,21 +8601,12 @@ function FinLavado() {
                                     function (tx) {
                                         tx.executeSql(
                                             "UPDATE IEN_EvidenciasLavado SET evidencia = ?, fecha = ? WHERE id_cedula = ?",
-                                            [
-                                                signate,
-                                                getDateWhitZeros(),
-                                                localStorage.getItem(
-                                                    "IdCedula"
-                                                ),
-                                            ],
+                                            [signate, getDateWhitZeros(), localStorage.getItem("IdCedula")],
                                             function (tx, results) {
                                                 console.log("update 2");
                                             },
                                             function (tx, error) {
-                                                console.error(
-                                                    "Error al guardar cierre: " +
-                                                        error.message
-                                                );
+                                                console.error("Error al guardar cierre: " + error.message);
                                             }
                                         );
                                     },
@@ -10393,23 +8618,12 @@ function FinLavado() {
                                     function (tx) {
                                         tx.executeSql(
                                             "INSERT INTO IEN_EvidenciasLavado(id_cedula,FKHeader,evidencia,fecha,typeLavado,proceso) VALUES (?,?,?,?,?,2)",
-                                            [
-                                                localStorage.getItem(
-                                                    "IdCedula"
-                                                ),
-                                                0,
-                                                signate,
-                                                getDateWhitZeros(),
-                                                "N/A",
-                                            ],
+                                            [localStorage.getItem("IdCedula"), 0, signate, getDateWhitZeros(), "N/A"],
                                             function (tx, results) {
                                                 console.log("insert 2");
                                             },
                                             function (tx, error) {
-                                                console.error(
-                                                    "Error al guardar cierre: " +
-                                                        error.message
-                                                );
+                                                console.error("Error al guardar cierre: " + error.message);
                                             }
                                         );
                                     },
@@ -10419,9 +8633,7 @@ function FinLavado() {
                             }
                         },
                         function (tx, error) {
-                            console.error(
-                                "Error al guardar cierre: " + error.message
-                            );
+                            console.error("Error al guardar cierre: " + error.message);
                         }
                     );
                 },
@@ -10441,21 +8653,12 @@ function FinLavado() {
                                     function (tx) {
                                         tx.executeSql(
                                             "UPDATE IEN_EvidenciasLavado SET evidencia = ?, fecha = ? WHERE id_cedula = ?",
-                                            [
-                                                signate,
-                                                getDateWhitZeros(),
-                                                localStorage.getItem(
-                                                    "IdCedula"
-                                                ),
-                                            ],
+                                            [signate, getDateWhitZeros(), localStorage.getItem("IdCedula")],
                                             function (tx, results) {
                                                 console.log("update 3");
                                             },
                                             function (tx, error) {
-                                                console.error(
-                                                    "Error al guardar cierre: " +
-                                                        error.message
-                                                );
+                                                console.error("Error al guardar cierre: " + error.message);
                                             }
                                         );
                                     },
@@ -10467,23 +8670,12 @@ function FinLavado() {
                                     function (tx) {
                                         tx.executeSql(
                                             "INSERT INTO IEN_EvidenciasLavado(id_cedula,FKHeader,evidencia,fecha,typeLavado,proceso) VALUES (?,?,?,?,?,3)",
-                                            [
-                                                localStorage.getItem(
-                                                    "IdCedula"
-                                                ),
-                                                0,
-                                                signate,
-                                                getDateWhitZeros(),
-                                                "N/A",
-                                            ],
+                                            [localStorage.getItem("IdCedula"), 0, signate, getDateWhitZeros(), "N/A"],
                                             function (tx, results) {
                                                 console.log("insert 3");
                                             },
                                             function (tx, error) {
-                                                console.error(
-                                                    "Error al guardar cierre: " +
-                                                        error.message
-                                                );
+                                                console.error("Error al guardar cierre: " + error.message);
                                             }
                                         );
                                     },
@@ -10493,9 +8685,7 @@ function FinLavado() {
                             }
                         },
                         function (tx, error) {
-                            console.error(
-                                "Error al guardar cierre: " + error.message
-                            );
+                            console.error("Error al guardar cierre: " + error.message);
                         }
                     );
                 },
@@ -10519,34 +8709,21 @@ function FinLavado() {
             databaseHandler.db.transaction(
                 function (tx) {
                     tx.executeSql(
-                        "UPDATE " +
-                            table +
-                            " SET fechaFin = ? WHERE id_cedula = ?",
+                        "UPDATE " + table + " SET fechaFin = ? WHERE id_cedula = ?",
                         [fecha_salida, id_cedula],
                         function (tx, results) {
-                            let nameSupervisorExt =
-                                $("#supervisorLavado").val();
+                            let nameSupervisorExt = $("#supervisorLavado").val();
                             databaseHandler.db.transaction(
                                 function (tx) {
                                     tx.executeSql(
                                         "UPDATE cedulas_general SET fecha_salida  = ?,estatus = ?, horario_programado = ? WHERE id_cedula = ?",
-                                        [
-                                            fecha_salida,
-                                            estatus,
-                                            nameSupervisorExt,
-                                            id_cedula,
-                                        ],
+                                        [fecha_salida, estatus, nameSupervisorExt, id_cedula],
                                         function (tx, results) {
                                             console.log("gg");
-                                            window.location.href =
-                                                "./menu.html";
+                                            window.location.href = "./menu.html";
                                         },
                                         function (tx, error) {
-                                            swal(
-                                                "Error al guardar",
-                                                error.message,
-                                                "error"
-                                            );
+                                            swal("Error al guardar", error.message, "error");
                                         }
                                     );
                                 },
@@ -10555,9 +8732,7 @@ function FinLavado() {
                             );
                         },
                         function (tx, error) {
-                            console.error(
-                                "Error al guardar cierre: " + error.message
-                            );
+                            console.error("Error al guardar cierre: " + error.message);
                         }
                     );
                 },
@@ -10584,8 +8759,7 @@ function cambioProveedor(id) {
     var NomJson = "Proveedores";
     var html = "";
     app.request({
-        url:
-            cordova.file.dataDirectory + "jsons_InsLavado/" + NomJson + ".json",
+        url: cordova.file.dataDirectory + "jsons_InsLavado/" + NomJson + ".json",
         method: "GET",
         dataType: "json",
         success: function (data) {
@@ -10675,25 +8849,13 @@ function guardanuevoProveedor(id) {
                         function (tx) {
                             tx.executeSql(
                                 "UPDATE IEN_ProgramacionLavado SET proveedor = ? WHERE id_cedula = ? AND FK_header = ? AND programa = ?",
-                                [
-                                    proveedoresModal,
-                                    id_cedula,
-                                    IdHeader,
-                                    programa,
-                                ],
+                                [proveedoresModal, id_cedula, IdHeader, programa],
                                 function (tx, results) {
-                                    swal(
-                                        "",
-                                        "Actualizado correctamente.",
-                                        "success"
-                                    );
+                                    swal("", "Actualizado correctamente.", "success");
                                     app.sheet.close("#sheet-modal");
                                 },
                                 function (tx, error) {
-                                    console.error(
-                                        "Error al guardar cierre: " +
-                                            error.message
-                                    );
+                                    console.error("Error al guardar cierre: " + error.message);
                                 }
                             );
                         },
@@ -10739,11 +8901,7 @@ function actualizaObsResultado() {
         function (tx) {
             tx.executeSql(
                 "UPDATE IEN_HeaderResultadoLavado SET observaciones = ? WHERE id_cedula = ? AND ID_HeaderLavado = ?",
-                [
-                    observaciones,
-                    localStorage.getItem("IdCedula"),
-                    localStorage.getItem("IdHeader"),
-                ],
+                [observaciones, localStorage.getItem("IdCedula"), localStorage.getItem("IdHeader")],
                 function (tx, results) {},
                 function (tx, error) {
                     console.error("Error al guardar cierre: " + error.message);
@@ -10801,17 +8959,11 @@ function FinalizarResultadoLavado() {
                             }
                         });
                     } else {
-                        swal(
-                            "",
-                            "Debes tener como minimo 5 unidades revisadas para poder continuar.",
-                            "warning"
-                        );
+                        swal("", "Debes tener como minimo 5 unidades revisadas para poder continuar.", "warning");
                     }
                 },
                 function (tx5, error) {
-                    console.error(
-                        "Error al consultar bandeja de salida: " + error.message
-                    );
+                    console.error("Error al consultar bandeja de salida: " + error.message);
                 }
             );
         },
@@ -10824,8 +8976,7 @@ function getNameProveedor(proveedor) {
     var NomJson = "Proveedores";
     let nameProveedor = "";
     app.request({
-        url:
-            cordova.file.dataDirectory + "jsons_InsLavado/" + NomJson + ".json",
+        url: cordova.file.dataDirectory + "jsons_InsLavado/" + NomJson + ".json",
         method: "GET",
         dataType: "json",
         success: function (data) {
@@ -10887,9 +9038,7 @@ function SortEncierro() {
                     }
                 },
                 function (tx5, error) {
-                    console.error(
-                        "Error al consultar bandeja de salida: " + error.message
-                    );
+                    console.error("Error al consultar bandeja de salida: " + error.message);
                 }
             );
         },
@@ -10950,29 +9099,17 @@ function prepreIniciaCargaDiesel() {
 
     if (bomba_def2 != 0 || carga_def2 || ID_Personal2 || personal2) {
         if (bomba_def2 == 0) {
-            swal(
-                "",
-                "Si vas a tener 2 bombas. Debes seleccionar una bomba.",
-                "warning"
-            );
+            swal("", "Si vas a tener 2 bombas. Debes seleccionar una bomba.", "warning");
             return false;
         }
 
         if (Number(carga_def2) <= 0) {
-            swal(
-                "",
-                "Si vas a tener 2 bombas. Debes indicar la cantidad de litros inicial.",
-                "warning"
-            );
+            swal("", "Si vas a tener 2 bombas. Debes indicar la cantidad de litros inicial.", "warning");
             return false;
         }
 
         if (!ID_Personal2) {
-            swal(
-                "",
-                "Si vas a tener 2 bombas. Debes indicar al despachador de la bomba.",
-                "warning"
-            );
+            swal("", "Si vas a tener 2 bombas. Debes indicar al despachador de la bomba.", "warning");
             return false;
         }
 
@@ -10990,32 +9127,12 @@ function prepreIniciaCargaDiesel() {
         dangerMode: true,
     }).then((RESP) => {
         if (RESP == true) {
-            iniciarCargasDiesel(
-                bomba_def,
-                carga_def,
-                ID_Personal,
-                personal,
-                bomba_def2,
-                carga_def2,
-                ID_Personal2,
-                personal2,
-                fecha_def
-            );
+            iniciarCargasDiesel(bomba_def, carga_def, ID_Personal, personal, bomba_def2, carga_def2, ID_Personal2, personal2, fecha_def);
         }
     });
 }
 
-function iniciarCargasDiesel(
-    bomba_def,
-    carga_def,
-    ID_Personal,
-    personal,
-    bomba_def2,
-    carga_def2,
-    ID_Personal2,
-    personal2,
-    fecha_def
-) {
+function iniciarCargasDiesel(bomba_def, carga_def, ID_Personal, personal, bomba_def2, carga_def2, ID_Personal2, personal2, fecha_def) {
     var id_usuario = localStorage.getItem("Usuario");
     var nombre_usuario = localStorage.getItem("nombre");
     var fecha_llegada = getDateWhitZeros();
@@ -11046,12 +9163,8 @@ function iniciarCargasDiesel(
                     var item = results.rows.item(0);
                     localStorage.setItem("IdCedula", item.Id);
                     var id_cedula = item.Id;
-                    carga_def = Number(
-                        String(carga_def).replaceAll(",", "")
-                    ).toFixed(2);
-                    carga_def2 = Number(
-                        String(carga_def2).replaceAll(",", "")
-                    ).toFixed(2);
+                    carga_def = Number(String(carga_def).replaceAll(",", "")).toFixed(2);
+                    carga_def2 = Number(String(carga_def2).replaceAll(",", "")).toFixed(2);
                     productHandler.addDatosGenerales_Diesel(
                         id_cedula,
                         fecha_llegada,
@@ -11101,12 +9214,8 @@ function llamarUnidadDiesel() {
             app.sheet.open("#sheet-modal");
             $("#id_unidad").val("");
             $("#eco").val("");
-            let bomba = String($("#bomba_def_d2").html()).trim()
-                ? 0
-                : $("#bomba_def_d").html();
-            String($("#bomba_def_d2").html()).trim()
-                ? null
-                : reviewTotalizador($("#bomba_def_d").html());
+            let bomba = String($("#bomba_def_d2").html()).trim() ? 0 : $("#bomba_def_d").html();
+            String($("#bomba_def_d2").html()).trim() ? null : reviewTotalizador($("#bomba_def_d").html());
             $("#bomba_c").val(bomba);
             $("#almacen").val("Diesel");
             $("#id_operador").val("");
@@ -11124,45 +9233,10 @@ function llamarUnidadDiesel() {
             var tiempoactual = getDateWhitZeros().split(" ");
             var horasSplit = tiempoactual[1].split(":");
             var fecha = tiempoactual[0].split("-");
-            var hours = add_minutes(
-                new Date(
-                    fecha[0],
-                    fecha[1],
-                    fecha[2],
-                    horasSplit[0],
-                    horasSplit[1],
-                    horasSplit[2]
-                ),
-                1
-            ).getHours();
-            var minutes = add_minutes(
-                new Date(
-                    fecha[0],
-                    fecha[1],
-                    fecha[2],
-                    horasSplit[0],
-                    horasSplit[1],
-                    horasSplit[2]
-                ),
-                1
-            ).getMinutes();
-            var seconds = add_minutes(
-                new Date(
-                    fecha[0],
-                    fecha[1],
-                    fecha[2],
-                    horasSplit[0],
-                    horasSplit[1],
-                    horasSplit[2]
-                ),
-                1
-            ).getSeconds();
-            var houtransform =
-                ("0" + hours).slice(-2) +
-                ":" +
-                ("0" + minutes).slice(-2) +
-                ":" +
-                ("0" + seconds).slice(-2);
+            var hours = add_minutes(new Date(fecha[0], fecha[1], fecha[2], horasSplit[0], horasSplit[1], horasSplit[2]), 1).getHours();
+            var minutes = add_minutes(new Date(fecha[0], fecha[1], fecha[2], horasSplit[0], horasSplit[1], horasSplit[2]), 1).getMinutes();
+            var seconds = add_minutes(new Date(fecha[0], fecha[1], fecha[2], horasSplit[0], horasSplit[1], horasSplit[2]), 1).getSeconds();
+            var houtransform = ("0" + hours).slice(-2) + ":" + ("0" + minutes).slice(-2) + ":" + ("0" + seconds).slice(-2);
 
             $("#id_unidad").val(id_unidad);
             $("#eco").val(eco);
@@ -11194,12 +9268,8 @@ function llamarUnidadDiesel() {
             app.sheet.open("#sheet-modal");
             $("#id_unidad").val("");
             $("#eco").val("");
-            let bomba = String($("#bomba_def_d2").html()).trim()
-                ? 0
-                : $("#bomba_def_d").html();
-            String($("#bomba_def_d2").html()).trim()
-                ? null
-                : reviewTotalizador($("#bomba_def_d").html());
+            let bomba = String($("#bomba_def_d2").html()).trim() ? 0 : $("#bomba_def_d").html();
+            String($("#bomba_def_d2").html()).trim() ? null : reviewTotalizador($("#bomba_def_d").html());
             $("#bomba_c").val(bomba);
             $("#almacen").val("Diesel");
             $("#id_operador").val("");
@@ -11217,45 +9287,10 @@ function llamarUnidadDiesel() {
             var tiempoactual = getDateWhitZeros().split(" ");
             var horasSplit = tiempoactual[1].split(":");
             var fecha = tiempoactual[0].split("-");
-            var hours = add_minutes(
-                new Date(
-                    fecha[0],
-                    fecha[1],
-                    fecha[2],
-                    horasSplit[0],
-                    horasSplit[1],
-                    horasSplit[2]
-                ),
-                1
-            ).getHours();
-            var minutes = add_minutes(
-                new Date(
-                    fecha[0],
-                    fecha[1],
-                    fecha[2],
-                    horasSplit[0],
-                    horasSplit[1],
-                    horasSplit[2]
-                ),
-                1
-            ).getMinutes();
-            var seconds = add_minutes(
-                new Date(
-                    fecha[0],
-                    fecha[1],
-                    fecha[2],
-                    horasSplit[0],
-                    horasSplit[1],
-                    horasSplit[2]
-                ),
-                1
-            ).getSeconds();
-            var houtransform =
-                ("0" + hours).slice(-2) +
-                ":" +
-                ("0" + minutes).slice(-2) +
-                ":" +
-                ("0" + seconds).slice(-2);
+            var hours = add_minutes(new Date(fecha[0], fecha[1], fecha[2], horasSplit[0], horasSplit[1], horasSplit[2]), 1).getHours();
+            var minutes = add_minutes(new Date(fecha[0], fecha[1], fecha[2], horasSplit[0], horasSplit[1], horasSplit[2]), 1).getMinutes();
+            var seconds = add_minutes(new Date(fecha[0], fecha[1], fecha[2], horasSplit[0], horasSplit[1], horasSplit[2]), 1).getSeconds();
+            var houtransform = ("0" + hours).slice(-2) + ":" + ("0" + minutes).slice(-2) + ":" + ("0" + seconds).slice(-2);
 
             $("#id_unidad").val(id_unidad);
             $("#eco").val(eco);
@@ -11299,20 +9334,14 @@ function llamarUnidadDiesel() {
         //     function () {}
         // );
     } else {
-        swal(
-            "",
-            "Debes seleccionar primero una unidad para poder continuar",
-            "warning"
-        );
+        swal("", "Debes seleccionar primero una unidad para poder continuar", "warning");
     }
 }
 
 function agregaCarga() {
     if ($("#carga").val()) {
         if ($("#totalizadorFlag").val() >= 9) {
-            if (
-                Number(String($("#totalizador").val()).replaceAll(",", "")) < 1
-            ) {
+            if (Number(String($("#totalizador").val()).replaceAll(",", "")) < 1) {
                 swal("", "Debes agregar el totalizador.", "warning");
                 return false;
             }
@@ -11320,31 +9349,14 @@ function agregaCarga() {
     }
 
     if (Number(String($("#totalizador").val()).replaceAll(",", "")) > 1) {
-        if (
-            Number(String($("#totalizador").val()).replaceAll(",", "")) <
-            Number($("#totalizadorReal").val())
-        ) {
-            swal(
-                "",
-                "EL totalizador agregado es menor al esperado.",
-                "warning"
-            );
+        if (Number(String($("#totalizador").val()).replaceAll(",", "")) < Number($("#totalizadorReal").val())) {
+            swal("", "EL totalizador agregado es menor al esperado.", "warning");
             return false;
         }
 
-        if (
-            Number(String($("#totalizador").val()).replaceAll(",", "")) >
-            Number($("#totalizadorReal").val())
-        ) {
-            if (
-                Number(String($("#totalizador").val()).replaceAll(",", "")) >
-                Number($("#totalizadorReal").val()) + 2000
-            ) {
-                swal(
-                    "",
-                    "EL totalizador agregado es mayor al esperado.",
-                    "warning"
-                );
+        if (Number(String($("#totalizador").val()).replaceAll(",", "")) > Number($("#totalizadorReal").val())) {
+            if (Number(String($("#totalizador").val()).replaceAll(",", "")) > Number($("#totalizadorReal").val()) + 2000) {
+                swal("", "EL totalizador agregado es mayor al esperado.", "warning");
                 return false;
             }
         }
@@ -11353,9 +9365,7 @@ function agregaCarga() {
     if ($("#bomba_c").val() != 0 && $("#odometro").val()) {
         var id_cedula = localStorage.getItem("IdCedula");
         var carga_total = Number($("#carga").val()).toFixed(2);
-        var odometro = Number(
-            String($("#odometro").val()).replaceAll(",", "")
-        ).toFixed(2);
+        var odometro = Number(String($("#odometro").val()).replaceAll(",", "")).toFixed(2);
         var fecha_carga = getDateWhitZeros();
         var no_bomba = $("#bomba_c").val();
         var tipo_carga = $("#tipo_carga").val();
@@ -11375,9 +9385,7 @@ function agregaCarga() {
         let comentarios = $("#comentariosDiesel").val();
         let Id_Empresa = $("#Id_Empresa").val();
         if ($("#totalizador").val()) {
-            var totalizador = Number(
-                String($("#totalizador").val()).replaceAll(",", "")
-            ).toFixed(2);
+            var totalizador = Number(String($("#totalizador").val()).replaceAll(",", "")).toFixed(2);
         } else {
             var totalizador = "";
         }
@@ -11421,41 +9429,23 @@ function agregaCarga() {
                                         var item2 = results.rows.item(0);
                                         $("#message-nr").css("display", "none");
                                         var no_bomba = "";
-                                        item2.no_bomba
-                                            ? (no_bomba = item2.no_bomba)
-                                            : (no_bomba = 0);
+                                        item2.no_bomba ? (no_bomba = item2.no_bomba) : (no_bomba = 0);
                                         $("#tb_diesel").append(
                                             `<tr><td>${item2.eco2}</td><td>${
                                                 Number(item2.carga_total) > 0
-                                                    ? numberWithCommas(
-                                                          item2.carga_total
-                                                      )
+                                                    ? numberWithCommas(item2.carga_total)
                                                     : '<span style="color:#FF0037"> SIN CARGA </span>'
-                                            }</td><td>${numberWithCommas(
-                                                item2.odometro
-                                            )}</td><td>${no_bomba}</td><td>${
+                                            }</td><td>${numberWithCommas(item2.odometro)}</td><td>${no_bomba}</td><td>${
                                                 item2.tipo_carga
                                             }</td><td><button class='col button button-small button-round button-outline edit-btn' style='height: 100%;border-color: #FF0037;margin-top: 15px;margin-bottom: 15px;height: 60px !important;width: 60px;' onclick="editarCargaDiesel('${
                                                 item2.id_detalle
-                                            }','${item2.id_unidad}','${
-                                                item2.eco
-                                            }','${item2.carga_total}','${
-                                                item2.odometro
-                                            }','${item2.no_bomba}','${
+                                            }','${item2.id_unidad}','${item2.eco}','${item2.carga_total}','${item2.odometro}','${item2.no_bomba}','${
                                                 item2.almacen
-                                            }','${item2.h_fin}','${
-                                                item2.h_inicio
-                                            }','${item2.jornada}','${
-                                                item2.operador
-                                            }','${item2.id_operador}','${
+                                            }','${item2.h_fin}','${item2.h_inicio}','${item2.jornada}','${item2.operador}','${item2.id_operador}','${
                                                 item2.vueltas
-                                            }','${item2.tipo_carga}','${
-                                                item2.operador2
-                                            }','${item2.VIN}','2','${
-                                                item2.eco2
-                                            }','${item2.comentarios}', '${
-                                                item2.Id_Empresa
-                                            }','${
+                                            }','${item2.tipo_carga}','${item2.operador2}','${item2.VIN}','2','${item2.eco2}','${
+                                                item2.comentarios
+                                            }', '${item2.Id_Empresa}','${
                                                 item2.totalizador
                                             }');"><i class='material-icons md-light' style='color: #FF0037;vertical-align: middle;font-size: 40px;'>edit</i></button></td></tr>`
                                         );
@@ -11465,86 +9455,41 @@ function agregaCarga() {
                                                     "SELECT SUM(carga_total) as carga_totales, COUNT(id_cedula) as cuentas FROM detalle_diesel WHERE id_cedula = ?",
                                                     [id_cedula],
                                                     function (tx5, results) {
-                                                        var item3 =
-                                                            results.rows.item(
-                                                                0
-                                                            );
-                                                        $("#total_litros").html(
+                                                        var item3 = results.rows.item(0);
+                                                        $("#total_litros").html(`${numberWithCommas(Number(item3.carga_totales).toFixed(2))}`);
+                                                        $("#carga_restantes").html(
                                                             `${numberWithCommas(
-                                                                Number(
-                                                                    item3.carga_totales
-                                                                ).toFixed(2)
+                                                                Number(String($("#carga_def_d").html()).replaceAll(",", "")).toFixed(2) -
+                                                                    Number(item3.carga_totales).toFixed(2)
                                                             )}`
                                                         );
-                                                        $(
-                                                            "#carga_restantes"
-                                                        ).html(
-                                                            `${numberWithCommas(
-                                                                Number(
-                                                                    String(
-                                                                        $(
-                                                                            "#carga_def_d"
-                                                                        ).html()
-                                                                    ).replaceAll(
-                                                                        ",",
-                                                                        ""
-                                                                    )
-                                                                ).toFixed(2) -
-                                                                    Number(
-                                                                        item3.carga_totales
-                                                                    ).toFixed(2)
-                                                            )}`
-                                                        );
-                                                        $(
-                                                            "#unidades_cargadas"
-                                                        ).html(
-                                                            `${item3.cuentas}`
-                                                        );
+                                                        $("#unidades_cargadas").html(`${item3.cuentas}`);
                                                         $("#tb_diesel").append(
                                                             `<tr id="row_totales" style="text-align: center;background-color: #005D99;color: white;font-weight: bold;"><th>Totales</th><th>${numberWithCommas(
-                                                                Number(
-                                                                    item3.carga_totales
-                                                                ).toFixed(2)
+                                                                Number(item3.carga_totales).toFixed(2)
                                                             )}</th><th>&nbsp;</th><th>&nbsp;</th><th>&nbsp;</th><th>&nbsp;</th></tr>`
                                                         );
-                                                        $("#autocomplete").val(
-                                                            ""
-                                                        );
-                                                        $(
-                                                            "#btn_llamarUnidad"
-                                                        ).removeData();
-                                                        $("#totalizador").val(
-                                                            ""
-                                                        );
+                                                        $("#autocomplete").val("");
+                                                        $("#btn_llamarUnidad").removeData();
+                                                        $("#totalizador").val("");
                                                         $("#modelos").val("");
-                                                        app.sheet.close(
-                                                            "#sheet-modal"
-                                                        );
+                                                        app.sheet.close("#sheet-modal");
                                                     },
                                                     function (tx5, error) {
-                                                        console.error(
-                                                            "Error: " +
-                                                                error.message
-                                                        );
+                                                        console.error("Error: " + error.message);
                                                     }
                                                 );
                                             },
                                             function (error) {
-                                                console.error(
-                                                    "Error: " + error.message
-                                                );
+                                                console.error("Error: " + error.message);
                                             },
                                             function (error) {
-                                                console.error(
-                                                    "Error: " + error.message
-                                                );
+                                                console.error("Error: " + error.message);
                                             }
                                         );
                                     },
                                     function (tx5, error) {
-                                        console.error(
-                                            "Error: " + error.message
-                                        );
+                                        console.error("Error: " + error.message);
                                     }
                                 );
                             },
@@ -11569,11 +9514,7 @@ function agregaCarga() {
             }
         );
     } else {
-        swal(
-            "",
-            "La bomba y el odometro son obligatorios para poder guardar",
-            "warning"
-        );
+        swal("", "La bomba y el odometro son obligatorios para poder guardar", "warning");
     }
 }
 
@@ -11699,9 +9640,7 @@ function actualizaCargaDiesel() {
         var h_fin = $("#h_fin_u").val();
         var id_carga = $("#id_detalle_u").val();
         var carga = Number($("#carga_u").val()).toFixed(2);
-        var odometro = Number(
-            String($("#odometro_u").val()).replaceAll(",", "")
-        ).toFixed(2);
+        var odometro = Number(String($("#odometro_u").val()).replaceAll(",", "")).toFixed(2);
         var bomba = $("#bomba_u").val();
         var almacen = $("#almacen_u").val();
         var jornada = $("#jornada_u").val();
@@ -11718,9 +9657,7 @@ function actualizaCargaDiesel() {
         let comentarios = $("#comentariosDiesel_u").val();
         let Id_Empresa = $("#Id_Empresa_u").val();
         if ($("#totalizador_u").val()) {
-            var totalizador = Number(
-                String($("#totalizador_u").val()).replaceAll(",", "")
-            ).toFixed(2);
+            var totalizador = Number(String($("#totalizador_u").val()).replaceAll(",", "")).toFixed(2);
         } else {
             var totalizador = "";
         }
@@ -11763,73 +9700,33 @@ function actualizaCargaDiesel() {
                                     function (tx5, results) {
                                         var length = results.rows.length;
                                         if (length == 0) {
-                                            $("#message-nr").css(
-                                                "display",
-                                                "block"
-                                            );
-                                            $("#total_litros").html(
-                                                `${numberWithCommas(0)}`
-                                            );
+                                            $("#message-nr").css("display", "block");
+                                            $("#total_litros").html(`${numberWithCommas(0)}`);
                                             $("#carga_restantes").html(
-                                                `${numberWithCommas(
-                                                    Number(
-                                                        String(
-                                                            $(
-                                                                "#carga_def_d"
-                                                            ).html()
-                                                        ).replaceAll(",", "")
-                                                    ).toFixed(2)
-                                                )}`
+                                                `${numberWithCommas(Number(String($("#carga_def_d").html()).replaceAll(",", "")).toFixed(2))}`
                                             );
                                         } else {
-                                            $("#message-nr").css(
-                                                "display",
-                                                "none"
-                                            );
+                                            $("#message-nr").css("display", "none");
                                             for (var i = 0; i < length; i++) {
-                                                var item2 =
-                                                    results.rows.item(i);
+                                                var item2 = results.rows.item(i);
                                                 var no_bomba = "";
-                                                item2.no_bomba
-                                                    ? (no_bomba =
-                                                          item2.no_bomba)
-                                                    : (no_bomba = 0);
+                                                item2.no_bomba ? (no_bomba = item2.no_bomba) : (no_bomba = 0);
                                                 $("#tb_diesel").append(
-                                                    `<tr><td>${
-                                                        item2.eco2
-                                                    }</td><td>${
-                                                        Number(
-                                                            item2.carga_total
-                                                        ) > 0
-                                                            ? numberWithCommas(
-                                                                  item2.carga_total
-                                                              )
+                                                    `<tr><td>${item2.eco2}</td><td>${
+                                                        Number(item2.carga_total) > 0
+                                                            ? numberWithCommas(item2.carga_total)
                                                             : '<span style="color:#FF0037"> SIN CARGA </span>'
-                                                    }</td><td>${numberWithCommas(
-                                                        item2.odometro
-                                                    )}</td><td>${no_bomba}</td><td>${
+                                                    }</td><td>${numberWithCommas(item2.odometro)}</td><td>${no_bomba}</td><td>${
                                                         item2.tipo_carga
                                                     }</td><td><button class='col button button-small button-round button-outline edit-btn' style='height: 100%;border-color: #FF0037;margin-top: 15px;margin-bottom: 15px;height: 60px !important;width: 60px;' onclick="editarCargaDiesel('${
                                                         item2.id_detalle
-                                                    }','${item2.id_unidad}','${
-                                                        item2.eco
-                                                    }','${
-                                                        item2.carga_total
-                                                    }','${item2.odometro}','${
+                                                    }','${item2.id_unidad}','${item2.eco}','${item2.carga_total}','${item2.odometro}','${
                                                         item2.no_bomba
-                                                    }','${item2.almacen}','${
-                                                        item2.h_fin
-                                                    }','${item2.h_inicio}','${
-                                                        item2.jornada
-                                                    }','${item2.operador}','${
-                                                        item2.id_operador
-                                                    }','${item2.vueltas}','${
-                                                        item2.tipo_carga
-                                                    }','${item2.operador2}','${
+                                                    }','${item2.almacen}','${item2.h_fin}','${item2.h_inicio}','${item2.jornada}','${
+                                                        item2.operador
+                                                    }','${item2.id_operador}','${item2.vueltas}','${item2.tipo_carga}','${item2.operador2}','${
                                                         item2.VIN
-                                                    }','2','${item2.eco2}','${
-                                                        item2.comentarios
-                                                    }','${item2.Id_Empresa}','${
+                                                    }','2','${item2.eco2}','${item2.comentarios}','${item2.Id_Empresa}','${
                                                         item2.totalizador
                                                     }');"><i class='material-icons md-light' style='color: #FF0037;vertical-align: middle;font-size: 40px;'>edit</i></button></td></tr>`
                                                 );
@@ -11839,101 +9736,43 @@ function actualizaCargaDiesel() {
                                                     tx5.executeSql(
                                                         "SELECT SUM(carga_total) as carga_totales, COUNT(id_cedula) as cuentas FROM detalle_diesel WHERE id_cedula = ?",
                                                         [id_cedula],
-                                                        function (
-                                                            tx5,
-                                                            results
-                                                        ) {
-                                                            var item3 =
-                                                                results.rows.item(
-                                                                    0
-                                                                );
-                                                            $(
-                                                                "#total_litros"
-                                                            ).html(
+                                                        function (tx5, results) {
+                                                            var item3 = results.rows.item(0);
+                                                            $("#total_litros").html(`${numberWithCommas(Number(item3.carga_totales).toFixed(2))}`);
+                                                            $("#carga_restantes").html(
                                                                 `${numberWithCommas(
-                                                                    Number(
-                                                                        item3.carga_totales
-                                                                    ).toFixed(2)
+                                                                    Number(String($("#carga_def_d").html()).replaceAll(",", "")).toFixed(2) -
+                                                                        Number(item3.carga_totales).toFixed(2)
                                                                 )}`
                                                             );
-                                                            $(
-                                                                "#carga_restantes"
-                                                            ).html(
-                                                                `${numberWithCommas(
-                                                                    Number(
-                                                                        String(
-                                                                            $(
-                                                                                "#carga_def_d"
-                                                                            ).html()
-                                                                        ).replaceAll(
-                                                                            ",",
-                                                                            ""
-                                                                        )
-                                                                    ).toFixed(
-                                                                        2
-                                                                    ) -
-                                                                        Number(
-                                                                            item3.carga_totales
-                                                                        ).toFixed(
-                                                                            2
-                                                                        )
-                                                                )}`
-                                                            );
-                                                            $(
-                                                                "#unidades_cargadas"
-                                                            ).html(
-                                                                `${item3.cuentas}`
-                                                            );
-                                                            $(
-                                                                "#tb_diesel"
-                                                            ).append(
+                                                            $("#unidades_cargadas").html(`${item3.cuentas}`);
+                                                            $("#tb_diesel").append(
                                                                 `<tr id="row_totales" style="text-align: center;background-color: #005D99;color: white;font-weight: bold;"><th>Totales</th><th>${numberWithCommas(
-                                                                    Number(
-                                                                        item3.carga_totales
-                                                                    ).toFixed(2)
+                                                                    Number(item3.carga_totales).toFixed(2)
                                                                 )}</th><th>&nbsp;</th><th>&nbsp;</th><th>&nbsp;</th><th>&nbsp;</th></tr>`
                                                             );
-                                                            $(
-                                                                "#autocomplete"
-                                                            ).val("");
-                                                            $("#modelos").val(
-                                                                ""
-                                                            );
-                                                            $(
-                                                                "#totalizador"
-                                                            ).val("");
+                                                            $("#autocomplete").val("");
+                                                            $("#modelos").val("");
+                                                            $("#totalizador").val("");
                                                             app.preloader.hide();
-                                                            app.sheet.close(
-                                                                "#sheet-modal-u"
-                                                            );
+                                                            app.sheet.close("#sheet-modal-u");
                                                         },
                                                         function (tx5, error) {
-                                                            console.error(
-                                                                "Error: " +
-                                                                    error.message
-                                                            );
+                                                            console.error("Error: " + error.message);
                                                         }
                                                     );
                                                 },
                                                 function (error) {
-                                                    console.error(
-                                                        "Error: " +
-                                                            error.message
-                                                    );
+                                                    console.error("Error: " + error.message);
                                                 },
                                                 function (error) {
-                                                    console.error(
-                                                        "Error: " +
-                                                            error.message
-                                                    );
+                                                    console.error("Error: " + error.message);
                                                 }
                                             );
                                         }
                                     },
                                     function (tx5, error) {
-                                        console.error(
-                                            "Error: " + error.message
-                                        );
+                                        console.error("Error: " + error.message);
                                     }
                                 );
                             },
@@ -12000,18 +9839,13 @@ function FinalizarCargaDiesel() {
                                         function (tx5, results) {
                                             var item3 = results.rows.item(0);
                                             var fecha_fin = getDateWhitZeros();
-                                            var promedio = Number(
-                                                item3.carga_totales /
-                                                    item3.cuentas
-                                            ).toFixed(2);
+                                            var promedio = Number(item3.carga_totales / item3.cuentas).toFixed(2);
                                             databaseHandler.db.transaction(
                                                 function (tx) {
                                                     tx.executeSql(
                                                         "UPDATE datos_generales_diesel  SET carga_total  = ?,total_unidades = ?,unidades_cargadas = ?,promedio = ?, fecha_fin = ? WHERE id_cedula = ?",
                                                         [
-                                                            Number(
-                                                                item3.carga_totales
-                                                            ).toFixed(2),
+                                                            Number(item3.carga_totales).toFixed(2),
                                                             item3.cuentas,
                                                             item3.cuentas,
                                                             promedio,
@@ -12019,15 +9853,10 @@ function FinalizarCargaDiesel() {
                                                             id_cedula,
                                                         ],
                                                         function (tx, results) {
-                                                            window.location.href =
-                                                                "./menu.html";
+                                                            window.location.href = "./menu.html";
                                                         },
                                                         function (tx, error) {
-                                                            swal(
-                                                                "Error al guardar",
-                                                                error.message,
-                                                                "error"
-                                                            );
+                                                            swal("Error al guardar", error.message, "error");
                                                         }
                                                     );
                                                 },
@@ -12036,9 +9865,7 @@ function FinalizarCargaDiesel() {
                                             );
                                         },
                                         function (tx5, error) {
-                                            console.error(
-                                                "Error: " + error.message
-                                            );
+                                            console.error("Error: " + error.message);
                                         }
                                     );
                                 },
@@ -12067,11 +9894,7 @@ function check_hours_menores(hora1, hora2) {
     var horas2 = $("#" + hora2).val();
     if (horas2 > horas1) {
     } else {
-        swal(
-            "",
-            "La hora fin no puede ser menor a la hora de inicio de carga.",
-            "warning"
-        );
+        swal("", "La hora fin no puede ser menor a la hora de inicio de carga.", "warning");
         $("#" + hora2).val("");
     }
 }
@@ -12097,15 +9920,11 @@ function cargarDiesel() {
             function (data) {
                 var content = JSON.parse(data);
                 if (content == 0) {
-                    $("#cedul").html(
-                        `<tr><td colspan = "6"><span>No hay datos para mostrar</span></td></tr>`
-                    );
+                    $("#cedul").html(`<tr><td colspan = "6"><span>No hay datos para mostrar</span></td></tr>`);
                     app.dialog.close();
                 } else {
                     if (data == "null") {
-                        $("#cedul").html(
-                            `<tr><td colspan = "6"><span>No hay datos para mostrar</span></td></tr>`
-                        );
+                        $("#cedul").html(`<tr><td colspan = "6"><span>No hay datos para mostrar</span></td></tr>`);
                         app.dialog.close();
                     } else {
                         if (content.length > 0) {
@@ -12115,22 +9934,15 @@ function cargarDiesel() {
                                 var fecha = content[e].FechaCaptura.split(" ");
                                 var id_interno = content[e].id_interno;
                                 var id_intelesis = content[e].id_intelesis;
-                                var estatusIntelisis =
-                                    content[e].estatusIntelisis;
+                                var estatusIntelisis = content[e].estatusIntelisis;
                                 var procesado = false;
-                                content[e].procesado == 2 ||
-                                content[e].procesado == 3
-                                    ? (procesado = true)
-                                    : (procesado = false);
+                                content[e].procesado == 2 || content[e].procesado == 3 ? (procesado = true) : (procesado = false);
 
                                 id_interno ? (ids[e] = id_interno) : null;
 
                                 if (estatusIntelisis == 2) {
                                     if (ids.length > 0) {
-                                        if (
-                                            ids.filter((x) => x === id_interno)
-                                                .length > 1
-                                        ) {
+                                        if (ids.filter((x) => x === id_interno).length > 1) {
                                         } else {
                                             id_interno
                                                 ? procesado
@@ -12167,10 +9979,7 @@ function cargarDiesel() {
                                     }
                                 } else {
                                     if (ids.length > 0) {
-                                        if (
-                                            ids.filter((x) => x === id_interno)
-                                                .length > 1
-                                        ) {
+                                        if (ids.filter((x) => x === id_interno).length > 1) {
                                         } else {
                                             id_interno
                                                 ? procesado
@@ -12211,9 +10020,7 @@ function cargarDiesel() {
                             app.dialog.close();
                         } else {
                             app.dialog.close();
-                            $("#cedul").html(
-                                `<tr><td colspan = "3"><span>No hay datos para mostrar</span></td></tr>`
-                            );
+                            $("#cedul").html(`<tr><td colspan = "3"><span>No hay datos para mostrar</span></td></tr>`);
                         }
                     }
                 }
@@ -12239,15 +10046,11 @@ function cargarDiesel() {
             function (data) {
                 var content = JSON.parse(data);
                 if (content == 0) {
-                    $("#cedul").html(
-                        `<tr><td colspan = "6"><span>No hay datos para mostrar</span></td></tr>`
-                    );
+                    $("#cedul").html(`<tr><td colspan = "6"><span>No hay datos para mostrar</span></td></tr>`);
                     app.dialog.close();
                 } else {
                     if (data == "null") {
-                        $("#cedul").html(
-                            `<tr><td colspan = "6"><span>No hay datos para mostrar</span></td></tr>`
-                        );
+                        $("#cedul").html(`<tr><td colspan = "6"><span>No hay datos para mostrar</span></td></tr>`);
                         app.dialog.close();
                     } else {
                         if (content.length > 0) {
@@ -12257,21 +10060,14 @@ function cargarDiesel() {
                                 var fecha = content[e].FechaCaptura.split(" ");
                                 var id_interno = content[e].id_interno;
                                 var id_intelesis = content[e].id_intelesis;
-                                var estatusIntelisis =
-                                    content[e].estatusIntelisis;
+                                var estatusIntelisis = content[e].estatusIntelisis;
                                 var procesado = false;
-                                content[e].procesado == 2 ||
-                                content[e].procesado == 3
-                                    ? (procesado = true)
-                                    : (procesado = false);
+                                content[e].procesado == 2 || content[e].procesado == 3 ? (procesado = true) : (procesado = false);
 
                                 id_interno ? (ids[e] = id_interno) : null;
 
                                 if (ids.length > 0) {
-                                    if (
-                                        ids.filter((x) => x === id_interno)
-                                            .length > 1
-                                    ) {
+                                    if (ids.filter((x) => x === id_interno).length > 1) {
                                     } else {
                                         id_interno
                                             ? procesado
@@ -12311,9 +10107,7 @@ function cargarDiesel() {
                             app.dialog.close();
                         } else {
                             app.dialog.close();
-                            $("#cedul").html(
-                                `<tr><td colspan = "3"><span>No hay datos para mostrar</span></td></tr>`
-                            );
+                            $("#cedul").html(`<tr><td colspan = "3"><span>No hay datos para mostrar</span></td></tr>`);
                         }
                     }
                 }
@@ -12337,15 +10131,11 @@ function cargarDiesel() {
             function (data) {
                 var content = JSON.parse(data);
                 if (content == 0) {
-                    $("#cedul").html(
-                        `<tr><td colspan = "6"><span>No hay datos para mostrar</span></td></tr>`
-                    );
+                    $("#cedul").html(`<tr><td colspan = "6"><span>No hay datos para mostrar</span></td></tr>`);
                     app.dialog.close();
                 } else {
                     if (data == "null") {
-                        $("#cedul").html(
-                            `<tr><td colspan = "6"><span>No hay datos para mostrar</span></td></tr>`
-                        );
+                        $("#cedul").html(`<tr><td colspan = "6"><span>No hay datos para mostrar</span></td></tr>`);
                         app.dialog.close();
                     } else {
                         if (content.length > 0) {
@@ -12355,21 +10145,14 @@ function cargarDiesel() {
                                 var fecha = content[e].FechaCaptura.split(" ");
                                 var id_interno = content[e].id_interno;
                                 var id_intelesis = content[e].id_intelesis;
-                                var estatusIntelisis =
-                                    content[e].estatusIntelisis;
+                                var estatusIntelisis = content[e].estatusIntelisis;
                                 var procesado = false;
-                                content[e].procesado == 2 ||
-                                content[e].procesado == 3
-                                    ? (procesado = true)
-                                    : (procesado = false);
+                                content[e].procesado == 2 || content[e].procesado == 3 ? (procesado = true) : (procesado = false);
 
                                 id_interno ? (ids[e] = id_interno) : null;
 
                                 if (ids.length > 0) {
-                                    if (
-                                        ids.filter((x) => x === id_interno)
-                                            .length > 1
-                                    ) {
+                                    if (ids.filter((x) => x === id_interno).length > 1) {
                                     } else {
                                         id_interno
                                             ? procesado
@@ -12409,9 +10192,7 @@ function cargarDiesel() {
                             app.dialog.close();
                         } else {
                             app.dialog.close();
-                            $("#cedul").html(
-                                `<tr><td colspan = "3"><span>No hay datos para mostrar</span></td></tr>`
-                            );
+                            $("#cedul").html(`<tr><td colspan = "3"><span>No hay datos para mostrar</span></td></tr>`);
                         }
                     }
                 }
@@ -12448,15 +10229,11 @@ function recarga_Diesel(mes_pdfs, year_pdfs) {
             function (data) {
                 var content = JSON.parse(data);
                 if (content == 0) {
-                    $("#cedul").html(
-                        `<tr><td colspan = "5"><span>No hay datos para mostrar</span></td></tr>`
-                    );
+                    $("#cedul").html(`<tr><td colspan = "5"><span>No hay datos para mostrar</span></td></tr>`);
                     app.dialog.close();
                 } else {
                     if (data == "null") {
-                        $("#cedul").html(
-                            `<tr><td colspan = "5"><span>No hay datos para mostrar</span></td></tr>`
-                        );
+                        $("#cedul").html(`<tr><td colspan = "5"><span>No hay datos para mostrar</span></td></tr>`);
                         app.dialog.close();
                     } else {
                         if (content.length > 0) {
@@ -12466,22 +10243,15 @@ function recarga_Diesel(mes_pdfs, year_pdfs) {
                                 var fecha = content[e].FechaCaptura.split(" ");
                                 var id_interno = content[e].id_interno;
                                 var id_intelesis = content[e].id_intelesis;
-                                var estatusIntelisis =
-                                    content[e].estatusIntelisis;
+                                var estatusIntelisis = content[e].estatusIntelisis;
                                 var procesado = false;
-                                content[e].procesado == 2 ||
-                                content[e].procesado == 3
-                                    ? (procesado = true)
-                                    : (procesado = false);
+                                content[e].procesado == 2 || content[e].procesado == 3 ? (procesado = true) : (procesado = false);
 
                                 id_interno ? (ids[e] = id_interno) : null;
 
                                 if (estatusIntelisis == 2) {
                                     if (ids.length > 0) {
-                                        if (
-                                            ids.filter((x) => x === id_interno)
-                                                .length > 1
-                                        ) {
+                                        if (ids.filter((x) => x === id_interno).length > 1) {
                                         } else {
                                             id_interno
                                                 ? procesado
@@ -12518,10 +10288,7 @@ function recarga_Diesel(mes_pdfs, year_pdfs) {
                                     }
                                 } else {
                                     if (ids.length > 0) {
-                                        if (
-                                            ids.filter((x) => x === id_interno)
-                                                .length > 1
-                                        ) {
+                                        if (ids.filter((x) => x === id_interno).length > 1) {
                                         } else {
                                             id_interno
                                                 ? procesado
@@ -12561,9 +10328,7 @@ function recarga_Diesel(mes_pdfs, year_pdfs) {
                             $("#cedul").html(html);
                             app.dialog.close();
                         } else {
-                            $("#cedul").html(
-                                `<tr><td colspan = "3"><span>No hay datos para mostrar</span></td></tr>`
-                            );
+                            $("#cedul").html(`<tr><td colspan = "3"><span>No hay datos para mostrar</span></td></tr>`);
                             app.dialog.close();
                         }
                     }
@@ -12590,15 +10355,11 @@ function recarga_Diesel(mes_pdfs, year_pdfs) {
             function (data) {
                 var content = JSON.parse(data);
                 if (content == 0) {
-                    $("#cedul").html(
-                        `<tr><td colspan = "6"><span>No hay datos para mostrar</span></td></tr>`
-                    );
+                    $("#cedul").html(`<tr><td colspan = "6"><span>No hay datos para mostrar</span></td></tr>`);
                     app.dialog.close();
                 } else {
                     if (data == "null") {
-                        $("#cedul").html(
-                            `<tr><td colspan = "6"><span>No hay datos para mostrar</span></td></tr>`
-                        );
+                        $("#cedul").html(`<tr><td colspan = "6"><span>No hay datos para mostrar</span></td></tr>`);
                         app.dialog.close();
                     } else {
                         if (content.length > 0) {
@@ -12608,21 +10369,14 @@ function recarga_Diesel(mes_pdfs, year_pdfs) {
                                 var fecha = content[e].FechaCaptura.split(" ");
                                 var id_interno = content[e].id_interno;
                                 var id_intelesis = content[e].id_intelesis;
-                                var estatusIntelisis =
-                                    content[e].estatusIntelisis;
+                                var estatusIntelisis = content[e].estatusIntelisis;
                                 var procesado = false;
-                                content[e].procesado == 2 ||
-                                content[e].procesado == 3
-                                    ? (procesado = true)
-                                    : (procesado = false);
+                                content[e].procesado == 2 || content[e].procesado == 3 ? (procesado = true) : (procesado = false);
 
                                 id_interno ? (ids[e] = id_interno) : null;
 
                                 if (ids.length > 0) {
-                                    if (
-                                        ids.filter((x) => x === id_interno)
-                                            .length > 1
-                                    ) {
+                                    if (ids.filter((x) => x === id_interno).length > 1) {
                                     } else {
                                         id_interno
                                             ? procesado
@@ -12662,9 +10416,7 @@ function recarga_Diesel(mes_pdfs, year_pdfs) {
                             app.dialog.close();
                         } else {
                             app.dialog.close();
-                            $("#cedul").html(
-                                `<tr><td colspan = "3"><span>No hay datos para mostrar</span></td></tr>`
-                            );
+                            $("#cedul").html(`<tr><td colspan = "3"><span>No hay datos para mostrar</span></td></tr>`);
                         }
                     }
                 }
@@ -12757,27 +10509,18 @@ function viewDetailDiesel2(IdCte, IdCedula, id_intelesis, type, id_empresa) {
                                 });
                             } else {
                                 // the mov in intelisis not is concluido
-                                if (
-                                    localStorage.getItem("TipoAcceso") ==
-                                    "admin"
-                                ) {
-                                    app.views.main.router.back(
-                                        "/formDiesel2/",
-                                        {
-                                            force: true,
-                                            ignoreCache: true,
-                                            reload: true,
-                                        }
-                                    );
+                                if (localStorage.getItem("TipoAcceso") == "admin") {
+                                    app.views.main.router.back("/formDiesel2/", {
+                                        force: true,
+                                        ignoreCache: true,
+                                        reload: true,
+                                    });
                                 } else {
-                                    app.views.main.router.back(
-                                        "/formDiesel3/",
-                                        {
-                                            force: true,
-                                            ignoreCache: true,
-                                            reload: true,
-                                        }
-                                    );
+                                    app.views.main.router.back("/formDiesel3/", {
+                                        force: true,
+                                        ignoreCache: true,
+                                        reload: true,
+                                    });
                                 }
                             }
                         } else {
@@ -12804,9 +10547,7 @@ function actualizaCargaDiesel2() {
         var h_fin = $("#h_fin_u").val();
         var id_carga = $("#id_detalle_u").val();
         var carga = Number($("#carga_u").val()).toFixed(2);
-        var odometro = Number(
-            String($("#odometro_u").val()).replaceAll(",", "")
-        ).toFixed(2);
+        var odometro = Number(String($("#odometro_u").val()).replaceAll(",", "")).toFixed(2);
         var bomba = $("#bomba_u").val();
         var almacen = $("#almacen_u").val();
         var jornada = $("#jornada_u").val();
@@ -12881,31 +10622,18 @@ function actualizaCargaDiesel2() {
                         if (dat2 > 0) {
                             app.sheet.close("#sheet-modal-u");
                             swal("Actualizado", "", "success");
-                            $("#trdiesel_" + id_carga)
-                                .html(`<td>${eco2}</td><td>${numberWithCommas(
-                                carga
-                            )}</td><td>${numberWithCommas(
+                            $("#trdiesel_" + id_carga).html(`<td>${eco2}</td><td>${numberWithCommas(carga)}</td><td>${numberWithCommas(
                                 odometro
                             )}</td><td>${bomba}</td><td>${tipo_carga}</td><td> 
                             <button class='col button button-small button-round button-outline edit-btn' style='height: 100%;border-color: #FF0037;height: 50px !important;width: 50px;' onclick="editarCargaDiesel('${id_carga}','${id_unidad}','${eco}','${carga}','${odometro}','${bomba}','${almacen}','${h_fin}','${h_inicio}','${jornada}','${operador}','${id_operador}','${vueltas}','${tipo_carga}','${operador2}','${VIN}','3','${eco2}','${comentarios}');"><i class='material-icons md-light' style='color: #FF0037;vertical-align: middle;font-size: 35px;'>edit</i></button>
                             <button class='col button button-small button-round button-outline edit-btn' style='height: 100%;border-color: #FF0037;height: 50px !important;width: 50px;' onclick="borrarCargaDiesel('${id_carga}','${id_unidad}','${eco}','${carga}');"><i class='material-icons md-light' style='color: #FF0037;vertical-align: middle;font-size: 35px;'>delete_forever</i></button>
                             </td>`);
-                            var carga_total_diesel = Number(
-                                $("#carga_total_diesel").val()
-                            );
-                            carga_total_diesel
-                                ? null
-                                : (carga_total_diesel = 0);
-                            carga_total_diesel = Number(
-                                carga_total_diesel - carga_back
-                            );
-                            carga_total_diesel = Number(
-                                carga_total_diesel + Number(carga)
-                            );
+                            var carga_total_diesel = Number($("#carga_total_diesel").val());
+                            carga_total_diesel ? null : (carga_total_diesel = 0);
+                            carga_total_diesel = Number(carga_total_diesel - carga_back);
+                            carga_total_diesel = Number(carga_total_diesel + Number(carga));
                             $("#carga_total_diesel").val(carga_total_diesel);
-                            $("#text_carga_Diesel").html(
-                                numberWithCommas(carga_total_diesel)
-                            );
+                            $("#text_carga_Diesel").html(numberWithCommas(carga_total_diesel));
                             $("#modelos").val("");
                         }
                     }
@@ -12920,12 +10648,7 @@ function actualizaCargaDiesel2() {
     }
 }
 
-function reprocesarIntelisis1(
-    IdCte,
-    IdCedula,
-    id_intelesis,
-    estatus_intelesis
-) {
+function reprocesarIntelisis1(IdCte, IdCedula, id_intelesis, estatus_intelesis) {
     //Procesa con id de intelesis
     //console.log('Reprocesa1', IdCte, IdCedula, id_intelesis);
     $(".icons_diesel").css("pointer-events", "none");
@@ -12970,38 +10693,23 @@ function reprocesarIntelisis1(
                 if (dat1 == "CEDULA") {
                     if (dat2 > 0) {
                         if (dat2 == 2) {
-                            swal(
-                                "Este registro ya no se puede reprocesar",
-                                "",
-                                "warning"
-                            );
+                            swal("Este registro ya no se puede reprocesar", "", "warning");
                             $(".icons_diesel").css("pointer-events", "all");
                             var mes_pdfs = $(".mes_pdfs").val();
                             var year_pdfs = $("#year").val();
                             recarga_Diesel(mes_pdfs, year_pdfs);
                         } else if (dat2 == 4) {
-                            swal(
-                                "Este registro ya no se puede reprocesar",
-                                "",
-                                "warning"
-                            );
+                            swal("Este registro ya no se puede reprocesar", "", "warning");
                             $(".icons_diesel").css("pointer-events", "all");
                             var mes_pdfs = $(".mes_pdfs").val();
                             var year_pdfs = $("#year").val();
                             recarga_Diesel(mes_pdfs, year_pdfs);
                         } else {
-                            swal(
-                                "Trabajando en el reproceso...",
-                                "",
-                                "warning"
-                            );
+                            swal("Trabajando en el reproceso...", "", "warning");
                             $.ajax({
                                 type: "POST",
                                 async: true,
-                                url:
-                                    url +
-                                    "/processDiesel.php?proceso=5&subProcess=2&estatusIntel=" +
-                                    dat2,
+                                url: url + "/processDiesel.php?proceso=5&subProcess=2&estatusIntel=" + dat2,
                                 dataType: "html",
                                 data: { datos: JSON.stringify(datos) },
                                 success: function (respuesta) {
@@ -13011,23 +10719,11 @@ function reprocesarIntelisis1(
                                         var dat2 = respu1[1];
                                         if (dat1 == "CEDULA") {
                                             if (dat2 > 0) {
-                                                swal(
-                                                    "Completado",
-                                                    "",
-                                                    "success"
-                                                );
-                                                $(".icons_diesel").css(
-                                                    "pointer-events",
-                                                    "all"
-                                                );
-                                                var mes_pdfs =
-                                                    $(".mes_pdfs").val();
-                                                var year_pdfs =
-                                                    $("#year").val();
-                                                recarga_Diesel(
-                                                    mes_pdfs,
-                                                    year_pdfs
-                                                );
+                                                swal("Completado", "", "success");
+                                                $(".icons_diesel").css("pointer-events", "all");
+                                                var mes_pdfs = $(".mes_pdfs").val();
+                                                var year_pdfs = $("#year").val();
+                                                recarga_Diesel(mes_pdfs, year_pdfs);
                                             } else {
                                                 AlmacenarError(respuesta);
                                             }
@@ -13037,29 +10733,16 @@ function reprocesarIntelisis1(
                                     }
                                 },
                                 error: function () {
-                                    console.log(
-                                        "Error en la comunicacion con el servidor"
-                                    );
-                                    swal(
-                                        "Error de comunicación a Internet",
-                                        "",
-                                        "error"
-                                    );
-                                    $(".icons_diesel").css(
-                                        "pointer-events",
-                                        "all"
-                                    );
+                                    console.log("Error en la comunicacion con el servidor");
+                                    swal("Error de comunicación a Internet", "", "error");
+                                    $(".icons_diesel").css("pointer-events", "all");
                                 },
                             });
                         }
                         //swal("Aún existe el registro en Intelisis","","warning");
                     } else if (dat2 == 0) {
                         // AlmacenarError(respuesta);
-                        swal(
-                            "Algo salió mal intenta más tarde.",
-                            "",
-                            "warning"
-                        );
+                        swal("Algo salió mal intenta más tarde.", "", "warning");
                         $(".icons_diesel").css("pointer-events", "all");
                     }
                 } else {
@@ -13075,12 +10758,7 @@ function reprocesarIntelisis1(
     });
 }
 
-function reprocesarIntelisis2(
-    IdCte,
-    IdCedula,
-    id_intelesis,
-    estatus_intelesis
-) {
+function reprocesarIntelisis2(IdCte, IdCedula, id_intelesis, estatus_intelesis) {
     //Procesa cuando no se competo la carga
     //console.log('Reprocesa2', IdCte, IdCedula, id_intelesis);
     $(".icons_diesel").css("pointer-events", "none");
@@ -13161,10 +10839,7 @@ function procesarIntelesis(IdCte, IdCedula, id_interno, estatus_intelesis) {
                     let text = "\n",
                         encontroSuper = false;
                     for (j = 0; j < Cargas.length; j++) {
-                        if (
-                            Number(Cargas[j].Parametro) <
-                            Number(Cargas[j].cargatotal)
-                        ) {
+                        if (Number(Cargas[j].Parametro) < Number(Cargas[j].cargatotal)) {
                             encontroSuper = true;
                         }
                     }
@@ -13177,21 +10852,11 @@ function procesarIntelesis(IdCte, IdCedula, id_interno, estatus_intelesis) {
                             dangerMode: true,
                         }).then((RESP) => {
                             if (RESP == true) {
-                                procesarIntelesisUltimo(
-                                    IdCte,
-                                    IdCedula,
-                                    id_interno,
-                                    estatus_intelesis
-                                );
+                                procesarIntelesisUltimo(IdCte, IdCedula, id_interno, estatus_intelesis);
                             }
                         });
                     } else {
-                        procesarIntelesisUltimo(
-                            IdCte,
-                            IdCedula,
-                            id_interno,
-                            estatus_intelesis
-                        );
+                        procesarIntelesisUltimo(IdCte, IdCedula, id_interno, estatus_intelesis);
                     }
                 }
             }
@@ -13202,12 +10867,7 @@ function procesarIntelesis(IdCte, IdCedula, id_interno, estatus_intelesis) {
     });
 }
 
-function procesarIntelesisUltimo(
-    IdCte,
-    IdCedula,
-    id_interno,
-    estatus_intelesis
-) {
+function procesarIntelesisUltimo(IdCte, IdCedula, id_interno, estatus_intelesis) {
     //console.log('Procesa', IdCte, IdCedula, nid_interno);
     $(".icons_diesel").css("pointer-events", "none");
     swal("Procesando....", "", "");
@@ -13310,18 +10970,9 @@ function guardarUnion() {
             $(".td_input").css("display", "none");
             $(".div_button_diesel").css("display", "none");
             $(".radio_diesel").prop("checked", false);
-            enviaUnion(
-                $("#diesel_IdCte").val(),
-                $("#diesel_IdCedula").val(),
-                $("#diesel_FechaCaptura").val(),
-                quita_coma
-            );
+            enviaUnion($("#diesel_IdCte").val(), $("#diesel_IdCedula").val(), $("#diesel_FechaCaptura").val(), quita_coma);
         } else {
-            swal(
-                "",
-                "Debes seleccionar registros de la misma empresa",
-                "warning"
-            );
+            swal("", "Debes seleccionar registros de la misma empresa", "warning");
         }
     } else {
         swal("", "Debes seleccionar al menos una opción", "warning");
@@ -13409,21 +11060,14 @@ function revisaParametros(id, proceso) {
                     let text = "\n",
                         encontroSuper = false;
                     for (j = 0; j < Cargas.length; j++) {
-                        if (
-                            Number(Cargas[j].Parametro) <
-                            Number(Cargas[j].cargatotal)
-                        ) {
+                        if (Number(Cargas[j].Parametro) < Number(Cargas[j].cargatotal)) {
                             encontroSuper = true;
                             text += `● ${Cargas[j].eco}\n`;
                         }
                     }
                     if (encontroSuper) {
                         if (proceso == 2) {
-                            swal(
-                                "Se detectaron alguna(as) unidad(es) que superan la carga definida.",
-                                text,
-                                "warning"
-                            );
+                            swal("Se detectaron alguna(as) unidad(es) que superan la carga definida.", text, "warning");
                         }
                     }
                 }
@@ -13443,9 +11087,7 @@ function agregaCarga2() {
     if ($("#carga").val() && $("#odometro").val() && $("#bomba_c").val() != 0) {
         var id_cedula = localStorage.getItem("IdCte"); // ID_cabecero
         var carga_total = Number($("#carga").val()).toFixed(2); // carga_total
-        var odometro = Number(
-            String($("#odometro").val()).replaceAll(",", "")
-        ).toFixed(2); // odometro
+        var odometro = Number(String($("#odometro").val()).replaceAll(",", "")).toFixed(2); // odometro
         var fecha_carga = getDateWhitZeros().replace(" ", "T"); // fecha_carga
         var no_bomba = $("#bomba_c").val(); // no_bomba
         var tipo_carga = $("#tipo_carga").val(); // tipo_carga
@@ -13529,36 +11171,21 @@ function agregaCarga2() {
                             $("#modelos").val("");
                             app.sheet.close("#sheet-modal");
                             swal("Agregado", "", "success");
-                            $("#disesl_detalle")
-                                .append(`<tr id="trdiesel_${dat2}"><td>${eco2}</td><td>${numberWithCommas(
+                            $("#disesl_detalle").append(`<tr id="trdiesel_${dat2}"><td>${eco2}</td><td>${numberWithCommas(
                                 carga_total
-                            )}</td><td>${numberWithCommas(
-                                odometro
-                            )}</td><td>${no_bomba}</td><td>${tipo_carga}</td><td> 
+                            )}</td><td>${numberWithCommas(odometro)}</td><td>${no_bomba}</td><td>${tipo_carga}</td><td> 
                                 <button class='col button button-small button-round button-outline edit-btn' style='height: 100%;border-color: #FF0037;height: 50px !important;width: 50px;' onclick="editarCargaDiesel('${dat2}','${id_unidad}','${eco}','${carga_total}','${odometro}','${no_bomba}','${almacen}','${h_fin}','${h_inicio}','${jornada}','${operador}','${id_operador}','${vueltas}','${tipo_carga}','${operador2}','${VIN}','3','${eco2}','${comentarios}');"><i class='material-icons md-light' style='color: #FF0037;vertical-align: middle;font-size: 35px;'>edit</i></button>
                                 <button class='col button button-small button-round button-outline edit-btn' style='height: 100%;border-color: #FF0037;height: 50px !important;width: 50px;' onclick="borrarCargaDiesel('${dat2}','${id_unidad}','${eco}','${carga_total}');"><i class='material-icons md-light' style='color: #FF0037;vertical-align: middle;font-size: 35px;'>delete_forever</i></button>
                             </td></tr>`);
-                            var carga_total_diesel = Number(
-                                $("#carga_total_diesel").val()
-                            );
-                            carga_total_diesel
-                                ? null
-                                : (carga_total_diesel = 0);
-                            carga_total_diesel = Number(
-                                carga_total_diesel + Number(carga_total)
-                            );
+                            var carga_total_diesel = Number($("#carga_total_diesel").val());
+                            carga_total_diesel ? null : (carga_total_diesel = 0);
+                            carga_total_diesel = Number(carga_total_diesel + Number(carga_total));
                             $("#carga_total_diesel").val(carga_total_diesel);
-                            $("#text_carga_Diesel").html(
-                                numberWithCommas(carga_total_diesel)
-                            );
+                            $("#text_carga_Diesel").html(numberWithCommas(carga_total_diesel));
 
-                            let text_unidades_cargadas = Number(
-                                $("#text_unidades_cargadas").text()
-                            );
+                            let text_unidades_cargadas = Number($("#text_unidades_cargadas").text());
                             text_unidades_cargadas++;
-                            $("#text_unidades_cargadas").html(
-                                text_unidades_cargadas
-                            );
+                            $("#text_unidades_cargadas").html(text_unidades_cargadas);
                         }
                     }
                 }
@@ -13568,11 +11195,7 @@ function agregaCarga2() {
             },
         });
     } else {
-        swal(
-            "",
-            "Debes llenar los campos de la bomba, litros cargados y el odometro para poder guardar",
-            "warning"
-        );
+        swal("", "Debes llenar los campos de la bomba, litros cargados y el odometro para poder guardar", "warning");
     }
 }
 function borrarCargaDiesel(id, id_unidad, eco, carga) {
@@ -13627,30 +11250,15 @@ function borrarCargaDiesel(id, id_unidad, eco, carga) {
                             if (dat2 > 0) {
                                 swal("Eliminado correctamente", "", "success");
                                 $("#trdiesel_" + id).remove();
-                                var carga_total_diesel = Number(
-                                    $("#carga_total_diesel").val()
-                                );
-                                carga_total_diesel
-                                    ? null
-                                    : (carga_total_diesel = 0);
-                                carga_total_diesel = Number(
-                                    carga_total_diesel - Number(carga)
-                                );
-                                $("#carga_total_diesel").val(
-                                    carga_total_diesel
-                                );
-                                $("#text_carga_Diesel").html(
-                                    numberWithCommas(carga_total_diesel)
-                                );
+                                var carga_total_diesel = Number($("#carga_total_diesel").val());
+                                carga_total_diesel ? null : (carga_total_diesel = 0);
+                                carga_total_diesel = Number(carga_total_diesel - Number(carga));
+                                $("#carga_total_diesel").val(carga_total_diesel);
+                                $("#text_carga_Diesel").html(numberWithCommas(carga_total_diesel));
 
-                                let text_unidades_cargadas = Number(
-                                    $("#text_unidades_cargadas").text()
-                                );
-                                text_unidades_cargadas =
-                                    text_unidades_cargadas - 1;
-                                $("#text_unidades_cargadas").html(
-                                    text_unidades_cargadas
-                                );
+                                let text_unidades_cargadas = Number($("#text_unidades_cargadas").text());
+                                text_unidades_cargadas = text_unidades_cargadas - 1;
+                                $("#text_unidades_cargadas").html(text_unidades_cargadas);
                             }
                         }
                     }
@@ -13669,24 +11277,17 @@ function validaLitros(valor) {
     let NomJson3 = "Parametros_" + empresa;
 
     if (modelo) {
-        app.request.get(
-            cordova.file.dataDirectory + "jsons_Diesel/" + NomJson3 + ".json",
-            function (data) {
-                var content5 = JSON.parse(data);
-                for (var x = 0; x < content5.length; x++) {
-                    if (content5[x].Modelo == modelo) {
-                        if (Number(content5[x].Parametro) < Number(valor)) {
-                            swal(
-                                "",
-                                "Se esta superando el límite de carga definido.",
-                                "warning"
-                            );
-                        }
-                        break;
+        app.request.get(cordova.file.dataDirectory + "jsons_Diesel/" + NomJson3 + ".json", function (data) {
+            var content5 = JSON.parse(data);
+            for (var x = 0; x < content5.length; x++) {
+                if (content5[x].Modelo == modelo) {
+                    if (Number(content5[x].Parametro) < Number(valor)) {
+                        swal("", "Se esta superando el límite de carga definido.", "warning");
                     }
+                    break;
                 }
             }
-        );
+        });
     }
 }
 
@@ -13749,21 +11350,13 @@ function reviewTotalizador(value) {
                                 }
                                 $("#totalizadorFlag").val(unidades);
                             }
-                            span_Flagtotalizador =
-                                10 - (Number($("#totalizadorFlag").val()) + 1);
-                            $(".span_Flagtotalizador").html(
-                                span_Flagtotalizador +
-                                    " UNIDADES PARA EL TOTALIZADOR"
-                            );
+                            span_Flagtotalizador = 10 - (Number($("#totalizadorFlag").val()) + 1);
+                            $(".span_Flagtotalizador").html(span_Flagtotalizador + " UNIDADES PARA EL TOTALIZADOR");
                             $(".span_Flagtotalizador").css("display", "block");
                         } else {
                             $("#totalizadorFlag").val(0);
-                            span_Flagtotalizador =
-                                10 - (Number($("#totalizadorFlag").val()) + 1);
-                            $(".span_Flagtotalizador").html(
-                                span_Flagtotalizador +
-                                    " UNIDADES PARA EL TOTALIZADOR"
-                            );
+                            span_Flagtotalizador = 10 - (Number($("#totalizadorFlag").val()) + 1);
+                            $(".span_Flagtotalizador").html(span_Flagtotalizador + " UNIDADES PARA EL TOTALIZADOR");
                             $(".span_Flagtotalizador").css("display", "block");
                         }
                     },
@@ -13799,23 +11392,15 @@ function reviewTotalizador(value) {
                                             console.log("item1 =>", item1);
                                             console.log("value =>", value);
                                             if (value == item1.bomba_def) {
-                                                $("#totalizadorReal").val(
-                                                    Number(item1.carga_def)
-                                                );
+                                                $("#totalizadorReal").val(Number(item1.carga_def));
                                                 console.log("Carga def 1");
-                                            } else if (
-                                                value == item1.bomba_def2
-                                            ) {
-                                                $("#totalizadorReal").val(
-                                                    Number(item1.carga_def2)
-                                                );
+                                            } else if (value == item1.bomba_def2) {
+                                                $("#totalizadorReal").val(Number(item1.carga_def2));
                                                 console.log("Carga def 2");
                                             }
                                         },
                                         function (tx5, error) {
-                                            console.error(
-                                                "Error: " + error.message
-                                            );
+                                            console.error("Error: " + error.message);
                                         }
                                     );
                                 },
@@ -13864,30 +11449,19 @@ function lengthCargas(id) {
 function getDataUnidad(id_unidad) {
     console.log(id_unidad);
     let NomJson = "Programacion_1";
-    app.request.get(
-        cordova.file.dataDirectory + "jsons_Diesel/" + NomJson + ".json",
-        function (data) {
-            var content5 = JSON.parse(data);
-            for (var x = 0; x < content5.length; x++) {
-                if (content5[x].FKUnidad == id_unidad) {
-                    if (
-                        content5[x].Estatus == "ASIGNADO" ||
-                        content5[x].Estatus == "CONCLUIDA"
-                    ) {
-                        console.log(content5[x]);
-                        getDataOperador(content5[x].FKPersonal);
-                        getDataVueltas(
-                            content5[x].Fecha2,
-                            content5[x].horaInicio,
-                            content5[x].Linea,
-                            content5[x].Fecha3
-                        );
-                        $("#jornada").val(content5[x].jornada);
-                    }
+    app.request.get(cordova.file.dataDirectory + "jsons_Diesel/" + NomJson + ".json", function (data) {
+        var content5 = JSON.parse(data);
+        for (var x = 0; x < content5.length; x++) {
+            if (content5[x].FKUnidad == id_unidad) {
+                if (content5[x].Estatus == "ASIGNADO" || content5[x].Estatus == "CONCLUIDA") {
+                    console.log(content5[x]);
+                    getDataOperador(content5[x].FKPersonal);
+                    getDataVueltas(content5[x].Fecha2, content5[x].horaInicio, content5[x].Linea, content5[x].Fecha3);
+                    $("#jornada").val(content5[x].jornada);
                 }
             }
         }
-    );
+    });
 }
 
 function getDataOperador(FKPersonal) {
@@ -13895,25 +11469,22 @@ function getDataOperador(FKPersonal) {
     let NomJson2 = "Operadores_" + empresa;
     let operador = FKPersonal;
     let encontro = false;
-    app.request.get(
-        cordova.file.dataDirectory + "jsons_Diesel/" + NomJson2 + ".json",
-        function (data) {
-            var content5 = JSON.parse(data);
-            for (var x = 0; x < content5.length; x++) {
-                if (content5[x].id_ope == operador) {
-                    $("#operador").val(content5[x].buscador);
-                    $("#id_operador").val(content5[x].id_ope);
-                    $("#operador2").val(content5[x].Operador2);
-                    encontro = true;
-                }
-            }
-            if (!encontro) {
-                $("#operador").val("");
-                $("#id_operador").val("");
-                $("#operador2").val("");
+    app.request.get(cordova.file.dataDirectory + "jsons_Diesel/" + NomJson2 + ".json", function (data) {
+        var content5 = JSON.parse(data);
+        for (var x = 0; x < content5.length; x++) {
+            if (content5[x].id_ope == operador) {
+                $("#operador").val(content5[x].buscador);
+                $("#id_operador").val(content5[x].id_ope);
+                $("#operador2").val(content5[x].Operador2);
+                encontro = true;
             }
         }
-    );
+        if (!encontro) {
+            $("#operador").val("");
+            $("#id_operador").val("");
+            $("#operador2").val("");
+        }
+    });
 }
 
 function getDataVueltas(Fecha1, horaInicio, Linea, FechaAux) {
@@ -13928,45 +11499,29 @@ function getDataVueltas(Fecha1, horaInicio, Linea, FechaAux) {
     let NomJson2 = "Lineas_" + empresa;
     let encontro = false;
     let duracionVuelta = "0";
-    app.request.get(
-        cordova.file.dataDirectory + "jsons_Diesel/" + NomJson2 + ".json",
-        function (data) {
-            var content5 = JSON.parse(data);
-            for (var x = 0; x < content5.length; x++) {
-                if (content5[x].linea_lnea == Linea) {
-                    duracionVuelta = content5[x].Hora;
-                    encontro = true;
-                    let entryHour = moment(Fecha, "YYYY-MM-DD HH:mm:ss"); //FECHA DE ENTRADA DE RUTA
-                    let exitHour = moment(
-                        getDateWhitZeros(),
-                        "YYYY-MM-DD HH:mm:ss"
-                    ); //FECHA ACTUAL
-                    let duration = moment
-                        .duration(exitHour.diff(entryHour))
-                        .asSeconds(); //TIEMPO TRANSCURRIDO EN SEGUNDOS
+    app.request.get(cordova.file.dataDirectory + "jsons_Diesel/" + NomJson2 + ".json", function (data) {
+        var content5 = JSON.parse(data);
+        for (var x = 0; x < content5.length; x++) {
+            if (content5[x].linea_lnea == Linea) {
+                duracionVuelta = content5[x].Hora;
+                encontro = true;
+                let entryHour = moment(Fecha, "YYYY-MM-DD HH:mm:ss"); //FECHA DE ENTRADA DE RUTA
+                let exitHour = moment(getDateWhitZeros(), "YYYY-MM-DD HH:mm:ss"); //FECHA ACTUAL
+                let duration = moment.duration(exitHour.diff(entryHour)).asSeconds(); //TIEMPO TRANSCURRIDO EN SEGUNDOS
 
-                    //CALCULAR SEGUNDOS DE LINEA
-                    let entryHour1 = moment(
-                        "2024-02-19 00:00:00",
-                        "YYYY-MM-DD HH:mm:ss"
-                    );
-                    let exitHour1 = moment(
-                        "2024-02-19 " + duracionVuelta,
-                        "YYYY-MM-DD HH:mm:ss"
-                    );
-                    let duration1 = moment
-                        .duration(exitHour1.diff(entryHour1))
-                        .asSeconds();
+                //CALCULAR SEGUNDOS DE LINEA
+                let entryHour1 = moment("2024-02-19 00:00:00", "YYYY-MM-DD HH:mm:ss");
+                let exitHour1 = moment("2024-02-19 " + duracionVuelta, "YYYY-MM-DD HH:mm:ss");
+                let duration1 = moment.duration(exitHour1.diff(entryHour1)).asSeconds();
 
-                    if (duration1 > 0) {
-                        let vueltasAprox = duration / duration1;
-                        vueltasAprox = vueltasAprox.toFixed(2);
-                        $("#vueltas").val(vueltasAprox);
-                    }
+                if (duration1 > 0) {
+                    let vueltasAprox = duration / duration1;
+                    vueltasAprox = vueltasAprox.toFixed(2);
+                    $("#vueltas").val(vueltasAprox);
                 }
             }
         }
-    );
+    });
 }
 //? Fin Diesel
 //fin HMO
