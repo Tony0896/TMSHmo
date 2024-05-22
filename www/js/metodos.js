@@ -112,7 +112,7 @@ function preeliminaCache() {
     let paso = 1;
     // let urlBase2 = "http://192.168.100.4/Desarrollo/CISAApp/HMOFiles/Exec";
     // let urlBase2 = "http://tmshmo.ci-sa.com.mx/www.CISAAPP.com/HMOFiles/Exec";
-    let urlBase2 = "http://tmshmo.ci-sa.com.mx/www.CISAAPP.com/HMOFiles/Exec";
+    let urlBase2 = "http://tmshmo.ci-sa.com.mx/www.CISAAPP.com/HMOFiles_dev/Exec";
     let url = "";
 
     // Capacitacion,Diesel,tecnologiasHmo,InsEncierro,InsLavado,Relevos
@@ -321,7 +321,8 @@ function moveMenu(val) {
             preInicioTech();
             // app.views.main.router.navigate({ name: 'yallegueTecnologiasHMO'});
         } else if (Modulos == "Relevos") {
-            app.views.main.router.navigate({ name: "formRelevos1" });
+            revisaDataRelevos();
+            // app.views.main.router.navigate({ name: "formRelevos1" });
         } else if (Modulos == "Diesel") {
             preingresoDiesel();
         }
@@ -4248,7 +4249,7 @@ function sincronizaDatosCapacitacion() {
     let paso = 1;
     // let urlBase2 = "http://192.168.100.4/Desarrollo/CISAApp/HMOFiles/Exec";
     // var urlBase2 = "http://172.16.0.143/Desarrollo/CISAApp/HMOFiles/Exec";
-    let urlBase2 = "http://tmshmo.ci-sa.com.mx/www.CISAAPP.com/HMOFiles/Exec";
+    let urlBase2 = "http://tmshmo.ci-sa.com.mx/www.CISAAPP.com/HMOFiles_dev/Exec";
     let url = urlBase2 + "/capacitacion/datos.php?empresa=" + EmpresaID + "&paso=" + paso;
 
     fetch(url).then((response) => {
@@ -6381,12 +6382,38 @@ function sincronizaDatosRelevos() {
     let paso = 1;
     // let urlBase2 = "http://192.168.100.4/Desarrollo/CISAApp/HMOFiles/Exec";
     // var urlBase2 = "http://172.16.0.143/Desarrollo/CISAApp/HMOFiles/Exec";
-    let urlBase2 = "http://tmshmo.ci-sa.com.mx/www.CISAAPP.com/HMOFiles/Exec";
+    let urlBase2 = "http://tmshmo.ci-sa.com.mx/www.CISAAPP.com/HMOFiles_dev/Exec";
     let url = urlBase2 + "/Relevos/datos.php?empresa=" + EmpresaID + "&paso=" + paso;
 
     fetch(url).then((response) => {
         console.log("Sincroniza datos OK!");
         eliminaCache();
+    });
+}
+
+function revisaDataRelevos() {
+    let fecha = getDateWhitZeros().split(" ")[0];
+    // console.log(fecha);
+    empresa = localStorage.getItem("empresa");
+    let NomJson = "programa_" + empresa;
+    app.request({
+        url: cordova.file.dataDirectory + "jsons_Relevos/" + NomJson + ".json",
+        method: "GET",
+        dataType: "json",
+        success: function (data) {
+            let encontro = false;
+            for (var j = 0; j < 2; j++) {
+                if (data[j].Fecha == fecha) {
+                    encontro = true;
+                }
+            }
+
+            if (!encontro) {
+                swal("", "Favor de Sincronizar los datos antes de empezar.", "warning");
+            } else {
+                app.views.main.router.navigate({ name: "formRelevos1" });
+            }
+        },
     });
 }
 //Fin Relevos
@@ -9384,6 +9411,10 @@ function agregaCarga() {
         eco2 = eco2.replace("Unidad: ", "");
         let comentarios = $("#comentariosDiesel").val();
         let Id_Empresa = $("#Id_Empresa").val();
+        let id_operador1 = $("#id_operador1").val();
+        let operador1 = $("#operador1").val();
+        let operador11 = $("#operador11").val();
+
         if ($("#totalizador").val()) {
             var totalizador = Number(String($("#totalizador").val()).replaceAll(",", "")).toFixed(2);
         } else {
@@ -9393,7 +9424,7 @@ function agregaCarga() {
         databaseHandler.db.transaction(
             function (tx) {
                 tx.executeSql(
-                    "insert into detalle_diesel (id_cedula, id_unidad, eco, carga_total, odometro, fecha_carga, no_bomba, almacen, operador, id_operador, jornada, vueltas, h_inicio, h_fin, tipo_carga, operador2, VIN, eco2, comentarios, Id_Empresa, totalizador) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                    "insert into detalle_diesel (id_cedula, id_unidad, eco, carga_total, odometro, fecha_carga, no_bomba, almacen, operador, id_operador, jornada, vueltas, h_inicio, h_fin, tipo_carga, operador2, VIN, eco2, comentarios, Id_Empresa, totalizador, id_operador1, operador1, operador11) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                     [
                         id_cedula,
                         id_unidad,
@@ -9416,6 +9447,9 @@ function agregaCarga() {
                         comentarios,
                         Id_Empresa,
                         totalizador,
+                        id_operador1,
+                        operador1,
+                        operador11,
                     ],
                     function (tx, results) {
                         swal("", "Guardado correctamente", "success");
@@ -11380,7 +11414,7 @@ function reviewTotalizador(value) {
                     [localStorage.getItem("IdCedula"), value],
                     function (tx5, results) {
                         var item2 = results.rows.item(0);
-                        console.log("max =>", Number(item2.MaxTotal));
+                        // console.log("max =>", Number(item2.MaxTotal));
                         if (Number(item2.MaxTotal) == 0) {
                             databaseHandler.db.transaction(
                                 function (tx5) {
@@ -11389,14 +11423,14 @@ function reviewTotalizador(value) {
                                         [localStorage.getItem("IdCedula")],
                                         function (tx5, results) {
                                             var item1 = results.rows.item(0);
-                                            console.log("item1 =>", item1);
-                                            console.log("value =>", value);
+                                            // console.log("item1 =>", item1);
+                                            // console.log("value =>", value);
                                             if (value == item1.bomba_def) {
                                                 $("#totalizadorReal").val(Number(item1.carga_def));
-                                                console.log("Carga def 1");
+                                                // console.log("Carga def 1");
                                             } else if (value == item1.bomba_def2) {
                                                 $("#totalizadorReal").val(Number(item1.carga_def2));
-                                                console.log("Carga def 2");
+                                                // console.log("Carga def 2");
                                             }
                                         },
                                         function (tx5, error) {
@@ -11447,17 +11481,19 @@ function lengthCargas(id) {
 }
 
 function getDataUnidad(id_unidad) {
-    console.log(id_unidad);
     let NomJson = "Programacion_1";
     app.request.get(cordova.file.dataDirectory + "jsons_Diesel/" + NomJson + ".json", function (data) {
         var content5 = JSON.parse(data);
         for (var x = 0; x < content5.length; x++) {
             if (content5[x].FKUnidad == id_unidad) {
-                if (content5[x].Estatus == "ASIGNADO" || content5[x].Estatus == "CONCLUIDA") {
+                if ((content5[x].Estatus == "ASIGNADO" || content5[x].Estatus == "CONCLUIDA") && content5[x].Turno == "2") {
                     console.log(content5[x]);
                     getDataOperador(content5[x].FKPersonal);
                     getDataVueltas(content5[x].Fecha2, content5[x].horaInicio, content5[x].Linea, content5[x].Fecha3);
                     $("#jornada").val(content5[x].jornada);
+                } else if ((content5[x].Estatus == "ASIGNADO" || content5[x].Estatus == "CONCLUIDA") && content5[x].Turno == "1") {
+                    console.log(content5[x]);
+                    getDataOperadorUno(content5[x].FKPersonal);
                 }
             }
         }
@@ -11473,6 +11509,7 @@ function getDataOperador(FKPersonal) {
         var content5 = JSON.parse(data);
         for (var x = 0; x < content5.length; x++) {
             if (content5[x].id_ope == operador) {
+                console.log("opera 2 =>", content5[x].buscador);
                 $("#operador").val(content5[x].buscador);
                 $("#id_operador").val(content5[x].id_ope);
                 $("#operador2").val(content5[x].Operador2);
@@ -11483,6 +11520,30 @@ function getDataOperador(FKPersonal) {
             $("#operador").val("");
             $("#id_operador").val("");
             $("#operador2").val("");
+        }
+    });
+}
+
+function getDataOperadorUno(FKPersonal) {
+    let empresa = localStorage.getItem("empresa");
+    let NomJson2 = "Operadores_" + empresa;
+    let operador = FKPersonal;
+    let encontro = false;
+    app.request.get(cordova.file.dataDirectory + "jsons_Diesel/" + NomJson2 + ".json", function (data) {
+        var content5 = JSON.parse(data);
+        for (var x = 0; x < content5.length; x++) {
+            if (content5[x].id_ope == operador) {
+                console.log("opera 1 =>", content5[x].buscador);
+                $("#operador1").val(content5[x].buscador);
+                $("#id_operador1").val(content5[x].id_ope);
+                $("#operador11").val(content5[x].Operador2);
+                encontro = true;
+            }
+        }
+        if (!encontro) {
+            $("#operador1").val("");
+            $("#id_operador1").val("");
+            $("#operador11").val("");
         }
     });
 }
@@ -11521,6 +11582,15 @@ function getDataVueltas(Fecha1, horaInicio, Linea, FechaAux) {
                 }
             }
         }
+    });
+}
+
+function verDetalleDiesel(id_cedula) {
+    localStorage.setItem("IdCedula", id_cedula);
+    app.views.main.router.back("/formDiesel5/", {
+        force: true,
+        ignoreCache: true,
+        reload: true,
     });
 }
 //? Fin Diesel

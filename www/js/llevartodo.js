@@ -1528,6 +1528,9 @@ function llevarTodo(id_cedula, tipo_cedula) {
                                                                 VIN: item2.VIN,
                                                                 comentarios: item2.comentarios,
                                                                 Id_Empresa: item2.Id_Empresa,
+                                                                id_operador1: item2.id_operador1,
+                                                                operador1: item2.operador1,
+                                                                operador11: item2.operador11,
                                                             };
                                                         }
                                                         $.ajax({
@@ -2047,6 +2050,33 @@ function EliminarReg(id_cedula, tipo_cedula) {
                     function (tx) {
                         tx.executeSql(
                             "DELETE FROM IEN_HeaderResultadoLavado WHERE id_cedula = ?",
+                            [id_cedula],
+                            function (tx, results) {},
+                            function (tx, error) {}
+                        );
+                    },
+                    function (error) {},
+                    function () {}
+                );
+            } else if (tipo_cedula == "Diesel") {
+                $("#conc" + id_cedula).remove();
+                swal("", "Eliminado correctamente", "success");
+                databaseHandler.db.transaction(
+                    function (tx) {
+                        tx.executeSql(
+                            "DELETE FROM datos_generales_diesel WHERE id_cedula = ?",
+                            [id_cedula],
+                            function (tx, results) {},
+                            function (tx, error) {}
+                        );
+                    },
+                    function (error) {},
+                    function () {}
+                );
+                databaseHandler.db.transaction(
+                    function (tx) {
+                        tx.executeSql(
+                            "DELETE FROM detalle_diesel WHERE id_cedula = ?",
                             [id_cedula],
                             function (tx, results) {},
                             function (tx, error) {}

@@ -405,7 +405,6 @@
             window.localStorage.removeItem("NombreCurso");
             window.localStorage.removeItem("nameBecario");
             window.localStorage.removeItem("Costo");
-            window.localStorage.removeItem("cameraField");
             window.localStorage.removeItem("IdHeader");
 
             var modulos = localStorage.getItem("Modulo").split(",");
@@ -507,7 +506,7 @@
                 // var urlBase2 = "http://192.168.100.8/Desarrollo/CISAApp/HMOFiles/JSONS";
                 // var urlBase2 = "http://192.168.1.79/Desarrollo/CISAApp/HMOFiles_dev/JSONS";
                 // var urlBase2 = "http://172.16.0.143/Desarrollo/CISAApp/HMOFiles/JSONS";
-                var urlBase2 = "http://tmshmo.ci-sa.com.mx/www.CISAAPP.com/HMOFiles/JSONS";
+                var urlBase2 = "http://tmshmo.ci-sa.com.mx/www.CISAAPP.com/HMOFiles_dev/JSONS";
                 // var urlBase2 = "http://tmshmo.ci-sa.com.mx/www.CISAAPP.com/HMOFiles/JSONS";
 
                 if (localStorage.getItem("Modulos")) {
@@ -893,33 +892,67 @@
                                             }
                                         } else {
                                             if (item.estatus == 1) {
-                                                $("#bandeja").append(
-                                                    `<li id=li-` +
-                                                        item.id_cedula +
-                                                        `><div class='item-content' style="padding-left: 5px !important;margin-bottom: 10px;"><div class='item-media'><i class='icon'><img src='img/circuloNaranja.png' width='20px' height='20px' /></i></div> <div class='item-inner'><div class='item-title'>` +
-                                                        item.nombre_cliente +
-                                                        ` | ` +
-                                                        fechas[0] +
-                                                        `</div> <div class='item-after'><a href='#' class='send-ced' onclick='llevarTodo(` +
-                                                        item.id_cedula +
-                                                        `,\"` +
-                                                        item.tipo_cedula +
-                                                        `\");' style='border: none; outline:none;'><img src='img/send.svg'  width='30px' height='30px'/></a></div></div></div></li>`
-                                                );
+                                                if (tipo == "Diesel") {
+                                                    $("#bandeja").append(
+                                                        `<li id=li-` +
+                                                            item.id_cedula +
+                                                            `><div class='item-content' style="padding-left: 5px !important;margin-bottom: 10px;"><div class='item-media'><i class='icon'><img src='img/circuloNaranja.png' width='20px' height='20px' /></i></div> <div class='item-inner'><div class='item-title'>` +
+                                                            item.nombre_cliente +
+                                                            ` | ` +
+                                                            fechas[0] +
+                                                            `</div> <div class='item-after'><a href='#' class='send-ced' onclick='llevarTodo(` +
+                                                            item.id_cedula +
+                                                            `,\"` +
+                                                            item.tipo_cedula +
+                                                            `\");' style='border: none; outline:none;'><img src='img/send.svg'  width='30px' height='30px'/></a>
+                                                            <a href='#' class='send-ced' onclick='verDetalleDiesel(${item.id_cedula});' style='border: none; outline:none;border: none;outline:none;margin-left: 15px;'><img src='img/info.svg' width='30px' height='30px'/></a> </div></div></div></li>`
+                                                    );
+                                                } else {
+                                                    $("#bandeja").append(
+                                                        `<li id=li-` +
+                                                            item.id_cedula +
+                                                            `><div class='item-content' style="padding-left: 5px !important;margin-bottom: 10px;"><div class='item-media'><i class='icon'><img src='img/circuloNaranja.png' width='20px' height='20px' /></i></div> <div class='item-inner'><div class='item-title'>` +
+                                                            item.nombre_cliente +
+                                                            ` | ` +
+                                                            fechas[0] +
+                                                            `</div> <div class='item-after'><a href='#' class='send-ced' onclick='llevarTodo(` +
+                                                            item.id_cedula +
+                                                            `,\"` +
+                                                            item.tipo_cedula +
+                                                            `\");' style='border: none; outline:none;'><img src='img/send.svg'  width='30px' height='30px'/></a></div></div></div></li>`
+                                                    );
+                                                }
                                             } else if (item.estatus == 2) {
-                                                $("#bandeja").append(
-                                                    `<li id=li-` +
-                                                        item.id_cedula +
-                                                        `><div class='item-content' style="padding-left: 5px !important;margin-bottom: 10px;"><div class='item-media'><i class='icon'><img src='img/circuloRojo.png' width='20px' height='20px' /></i></div> <div class='item-inner'><div class='item-title'>` +
-                                                        item.nombre_cliente +
-                                                        ` | ` +
-                                                        fechas[0] +
-                                                        `</div> <div class='item-after'><a href='#' class='send-ced' onclick='llevarTodo(` +
-                                                        item.id_cedula +
-                                                        `,\"` +
-                                                        item.tipo_cedula +
-                                                        `\");' style='border: none; outline:none;'><img src='img/send.svg'  width='30px' height='30px' /></a></div></div></div><div class='sortable-handler'></div></li>`
-                                                );
+                                                if (tipo == "Diesel") {
+                                                    $("#bandeja").append(
+                                                        `<li id=li-` +
+                                                            item.id_cedula +
+                                                            `><div class='item-content' style="padding-left: 5px !important;margin-bottom: 10px;"><div class='item-media'><i class='icon'><img src='img/circuloRojo.png' width='20px' height='20px' /></i></div> <div class='item-inner'><div class='item-title'>` +
+                                                            item.nombre_cliente +
+                                                            ` | ` +
+                                                            fechas[0] +
+                                                            `</div> <div class='item-after'><a href='#' class='send-ced' onclick='llevarTodo(` +
+                                                            item.id_cedula +
+                                                            `,\"` +
+                                                            item.tipo_cedula +
+                                                            `\");' style='border: none; outline:none;'><img src='img/send.svg'  width='30px' height='30px' /></a> 
+                                                            <a href='#' class='send-ced' onclick='verDetalleDiesel(${item.id_cedula});' style='border: none; outline:none;border: none;outline:none;margin-left: 15px;'><img src='img/info.svg' width='30px' height='30px'/></a> </div></div></div><div class='sortable-handler'></div></li>`
+                                                    );
+                                                } else {
+                                                    $("#bandeja").append(
+                                                        `<li id=li-` +
+                                                            item.id_cedula +
+                                                            `><div class='item-content' style="padding-left: 5px !important;margin-bottom: 10px;"><div class='item-media'><i class='icon'><img src='img/circuloRojo.png' width='20px' height='20px' /></i></div> <div class='item-inner'><div class='item-title'>` +
+                                                            item.nombre_cliente +
+                                                            ` | ` +
+                                                            fechas[0] +
+                                                            `</div> <div class='item-after'><a href='#' class='send-ced' onclick='llevarTodo(` +
+                                                            item.id_cedula +
+                                                            `,\"` +
+                                                            item.tipo_cedula +
+                                                            `\");' style='border: none; outline:none;'><img src='img/send.svg'  width='30px' height='30px' /></a></div></div></div><div class='sortable-handler'></div></li>`
+                                                    );
+                                                }
                                             }
                                         }
                                     }
@@ -1011,6 +1044,35 @@
                         },
                         function () {}
                     );
+                    databaseHandler.db.transaction(
+                        function (tx5) {
+                            tx5.executeSql("SELECT id_operador2 FROM detalle_diesel LIMIT 1", [], function (tx5, results) {});
+                        },
+                        function (error) {
+                            databaseHandler.db.transaction(
+                                function (tx5) {
+                                    tx5.executeSql("ALTER TABLE detalle_diesel ADD COLUMN id_operador1 int", [], function (tx5, results) {});
+                                },
+                                function (error) {},
+                                function () {}
+                            );
+                            databaseHandler.db.transaction(
+                                function (tx5) {
+                                    tx5.executeSql("ALTER TABLE detalle_diesel ADD COLUMN operador1 text", [], function (tx5, results) {});
+                                },
+                                function (error) {},
+                                function () {}
+                            );
+                            databaseHandler.db.transaction(
+                                function (tx5) {
+                                    tx5.executeSql("ALTER TABLE detalle_diesel ADD COLUMN operador11 text", [], function (tx5, results) {});
+                                },
+                                function (error) {},
+                                function () {}
+                            );
+                        },
+                        function () {}
+                    ); //id_operador int, operador text, operador2 text
                     //* FIN Cambio de campos en BD
                     //Sin conexion
                     var sinConexion = 0;
