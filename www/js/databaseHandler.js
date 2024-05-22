@@ -225,6 +225,48 @@ var databaseHandler = {
                         }
                     );
                 //? Fin Lavado
+                //? Inicio Diesel
+                    tx.executeSql(
+                        "create table if not exists datos_generales_diesel(id_dato integer primary key, id_cedula integer, fecha text, id_usuario text, id_empresa integer, observaciones text, carga_total float, total_unidades integer, unidades_cargadas integer, promedio float, origen int, estatus int, id_servidor integer, fecha_fin text, nombre_usuario text, bomba_def integer, carga_def float)",
+                        [],
+                        function(tx, results){
+                            // console.log("Se creo Servicio tecnico DIPREC correctamente!");
+                        },
+                        function(tx, error){
+                            console.error("Error al crear la tabla de datos_generales_recaudo: " + error.message);
+                        }
+                    );
+                    tx.executeSql(
+                        "create table if not exists detalle_diesel(id_detalle integer primary key, id_cedula integer, id_unidad integer, eco text, carga_total float, odometro float, fecha_carga text, no_bomba int, almacen text, id_operador int, operador text, operador2 text, jornada text, vueltas int, h_inicio text, h_fin text, tipo_carga text, VIN text, eco2 text, comentarios text, Id_Empresa int)",
+                        [],
+                        function(tx, results){
+                            // console.log("Se creo Servicio tecnico DIPREC correctamente!");
+                        },
+                        function(tx, error){
+                            console.error("Error al crear la tabla de detalle_recaudo: " + error.message);
+                        }
+                    );
+                //? Fin Diesel
+                //? INICO IMAGEN
+                tx.executeSql(
+                    "create table if not exists checklist(id_check integer primary key, id_cedula integer, id_pregunta integer, revision text, nombre_fase text, int_ext text, id_fase int, obligatorio int, no_pregunta int, respuesta int, modelo int, comentarios text, multiple int)",
+                    [],
+                    function(tx, results){
+                    },
+                    function(tx, error){
+                        console.error("Error al crear la tabla" + error.message);
+                    }
+                );
+                tx.executeSql(
+                    "create table if not exists datos_generales_checklist(id_dato integer primary key,id_cedula integer, Unidad text, Chasis text, Familia text, marca text, Empresa text, FK_id_unidad int, id_unidad_vs int, FK_id_empresa int, id_modelo_check int, comentarios_generales text, fecha_revision text)",
+                    [],
+                    function(tx, results){
+                    },
+                    function(tx, error){
+                        console.error("Error al crear la tabla" + error.message);
+                    }
+                );
+                //? FIN IMAGEN
             },
             function(error){
                 console.error("Error al crear la base de datos: " + error.message);

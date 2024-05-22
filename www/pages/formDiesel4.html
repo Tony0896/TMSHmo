@@ -1,0 +1,240 @@
+<style>
+    .item-title {
+        font-size: 25px !important;
+    }
+    .autocomplete-dropdown-inner {
+        margin-top: 15px;
+    }
+    .item-inner {
+        margin-bottom: 12px;
+    }
+</style>
+<template>
+    <div class="page">
+        <!-- Navsbars -->
+        <nav class="left top-left" style="justify-content: space-between">
+            <a href="javascript:location.reload()" style="margin-left: 10px; display: inline-flex; align-items: center">
+                <i class="icon material-icons md-only" style="font-weight: 900; font-size: 30px">arrow_back</i>
+            </a>
+            <div class="title">Carga Diesel</div>
+            <a style="margin-right: 10px">
+                <i class="icon material-icons md-only" style="color: #1e9fb4; font-weight: 900">arrow_back</i>
+            </a>
+        </nav>
+        <!-- Contenido Page -->
+        <div class="page-content" style="height: 98%; border-radius: 0px !important">
+            <div style="text-align: center; justify-content: center; margin-right: auto; margin-left: auto; width: 99%; margin-top: 0px">
+                <div style="text-align: left">
+                    <div class="list FWM-fixing-form" id="datos_form" style="margin-left: 5px; margin-right: 5px; width: 99%">
+                        <h2 style="text-align: center">Datos de carga de Diesel</h2>
+                        <div style="margin: 20px 10px">
+                            <span class="span FWM-span-form">Fecha</span>
+                            <input
+                                type="date"
+                                id="fecha_def"
+                                class="FWM-input input-resalte"
+                                style="padding-right: 5px; font-size: 39px !important"
+                            />
+
+                            <span class="span FWM-span-form">Bomba de carga</span>
+                            <select class="FWM-input input-resalte" id="bomba_def" style="font-size: 30px !important; padding: 15px">
+                                <option value="0" selected>Selecciona una opción</option>
+                                <option value="Bomba 1">Bomba 1</option>
+                                <option value="Bomba 2">Bomba 2</option>
+                                <option value="Bomba 3">Bomba 3</option>
+                                <option value="Bomba 4">Bomba 4</option>
+                                <option value="Bomba 5">Bomba 5</option>
+                            </select>
+
+                            <span class="span FWM-span-form">Totalizador</span>
+                            <input
+                                type="text"
+                                inputmode="numeric"
+                                id="carga_def"
+                                class="FWM-input input-resalte"
+                                style="padding-right: 5px; font-size: 39px !important"
+                                maxlength="20"
+                                min="1"
+                                step=".01"
+                                oninput="checkLengtNumber(this.id)"
+                            />
+
+                            <span class="span FWM-span-form">Despachador (Bombero)</span>
+                            <input
+                                type="text"
+                                id="personal"
+                                class="FWM-input input-resalte"
+                                style="padding-right: 5px; font-size: 39px !important; margin-bottom: 50px"
+                            />
+                            <input type="hidden" id="ID_Personal" />
+
+                            <span class="span FWM-span-form">Segunda Bomba de carga</span>
+                            <select class="FWM-input input-resalte" id="bomba_def2" style="font-size: 30px !important; padding: 15px">
+                                <option value="0" selected>Selecciona una opción</option>
+                                <option value="Bomba 1">Bomba 1</option>
+                                <option value="Bomba 2">Bomba 2</option>
+                                <option value="Bomba 3">Bomba 3</option>
+                                <option value="Bomba 4">Bomba 4</option>
+                                <option value="Bomba 5">Bomba 5</option>
+                            </select>
+
+                            <span class="span FWM-span-form">Segundo Totalizador</span>
+                            <input
+                                type="text"
+                                inputmode="numeric"
+                                id="carga_def2"
+                                class="FWM-input input-resalte"
+                                style="padding-right: 5px; font-size: 39px !important"
+                                maxlength="20"
+                                min="1"
+                                step=".01"
+                                oninput="checkLengtNumber(this.id)"
+                            />
+
+                            <span class="span FWM-span-form">Segundo Despachador (Bombero)</span>
+                            <input
+                                type="text"
+                                id="personal2"
+                                class="FWM-input input-resalte"
+                                style="padding-right: 5px; font-size: 39px !important; margin-bottom: 50px"
+                            />
+                            <input type="hidden" id="ID_Personal2" />
+
+                            <div class="block grid-resizable-demo" style="margin-bottom: 70px">
+                                <div class="row align-items-stretch" style="text-align: center">
+                                    <div class="col-100 medium-50" style="min-width: 50px; border-style: none">
+                                        <span class="resize-handler"></span>
+                                        <a href="#" onclick="prepreIniciaCargaDiesel();" style="background-color: #ff0037" class="boton-equipo"
+                                            >Guardar y continuar</a
+                                        >
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div style="height: 100px"></div>
+        </div>
+    </div>
+</template>
+<script>
+    return {
+        on: {
+            pageInit: function () {
+                var empresa = localStorage.getItem("empresa");
+                var self = this;
+                var app = self.$app;
+
+                var carpeta2 = "jsons_Diesel";
+                var NomJson3 = "Personal_" + empresa;
+
+                self.autocompleteDropdownAjax = app.autocomplete.create({
+                    inputEl: "#personal",
+                    openIn: "dropdown",
+                    preloader: true, //enable preloader
+                    valueProperty: "ID", //object's "value" property name
+                    textProperty: "buscador", //object's "text" property name
+                    limit: 10, //limit to [number] results
+                    dropdownPlaceholderText: "Selecciona una Operador...",
+                    source: function (query, render) {
+                        var autocomplete = this;
+                        var results = [];
+                        if (query.length === 0) {
+                            render(results);
+                            return;
+                        }
+                        autocomplete.preloaderShow();
+                        app.request({
+                            url: cordova.file.dataDirectory + carpeta2 + "/" + NomJson3 + ".json",
+                            method: "GET",
+                            dataType: "json",
+                            data: {
+                                query: query,
+                            },
+                            success: function (data) {
+                                for (var i = 0; i < data.length; i++) {
+                                    if (data[i].buscador.toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(data[i]);
+                                }
+                                autocomplete.preloaderHide();
+                                render(results);
+                            },
+                        });
+                    },
+                });
+
+                $("#personal").change(function () {
+                    var operador = $("#personal").val();
+                    var encontro = false;
+                    app.request.get(cordova.file.dataDirectory + "jsons_Diesel/" + NomJson3 + ".json", function (data) {
+                        var content5 = JSON.parse(data);
+                        for (var x = 0; x < content5.length; x++) {
+                            if (content5[x].ID == operador) {
+                                $("#personal").val(content5[x].buscador);
+                                $("#ID_Personal").val(content5[x].ID);
+                                encontro = true;
+                            }
+                        }
+                        if (!encontro) {
+                            $("#personal").val("");
+                            $("#ID_Personal").val("");
+                        }
+                    });
+                });
+
+                self.autocompleteDropdownAjax = app.autocomplete.create({
+                    inputEl: "#personal2",
+                    openIn: "dropdown",
+                    preloader: true, //enable preloader
+                    valueProperty: "ID", //object's "value" property name
+                    textProperty: "buscador", //object's "text" property name
+                    limit: 10, //limit to [number] results
+                    dropdownPlaceholderText: "Selecciona una Operador...",
+                    source: function (query, render) {
+                        var autocomplete = this;
+                        var results = [];
+                        if (query.length === 0) {
+                            render(results);
+                            return;
+                        }
+                        autocomplete.preloaderShow();
+                        app.request({
+                            url: cordova.file.dataDirectory + carpeta2 + "/" + NomJson3 + ".json",
+                            method: "GET",
+                            dataType: "json",
+                            data: {
+                                query: query,
+                            },
+                            success: function (data) {
+                                for (var i = 0; i < data.length; i++) {
+                                    if (data[i].buscador.toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(data[i]);
+                                }
+                                autocomplete.preloaderHide();
+                                render(results);
+                            },
+                        });
+                    },
+                });
+
+                $("#personal2").change(function () {
+                    var operador = $("#personal2").val();
+                    var encontro = false;
+                    app.request.get(cordova.file.dataDirectory + "jsons_Diesel/" + NomJson3 + ".json", function (data) {
+                        var content5 = JSON.parse(data);
+                        for (var x = 0; x < content5.length; x++) {
+                            if (content5[x].ID == operador) {
+                                $("#personal2").val(content5[x].buscador);
+                                $("#ID_Personal2").val(content5[x].ID);
+                                encontro = true;
+                            }
+                        }
+                        if (!encontro) {
+                            $("#personal2").val("");
+                            $("#ID_Personal2").val("");
+                        }
+                    });
+                });
+            },
+        },
+    };
+</script>
