@@ -531,9 +531,9 @@ function busquedaEvaluacion2(IDCurso, FK_Becario) {
 function sincronizaDatosRelevos() {
     let EmpresaID = 1;
     let paso = 1;
-    // let urlBase2 = "http://192.168.100.4/Desarrollo/CISAApp/HMOFiles/Exec";
-    // var urlBase2 = "http://172.16.0.143/Desarrollo/CISAApp/HMOFiles/Exec";
-    let urlBase2 = "http://tmshmo.ci-sa.com.mx/www.CISAAPP.com/HMOFiles/Exec";
+    let urlBase2 = "http://192.168.100.10/CISAApp/HMOFiles/Exec";
+    // var urlBase2 = "http://172.16.0.143/CISAApp/HMOFiles/Exec";
+    // let urlBase2 = "http://tmshmo.ci-sa.com.mx/www.CISAAPP.com/HMOFiles/Exec";
     let url = urlBase2 + "/Relevos/datos.php?empresa=" + EmpresaID + "&paso=" + paso;
 
     fetch(url).then((response) => {

@@ -110,9 +110,9 @@ function preeliminaCache() {
     swal("", "Trabajando...", "success");
     let EmpresaID = 1;
     let paso = 1;
-    // let urlBase2 = "http://192.168.100.4/Desarrollo/CISAApp/HMOFiles/Exec";
+    let urlBase2 = "http://192.168.100.10/CISAApp/HMOFiles/Exec";
     // let urlBase2 = "http://tmshmo.ci-sa.com.mx/www.CISAAPP.com/HMOFiles/Exec";
-    let urlBase2 = "http://tmshmo.ci-sa.com.mx/www.CISAAPP.com/HMOFiles_dev/Exec";
+    // let urlBase2 = "http://tmshmo.ci-sa.com.mx/www.CISAAPP.com/HMOFiles_dev/Exec";
     let url = "";
 
     // Capacitacion,Diesel,tecnologiasHmo,InsEncierro,InsLavado,Relevos
@@ -2910,7 +2910,7 @@ function edit_apoyo(val, estatus) {
 }
 function sincronizaDatos() {
     var EmpresaID = localStorage.getItem("empresa");
-    // var urlBase2 = "http://192.168.100.4/Desarrollo/CISAApp";
+    // var urlBase2 = "http://192.168.100.4/CISAApp";
     var urlBase2 = "http://mantto.ci-sa.com.mx/www.CISAAPP.com";
     var url = urlBase2 + "/Exec/datos_desin.php?empresa=" + EmpresaID;
     var url2 = urlBase2 + "/Exec/datos_desin_H.php?empresa=" + EmpresaID;

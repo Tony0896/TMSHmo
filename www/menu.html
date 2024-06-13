@@ -508,10 +508,10 @@
                 alert("Failed because: " + message);
             }
             function updateData() {
-                // var urlBase2 = "http://192.168.100.8/Desarrollo/CISAApp/HMOFiles/JSONS";
-                // var urlBase2 = "http://192.168.1.79/Desarrollo/CISAApp/HMOFiles_dev/JSONS";
-                // var urlBase2 = "http://172.16.0.143/Desarrollo/CISAApp/HMOFiles/JSONS";
-                var urlBase2 = "http://tmshmo.ci-sa.com.mx/www.CISAAPP.com/HMOFiles_dev/JSONS";
+                var urlBase2 = "http://192.168.100.10/CISAApp/HMOFiles/JSONS";
+                // var urlBase2 = "http://192.168.1.79/CISAApp/HMOFiles_dev/JSONS";
+                // var urlBase2 = "http://172.16.0.143/CISAApp/HMOFiles/JSONS";
+                // var urlBase2 = "http://tmshmo.ci-sa.com.mx/www.CISAAPP.com/HMOFiles_dev/JSONS";
                 // var urlBase2 = "http://tmshmo.ci-sa.com.mx/www.CISAAPP.com/HMOFiles/JSONS";
 
                 if (localStorage.getItem("Modulos")) {
@@ -1090,6 +1090,20 @@
                                         [],
                                         function (tx5, results) {}
                                     );
+                                },
+                                function (error) {},
+                                function () {}
+                            );
+                            databaseHandler.db.transaction(
+                                function (tx5) {
+                                    tx5.executeSql("ALTER TABLE asistenciaDetails ADD COLUMN flagTipo text", [], function (tx5, results) {});
+                                },
+                                function (error) {},
+                                function () {}
+                            );
+                            databaseHandler.db.transaction(
+                                function (tx5) {
+                                    tx5.executeSql("ALTER TABLE asistenciaDetails ADD COLUMN FKTipo int", [], function (tx5, results) {});
                                 },
                                 function (error) {},
                                 function () {}

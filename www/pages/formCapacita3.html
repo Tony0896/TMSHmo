@@ -90,17 +90,23 @@
                                                 <tbody class="tbody_asistencia">`;
                                             if (length == 0) {
                                             } else {
-                                                let asiste = "";
+                                                let asiste = "",
+                                                    asiste1 = "",
+                                                    display = "";
                                                 for (var i = 0; i < length; i++) {
                                                     var item = results.rows.item(i);
                                                     let observacionAsistencia = item.observacionAsistencia;
 
                                                     item.asiste == 1
-                                                        ? (asiste = `<span class="element_asis_evt_green" style="font-size: 16px;">ASISTENCIA</span>`)
-                                                        : (asiste = `<button class="col button button-small button-round button-outline" style="height: 50px;border-color: #1E9FB4;width: fit-content;margin: auto;border-radius: 15px;" 
-                                                            onclick="leerQrCrendencialBeceario(${item.id_asistenciaD});"> 
-                                                            <i class="material-icons md-light" style="color: #1E9FB4;vertical-align: middle;font-size: 25px;margin: 0px 20px;">filter_center_focus</i> 
-                                                        </button>`);
+                                                        ? ((asiste = `<span class="element_asis_evt_green" style="font-size: 16px;">ASISTENCIA</span>`),
+                                                          (asiste1 = "checked"),
+                                                          (display = "display:none;"))
+                                                        : ((asiste = `<button class="col button button-small button-round button-outline" style="height: 50px;border-color: #1E9FB4;width: fit-content;margin: auto;border-radius: 15px;"
+                                                            onclick="leerQrCrendencialBeceario(${item.id_asistenciaD});">
+                                                            <i class="material-icons md-light" style="color: #1E9FB4;vertical-align: middle;font-size: 25px;margin: 0px 20px;">filter_center_focus</i>
+                                                        </button>`),
+                                                          (asiste1 = ""),
+                                                          (display = ""));
 
                                                     html += ` <tr>
                                                                 <td style="padding: 10px;"><span>${item.claveBecario}</span></td>
@@ -110,8 +116,24 @@
                                                                         <div class="div_IMTES_asis">
                                                                             <div id="div_evento_${item.id_becario}"></div>
                                                                         </div>
-                                                                        <div id="divAsistencia_${item.id_asistenciaD}">
+                                                                        <div id="divAsistencia_${item.id_asistenciaD}" style="margin-bottom: 20px;">
                                                                             ${asiste}
+                                                                        </div>
+                                                                        <div style="margin-bottom: 10px;${display}" id="divAsistenciaToggle_${
+                                                        item.id_asistenciaD
+                                                    }" >
+                                                                            <label class="item-content" style="padding-left: inherit;">
+                                                                                <div class="item-inner2">
+                                                                                    <div class="item-after item-after2">
+                                                                                        <div class="toggle toggle-init color-green">
+                                                                                            <input id="cb3-${item.id_asistenciaD}" class="toogle_${
+                                                        item.id_becario
+                                                    }" type="checkbox" onclick="actualizaLista(this.id)" ${asiste1}>
+                                                                                            <span class="toggle-icon toggle-icon2"></span>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </label>
                                                                         </div>
                                                                     </div>
                                                                 </td>
@@ -121,9 +143,9 @@
                                                                     </div>
                                                                 </td>
                                                                 <td style="padding: 10px;">
-                                                                    <button class="col button button-small button-round button-outline" style="height: 50px;border-color: #FF0037;width: fit-content;margin: auto;border-radius: 15px;" 
-                                                                        onclick="editarComentariosAsistencia(${item.id_asistenciaD});"> 
-                                                                        <i class="material-icons md-light" style="color: #FF0037;vertical-align: middle;font-size: 25px;margin: 0px 20px;">edit</i> 
+                                                                    <button class="col button button-small button-round button-outline" style="height: 50px;border-color: #FF0037;width: fit-content;margin: auto;border-radius: 15px;"
+                                                                        onclick="editarComentariosAsistencia(${item.id_asistenciaD});">
+                                                                        <i class="material-icons md-light" style="color: #FF0037;vertical-align: middle;font-size: 25px;margin: 0px 20px;">edit</i>
                                                                     </button>
                                                                 </td>
                                                             </tr>`;

@@ -753,27 +753,47 @@ function generarAsistencia() {
 }
 
 function actualizaLista(id) {
-    var id_asistenciaD = id.replace("cb3-", "");
-    var assite = 0;
-    $("#" + id).prop("checked") == true ? (assite = 1) : (assite = 0);
-    databaseHandler.db.transaction(
-        function (tx) {
-            tx.executeSql(
-                "UPDATE asistenciaDetails SET asiste = ? WHERE id_asistenciaD = ?",
-                [assite, id_asistenciaD],
-                function (tx, results) {},
-                function (tx, error) {
-                    console.error("Error al guardar cierre: " + error.message);
-                }
-            );
-        },
-        function (error) {},
-        function () {}
-    );
+    if ($("#" + id).prop("checked") == true) {
+        swal({
+            title: "Aviso",
+            text: "¿Estas seguro de querer marcar la asistencia sin escanear la credencial?",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        }).then((RESP) => {
+            if (RESP == true) {
+                let id_asistenciaD = id.replace("cb3-", "");
+                let assite = 0;
+                $("#" + id).prop("checked") == true ? (assite = 1) : (assite = 0);
+                let flagTipo = "Boton";
+                let FKTipo = 1;
+                databaseHandler.db.transaction(
+                    function (tx) {
+                        tx.executeSql(
+                            "UPDATE asistenciaDetails SET asiste = ?, flagTipo = ?, FKTipo = ?, fechaCaptura = ? WHERE id_asistenciaD = ?",
+                            [assite, flagTipo, FKTipo, getDateWhitZeros(), id_asistenciaD],
+                            function (tx, results) {
+                                swal("", "Asistencia guardada correctamente", "success");
+                                $("#divAsistencia_" + id_asistenciaD).html(`<span class="element_asis_evt_green">ASISTENCIA</span>`);
+                                $("#divAsistenciaToggle_" + id_asistenciaD).css("display", "none");
+                            },
+                            function (tx, error) {
+                                console.error("Error al guardar cierre: " + error.message);
+                            }
+                        );
+                    },
+                    function (error) {},
+                    function () {}
+                );
+            } else {
+                $("#" + id).prop("checked", false);
+            }
+        });
+    }
 }
 
 function guardarAsistencia() {
-    var id_cedula = localStorage.getItem("IdCedula");
+    let id_cedula = localStorage.getItem("IdCedula");
 
     swal({
         title: "Aviso",
@@ -1253,9 +1273,9 @@ function actualizaRespuestaSiNoPuntuacion(id, valor, OpCorrecta) {
 function sincronizaDatosCapacitacion() {
     let EmpresaID = 1;
     let paso = 1;
-    // let urlBase2 = "http://192.168.100.4/Desarrollo/CISAApp/HMOFiles/Exec";
-    // var urlBase2 = "http://172.16.0.143/Desarrollo/CISAApp/HMOFiles/Exec";
-    let urlBase2 = "http://tmshmo.ci-sa.com.mx/www.CISAAPP.com/HMOFiles_dev/Exec";
+    let urlBase2 = "http://192.168.100.10/CISAApp/HMOFiles/Exec";
+    // var urlBase2 = "http://172.16.0.143/CISAApp/HMOFiles/Exec";
+    // let urlBase2 = "http://tmshmo.ci-sa.com.mx/www.CISAAPP.com/HMOFiles_dev/Exec";
     let url = urlBase2 + "/capacitacion/datos.php?empresa=" + EmpresaID + "&paso=" + paso;
 
     fetch(url).then((response) => {
@@ -2252,14 +2272,17 @@ function buscadorBecario(dataQR, id_asistenciaD) {
             for (var j = 0; j < data.length; j++) {
                 if (data[j].FKPersonalInstructor == id_instructor) {
                     if (data[j].QRBecario == dataQR) {
+                        let flagTipo = "Escaner";
+                        let FKTipo = 2;
                         databaseHandler.db.transaction(
                             function (tx) {
                                 tx.executeSql(
-                                    "UPDATE asistenciaDetails SET asiste = ?, fechaCaptura = ? WHERE id_asistenciaD = ?",
-                                    [1, getDateWhitZeros(), id_asistenciaD],
+                                    "UPDATE asistenciaDetails SET asiste = ?, flagTipo = ?, FKTipo = ?, fechaCaptura = ? WHERE id_asistenciaD = ?",
+                                    [1, flagTipo, FKTipo, getDateWhitZeros(), id_asistenciaD],
                                     function (tx, results) {
                                         swal("", "Asistencia guardada correctamente", "success");
                                         $("#divAsistencia_" + id_asistenciaD).html(`<span class="element_asis_evt_green">ASISTENCIA</span>`);
+                                        $("#divAsistenciaToggle_" + id_asistenciaD).css("display", "none");
                                     },
                                     function (tx, error) {
                                         console.error("Error al guardar cierre: " + error.message);
