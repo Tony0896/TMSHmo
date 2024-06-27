@@ -1273,9 +1273,9 @@ function actualizaRespuestaSiNoPuntuacion(id, valor, OpCorrecta) {
 function sincronizaDatosCapacitacion() {
     let EmpresaID = 1;
     let paso = 1;
-    let urlBase2 = "http://192.168.100.10/CISAApp/HMOFiles/Exec";
+    // let urlBase2 = "http://192.168.100.8/CISAApp/HMOFiles/Exec";
     // var urlBase2 = "http://172.16.0.143/CISAApp/HMOFiles/Exec";
-    // let urlBase2 = "http://tmshmo.ci-sa.com.mx/www.CISAAPP.com/HMOFiles_dev/Exec";
+    let urlBase2 = "http://tmshmo.ci-sa.com.mx/www.CISAAPP.com/HMOFiles/Exec";
     let url = urlBase2 + "/capacitacion/datos.php?empresa=" + EmpresaID + "&paso=" + paso;
 
     fetch(url).then((response) => {
@@ -2237,63 +2237,83 @@ function actualizaObsAsistencia(id_cedula, id_asistenciaD) {
     );
 }
 
-function leerQrCrendencialBeceario(id_asistenciaD) {
-    buscadorBecario("C1413/MIHSA", id_asistenciaD);
-    // cordova.plugins.barcodeScanner.scan(
-    //     function (result) {
-    //         buscadorBecario(result.text, id_asistenciaD);
-    //     },
-    //     function (error) {
-    //         alert("Scanning failed: " + error);
-    //     },
-    //     {
-    //         preferFrontCamera: false,
-    //         showFlipCameraButton: true,
-    //         showTorchButton: true,
-    //         torchOn: false,
-    //         saveHistory: false,
-    //         prompt: "Coloca el código dentro de la zona marcada",
-    //         resultDisplayDuration: 500,
-    //         orientation: "portrait",
-    //         disableAnimations: true,
-    //         disableSuccessBeep: false,
-    //     }
-    // );
+function leerQrCrendencialBeceario(id_asistenciaD, clave) {
+    // buscadorBecario("C1413/MIHSA", id_asistenciaD);
+    cordova.plugins.barcodeScanner.scan(
+        function (result) {
+            buscadorBecario(result.text, id_asistenciaD, clave);
+        },
+        function (error) {
+            alert("Scanning failed: " + error);
+        },
+        {
+            preferFrontCamera: false,
+            showFlipCameraButton: true,
+            showTorchButton: true,
+            torchOn: false,
+            saveHistory: false,
+            prompt: "Coloca el código dentro de la zona marcada",
+            resultDisplayDuration: 500,
+            orientation: "portrait",
+            disableAnimations: true,
+            disableSuccessBeep: false,
+        }
+    );
 }
 
-function buscadorBecario(dataQR, id_asistenciaD) {
+function buscadorBecario(dataQR, id_asistenciaD, clave) {
     let id_instructor = localStorage.getItem("id_usuario");
     let NomJson = "BecariosVsInstructor_1";
+    let encontro = false;
+    let Instructor = false;
+    let coincidencia = false;
     app.request({
         url: cordova.file.dataDirectory + "jsons_capacitacion/" + NomJson + ".json",
         method: "GET",
         dataType: "json",
         success: function (data) {
             for (var j = 0; j < data.length; j++) {
-                if (data[j].FKPersonalInstructor == id_instructor) {
-                    if (data[j].QRBecario == dataQR) {
-                        let flagTipo = "Escaner";
-                        let FKTipo = 2;
-                        databaseHandler.db.transaction(
-                            function (tx) {
-                                tx.executeSql(
-                                    "UPDATE asistenciaDetails SET asiste = ?, flagTipo = ?, FKTipo = ?, fechaCaptura = ? WHERE id_asistenciaD = ?",
-                                    [1, flagTipo, FKTipo, getDateWhitZeros(), id_asistenciaD],
-                                    function (tx, results) {
-                                        swal("", "Asistencia guardada correctamente", "success");
-                                        $("#divAsistencia_" + id_asistenciaD).html(`<span class="element_asis_evt_green">ASISTENCIA</span>`);
-                                        $("#divAsistenciaToggle_" + id_asistenciaD).css("display", "none");
-                                    },
-                                    function (tx, error) {
-                                        console.error("Error al guardar cierre: " + error.message);
-                                    }
-                                );
-                            },
-                            function (error) {},
-                            function () {}
-                        );
+                if (data[j].QRBecario == dataQR) {
+                    encontro = true;
+                    if (data[j].FKPersonalInstructor == id_instructor) {
+                        Instructor = true;
+                        if (data[j].claveBecario == clave) {
+                            coincidencia = true;
+                            let flagTipo = "Escaner";
+                            let FKTipo = 2;
+                            databaseHandler.db.transaction(
+                                function (tx) {
+                                    tx.executeSql(
+                                        "UPDATE asistenciaDetails SET asiste = ?, flagTipo = ?, FKTipo = ?, fechaCaptura = ? WHERE id_asistenciaD = ?",
+                                        [1, flagTipo, FKTipo, getDateWhitZeros(), id_asistenciaD],
+                                        function (tx, results) {
+                                            swal("", "Asistencia guardada correctamente", "success");
+                                            $("#divAsistencia_" + id_asistenciaD).html(`<span class="element_asis_evt_green">ASISTENCIA</span>`);
+                                            $("#divAsistenciaToggle_" + id_asistenciaD).css("display", "none");
+                                        },
+                                        function (tx, error) {
+                                            console.error("Error al guardar cierre: " + error.message);
+                                        }
+                                    );
+                                },
+                                function (error) {},
+                                function () {}
+                            );
+                        }
                     }
                 }
+            }
+
+            if (encontro) {
+                if (!Instructor) {
+                    swal("", "Este Becario esta asignado a otro instructor.", "warning");
+                } else {
+                    if (!coincidencia) {
+                        swal("", "La credencial escaneada no corresponde con el becario a marcar asistencia.", "warning");
+                    }
+                }
+            } else {
+                swal("", "No se encontró información del QR escaneado.", "warning");
             }
         },
     });

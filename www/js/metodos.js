@@ -110,8 +110,8 @@ function preeliminaCache() {
     swal("", "Trabajando...", "success");
     let EmpresaID = 1;
     let paso = 1;
-    let urlBase2 = "http://192.168.100.10/CISAApp/HMOFiles/Exec";
-    // let urlBase2 = "http://tmshmo.ci-sa.com.mx/www.CISAAPP.com/HMOFiles/Exec";
+    // let urlBase2 = "http://192.168.100.8/CISAApp/HMOFiles/Exec";
+    let urlBase2 = "http://tmshmo.ci-sa.com.mx/www.CISAAPP.com/HMOFiles/Exec";
     // let urlBase2 = "http://tmshmo.ci-sa.com.mx/www.CISAAPP.com/HMOFiles_dev/Exec";
     let url = "";
 
