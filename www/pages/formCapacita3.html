@@ -5,48 +5,52 @@
 </style>
 <template>
     <div class="page">
-        <div class="navbar" style="background-color: #1E9FB4;height: 5px;">
-            <div class="left top-left" style="justify-content: space-between;">
-                <a href="javascript:location.reload()"
-                    style="margin-left: 10px; display: inline-flex;align-items: center;">
-                    <i class="icon material-icons md-only" style="font-weight: 900;font-size: 30px;">arrow_back</i>
+        <div class="navbar" style="background-color: #1e9fb4; height: 5px">
+            <div class="left top-left" style="justify-content: space-between">
+                <a href="javascript:location.reload()" style="margin-left: 10px; display: inline-flex; align-items: center">
+                    <i class="icon material-icons md-only" style="font-weight: 900; font-size: 30px">arrow_back</i>
                 </a>
-                <div class="title" style="font-size: 18px;">Lista de Asistencia</div>
-                <a style="margin-right: 10px;">
-                    <i class="icon material-icons md-only" style="color: #1E9FB4; font-weight: 900;">arrow_back</i>
+                <div class="title" style="font-size: 18px">Lista de Asistencia</div>
+                <a style="margin-right: 10px">
+                    <i class="icon material-icons md-only" style="color: #1e9fb4; font-weight: 900">arrow_back</i>
                 </a>
             </div>
         </div>
 
         <div class="toolbar tabbar toolbar-bottom">
-            <div class="toolbar-inner" style="background-color: #1E9FB4;" id="toolbar_down">
-                <a href="#" onclick="guardarAsistencia();"
-                    style="margin: auto;color: #fff;font-weight: bold;font-size: 18px;width: 100%;text-align: center;">Guardar <i
-                        class="icon material-icons md-only" style="display: inline-block;">chevron_right</i></a>
+            <div class="toolbar-inner" style="background-color: #1e9fb4" id="toolbar_down">
+                <a
+                    href="#"
+                    onclick="guardarAsistencia();"
+                    style="margin: auto; color: #fff; font-weight: bold; font-size: 18px; width: 100%; text-align: center"
+                    >Guardar <i class="icon material-icons md-only" style="display: inline-block">chevron_right</i></a
+                >
             </div>
         </div>
 
-        <div class="page-content" style="height: 98%;border-radius: 0px !important">
-            <div
-                style="text-align: center; justify-content:center; margin-right:auto; margin-left:auto; width: 99%;margin-top: 30px;">
-                <div style="text-align: left;">
-                    <div class="list FWM-fixing-form" id="datos_form" style="width: 97%;margin-left: 10px;margin-right: 10px;">
-                        <h2 style="text-align: center;" id="title_asis">Asistencia becarios del día 01/07/2023</h2>
+        <div class="page-content" style="height: 98%; border-radius: 0px !important">
+            <div style="text-align: center; justify-content: center; margin-right: auto; margin-left: auto; width: 99%; margin-top: 30px">
+                <div style="text-align: left">
+                    <div class="list FWM-fixing-form" id="datos_form" style="width: 97%; margin-left: 10px; margin-right: 10px">
+                        <h2 style="text-align: center" id="title_asis">Asistencia becarios del día 01/07/2023</h2>
 
-                        <div id="content-page1"
-                            style="text-align: center; justify-content:center; margin-right:auto; margin-left:auto; width: 99%;">
-                            <div class='sentencia1 preloader color-blue infinite-scroll-preloader'></div>
-                            <div
-                                style="text-align: left; justify-content:left; margin-right:auto; margin-left:auto; width: 99%;">
-                                <div class="infinite-scroll-content">
-                                    <div id="historyContainer"></div>
+                        <div class="card data-table" style="margin-bottom: 50px">
+                            <div class="sentencia1 preloader color-blue infinite-scroll-preloader"></div>
+                            <div class="infinite-scroll-content">
+                                <div id="historyContainer">
+                                    <div
+                                        id="message-nr"
+                                        style="width: 100%; text-align: center; font-family: 'ITC Avant Garde Gothic', sans-serif; font-size: 16px"
+                                        style="display: none"
+                                    >
+                                        <p>Sin registros</p>
+                                    </div>
                                 </div>
-                                <br>
                             </div>
                         </div>
-
                     </div>
-                    <div style="margin-bottom: 100px;"></div>
+
+                    <div style="margin-bottom: 100px"></div>
                 </div>
             </div>
         </div>
@@ -56,43 +60,55 @@
     return {
         on: {
             pageInit: function () {
-                app.preloader.show('red');
-                $('.sentencia1').remove();                
+                app.preloader.show("red");
+                $(".sentencia1").remove();
 
                 var id_cedula = localStorage.getItem("IdCedula");
                 databaseHandler.db.transaction(
-                    function(tx){
-                        tx.executeSql(
-                            "Select fecha from asistenciaHeader where id_cedula= ?",
-                            [id_cedula],
-                            function(tx, results){
-                                var item2 = results.rows.item(0);
-                                var fecha = item2.fecha;
-                                $("#title_asis").html("Asistencia becarios del día "+fecha)
-                                databaseHandler.db.transaction(
-                                    function(tx){
-                                        tx.executeSql(
-                                            "Select id_asistenciaD, id_becario, claveBecario, nameBecario, asiste from asistenciaDetails where id_cedula= ?",
-                                            [id_cedula],
-                                            function(tx, results){
-                                                var length = results.rows.length;
-                                                let html = `<table style="width: 100%;">
-                                                                <thead>
-                                                                    <tr>
-                                                                        <th style="color:#FFF;background-color: #005D99;width: 10%;font-size: 20px !important;padding: 10px;">#</th>
-                                                                        <th style="color:#FFF;background-color: #005D99;font-size: 20px !important;padding: 10px;">Nombre</th>
-                                                                        <th style="color:#FFF;background-color: #005D99;width: 35%;font-size: 20px !important;padding: 10px;">Asistencia</th>
-                                                                    </tr>
-                                                                </thead>
-                                                            <tbody class="tbody_asistencia">`;
-                                                if(length == 0){
-                                                }else{
-                                                    var asiste
-                                                    for(var i = 0; i< length; i++){
-                                                        var item = results.rows.item(i);
-                                                        item.asiste == 1 ? asiste = 'checked' : asiste = ''
-                                                        html += `
-                                                            <tr>
+                    function (tx) {
+                        tx.executeSql("Select fecha from asistenciaHeader where id_cedula= ?", [id_cedula], function (tx, results) {
+                            var item2 = results.rows.item(0);
+                            var fecha = item2.fecha;
+                            $("#title_asis").html("Asistencia becarios del día " + fecha);
+                            databaseHandler.db.transaction(
+                                function (tx) {
+                                    tx.executeSql(
+                                        "Select id_asistenciaD, id_becario, claveBecario, nameBecario, asiste, observacionAsistencia from asistenciaDetails where id_cedula= ?",
+                                        [id_cedula],
+                                        function (tx, results) {
+                                            var length = results.rows.length;
+                                            let html = `<table style="width: 100%;">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="color:#FFF;background-color: #005D99;width: 10%;font-size: 20px !important;padding: 10px;">#</th>
+                                                        <th style="color:#FFF;background-color: #005D99;font-size: 20px !important;padding: 10px;">Nombre</th>
+                                                        <th style="color:#FFF;background-color: #005D99;font-size: 20px !important;padding: 10px;">Asistencia</th>
+                                                        <th style="color:#FFF;background-color: #005D99;font-size: 20px !important;padding: 10px;">Comentarios</th>
+                                                        <th style="color:#FFF;background-color: #005D99;font-size: 20px !important;padding: 10px;">Acciones</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody class="tbody_asistencia">`;
+                                            if (length == 0) {
+                                            } else {
+                                                let asiste = "",
+                                                    asiste1 = "",
+                                                    display = "";
+                                                for (var i = 0; i < length; i++) {
+                                                    var item = results.rows.item(i);
+                                                    let observacionAsistencia = item.observacionAsistencia;
+
+                                                    item.asiste == 1
+                                                        ? ((asiste = `<span class="element_asis_evt_green" style="font-size: 16px;">ASISTENCIA</span>`),
+                                                          (asiste1 = "checked"),
+                                                          (display = "display:none;"))
+                                                        : ((asiste = `<button class="col button button-small button-round button-outline" style="height: 50px;border-color: #1E9FB4;width: fit-content;margin: auto;border-radius: 15px;"
+                                                            onclick="leerQrCrendencialBeceario(${item.id_asistenciaD}, '${item.claveBecario}');">
+                                                            <i class="material-icons md-light" style="color: #1E9FB4;vertical-align: middle;font-size: 25px;margin: 0px 20px;">filter_center_focus</i>
+                                                        </button>`),
+                                                          (asiste1 = ""),
+                                                          (display = ""));
+
+                                                    html += ` <tr>
                                                                 <td style="padding: 10px;"><span>${item.claveBecario}</span></td>
                                                                 <td style="padding: 10px;"><span>${item.nameBecario}</span></td>
                                                                 <td style="padding: 10px;">
@@ -100,12 +116,19 @@
                                                                         <div class="div_IMTES_asis">
                                                                             <div id="div_evento_${item.id_becario}"></div>
                                                                         </div>
-                                                                        <div style="margin-bottom: 10px;">
-                                                                            <label class="item-content">
+                                                                        <div id="divAsistencia_${item.id_asistenciaD}" style="margin-bottom: 20px;">
+                                                                            ${asiste}
+                                                                        </div>
+                                                                        <div style="margin-bottom: 10px;${display}" id="divAsistenciaToggle_${
+                                                        item.id_asistenciaD
+                                                    }" >
+                                                                            <label class="item-content" style="padding-left: inherit;">
                                                                                 <div class="item-inner2">
                                                                                     <div class="item-after item-after2">
                                                                                         <div class="toggle toggle-init color-green">
-                                                                                            <input id="cb3-${item.id_asistenciaD}" class="toogle_${item.id_becario}" type="checkbox" onchange="actualizaLista(this.id)" ${asiste}>
+                                                                                            <input id="cb3-${item.id_asistenciaD}" class="toogle_${
+                                                        item.id_becario
+                                                    }" type="checkbox" onclick="actualizaLista(this.id)" ${asiste1}>
                                                                                             <span class="toggle-icon toggle-icon2"></span>
                                                                                         </div>
                                                                                     </div>
@@ -114,37 +137,62 @@
                                                                         </div>
                                                                     </div>
                                                                 </td>
-                                                            </tr>`
-                                                    }
+                                                                <td style="padding: 10px;">
+                                                                    <div id="divObs_${item.id_asistenciaD}">
+                                                                        ${observacionAsistencia ? `<span>${observacionAsistencia}</span>` : ``}
+                                                                    </div>
+                                                                </td>
+                                                                <td style="padding: 10px;">
+                                                                    <button class="col button button-small button-round button-outline" style="height: 50px;border-color: #FF0037;width: fit-content;margin: auto;border-radius: 15px;"
+                                                                        onclick="editarComentariosAsistencia(${item.id_asistenciaD});">
+                                                                        <i class="material-icons md-light" style="color: #FF0037;vertical-align: middle;font-size: 25px;margin: 0px 20px;">edit</i>
+                                                                    </button>
+                                                                </td>
+                                                            </tr>`;
                                                 }
-                                                html += `</tbody> </table>`;
-                                                $('#historyContainer').html(html);
-                                                validaEventos(fecha)
-                                                app.preloader.hide();
                                             }
-                                        );
-                                    },
-                                    function(error){app.preloader.hide();},
-                                    function(){}
-                                );
-                            }
-                        );
+                                            html += `</tbody> </table>`;
+                                            $("#historyContainer").html(html);
+                                            validaEventos(fecha);
+                                            app.preloader.hide();
+                                        }
+                                    );
+                                },
+                                function (error) {
+                                    app.preloader.hide();
+                                },
+                                function () {}
+                            );
+                        });
                     },
-                    function(error){},
-                    function(){}
+                    function (error) {},
+                    function () {}
                 );
 
-
                 // app.request({
-                //     url: cordova.file.dataDirectory + carpeta + "/"+NomJson+".json", 
+                //     url: cordova.file.dataDirectory + carpeta + "/"+NomJson+".json",
                 //     method: 'GET',
                 //     dataType: 'json',
                 //     success: function (data) {
-                //         
+                //
                 //     }
-                // }); 
+                // });
 
-            }
-        }
-    }
+                // <div style="margin-bottom: 10px;">
+                //     <label class="item-content">
+                //         <div class="item-inner2">
+                //             <div class="item-after item-after2">
+                //                 <div class="toggle toggle-init color-green">
+                //                     <input id="cb3-${item.id_asistenciaD}"
+                //                     class="toogle_${item.id_becario}"
+                //                     type="checkbox" onchange="actualizaLista(this.id)" ${asiste}>
+                //                     <span class="toggle-icon toggle-icon2"></span>
+                //                 </div>
+                //             </div>
+                //         </div>
+                //     </label>
+                // </div>
+            },
+        },
+    };
 </script>

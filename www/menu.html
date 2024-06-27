@@ -373,6 +373,11 @@
         <script type="text/javascript" src="js/productHandler.js"></script>
         <script type="text/javascript" src="js/morris.min.js"></script>
         <script src="js/metodos.js"></script>
+        <script src="./js/metodos/campanias.js"></script>
+        <script src="./js/metodos/diesel.js"></script>
+        <script src="./js/metodos/metodosCapacitacion.js"></script>
+        <script src="./js/metodos/relevos.js"></script>
+        <script src="./js/metodos/tecnologiasHmo.js"></script>
         <script src="js/jquery-3.6.2.js"></script>
         <script src="js/qrcode.js"></script>
         <script src="js/sweetalert.min.js"></script>
@@ -503,11 +508,11 @@
                 alert("Failed because: " + message);
             }
             function updateData() {
-                // var urlBase2 = "http://192.168.100.8/Desarrollo/CISAApp/HMOFiles/JSONS";
-                // var urlBase2 = "http://192.168.1.79/Desarrollo/CISAApp/HMOFiles_dev/JSONS";
-                // var urlBase2 = "http://172.16.0.143/Desarrollo/CISAApp/HMOFiles/JSONS";
+                // var urlBase2 = "http://192.168.100.8/CISAApp/HMOFiles/JSONS";
+                // var urlBase2 = "http://192.168.1.79/CISAApp/HMOFiles_dev/JSONS";
+                // var urlBase2 = "http://172.16.0.143/CISAApp/HMOFiles/JSONS";
+                // var urlBase2 = "http://tmshmo.ci-sa.com.mx/www.CISAAPP.com/HMOFiles_dev/JSONS";
                 var urlBase2 = "http://tmshmo.ci-sa.com.mx/www.CISAAPP.com/HMOFiles/JSONS";
-                // var urlBase2 = "http://tmshmo.ci-sa.com.mx/www.CISAAPP.com/HMOFiles/JSONS";
 
                 if (localStorage.getItem("Modulos")) {
                     if (localStorage.getItem("Modulos") == "Limpieza") {
@@ -1073,6 +1078,40 @@
                         },
                         function () {}
                     ); //id_operador int, operador text, operador2 text
+                    databaseHandler.db.transaction(
+                        function (tx5) {
+                            tx5.executeSql("SELECT observacionAsistencia FROM asistenciaDetails LIMIT 1", [], function (tx5, results) {});
+                        },
+                        function (error) {
+                            databaseHandler.db.transaction(
+                                function (tx5) {
+                                    tx5.executeSql(
+                                        "ALTER TABLE asistenciaDetails ADD COLUMN observacionAsistencia text",
+                                        [],
+                                        function (tx5, results) {}
+                                    );
+                                },
+                                function (error) {},
+                                function () {}
+                            );
+                            databaseHandler.db.transaction(
+                                function (tx5) {
+                                    tx5.executeSql("ALTER TABLE asistenciaDetails ADD COLUMN flagTipo text", [], function (tx5, results) {});
+                                },
+                                function (error) {},
+                                function () {}
+                            );
+                            databaseHandler.db.transaction(
+                                function (tx5) {
+                                    tx5.executeSql("ALTER TABLE asistenciaDetails ADD COLUMN FKTipo int", [], function (tx5, results) {});
+                                },
+                                function (error) {},
+                                function () {}
+                            );
+                        },
+                        function () {}
+                    );
+
                     //* FIN Cambio de campos en BD
                     //Sin conexion
                     var sinConexion = 0;

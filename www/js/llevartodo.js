@@ -364,6 +364,9 @@ function llevarTodo(id_cedula, tipo_cedula) {
                                                                         fechaCaptura: fecha_captura,
                                                                         id_becario: item1.id_becario,
                                                                         nameBecario: item1.nameBecario,
+                                                                        observacionAsistencia: item1.observacionAsistencia,
+                                                                        flagTipo: item1.flagTipo,
+                                                                        FKTipo: item1.FKTipo,
                                                                     };
                                                                 }
                                                                 $.ajax({
