@@ -532,7 +532,7 @@ function sincronizaDatosRelevos() {
     let EmpresaID = 1;
     let paso = 1;
     let UrlUniversal = localStorage.getItem("UrlUniversal");
-    let urlBase2 = UrlUniversal + "HMOFiles/Exec";
+    let urlBase2 = UrlUniversal + "HMOFiles_dev/Exec";
     let url = urlBase2 + "/Relevos/datos.php?empresa=" + EmpresaID + "&paso=" + paso;
 
     fetch(url).then((response) => {

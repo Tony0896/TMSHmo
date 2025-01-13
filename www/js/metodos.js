@@ -111,7 +111,7 @@ function preeliminaCache() {
     let EmpresaID = 1;
     let paso = 1;
     let UrlUniversal = localStorage.getItem("UrlUniversal");
-    let urlBase2 = UrlUniversal + "HMOFiles/Exec";
+    let urlBase2 = UrlUniversal + "HMOFiles_dev/Exec";
     let url = "";
 
     // Capacitacion,Diesel,tecnologiasHmo,InsEncierro,InsLavado,Relevos

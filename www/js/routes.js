@@ -226,6 +226,18 @@ var routes = [
         componentUrl: "./pages/formDiesel5.html",
     },
     //? fin diesel
+    //? Inicio Siniestros
+    {
+        name: "yallegueSiniestros",
+        path: "/yallegueSiniestros/",
+        componentUrl: "./pages/yallegueSiniestros.html",
+    },
+    {
+        name: "formSiniestros1",
+        path: "/formSiniestros1/",
+        componentUrl: "./pages/formSiniestros1.html",
+    },
+    //? Fin Siniestros
     //************************************** fin HMO **************************************
     {
         name: "visualizar",

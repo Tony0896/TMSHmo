@@ -21,6 +21,7 @@
         <link rel="stylesheet" href="css/fwm.css" />
         <link rel="stylesheet" href="css/Hmo.css" />
         <link rel="stylesheet" href="css/camera-field.css" />
+        <link rel="stylesheet" href="css/zoomist.css" />
     </head>
 
     <body>
@@ -321,6 +322,22 @@
                                                         </div>
                                                     </td>
                                                 </tr>
+
+                                                <tr class="menu_Siniestros menus" style="display: none">
+                                                    <td>
+                                                        <a
+                                                            class="item-content item-link entrar principalButton"
+                                                            href="/yallegueSiniestros/"
+                                                            onclick=""
+                                                        >
+                                                            <img src="img/iconsMenu/history.svg" height="60px" />
+                                                            <p style="color: #000000">Siniestros</p>
+                                                            <i class="material-icons md-light" style="color: #ff0000; margin-right: 10px">
+                                                                chevron_right
+                                                            </i>
+                                                        </a>
+                                                    </td>
+                                                </tr>
                                             </table>
                                         </div>
                                     </div>
@@ -381,6 +398,7 @@
         <script src="js/jquery-3.6.2.js"></script>
         <script src="js/qrcode.js"></script>
         <script src="js/sweetalert.min.js"></script>
+        <script src="js/zoomist.umd.js"></script>
         <!-- Data table Inicio -->
         <link rel="stylesheet" href="css/jquery.dataTables.min.css" />
         <link rel="stylesheet" href="css/responsive.dataTables.min.css" />
@@ -509,7 +527,7 @@
             }
             function updateData() {
                 var UrlUniversal = localStorage.getItem("UrlUniversal");
-                var urlBase2 = UrlUniversal + "HMOFiles/JSONS";
+                var urlBase2 = UrlUniversal + "HMOFiles_dev/JSONS";
 
                 if (localStorage.getItem("Modulos")) {
                     if (localStorage.getItem("Modulos") == "Limpieza") {
