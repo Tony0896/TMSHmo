@@ -110,9 +110,8 @@ function preeliminaCache() {
     swal("", "Trabajando...", "success");
     let EmpresaID = 1;
     let paso = 1;
-    // let urlBase2 = "http://192.168.100.8/CISAApp/HMOFiles/Exec";
-    let urlBase2 = "http://tmshmo.ci-sa.com.mx/www.CISAAPP.com/HMOFiles/Exec";
-    // let urlBase2 = "http://tmshmo.ci-sa.com.mx/www.CISAAPP.com/HMOFiles_dev/Exec";
+    let UrlUniversal = localStorage.getItem("UrlUniversal");
+    let urlBase2 = UrlUniversal + "HMOFiles/Exec";
     let url = "";
 
     // Capacitacion,Diesel,tecnologiasHmo,InsEncierro,InsLavado,Relevos
