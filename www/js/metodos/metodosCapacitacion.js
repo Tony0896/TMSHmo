@@ -1275,7 +1275,8 @@ function sincronizaDatosCapacitacion() {
     let paso = 1;
     // let urlBase2 = "http://192.168.100.8/CISAApp/HMOFiles/Exec";
     // var urlBase2 = "http://172.16.0.143/CISAApp/HMOFiles/Exec";
-    let urlBase2 = "http://tmshmo.ci-sa.com.mx/www.CISAAPP.com/HMOFiles/Exec";
+    let urlBase2 = "http://tmshmo.ci-sa.com.mx/www.CISAAPP.com/HMOFiles_dev/Exec";
+    // let urlBase2 = "http://172.19.0.148/CISAApp/HMOFiles_TURNOS/Exec";
     let url = urlBase2 + "/capacitacion/datos.php?empresa=" + EmpresaID + "&paso=" + paso;
 
     fetch(url).then((response) => {
