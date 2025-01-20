@@ -395,6 +395,7 @@
         <script src="./js/metodos/metodosCapacitacion.js"></script>
         <script src="./js/metodos/relevos.js"></script>
         <script src="./js/metodos/tecnologiasHmo.js"></script>
+        <script src="./js/metodos/Siniestros.js"></script>
         <script src="js/jquery-3.6.2.js"></script>
         <script src="js/qrcode.js"></script>
         <script src="js/sweetalert.min.js"></script>
@@ -1166,7 +1167,7 @@
                                         function (tx5, results) {
                                             var length = results.rows.length;
                                             if (length == 0) {
-                                                updateData();
+                                                // ! updateData();  QUITAR
                                             } else {
                                                 var item1 = results.rows.item(0);
                                                 var tu = item1.Fecha;
@@ -1182,7 +1183,7 @@
                                                 d = n.getDate();
                                                 if (y == sy && m == sm && d == sd) {
                                                 } else {
-                                                    updateData();
+                                                    //! updateData(); QUITAR
                                                 }
                                             }
                                         }
@@ -1249,6 +1250,48 @@
                 },
                 false
             );
+
+            var popEvidencia_modal_general = app.popup.create({
+                content: `
+                <div class="sheet-modal my-sheet" id="sheet-modal_general" name="sheet">
+                    <div class="toolbar">
+                        <div class="toolbar-inner">
+                            <div class="left"></div>
+                            <div class="right"><a class="link" id="close_sheet" href="#">Cerrar</a></div>
+                        </div>
+                    </div>
+                    <div class="sheet-modal-inner" style="overflow-y: scroll;">
+                        <div class="block" id="bodyModal_general">
+                            
+                        </div>
+                    </div>
+                </div>`,
+                swipeToClose: false,
+                closeByOutsideClick: false,
+                closeByBackdropClick: false,
+                closeOnEscape: false,
+                on: {
+                    open: function (popup) {
+                        $("#close_sheet").click(function () {
+                            if ($("#pasa").val() != 0) {
+                                app.sheet.close("#sheet-modal_general");
+                            } else {
+                                swal({
+                                    title: "Aviso",
+                                    text: "Aún no seleccionas o guardas una opción, ¿Estas seguro que deseas regresar?",
+                                    icon: "warning",
+                                    buttons: true,
+                                    dangerMode: false,
+                                }).then((willGoBack) => {
+                                    if (willGoBack) {
+                                        app.sheet.close("#sheet-modal_general");
+                                    }
+                                });
+                            }
+                        });
+                    },
+                },
+            });
         </script>
     </body>
 </html>

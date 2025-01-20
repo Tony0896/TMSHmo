@@ -1,0 +1,239 @@
+<style>
+    .image-mapper-shape {
+        fill: var(--color, #ff0000);
+        opacity: 0.6;
+        cursor: pointer;
+    }
+    g:hover .image-mapper-shape {
+        stroke: white;
+        stroke-width: 2px;
+        opacity: 50%;
+        fill: var(--color, #ff0000);
+    }
+</style>
+<template>
+    <div class="page">
+        <!-- Navsbars -->
+        <nav class="left top-left" style="justify-content: space-between">
+            <a href="javascript:location.reload()" style="margin-left: 10px; display: inline-flex; align-items: center">
+                <i class="icon material-icons md-only" style="font-weight: 900; font-size: 30px">arrow_back</i>
+            </a>
+            <div class="title">Siniestros</div>
+            <a style="margin-right: 10px">
+                <i class="icon material-icons md-only" style="color: #1e9fb4; font-weight: 900">arrow_back</i>
+            </a>
+        </nav>
+        <!-- Contenido Page -->
+        <div class="page-content" style="height: 98%">
+            <div style="text-align: center; justify-content: center; margin-right: auto; margin-left: auto; width: 99%; margin-top: 30px">
+                <div style="text-align: left">
+                    <div class="list FWM-fixing-form" style="margin-top: 5px">
+                        <div>
+                            <span class="span FWM-span-form">Vistas</span>
+                            <select id="selectVistas" class="FWM-input"></select>
+                        </div>
+                        <h2 class="FWN-titulo-2" style="margin-bottom: 0px; color: #707070" id="titulo"></h2>
+                        <h2 class="FWN-titulo-2" style="margin-bottom: 0px; margin-top: 10px" id="fase_titulo"></h2>
+                        <div id="bodyHtml"></div>
+                    </div>
+                </div>
+
+                <br />
+            </div>
+        </div>
+    </div>
+</template>
+<script>
+    return {
+        on: {
+            pageInit: function () {
+                let id_cedula = localStorage.getItem("IdCedula");
+                let IDUnidad = localStorage.getItem("IDUnidad");
+                let FKFormato = localStorage.getItem("FKFormato");
+                let Chasis = localStorage.getItem("ChasisUnidad");
+                let encontro = false;
+                let encontro2 = false;
+                let empresa = localStorage.getItem("empresa");
+                let optionsVistas = '<option value="" selected disabled>Selecciona una opción</option>';
+                var zoomist = "";
+
+                app.request.get(cordova.file.dataDirectory + "jsons_Siniestros/Asignaciones_" + empresa + ".json", function (data) {
+                    let content2 = JSON.parse(data);
+                    for (let x = 0; x < content2.length; x++) {
+                        if (content2[x].Chasis == Chasis && content2[x].FK_formato == FKFormato) {
+                            optionsVistas += `
+                            <option 
+                                value="${content2[x].ID}" 
+                                attr_RutaImg="${content2[x].NombreImg}"
+                                attr_IDAsignacion="${content2[x].ID}"
+                                attr_IDVistas="${content2[x].IDVistas}"
+                            >
+                                ${content2[x].PARTE_DE_LA_UNIDAD}
+                            </option>`;
+                            encontro = true;
+                        }
+                    }
+                    $("#selectVistas").html(optionsVistas);
+                });
+
+                $("#selectVistas").change(() => {
+                    if ($("#selectVistas").find("option:selected").attr("attr_RutaImg") == "null") {
+                        swal("", "No hay vista que traer.", "warning");
+                        if (zoomist) {
+                            zoomist.destroy();
+                            $("#bodyHtml").html("");
+                        }
+                        return false;
+                    }
+
+                    let nameImg = $("#selectVistas").find("option:selected").attr("attr_RutaImg");
+                    let ruta = cordova.file.dataDirectory + "jsons_Siniestros/" + nameImg;
+                    let IDAsignacion = $("#selectVistas").find("option:selected").attr("attr_IDAsignacion");
+                    let IDVistas = $("#selectVistas").find("option:selected").attr("attr_IDVistas");
+                    let html = "";
+
+                    app.request.get(cordova.file.dataDirectory + "jsons_Siniestros/DetallesFormatos2_" + empresa + ".json", function (data) {
+                        let content2 = JSON.parse(data);
+                        for (let x = 0; x < content2.length; x++) {
+                            if (content2[x].FK_RelacionAsignacion == IDAsignacion && content2[x].FK_Vista == IDVistas) {
+                                console.log(content2[x]);
+                                if (content2[x].type_val == "circle") {
+                                    html += `
+                                    <a xlink:href="#" xlink:title="" 
+                                        onclick="verConceptoSiniestro(
+                                            ${content2[x].FK_RelacionAsignacion},
+                                            ${content2[x].FK_Vista},
+                                            ${content2[x].FK_Concepto}
+                                        )">
+                                        <g>
+                                            <circle
+                                                cx="${content2[x].cx_val}"
+                                                cy="${content2[x].cy_val}"
+                                                r="${content2[x].r_val}"
+                                                class="image-mapper-shape"
+                                                data-index="${content2[x].index_val}"
+                                                onclick="return false;"
+                                            ></circle>
+                                        </g>
+                                    </a>`;
+                                } else if (content2[x].type_val == "rectangulo") {
+                                    html += `
+                                    <a xlink:href="#" xlink:title="" 
+                                        onclick="verConceptoSiniestro(
+                                            ${content2[x].FK_RelacionAsignacion},
+                                            ${content2[x].FK_Vista},
+                                            ${content2[x].FK_Concepto}
+                                        )">
+                                        <g>
+                                            <rect
+                                                x="${content2[x].x_val}"
+                                                y="${content2[x].y_val}"
+                                                width="${content2[x].width}"
+                                                height="${content2[x].height}"
+                                                class="image-mapper-shape"
+                                                data-index="${content2[x].index_val}"
+                                                onclick="return false;"
+                                            ></rect>
+                                        </g>
+                                    </a>`;
+                                }
+
+                                encontro2 = true;
+                            }
+                        }
+
+                        $("#bodyHtml").html(
+                            `<div class="row">
+                                <div class="col-75">
+                                    <div class="col p-2 d-flex justify-content-center">
+                                        <div class="zoomist-container">
+                                            <div class="zoomist-wrapper">
+                                                <div class="zoomist-image">
+                                                    <!-- Image Map Generated by https://www.fla-shop.com/image-map/ -->
+                                                    <svg style="width: 100%" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" id="svg_img">
+                                                        <image
+                                                            xlink:href="${ruta}"
+                                                            style="width: 1920px"
+                                                        ></image>
+                                                        ${html}
+                                                    </svg>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-25" style="text-align: center;">
+                                    <input type="color" id="html5colorpicker" onchange="changeColor(this.value)" oninput="changeColor2(this.value)" 
+                                    value="${
+                                        document.documentElement.style.getPropertyValue("--color")
+                                            ? document.documentElement.style.getPropertyValue("--color")
+                                            : "#ff0000"
+                                    }" style="min-height: 40px;min-width: 50px;">
+                                </div>
+                            </div>`
+                        );
+
+                        if (zoomist) {
+                            zoomist.destroy();
+                        }
+                        zoomist = new Zoomist(".zoomist-container", {
+                            // Optional parameters
+                            bounds: true,
+                            maxScale: 4,
+                            bounds: false,
+                            // if you need slider
+                            slider: false,
+                            // if you need zoomer
+                            zoomer: true,
+                            draggable: false,
+                            dragReleaseOnBounds: true,
+                            pinchable: false,
+                        });
+                    });
+                });
+
+                // let popEvidencia = app.popup.create({
+                //     content: `
+                //     <div class="sheet-modal my-sheet" id="sheet-modal" name="sheet">
+                //         <div class="toolbar">
+                //             <div class="toolbar-inner">
+                //                 <div class="left"></div>
+                //                 <div class="right"><a class="link" id="close_sheet" href="#">Cerrar</a></div>
+                //             </div>
+                //         </div>
+                //         <div class="sheet-modal-inner" style="overflow-y: scroll;">
+                //             <div class="block" id="bodyModal">
+
+                //             </div>
+                //         </div>
+                //     </div>`,
+                //     swipeToClose: false,
+                //     closeByOutsideClick: false,
+                //     closeByBackdropClick: false,
+                //     closeOnEscape: false,
+                //     on: {
+                //         open: function (popup) {
+                //             $("#close_sheet").click(function () {
+                //                 if ($("#pasa").val() != 0) {
+                //                     app.sheet.close("#sheet-modal");
+                //                 } else {
+                //                     swal({
+                //                         title: "Aviso",
+                //                         text: "Aún no seleccionas o guardas una opción, ¿Estas seguro que deseas regresar?",
+                //                         icon: "warning",
+                //                         buttons: true,
+                //                         dangerMode: false,
+                //                     }).then((willGoBack) => {
+                //                         if (willGoBack) {
+                //                             app.sheet.close("#sheet-modal");
+                //                         }
+                //                     });
+                //                 }
+                //             });
+                //         },
+                //     },
+                // });
+            },
+        },
+    };
+</script>
