@@ -1,12 +1,12 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.cisa.tmshmo" version="1.4.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="com.cisa.tmshmo" version="1.4.5" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>TMS Hmo</name>
     <description>TMS Hmo</description>
     <author email="jacruz@ci-sa.com.mx" href="https://ci-sa.com.mx">
         Jose Antonio Cruz Romero
     </author>
    
-   <content src="splash.html" />
+    <content src="splash.html" />
     <content original-src="splash.html" />
 
     <access origin="*" />
@@ -25,38 +25,17 @@
         <preference name="AndroidPersistentFileLocation" value="Compatibility" />
         <preference name="AndroidInsecureFileModeEnabled" value="true" />
         <preference name="StatusBarOverlaysWebView" value="false" />
-        <preference name="android-minSdkVersion" value="25" />
-        <preference name="android-targetSdkVersion" value="33" />
-        <preference name="android-compileSdkVersion" value="33" />
-        <!-- <splash density="land-hdpi" src="res/screen/android/drawable-hdpi/screen.png" />
-        <splash density="land-mdpi" src="res/screen/android/drawable-mdpi/screen.png" />
-        <splash density="land-xhdpi" src="res/screen/android/drawable-xhdpi/screen.png" />
-        <splash density="land-xxhdpi" src="res/screen/android/drawable-xxhdpi/screen.png" />
-        <splash density="land-xxxhdpi" src="res/screen/android/drawable-xxxhdpi/screen.png" />
-        <splash density="port-hdpi" src="res/screen/android/drawable-hdpi/screen.png" />
-        <splash density="port-mdpi" src="res/screen/android/drawable-mdpi/screen.png" />
-        <splash density="port-xhdpi" src="res/screen/android/drawable-xhdpi/screen.png" />
-        <splash density="port-xxhdpi" src="res/screen/android/drawable-xxhdpi/screen.png" />
-        <splash density="port-xxxhdpi" src="res/screen/android/drawable-xxxhdpi/screen.png" /> -->
 
-        <preference name="AndroidWindowSplashScreenAnimatedIcon" value="res/icon/android/playstore.png"/>
+        <preference name="AndroidWindowSplashScreenAnimatedIcon" value="res/icon/android/icon.png"/>
         <preference name="AndroidWindowSplashScreenBackground" value="#155169" />
-        <!-- <preference name="SplashScreenDelay" value="2000" />
-        <preference name="AutoHideSplashScreen" value="true" />
-        <preference name="FadeSplashScreen" value="true"/>
-        <preference name="FadeSplashScreenDuration" value="3000"/> -->
+        <preference name="AndroidWindowSplashScreenDuration" value="1000" />
 
-        <icon src="www/img/logo_round.png"/>
+            <icon src="res/icon/android/playstore.png" density="mdpi" />
+            <icon src="res/icon/android/playstore.png" density="hdpi" />
+            <icon src="res/icon/android/playstore.png" density="xhdpi" />
+            <icon src="res/icon/android/playstore.png" density="xxhdpi" />
+            <icon src="res/icon/android/playstore.png" density="xxxhdpi" />
+
     </platform>
 
-    <preference name="SplashMaintainAspectRatio" value="false"/>
-    <preference name="SplashScreen" value="screen"/>
-    <preference name="AutoHideSplashScreen" value="true" />  
-    <preference name="ShowSplashScreen" value="true"/>
-    <preference name="SplashShowOnlyFirstTime" value="true"/>
-
-    <platform name="android">
-        <preference name="ShowSplashScreenSpinner" value="false" />
-    </platform>
-    
 </widget>

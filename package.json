@@ -13,7 +13,7 @@
   "author": "Apache Cordova Team",
   "license": "Apache-2.0",
   "devDependencies": {
-    "cordova-android": "^12.0.0",
+    "cordova-android": "^14.0.1",
     "cordova-plugin-android-permissions": "^1.1.3",
     "cordova-plugin-androidx-adapter": "^1.1.3",
     "cordova-plugin-cache-clear": "^1.3.7",
@@ -24,13 +24,16 @@
     "cordova-plugin-screen-orientation": "^3.0.2",
     "cordova-plugin-splashscreen": "^6.0.0",
     "cordova-plugin-statusbar": "^3.0.0",
-    "cordova-sqlite-storage": "^6.0.0",
+    "cordova-plugin-zip": "^3.1.0",
+    "cordova-sqlite-storage": "^7.0.0",
     "cordova.plugins.diagnostic": "^6.1.1",
     "es6-promise-plugin": "^4.2.2",
     "phonegap-plugin-barcodescanner": "^8.1.0"
   },
   "cordova": {
-    "platforms": [],
+    "platforms": [
+      "android"
+    ],
     "plugins": {
       "cordova-plugin-android-permissions": {},
       "cordova-plugin-androidx-adapter": {},
@@ -47,7 +50,6 @@
       "cordova-plugin-screen-orientation": {},
       "cordova-plugin-splashscreen": {},
       "cordova-plugin-statusbar": {},
-      "cordova-sqlite-storage": {},
       "cordova.plugins.diagnostic": {
         "ANDROIDX_VERSION": "1.0.0",
         "ANDROIDX_APPCOMPAT_VERSION": "1.3.1"
@@ -55,7 +57,8 @@
       "es6-promise-plugin": {},
       "phonegap-plugin-barcodescanner": {
         "ANDROID_SUPPORT_V4_VERSION": "27.+"
-      }
+      },
+      "cordova-sqlite-storage": {}
     }
   },
   "dependencies": {

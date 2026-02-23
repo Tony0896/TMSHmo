@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
     <title>Login</title>
 
@@ -18,10 +18,10 @@
             $(document).ready(function () {
                 // Validar si ya habia iniciado sesion
                 var Usuario = localStorage.getItem("Usuario");
-                localStorage.setItem("version", "1.4.1");
+                localStorage.setItem("version", "1.4.5");
                 // var url = "http://192.168.100.8/CISAApp/HMOFiles/App";
                 // var url = "http://tmshmo.ci-sa.com.mx/www.CISAAPP.com/DEMOFiles/App";
-                var UrlUniversal = "http://tmshmo.ci-sa.com.mx/www.CISAAPP.com/";
+                var UrlUniversal = "https://tmshmo.ci-sa.com.mx/www.CISAAPP.com/";
                 var url = UrlUniversal + "HMOFiles/App";
 
                 localStorage.setItem("url", url);
@@ -63,7 +63,7 @@
                     if (this.value) {
                         $.ajax({
                             type: "POST",
-                            url: url + "/loginDatos.php",
+                            url: "https://tmshmo.ci-sa.com.mx/www.CISAAPP.com/HMOFiles/App/loginDatos.php",
                             data: { metodo: 1, user: this.value },
                             success: function (datares) {
                                 $("#id_user").val(0);
@@ -130,7 +130,7 @@
                         if ($("#empresa").val()) {
                             $.ajax({
                                 type: "POST",
-                                url: url + "/loginDatos.php",
+                                url: "https://tmshmo.ci-sa.com.mx/www.CISAAPP.com/HMOFiles/App/loginDatos.php",
                                 data: { metodo: 3, user: nombre, pwd: contra },
                                 success: function (data) {
                                     let termino = "</html>";
@@ -223,6 +223,8 @@
                         <br />
                         <a id="insert" class="login100-form-btn" style="text-decoration: none">Ingresar</a>
                     </div>
+                    <span id="urlView" style="color: transparent; padding-top: 15px"></span>
+                    <span id="urlViewU" style="color: transparent"></span>
                 </form>
             </div>
         </div>
@@ -238,6 +240,11 @@
                     $("#togglePassword").addClass("bi-eye-slash");
                 }
             });
+            let url = localStorage.getItem("url");
+            $("#urlView").html(url);
+            let UrlUniversal = localStorage.getItem("UrlUniversal");
+            $("#urlViewU").html(UrlUniversal);
+
             // function cambiaimgempresa(val) {
             //     if (val == 1) {
             //         $("#img_logo").attr("src", "img/ACHSA.png");
